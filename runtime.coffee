@@ -95,6 +95,8 @@ class Runtime
     for name of @customVariables
       state["#{name}"] = @customVariables[name]
 
+    functions.CONFIGURE(state)
+
   prepare: ->
     @elements = Utils.flattenElements(@form.elements)
 

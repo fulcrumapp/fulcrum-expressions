@@ -977,3 +977,51 @@ describe 'SELECTED', ->
     SELECTED(choice_values: ['1']).should.be.false
     SELECTED(choice_values: ['1'], other_values: ['2'], '1').should.be.true
     SELECTED(choice_values: ['1'], other_values: ['2'], '2').should.be.true
+
+describe 'GETSTATE', ->
+  it 'returns the current state', ->
+    CONFIGURE(decimalSeparator: '.')
+    GETSTATE().decimalSeparator.should.eql('.')
+
+describe 'FIXED', ->
+  it 'returns the fixed represention of a number', ->
+    FIXED(12345678901 / 3, 3).should.eql('4,115,226,300.333')
+    FIXED(12345678901 / 3, 3, true).should.eql('4115226300.333')
+    FIXED(1 / 3, 3, true).should.eql('0.333')
+    FIXED(1 / 3, 3).should.eql('0.333')
+    FIXED(13.371337, 3).should.eql('13.371')
+    FIXED(3 * 3.2, 1).should.eql('9.6')
+    FIXED(0).should.eql('0.00')
+    FIXED(1, 10).should.eql('1.0000000000')
+    FIXED(100000, 10).should.eql('100,000.0000000000')
+    FIXED(1000000001, 10).should.eql('1,000,000,001.0000000000')
+    FIXED(9999999999, 10).should.eql('9,999,999,999.0000000000')
+    FIXED(9999999999.001, 3).should.eql('9,999,999,999.001')
+
+    CONFIGURE(decimalSeparator: ',', groupingSeparator: '.')
+
+    FIXED(12345678901 / 3, 3).should.eql('4.115.226.300,333')
+    FIXED(12345678901 / 3, 3, true).should.eql('4115226300,333')
+    FIXED(1 / 3, 3, true).should.eql('0,333')
+    FIXED(1 / 3, 3).should.eql('0,333')
+    FIXED(13.371337, 3).should.eql('13,371')
+    FIXED(3 * 3.2, 1).should.eql('9,6')
+    FIXED(0).should.eql('0,00')
+    FIXED(1, 10).should.eql('1,0000000000')
+    FIXED(100000, 10).should.eql('100.000,0000000000')
+    FIXED(1000000001, 10).should.eql('1.000.000.001,0000000000')
+
+    CONFIGURE(decimalSeparator: '.', groupingSeparator: ',', groupingSize: 4)
+
+    FIXED(12345678901 / 3, 3).should.eql('41,1522,6300.333')
+    FIXED(12345678901 / 3, 3, true).should.eql('4115226300.333')
+
+    CONFIGURE(decimalSeparator: '.', groupingSeparator: ',', groupingSize: 3)
+
+    shouldHaveNoValue(FIXED([]))
+    shouldHaveNoValue(FIXED({}))
+    shouldHaveNoValue(FIXED(undefined))
+    shouldHaveNoValue(FIXED(null))
+    shouldHaveNoValue(FIXED(new Date))
+    shouldHaveNoValue(FIXED(new RegExp))
+    shouldHaveNoValue(FIXED(''))

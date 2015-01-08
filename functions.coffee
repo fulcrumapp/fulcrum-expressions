@@ -8,12 +8,12 @@ Utils = require('./utils')
 
 toArray = Utils.toArray
 
-FunctionConfig =
-  locale: null
-  defaultLocale: null
-  currencyCode: null
+State = {}
 
 exports = {}
+
+exports.CONFIGURE = (state) ->
+  State = state
 
 exports.NO_VALUE = null
 
@@ -259,10 +259,72 @@ exports.FIND = (needle, haystack, position) ->
 
   index + 1
 
-exports.FIXED = (number, decimals, noCommas) ->
-  # requires locale support
-  NOT_IMPLEMENTED()
+exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
+  number = NUM(number)
+  decimals = NUM(decimals)
+  decimals = 2 if isNaN(decimals)
+  decimals = MAX(decimals, 0)
+  decimals = MIN(decimals, 20)
 
+  return NO_VALUE if isNaN(number)
+  return NO_VALUE if isNaN(decimals)
+
+  suppressGroupingSeparator = !!suppressGroupingSeparator
+
+  power = Math.pow(10, decimals)
+
+  scaled = parseInt(number * power)
+
+  machineDecimalSeparator = '.'
+
+  machineValue = number.toFixed(decimals)
+
+  index = machineValue.indexOf(machineDecimalSeparator)
+
+  return machineValue unless index > -1
+
+  integerPart = parseInt(machineValue.substring(0, index))
+  fractionPart = machineValue.substring(index + 1, machineValue.length)
+
+  integerString = ''
+
+  groupingSize = GROUPINGSIZE()
+  groupingMax = Math.pow(10, groupingSize)
+
+  if suppressGroupingSeparator or integerPart < groupingMax
+    integerString = integerPart.toString()
+  else
+    groupingSeparator = GROUPINGSEPARATOR()
+
+    parts = []
+
+    while integerPart >= groupingMax
+      thisIntegerPart = Math.floor(integerPart % groupingMax)
+
+      zeroPadding = new Array(groupingSize + 1).join('0')
+
+      parts.push(RIGHT(zeroPadding + thisIntegerPart.toString(), groupingSize))
+
+      integerPart = Math.floor(integerPart / groupingMax)
+
+    if integerPart > 0
+      parts.push(integerPart.toString())
+
+    integerString = parts.reverse().join(groupingSeparator)
+
+  if decimals < 1
+    integerString
+  else
+    integerString + DECIMALSEPARATOR() + fractionPart.toString()
+
+exports.GROUPINGSIZE = ->
+  State.groupingSize or 3
+
+exports.DECIMALSEPARATOR = ->
+  State.decimalSeparator or '.'
+
+exports.GROUPINGSEPARATOR = ->
+  State.groupingSeparator or ','
 
 exports.GCD = ->
   numbers = toArray(arguments).map(NUM)
@@ -749,6 +811,8 @@ exports.ISNEW = ->
 exports.ISUPDATE = ->
   NOT_IMPLEMENTED()
 
+exports.GETSTATE = ->
+  State
 
 # Fulcrum Functions
 
