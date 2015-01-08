@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var FunctionConfig, MATH_FUNC, Utils, exports, toArray, _;
+var MATH_FUNC, State, Utils, exports, toArray, _;
 
 _ = require('underscore');
 
@@ -11,13 +11,13 @@ Utils = require('./utils');
 
 toArray = Utils.toArray;
 
-FunctionConfig = {
-  locale: null,
-  defaultLocale: null,
-  currencyCode: null
-};
+State = {};
 
 exports = {};
+
+exports.CONFIGURE = function(state) {
+  return State = state;
+};
 
 exports.NO_VALUE = null;
 
@@ -354,8 +354,74 @@ exports.FIND = function(needle, haystack, position) {
   return index + 1;
 };
 
-exports.FIXED = function(number, decimals, noCommas) {
-  return NOT_IMPLEMENTED();
+exports.FIXED = function(number, decimals, suppressGroupingSeparator) {
+  var fractionPart, groupingMax, groupingSeparator, groupingSize, index, integerPart, integerString, machineDecimalSeparator, machineValue, parts, power, scaled, thisIntegerPart, zeroPadding;
+  if (decimals == null) {
+    decimals = 2;
+  }
+  if (suppressGroupingSeparator == null) {
+    suppressGroupingSeparator = false;
+  }
+  number = NUM(number);
+  decimals = NUM(decimals);
+  if (isNaN(decimals)) {
+    decimals = 2;
+  }
+  decimals = MAX(decimals, 0);
+  decimals = MIN(decimals, 20);
+  if (isNaN(number)) {
+    return NO_VALUE;
+  }
+  if (isNaN(decimals)) {
+    return NO_VALUE;
+  }
+  suppressGroupingSeparator = !!suppressGroupingSeparator;
+  power = Math.pow(10, decimals);
+  scaled = parseInt(number * power);
+  machineDecimalSeparator = '.';
+  machineValue = number.toFixed(decimals);
+  index = machineValue.indexOf(machineDecimalSeparator);
+  if (!(index > -1)) {
+    return machineValue;
+  }
+  integerPart = parseInt(machineValue.substring(0, index));
+  fractionPart = machineValue.substring(index + 1, machineValue.length);
+  integerString = '';
+  groupingSize = GROUPINGSIZE();
+  groupingMax = Math.pow(10, groupingSize);
+  if (suppressGroupingSeparator || integerPart < groupingMax) {
+    integerString = integerPart.toString();
+  } else {
+    groupingSeparator = GROUPINGSEPARATOR();
+    parts = [];
+    while (integerPart >= groupingMax) {
+      thisIntegerPart = Math.floor(integerPart % groupingMax);
+      zeroPadding = new Array(groupingSize + 1).join('0');
+      parts.push(RIGHT(zeroPadding + thisIntegerPart.toString(), groupingSize));
+      integerPart = Math.floor(integerPart / groupingMax);
+    }
+    if (integerPart > 0) {
+      parts.push(integerPart.toString());
+    }
+    integerString = parts.reverse().join(groupingSeparator);
+  }
+  if (decimals < 1) {
+    return integerString;
+  } else {
+    return integerString + DECIMALSEPARATOR() + fractionPart.toString();
+  }
+};
+
+exports.GROUPINGSIZE = function() {
+  return State.groupingSize || 3;
+};
+
+exports.DECIMALSEPARATOR = function() {
+  return State.decimalSeparator || '.';
+};
+
+exports.GROUPINGSEPARATOR = function() {
+  return State.groupingSeparator || ',';
 };
 
 exports.GCD = function() {
@@ -1061,6 +1127,10 @@ exports.ISNEW = function() {
 
 exports.ISUPDATE = function() {
   return NOT_IMPLEMENTED();
+};
+
+exports.GETSTATE = function() {
+  return State;
 };
 
 exports.HASOTHER = function(value) {
@@ -3247,7 +3317,7 @@ Runtime = (function() {
   Runtime.prototype.extraVariableNames = ['locale', 'decimalSeparator', 'groupingSeparator', 'currencySymbol', 'currencyCode', 'country', 'deviceIdentifier', 'deviceModel', 'deviceManufacturer', 'platform', 'platformVersion', 'application', 'applicationVersion', 'applicationBuild', 'recordStatus', 'recordSystemCreatedAt', 'recordSystemUpdatedAt', 'recordClientCreatedAt', 'recordClientUpdatedAt', 'recordProject', 'recordProjectName', 'recordGeometry', 'recordAltitude', 'recordVerticalAccuracy', 'recordHorizontalAccuracy', 'createdAt', 'updatedAt', 'geometry'];
 
   Runtime.prototype.setupValues = function() {
-    var key, name, names, state, value, _i, _len, _ref, _results;
+    var key, name, names, state, value, _i, _len, _ref;
     state = this.variables = {};
     names = this.dataNames;
     for (key in names) {
@@ -3266,11 +3336,10 @@ Runtime = (function() {
       name = _ref[_i];
       state["$$" + name] = this[name];
     }
-    _results = [];
     for (name in this.customVariables) {
-      _results.push(state["" + name] = this.customVariables[name]);
+      state["" + name] = this.customVariables[name];
     }
-    return _results;
+    return functions.CONFIGURE(state);
   };
 
   Runtime.prototype.prepare = function() {
