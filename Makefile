@@ -1,11 +1,10 @@
-# NODE_PATH := $(shell pwd)/lib
 REPORTER  ?= list
 TESTS     ?= test/*.coffee
 
 all: build
 
 build:
-	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/computed-field.js
+	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/calculated-field.js
 
 test:
 	./node_modules/mocha/bin/mocha \

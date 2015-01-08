@@ -1,11 +1,11 @@
 {
-  "name": "fulcrum-computed-field",
+  "name": "fulcrum-calculated-field",
   "version": "0.0.1",
-  "description": "Computed field runtime for Fulcrum",
-  "main": "./dist/computed-field.js",
+  "description": "Calculated field runtime for Fulcrum",
+  "main": "./dist/calculated-field.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fulcrumapp/fulcrum-computed-field.git"
+    "url": "git://github.com/fulcrumapp/fulcrum-calculated-field.git"
   },
   "directories": {
     "test": "test"

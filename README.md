@@ -1,6 +1,6 @@
-## Fulcrum Computed Field
+## Fulcrum Calculated Field
 
-This implements the runtime for computed fields in Fulcrum.
+This implements the runtime for calculated fields in Fulcrum.
 
 ### Build
 
