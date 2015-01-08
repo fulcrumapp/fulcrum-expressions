@@ -989,6 +989,7 @@ describe 'FIXED', ->
     FIXED(12345678901 / 3, 3, true).should.eql('4115226300.333')
     FIXED(1 / 3, 3, true).should.eql('0.333')
     FIXED(1 / 3, 3).should.eql('0.333')
+    FIXED(2 / 3, 3).should.eql('0.667')
     FIXED(13.371337, 3).should.eql('13.371')
     FIXED(3 * 3.2, 1).should.eql('9.6')
     FIXED(0).should.eql('0.00')
