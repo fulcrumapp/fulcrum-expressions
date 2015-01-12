@@ -959,6 +959,9 @@ HostFunctions = host = {}
 host.formatNumber = (number, language, options) ->
   if hostFunctionExists('formatNumber')
     hostFunctionCall('formatNumber', arguments)
+  else if typeof(Intl) isnt 'undefined'
+    nf = new Intl.NumberFormat(language, options)
+    nf.format(number)
   else
     '' + number
 

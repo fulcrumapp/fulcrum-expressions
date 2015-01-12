@@ -11,10 +11,6 @@ else
   console.log 'Running debug'
   runtime = require '../runtime'
 
-runtime.$$formatNumber = (number, locale, options) ->
-  nf = new Intl.NumberFormat(locale, options)
-  nf.format(number)
-
 shouldBeNull = (value) ->
   (value is null).should.be.true
 
