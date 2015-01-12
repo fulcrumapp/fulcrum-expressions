@@ -1,4 +1,13 @@
-runtime = require('../runtime')
+
+DIST = process.env.DIST or false
+
+if DIST
+  console.log 'Running distribution'
+  require '../dist/expressions.js'
+  runtime = $$runtime
+else
+  console.log 'Running debug'
+  runtime = require '../runtime'
 
 shouldBeNull = (value) ->
   (value is null).should.be.true
