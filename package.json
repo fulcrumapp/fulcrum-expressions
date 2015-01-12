@@ -22,6 +22,7 @@
   "devDependencies": {
     "coffee-script": "^1.8.0",
     "coffeeify": "^1.0.0",
+    "intl": "^0.1.4",
     "mocha": "^2.1.0",
     "should": "^4.4.2",
     "uglify-js": "^2.4.16"

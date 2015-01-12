@@ -8,12 +8,31 @@ Utils = require('./utils')
 
 toArray = Utils.toArray
 
-State = {}
+Defaults =
+  locale: 'en_US'
+  language: 'en-US'
+  country: 'US'
+  currencyCode: 'USD'
+  currencySymbol: '$'
+  timeZone: 'UTC'
+  decimalSeparator: '.'
+  groupingSeparator: ','
+  groupingSize: 3
+
+Config = _.extend({}, Defaults)
 
 exports = {}
 
-exports.CONFIGURE = (state) ->
-  State = state
+exports.CONFIGURE = (config, merge=true) ->
+  if merge
+    _.extend(Config, config)
+  else
+    Config = config
+
+  Config
+
+exports.RESETCONFIG = ->
+  Config = _.extend({}, Defaults)
 
 exports.NO_VALUE = null
 
@@ -192,8 +211,25 @@ exports.DEGREES = (value) ->
   return NaN unless _.isNumber(value)
   180.0 * value / Math.PI
 
-exports.DOLLAR = (value, decimals=2) ->
-  NOT_IMPLEMENTED()
+exports.DOLLAR = (value, decimals=2, currency=null, language=null) ->
+  decimals = NUM(decimals)
+  decimals ?= 2
+  decimals = 2 if isNaN(decimals)
+
+  value = NUM(value)
+
+  return NO_VALUE unless _.isNumber(value)
+
+  currency ?= CURRENCYCODE()
+  language ?= LANGUAGE()
+
+  options =
+    style: 'currency'
+    currency: currency
+    minimumFractionDigits: decimals
+    maximumFractionDigits: decimals
+
+  FORMATNUMBER(value, language, options)
 
 exports.EVEN = (value) ->
   value = NUM(value)
@@ -316,15 +352,6 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
     integerString
   else
     integerString + DECIMALSEPARATOR() + fractionPart.toString()
-
-exports.GROUPINGSIZE = ->
-  State.groupingSize or 3
-
-exports.DECIMALSEPARATOR = ->
-  State.decimalSeparator or '.'
-
-exports.GROUPINGSEPARATOR = ->
-  State.groupingSeparator or ','
 
 exports.GCD = ->
   numbers = toArray(arguments).map(NUM)
@@ -811,8 +838,8 @@ exports.ISNEW = ->
 exports.ISUPDATE = ->
   NOT_IMPLEMENTED()
 
-exports.GETSTATE = ->
-  State
+exports.CONFIG = ->
+  Config
 
 # Fulcrum Functions
 
@@ -843,5 +870,96 @@ exports.SELECTED = (value, choice) ->
     return true if _.contains(value.other_values, choice)
 
   false
+
+exports.LOCALE = ->
+  Config.locale or Defaults.locale
+
+exports.LANGUAGE = ->
+  Config.language or Defaults.language
+
+exports.COUNTRY = ->
+  Config.country or Defaults.country
+
+exports.GROUPINGSIZE = ->
+  Config.groupingSize or Defaults.groupingSize
+
+exports.DECIMALSEPARATOR = ->
+  Config.decimalSeparator or Defaults.decimalSeparator
+
+exports.GROUPINGSEPARATOR = ->
+  Config.groupingSeparator or Defaults.groupingSeparator
+
+exports.TIMEZONE = ->
+  Config.timeZone or Defaults.timeZone
+
+exports.CURRENCYCODE = ->
+  Config.currencyCode or Defaults.currencyCode
+
+exports.CURRENCYSYMBOL = ->
+  Config.currencySymbol or Defaults.currencySymbol
+
+exports.FORMATNUMBER = (number, language, options) ->
+  number ?= NUM(number)
+  language ?= LANGUAGE()
+
+  options ?= {}
+
+  style = 'decimal'
+  style = 'currency' if options.style is 'currency'
+  style = 'percent'  if options.style is 'percent'
+
+  options.style = style
+
+  if options.style is 'currency'
+    options.currency ?= CURRENCYCODE()
+
+  hasSignificantDigitsOption = _.isNumber(options.minimumSignificantDigits) or _.isNumber(options.maximumSignificantDigits)
+
+  if hasSignificantDigitsOption
+    options.minimumSignificantDigits ?= 1
+    options.minimumSignificantDigits = NUM(options.minimumSignificantDigits)
+    options.minimumSignificantDigits = MIN(MAX(options.minimumSignificantDigits, 1), 21)
+
+    options.maximumSignificantDigits ?= options.minimumSignificantDigits
+    options.maximumSignificantDigits = NUM(options.maximumSignificantDigits)
+    options.maximumSignificantDigits = MIN(MAX(options.maximumSignificantDigits, 1), 21)
+  else
+    options.minimumIntegerDigits ?= 1
+    options.minimumIntegerDigits = NUM(options.minimumIntegerDigits)
+    options.minimumIntegerDigits = MIN(MAX(options.minimumIntegerDigits, 1), 21)
+
+    options.minimumFractionDigits ?= if options.style is 'currency' then 2 else 0
+    options.minimumFractionDigits = NUM(options.minimumFractionDigits)
+    options.minimumFractionDigits = MIN(MAX(options.minimumFractionDigits, 0), 20)
+
+    if options.style is 'currency'
+      options.maximumFractionDigits ?= 2
+    else if options.style is 'percent'
+      options.maximumFractionDigits ?= MAX(options.minimumFractionDigits, 0)
+    else
+      options.maximumFractionDigits ?= MAX(options.minimumFractionDigits, 3)
+
+    options.maximumFractionDigits = NUM(options.maximumFractionDigits)
+    options.maximumFractionDigits = MIN(MAX(options.maximumFractionDigits, 0), 20)
+
+  unless _.isBoolean(options.useGrouping)
+    options.useGrouping = true
+
+  HostFunctions.formatNumber(number, language, options)
+
+
+hostFunctionExists = (name) ->
+  _.isFunction($$runtime["$$#{name}"])
+
+hostFunctionCall = (name, args) ->
+  $$runtime["$$#{name}"].apply($$runtime, args)
+
+HostFunctions = host = {}
+
+host.formatNumber = (number, language, options) ->
+  if hostFunctionExists('formatNumber')
+    hostFunctionCall('formatNumber', arguments)
+  else
+    '' + number
 
 module.exports = exports

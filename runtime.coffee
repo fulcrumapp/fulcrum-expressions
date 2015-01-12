@@ -9,11 +9,13 @@ class Runtime
     @setupGlobal()
     @setupFunctions()
 
-  @defaultLocale: 'en-US'
+  @defaultLocale: 'en_US'
 
   @defaultCurrencyCode: 'USD'
 
   @defaultCurrencySymbol: '$'
+
+  @defaultTimeZone: 'UTC'
 
   global: null
 
@@ -45,6 +47,7 @@ class Runtime
 
   extraVariableNames: [
     'locale',
+    'timeZone',
     'decimalSeparator',
     'groupingSeparator',
     'currencySymbol',
@@ -95,7 +98,7 @@ class Runtime
     for name of @customVariables
       state["#{name}"] = @customVariables[name]
 
-    functions.CONFIGURE(state)
+    functions.CONFIGURE(@, false)
 
   prepare: ->
     @elements = Utils.flattenElements(@form.elements)

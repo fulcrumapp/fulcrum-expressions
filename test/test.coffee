@@ -1,4 +1,6 @@
 
+global.Intl = require 'intl'
+
 DIST = process.env.DIST or false
 
 if DIST
@@ -8,6 +10,10 @@ if DIST
 else
   console.log 'Running debug'
   runtime = require '../runtime'
+
+runtime.$$formatNumber = (number, locale, options) ->
+  nf = new Intl.NumberFormat(locale, options)
+  nf.format(number)
 
 shouldBeNull = (value) ->
   (value is null).should.be.true
@@ -987,10 +993,10 @@ describe 'SELECTED', ->
     SELECTED(choice_values: ['1'], other_values: ['2'], '1').should.be.true
     SELECTED(choice_values: ['1'], other_values: ['2'], '2').should.be.true
 
-describe 'GETSTATE', ->
-  it 'returns the current state', ->
+describe 'CONFIG', ->
+  it 'returns the current config', ->
     CONFIGURE(decimalSeparator: '.')
-    GETSTATE().decimalSeparator.should.eql('.')
+    CONFIG().decimalSeparator.should.eql('.')
 
 describe 'FIXED', ->
   it 'returns the fixed represention of a number', ->
@@ -1035,3 +1041,61 @@ describe 'FIXED', ->
     shouldHaveNoValue(FIXED(new Date))
     shouldHaveNoValue(FIXED(new RegExp))
     shouldHaveNoValue(FIXED(''))
+
+describe 'LOCALE', ->
+  it 'returns the current locale', ->
+    LOCALE().should.eql('en_US')
+    CONFIGURE(locale: 'pt_BR').locale.should.eql('pt_BR')
+
+describe 'FORMATNUMBER', ->
+  it 'formats a number in a given locale', ->
+    FORMATNUMBER(1 / 3).should.eql('0.333')
+    FORMATNUMBER(1 / 3, 'pt-BR').should.eql('0,333')
+    FORMATNUMBER(10000 / 3, 'pt-BR').should.eql('3.333,333')
+    FORMATNUMBER(10000 / 3, 'fr-FR').should.eql('3 333,333')
+    FORMATNUMBER(10000 / 3, 'pt-BR', useGrouping: false).should.eql('3333,333')
+    FORMATNUMBER(10000 / 3, 'fr-FR', useGrouping: false).should.eql('3333,333')
+    FORMATNUMBER(1 / 3, null, minimumFractionDigits: 5).should.eql('0.33333')
+    FORMATNUMBER(1 / 3, null, maximumFractionDigits: 2).should.eql('0.33')
+    FORMATNUMBER(1 / 3, null, minimumIntegerDigits: 2).should.eql('00.333')
+    FORMATNUMBER(10000 / 3, 'pt-BR', style: 'currency', currency: 'BRL').should.eql('R$3.333,33')
+    FORMATNUMBER(10000 / 3, 'fr-FR', style: 'currency', currency: 'EUR').should.eql('3 333,33 €')
+
+    CONFIGURE(currencyCode: 'BRL')
+    FORMATNUMBER(10000 / 3, 'pt-BR', style: 'currency').should.eql('R$3.333,33')
+
+
+    #test formatting currency in different locales
+    CONFIGURE(currencyCode: 'EUR')
+    FORMATNUMBER(10000 / 3, 'pt-BR', style: 'currency').should.eql('€3.333,33')
+    FORMATNUMBER(10000 / 3, 'fr-FR', style: 'currency').should.eql('3 333,33 €')
+    FORMATNUMBER(10000 / 3, 'en-US', style: 'currency').should.eql('€3,333.33')
+
+    CONFIGURE(currencyCode: 'BRL')
+    FORMATNUMBER(10000 / 3, 'pt-BR', style: 'currency').should.eql('R$3.333,33')
+    FORMATNUMBER(10000 / 3, 'fr-FR', style: 'currency').should.eql('3 333,33 R$')
+    FORMATNUMBER(10000 / 3, 'en-US', style: 'currency').should.eql('R$3,333.33')
+
+    CONFIGURE(currencyCode: 'USD')
+    FORMATNUMBER(10000 / 3, 'pt-BR', style: 'currency').should.eql('US$3.333,33')
+    FORMATNUMBER(10000 / 3, 'fr-FR', style: 'currency').should.eql('3 333,33 $US')
+    FORMATNUMBER(10000 / 3, 'en-US', style: 'currency').should.eql('$3,333.33')
+
+    RESETCONFIG()
+
+describe 'DOLLAR', ->
+  it 'returns a string with a formatted dollar amount in the current locale', ->
+    DOLLAR(10000 / 3).should.eql('$3,333.33')
+    DOLLAR(10000 / 3, 0).should.eql('$3,333')
+    DOLLAR(10000 / 3, 4).should.eql('$3,333.3333')
+
+    CONFIGURE(currencyCode: 'EUR')
+    DOLLAR(10000 / 3).should.eql('€3,333.33')
+    DOLLAR(10000 / 3, 0).should.eql('€3,333')
+    DOLLAR(10000 / 3, 4).should.eql('€3,333.3333')
+
+    RESETCONFIG()
+
+    DOLLAR(10000 / 3, 2, 'THB').should.eql('฿3,333.33')
+    DOLLAR(10000 / 3, 0, 'THB').should.eql('฿3,333')
+    DOLLAR(10000 / 3, 4, 'THB').should.eql('฿3,333.3333')
