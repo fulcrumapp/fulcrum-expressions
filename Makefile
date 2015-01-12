@@ -4,7 +4,8 @@ TESTS     ?= test/*.coffee
 all: build
 
 build:
-	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
+	browserify -t coffeeify --extension=".coffee" runtime.coffee | \
+		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --compress --mangle
 
 test:
 	./node_modules/mocha/bin/mocha \
