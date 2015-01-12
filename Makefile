@@ -4,7 +4,7 @@ TESTS     ?= test/*.coffee
 all: build
 
 build:
-	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/calculated-field.js
+	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
 
 test:
 	./node_modules/mocha/bin/mocha \

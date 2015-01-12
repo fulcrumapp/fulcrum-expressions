@@ -1,11 +1,11 @@
 {
-  "name": "fulcrum-calculated-field",
+  "name": "fulcrum-expressions",
   "version": "0.0.1",
-  "description": "Calculated field runtime for Fulcrum",
-  "main": "./dist/calculated-field.js",
+  "description": "Expression runtime for Fulcrum",
+  "main": "./dist/expressions.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fulcrumapp/fulcrum-calculated-field.git"
+    "url": "git://github.com/fulcrumapp/fulcrum-expressions.git"
   },
   "directories": {
     "test": "test"

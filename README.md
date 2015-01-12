@@ -1,6 +1,6 @@
-## Fulcrum Calculated Field
+## Fulcrum Expressions
 
-This implements the runtime for calculated fields in Fulcrum.
+This implements the runtime for javascript expressions in Fulcrum.
 
 ### Build
 
