@@ -871,6 +871,9 @@ exports.SELECTED = (value, choice) ->
 
   false
 
+exports.ONCE = (value) ->
+  $$runtime.$$currentValue ? value
+
 exports.LOCALE = ->
   Config.locale or Defaults.locale
 
