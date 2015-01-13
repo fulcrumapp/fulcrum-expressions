@@ -132,7 +132,9 @@ class Runtime
 
         rawValue = @coalesce(variables.$$result, evalResult)
 
-        stringValue = variables[thisVariableName] = @formatValue(rawValue)
+        stringValue = @formatValue(rawValue)
+
+        variables[thisVariableName] = if _.isNumber(rawValue) then rawValue else stringValue
 
       return @createResult(context.key, rawValue, stringValue, null)
     catch ex
