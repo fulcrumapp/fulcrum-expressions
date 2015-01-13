@@ -10,12 +10,14 @@ build:
 
 docs:
 	./script/build-docs
+
+help:
 	./script/generate-help
 
 copy:
 	./script/copy-files
 
-dist: build copy
+dist: build help copy
 
 test:
 	./node_modules/mocha/bin/mocha \
@@ -24,4 +26,4 @@ test:
 	--compilers coffee:coffee-script/register \
 	$(TESTS)
 
-.PHONY: build test docs copy dist
+.PHONY: build test docs help copy dist
