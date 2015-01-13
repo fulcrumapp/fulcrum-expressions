@@ -1,15 +1,15 @@
 ## FALSE
 
-Description
+Returns the boolean value `false`.
 
 ### Parameters
-`value` : Number (required) - argument
+No parameters
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
+// returns false
 FALSE()
 ```

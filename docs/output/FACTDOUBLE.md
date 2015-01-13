@@ -1,15 +1,15 @@
 ## FACTDOUBLE
 
-Description
+Returns the double factorial of a number.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - The value for which to calculate the double factorial.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-FACTDOUBLE()
+// returns 15
+FACTDOUBLE(5)
 ```

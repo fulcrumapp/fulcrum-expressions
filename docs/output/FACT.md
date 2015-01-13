@@ -1,15 +1,15 @@
 ## FACT
 
-Description
+Returns the factorial of a number.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - The value for which to calculate the factorial.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-FACT()
+// returns 120
+FACT(5)
 ```

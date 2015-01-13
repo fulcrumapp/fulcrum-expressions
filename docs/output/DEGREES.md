@@ -1,15 +1,15 @@
 ## DEGREES
 
-Description
+Converts an angle value in radians to degrees.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - Number in radians.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-DEGREES()
+// returns 57.29577951308232
+DEGREES(1)
 ```

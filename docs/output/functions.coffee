@@ -10,35 +10,35 @@ class window.ExpressionFunctions
     { identifier: "CLEAN", description: "Returns the text with the non-printable ASCII characters removed." }
     { identifier: "CODE", description: "Returns the numeric Unicode map value of the first character in the string provided." }
     { identifier: "COMPACT", description: "Description" }
-    { identifier: "CONCATENATE", description: "Description" }
+    { identifier: "CONCATENATE", description: "Returns the concatenation of multiple values." }
     { identifier: "CONFIG", description: "Description" }
     { identifier: "CONFIGURE", description: "Description" }
-    { identifier: "COS", description: "Description" }
-    { identifier: "COSH", description: "Description" }
-    { identifier: "COUNT", description: "Description" }
-    { identifier: "COUNTA", description: "Description" }
-    { identifier: "COUNTBLANK", description: "Description" }
+    { identifier: "COS", description: "Returns the cosine of a value, in radians." }
+    { identifier: "COSH", description: "Returns the hyperbolic cosine of a number." }
+    { identifier: "COUNT", description: "Returns a count of the number of numeric values in a dataset." }
+    { identifier: "COUNTA", description: "Returns a count of the number of values in a dataset." }
+    { identifier: "COUNTBLANK", description: "Returns the number of blank values in a dataset." }
     { identifier: "COUNTRY", description: "Description" }
     { identifier: "CURRENCYCODE", description: "Description" }
     { identifier: "CURRENCYSYMBOL", description: "Description" }
-    { identifier: "DATE", description: "Description" }
-    { identifier: "DATEVALUE", description: "Description" }
-    { identifier: "DAY", description: "Description" }
-    { identifier: "DAYS360", description: "Description" }
+    { identifier: "DATE", description: "Converts a provided year, month, and day into a date." }
+    { identifier: "DATEVALUE", description: "Converts a provided date string in a known format to a date value." }
+    { identifier: "DAY", description: "Returns the day of the month that a specific date falls on, in numeric format." }
+    { identifier: "DAYS360", description: "Returns the difference between two days based on the 360 day year used in some financial interest calculations." }
     { identifier: "DECIMALSEPARATOR", description: "Description" }
-    { identifier: "DEGREES", description: "Description" }
-    { identifier: "DOLLAR", description: "Description" }
-    { identifier: "EVEN", description: "Description" }
-    { identifier: "EXACT", description: "Description" }
-    { identifier: "EXP", description: "Description" }
-    { identifier: "FACT", description: "Description" }
-    { identifier: "FACTDOUBLE", description: "Description" }
-    { identifier: "FALSE", description: "Description" }
-    { identifier: "FIND", description: "Description" }
-    { identifier: "FIXED", description: "Description" }
-    { identifier: "FLOOR", description: "Description" }
+    { identifier: "DEGREES", description: "Converts an angle value in radians to degrees." }
+    { identifier: "DOLLAR", description: "Formats a number into the locale-specific currency format." }
+    { identifier: "EVEN", description: "Returns number rounded up to the nearest even integer." }
+    { identifier: "EXACT", description: "Tests whether two strings are identical." }
+    { identifier: "EXP", description: "Returns Euler's number, e (~2.718) raised to a power." }
+    { identifier: "FACT", description: "Returns the factorial of a number." }
+    { identifier: "FACTDOUBLE", description: "Returns the double factorial of a number." }
+    { identifier: "FALSE", description: "Returns the boolean value `false`." }
+    { identifier: "FIND", description: "Returns the position at which a string is first found within text, case-sensitive." }
+    { identifier: "FIXED", description: "Formats a number with a fixed number of decimal places." }
+    { identifier: "FLOOR", description: "Rounds a number down to the nearest integer multiple of specified significance." }
     { identifier: "FORMATNUMBER", description: "Description" }
-    { identifier: "GCD", description: "Description" }
+    { identifier: "GCD", description: "Returns the greatest common divisor of one or more integers." }
     { identifier: "GROUPINGSEPARATOR", description: "Description" }
     { identifier: "GROUPINGSIZE", description: "Description" }
     { identifier: "HASERROR", description: "Description" }

@@ -1,6 +1,6 @@
 ## COUNTBLANK
 
-Description
+Returns the number of blank values in a dataset.
 
 ### Parameters
 `value` : Number (required) - argument

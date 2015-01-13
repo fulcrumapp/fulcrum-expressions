@@ -1,15 +1,24 @@
 ## FIXED
 
-Description
+Formats a number with a fixed number of decimal places.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - Number to format.
+
+`number_of_places` : Number (required) - Number of decimal places to display in the result.
+
+`value` : Boolean (required) - Whether or not to suppress the thousands separator.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-FIXED()
+// returns 3000.14
+FIXED(3000.141592, 2, true)
+```
+
+```
+// returns 6,276.222
+FIXED(6276.22241, 3, false)
 ```

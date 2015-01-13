@@ -1,6 +1,6 @@
 ## COUNTA
 
-Description
+Returns a count of the number of values in a dataset.
 
 ### Parameters
 `value` : Number (required) - argument

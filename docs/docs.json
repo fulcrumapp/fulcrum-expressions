@@ -340,12 +340,12 @@
             "name": "COSH",
             "access": "",
             "virtual": false,
-            "description": "COSH\nDescription",
+            "description": "COSH\nReturns the hyperbolic cosine of a number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The real number for which to calculate the hyperbolic cosine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -363,12 +363,12 @@
             "name": "COUNT",
             "access": "",
             "virtual": false,
-            "description": "COUNT\nDescription",
+            "description": "COUNT\nReturns a count of the number of numeric values in a dataset.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Value to include in the count.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -378,7 +378,7 @@
                 "// returns VALUE\nCOUNT()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -386,7 +386,7 @@
             "name": "COUNTA",
             "access": "",
             "virtual": false,
-            "description": "COUNTA\nDescription",
+            "description": "COUNTA\nReturns a count of the number of values in a dataset.",
             "parameters": [
                 {
                     "name": "value",
@@ -409,7 +409,7 @@
             "name": "COUNTBLANK",
             "access": "",
             "virtual": false,
-            "description": "COUNTBLANK\nDescription",
+            "description": "COUNTBLANK\nReturns the number of blank values in a dataset.",
             "parameters": [
                 {
                     "name": "value",
@@ -501,7 +501,7 @@
             "name": "DATE",
             "access": "",
             "virtual": false,
-            "description": "DATE\nDescription",
+            "description": "DATE\nConverts a provided year, month, and day into a date.",
             "parameters": [
                 {
                     "name": "value",
@@ -524,7 +524,7 @@
             "name": "DATEVALUE",
             "access": "",
             "virtual": false,
-            "description": "DATEVALUE\nDescription",
+            "description": "DATEVALUE\nConverts a provided date string in a known format to a date value.",
             "parameters": [
                 {
                     "name": "value",
@@ -547,7 +547,7 @@
             "name": "DAY",
             "access": "",
             "virtual": false,
-            "description": "DAY\nDescription",
+            "description": "DAY\nReturns the day of the month that a specific date falls on, in numeric format.",
             "parameters": [
                 {
                     "name": "value",
@@ -570,7 +570,7 @@
             "name": "DAYS360",
             "access": "",
             "virtual": false,
-            "description": "DAYS360\nDescription",
+            "description": "DAYS360\nReturns the difference between two days based on the 360 day year used in some financial interest calculations.",
             "parameters": [
                 {
                     "name": "value",
@@ -616,19 +616,19 @@
             "name": "DEGREES",
             "access": "",
             "virtual": false,
-            "description": "DEGREES\nDescription",
+            "description": "DEGREES\nConverts an angle value in radians to degrees.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Number in radians.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nDEGREES()"
+                "// returns 57.29577951308232\nDEGREES(1)"
             ],
             "returns": {
                 "type": "Number",
@@ -639,7 +639,7 @@
             "name": "DOLLAR",
             "access": "",
             "virtual": false,
-            "description": "DOLLAR\nDescription",
+            "description": "DOLLAR\nFormats a number into the locale-specific currency format.",
             "parameters": [
                 {
                     "name": "value",
@@ -662,19 +662,20 @@
             "name": "EVEN",
             "access": "",
             "virtual": false,
-            "description": "EVEN\nDescription",
+            "description": "EVEN\nReturns number rounded up to the nearest even integer.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Number to round.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nEVEN()"
+                "// returns 6\nEVEN(5.2)",
+                "// returns 530\nEVEN(528.2172814)"
             ],
             "returns": {
                 "type": "Number",
@@ -685,22 +686,32 @@
             "name": "EXACT",
             "access": "",
             "virtual": false,
-            "description": "EXACT\nDescription",
+            "description": "EXACT\nTests whether two strings are identical.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "First string to compare.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "Second string to compare.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nEXACT()"
+                "// returns true\nEXACT(\"String 1\", \"String 1\")",
+                "// returns false\nEXACT(\"String 1\", \"Another String\")",
+                "// returns true\nEXACT(4,4)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -708,19 +719,19 @@
             "name": "EXP",
             "access": "",
             "virtual": false,
-            "description": "EXP\nDescription",
+            "description": "EXP\nReturns Euler's number, e (~2.718) raised to a power.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Power to which to raise `e`.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nEXP()"
+                "// returns 20.085536923187668\nEXP(3)"
             ],
             "returns": {
                 "type": "Number",
@@ -731,19 +742,19 @@
             "name": "FACT",
             "access": "",
             "virtual": false,
-            "description": "FACT\nDescription",
+            "description": "FACT\nReturns the factorial of a number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the factorial.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nFACT()"
+                "// returns 120\nFACT(5)"
             ],
             "returns": {
                 "type": "Number",
@@ -754,19 +765,19 @@
             "name": "FACTDOUBLE",
             "access": "",
             "virtual": false,
-            "description": "FACTDOUBLE\nDescription",
+            "description": "FACTDOUBLE\nReturns the double factorial of a number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the double factorial.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nFACTDOUBLE()"
+                "// returns 15\nFACTDOUBLE(5)"
             ],
             "returns": {
                 "type": "Number",
@@ -777,22 +788,13 @@
             "name": "FALSE",
             "access": "",
             "virtual": false,
-            "description": "FALSE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "FALSE\nReturns the boolean value `false`.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nFALSE()"
+                "// returns false\nFALSE()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -800,19 +802,35 @@
             "name": "FIND",
             "access": "",
             "virtual": false,
-            "description": "FIND\nDescription",
+            "description": "FIND\nReturns the position at which a string is first found within text, case-sensitive.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "search_for",
+                    "type": "String",
+                    "description": "String to search for within `text_to_search`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "text_to_search",
+                    "type": "String",
+                    "description": "Text to search for the first instance of `search_for`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "starting_at",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "argument Position index to begin the search.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nFIND()"
+                "// returns 15\nFIND(\"haystack\", \"Needle in the haystack\")"
             ],
             "returns": {
                 "type": "Number",
@@ -823,22 +841,39 @@
             "name": "FIXED",
             "access": "",
             "virtual": false,
-            "description": "FIXED\nDescription",
+            "description": "FIXED\nFormats a number with a fixed number of decimal places.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Number to format.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "number_of_places",
+                    "type": "Number",
+                    "description": "Number of decimal places to display in the result.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "Boolean",
+                    "description": "Whether or not to suppress the thousands separator.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nFIXED()"
+                "// returns 3000.14\nFIXED(3000.141592, 2, true)",
+                "// returns 6,276.222\nFIXED(6276.22241, 3, false)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -846,19 +881,28 @@
             "name": "FLOOR",
             "access": "",
             "virtual": false,
-            "description": "FLOOR\nDescription",
+            "description": "FLOOR\nRounds a number down to the nearest integer multiple of specified significance.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Number to round down.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "significance",
+                    "type": "Number",
+                    "description": "The number to whose multiples `value` will be rounded.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nFLOOR()"
+                "// returns 126\nFLOOR(126.25, 1)",
+                "// returns 120\nFLOOR(126.25, 10)"
             ],
             "returns": {
                 "type": "Number",
@@ -892,19 +936,20 @@
             "name": "GCD",
             "access": "",
             "virtual": false,
-            "description": "GCD\nDescription",
+            "description": "GCD\nReturns the greatest common divisor of one or more integers.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Value to consider to calculate greatest common divisor.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nGCD()"
+                "// returns 1\nGCD(5, 9)",
+                "// returns 7\nGCD(14, 21, 42)"
             ],
             "returns": {
                 "type": "Number",

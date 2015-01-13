@@ -1,15 +1,19 @@
 ## FIND
 
-Description
+Returns the position at which a string is first found within text, case-sensitive.
 
 ### Parameters
-`value` : Number (required) - argument
+`search_for` : String (required) - String to search for within `text_to_search`.
+
+`text_to_search` : String (required) - Text to search for the first instance of `search_for`.
+
+`starting_at` : Number (required) - argument Position index to begin the search.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-FIND()
+// returns 15
+FIND("haystack", "Needle in the haystack")
 ```

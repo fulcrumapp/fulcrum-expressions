@@ -1,12 +1,12 @@
 ## COUNT
 
-Description
+Returns a count of the number of numeric values in a dataset.
 
 ### Parameters
-`value` : Number (required) - argument
+`var_args_values` : Number (required) - Value to include in the count.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```

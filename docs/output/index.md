@@ -60,19 +60,19 @@ Returns the cosine of a value, in radians.
 
 ### [COSH](./COSH)
 
-Description
+Returns the hyperbolic cosine of a number.
 
 ### [COUNT](./COUNT)
 
-Description
+Returns a count of the number of numeric values in a dataset.
 
 ### [COUNTA](./COUNTA)
 
-Description
+Returns a count of the number of values in a dataset.
 
 ### [COUNTBLANK](./COUNTBLANK)
 
-Description
+Returns the number of blank values in a dataset.
 
 ### [COUNTRY](./COUNTRY)
 
@@ -88,19 +88,19 @@ Description
 
 ### [DATE](./DATE)
 
-Description
+Converts a provided year, month, and day into a date.
 
 ### [DATEVALUE](./DATEVALUE)
 
-Description
+Converts a provided date string in a known format to a date value.
 
 ### [DAY](./DAY)
 
-Description
+Returns the day of the month that a specific date falls on, in numeric format.
 
 ### [DAYS360](./DAYS360)
 
-Description
+Returns the difference between two days based on the 360 day year used in some financial interest calculations.
 
 ### [DECIMALSEPARATOR](./DECIMALSEPARATOR)
 
@@ -108,47 +108,47 @@ Description
 
 ### [DEGREES](./DEGREES)
 
-Description
+Converts an angle value in radians to degrees.
 
 ### [DOLLAR](./DOLLAR)
 
-Description
+Formats a number into the locale-specific currency format.
 
 ### [EVEN](./EVEN)
 
-Description
+Returns number rounded up to the nearest even integer.
 
 ### [EXACT](./EXACT)
 
-Description
+Tests whether two strings are identical.
 
 ### [EXP](./EXP)
 
-Description
+Returns Euler's number, e (~2.718) raised to a power.
 
 ### [FACT](./FACT)
 
-Description
+Returns the factorial of a number.
 
 ### [FACTDOUBLE](./FACTDOUBLE)
 
-Description
+Returns the double factorial of a number.
 
 ### [FALSE](./FALSE)
 
-Description
+Returns the boolean value `false`.
 
 ### [FIND](./FIND)
 
-Description
+Returns the position at which a string is first found within text, case-sensitive.
 
 ### [FIXED](./FIXED)
 
-Description
+Formats a number with a fixed number of decimal places.
 
 ### [FLOOR](./FLOOR)
 
-Description
+Rounds a number down to the nearest integer multiple of specified significance.
 
 ### [FORMATNUMBER](./FORMATNUMBER)
 
@@ -156,7 +156,7 @@ Description
 
 ### [GCD](./GCD)
 
-Description
+Returns the greatest common divisor of one or more integers.
 
 ### [GROUPINGSEPARATOR](./GROUPINGSEPARATOR)
 

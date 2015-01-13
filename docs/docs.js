@@ -221,8 +221,8 @@ function COS() {}
 
 /**
  * COSH
- * Description
- * @param {Number} value argument
+ * Returns the hyperbolic cosine of a number.
+ * @param {Number} value The real number for which to calculate the hyperbolic cosine.
  * @returns {Number}
  * @example
  * // returns VALUE
@@ -235,9 +235,9 @@ function COSH() {}
 
 /**
  * COUNT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a count of the number of numeric values in a dataset.
+ * @param {...Number} var_args_values Value to include in the count.
+ * @returns {String}
  * @example
  * // returns VALUE
  * COUNT()
@@ -249,7 +249,7 @@ function COUNT() {}
 
 /**
  * COUNTA
- * Description
+ * Returns a count of the number of values in a dataset.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -263,7 +263,7 @@ function COUNTA() {}
 
 /**
  * COUNTBLANK
- * Description
+ * Returns the number of blank values in a dataset.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -319,7 +319,7 @@ function CURRENCYSYMBOL() {}
 
 /**
  * DATE
- * Description
+ * Converts a provided year, month, and day into a date.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -333,7 +333,7 @@ function DATE() {}
 
 /**
  * DATEVALUE
- * Description
+ * Converts a provided date string in a known format to a date value.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -347,7 +347,7 @@ function DATEVALUE() {}
 
 /**
  * DAY
- * Description
+ * Returns the day of the month that a specific date falls on, in numeric format.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -361,7 +361,7 @@ function DAY() {}
 
 /**
  * DAYS360
- * Description
+ * Returns the difference between two days based on the 360 day year used in some financial interest calculations.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -389,12 +389,12 @@ function DECIMALSEPARATOR() {}
 
 /**
  * DEGREES
- * Description
- * @param {Number} value argument
+ * Converts an angle value in radians to degrees.
+ * @param {Number} value Number in radians.
  * @returns {Number}
  * @example
- * // returns VALUE
- * DEGREES()
+ * // returns 57.29577951308232
+ * DEGREES(1)
  */
 function DEGREES() {}
 
@@ -403,7 +403,7 @@ function DEGREES() {}
 
 /**
  * DOLLAR
- * Description
+ * Formats a number into the locale-specific currency format.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -417,12 +417,15 @@ function DOLLAR() {}
 
 /**
  * EVEN
- * Description
- * @param {Number} value argument
+ * Returns number rounded up to the nearest even integer.
+ * @param {Number} value Number to round.
  * @returns {Number}
  * @example
- * // returns VALUE
- * EVEN()
+ * // returns 6
+ * EVEN(5.2)
+ * @example
+ * // returns 530
+ * EVEN(528.2172814)
  */
 function EVEN() {}
 
@@ -431,12 +434,19 @@ function EVEN() {}
 
 /**
  * EXACT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Tests whether two strings are identical.
+ * @param {String} value First string to compare.
+ * @param {String} value Second string to compare.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * EXACT()
+ * // returns true
+ * EXACT("String 1", "String 1")
+ * @example
+ * // returns false
+ * EXACT("String 1", "Another String")
+ * @example
+ * // returns true
+ * EXACT(4,4)
  */
 function EXACT() {}
 
@@ -445,12 +455,12 @@ function EXACT() {}
 
 /**
  * EXP
- * Description
- * @param {Number} value argument
+ * Returns Euler's number, e (~2.718) raised to a power.
+ * @param {Number} value Power to which to raise `e`.
  * @returns {Number}
  * @example
- * // returns VALUE
- * EXP()
+ * // returns 20.085536923187668
+ * EXP(3)
  */
 function EXP() {}
 
@@ -459,12 +469,12 @@ function EXP() {}
 
 /**
  * FACT
- * Description
- * @param {Number} value argument
+ * Returns the factorial of a number.
+ * @param {Number} value The value for which to calculate the factorial.
  * @returns {Number}
  * @example
- * // returns VALUE
- * FACT()
+ * // returns 120
+ * FACT(5)
  */
 function FACT() {}
 
@@ -473,12 +483,12 @@ function FACT() {}
 
 /**
  * FACTDOUBLE
- * Description
- * @param {Number} value argument
+ * Returns the double factorial of a number.
+ * @param {Number} value The value for which to calculate the double factorial.
  * @returns {Number}
  * @example
- * // returns VALUE
- * FACTDOUBLE()
+ * // returns 15
+ * FACTDOUBLE(5)
  */
 function FACTDOUBLE() {}
 
@@ -487,11 +497,10 @@ function FACTDOUBLE() {}
 
 /**
  * FALSE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the boolean value `false`.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
+ * // returns false
  * FALSE()
  */
 function FALSE() {}
@@ -501,12 +510,14 @@ function FALSE() {}
 
 /**
  * FIND
- * Description
- * @param {Number} value argument
+ * Returns the position at which a string is first found within text, case-sensitive.
+ * @param {String} search_for String to search for within `text_to_search`.
+ * @param {String} text_to_search Text to search for the first instance of `search_for`.
+ * @param {Number} starting_at argument Position index to begin the search.
  * @returns {Number}
  * @example
- * // returns VALUE
- * FIND()
+ * // returns 15
+ * FIND("haystack", "Needle in the haystack")
  */
 function FIND() {}
 
@@ -515,12 +526,17 @@ function FIND() {}
 
 /**
  * FIXED
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Formats a number with a fixed number of decimal places.
+ * @param {Number} value Number to format.
+ * @param {Number} number_of_places Number of decimal places to display in the result.
+ * @param {Boolean} value Whether or not to suppress the thousands separator.
+ * @returns {String}
  * @example
- * // returns VALUE
- * FIXED()
+ * // returns 3000.14
+ * FIXED(3000.141592, 2, true)
+ * @example
+ * // returns 6,276.222
+ * FIXED(6276.22241, 3, false)
  */
 function FIXED() {}
 
@@ -529,12 +545,16 @@ function FIXED() {}
 
 /**
  * FLOOR
- * Description
- * @param {Number} value argument
+ * Rounds a number down to the nearest integer multiple of specified significance.
+ * @param {Number} value Number to round down.
+ * @param {Number} significance The number to whose multiples `value` will be rounded.
  * @returns {Number}
  * @example
- * // returns VALUE
- * FLOOR()
+ * // returns 126
+ * FLOOR(126.25, 1)
+ * @example
+ * // returns 120
+ * FLOOR(126.25, 10)
  */
 function FLOOR() {}
 
@@ -557,12 +577,15 @@ function FORMATNUMBER() {}
 
 /**
  * GCD
- * Description
- * @param {Number} value argument
+ * Returns the greatest common divisor of one or more integers.
+ * @param {...Number} var_args_values Value to consider to calculate greatest common divisor.
  * @returns {Number}
  * @example
- * // returns VALUE
- * GCD()
+ * // returns 1
+ * GCD(5, 9)
+ * @example
+ * // returns 7
+ * GCD(14, 21, 42)
  */
 function GCD() {}
 
