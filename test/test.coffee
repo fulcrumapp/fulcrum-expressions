@@ -1163,3 +1163,11 @@ describe 'REPEATABLEVALUES', ->
     costs = REPEATABLEVALUES($repeatable_field, 'items', 'cost')
 
     costs.should.eql([1, 2, 3])
+
+describe 'REPEATABLESUM', ->
+  it 'returns the sum of a specific numeric field within a repeatable field', ->
+    $repeatable_field = variables.values.form_values['1337']
+
+    totalCost = REPEATABLESUM($repeatable_field, 'items', 'cost')
+
+    totalCost.should.eql(6)

@@ -2311,6 +2311,45 @@
             }
         },
         {
+            "name": "REPEATABLESUM",
+            "access": "",
+            "virtual": false,
+            "description": "REPEATABLESUM\nReturn the sum of a specific numeric field across multiple repeatable items",
+            "parameters": [
+                {
+                    "name": "repeatableVariable",
+                    "type": "Object",
+                    "description": "The repeatable field variable",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "repeatableDataName",
+                    "type": "String",
+                    "description": "The data name of the repeatable field for `repeatableVariable`",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "dataName",
+                    "type": "String",
+                    "description": "The data name of the field to extract from each repeatable item",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 6\nREPEATABLESUM($repeatable_field, 'items', 'cost')"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": "The sum of the `dataName` field within each repeatable item"
+            }
+        },
+        {
             "name": "REPLACE",
             "access": "",
             "virtual": false,
