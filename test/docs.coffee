@@ -39,6 +39,3 @@ describe 'Documentation', ->
         (-> eval(example)).should.not.throw
 
         eval(example).toString().should.eql(returnValue)
-
-
-
