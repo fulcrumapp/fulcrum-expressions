@@ -68,14 +68,31 @@ class DocumentationGenerator
 
     titles.join("\n\n")
 
+  generateAppHelp: (docs) ->
+    functions = _.map docs.functions, (func) =>
+      desc = @getDescription(func)
+      desc = desc.replace(/\n/g, "\\n")
+
+      "    { identifier: \"#{func.name}\", description: \"#{desc}\" }"
+
+    """
+    class window.ExpressionFunctions
+      @FUNCTIONS: [
+#{functions.join("\n")}
+      ]
+    """
+
 docs = JSON.parse(fs.readFileSync('./docs/docs.json'))
 
 generator = new DocumentationGenerator
 
 files = generator.generateDocs(docs)
 index = generator.generateIndex(docs)
+help  = generator.generateAppHelp(docs)
 
 _.each files, (file) ->
   fs.writeFileSync("./docs/output/#{file.name}.md", file.markdown)
 
 fs.writeFileSync("./docs/output/index.md", index)
+
+fs.writeFileSync("./docs/output/functions.coffee", help)
