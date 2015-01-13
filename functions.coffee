@@ -904,6 +904,39 @@ exports.CURRENCYCODE = ->
 exports.CURRENCYSYMBOL = ->
   Config.currencySymbol or Defaults.currencySymbol
 
+exports.DEVICEMODEL = ->
+  Config.deviceModel ? ''
+
+exports.DEVICEMANUFACTURER = ->
+  Config.deviceManufacturer ? ''
+
+exports.PLATFORM = ->
+  Config.platform ? ''
+
+exports.PLATFORMVERSION = ->
+  Config.platformVersion ? ''
+
+exports.APPLICATION = ->
+  Config.application ? ''
+
+exports.APPLICATIONVERSION = ->
+  Config.applicationVersion ? ''
+
+exports.APPLICATIONBUILD = ->
+  Config.applicationBuild ? ''
+
+exports.DEVICEINFO = (separator=' ') ->
+  _.compact([ DEVICEMANUFACTURER(), DEVICEMODEL() ]).join(separator)
+
+exports.PLATFORMINFO = (separator=' ') ->
+  _.compact([ PLATFORM(), PLATFORMVERSION() ]).join(separator)
+
+exports.APPLICATIONINFO = (separator=' ') ->
+  _.compact([ APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD() ]).join(separator)
+
+exports.VERSIONINFO = (separator=' ') ->
+  _.compact([ DEVICEINFO(), PLATFORMINFO(), APPLICATIONINFO() ]).join(separator)
+
 exports.FORMATNUMBER = (number, language, options) ->
   number ?= NUM(number)
   language ?= LANGUAGE()

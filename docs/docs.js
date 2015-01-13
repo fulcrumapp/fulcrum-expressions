@@ -1676,3 +1676,16 @@ function UPPER() {}
  * VALUE()
  */
 function VALUE() {}
+
+
+////VERSIONINFO
+
+/**
+ * VERSIONINFO
+ * Returns version information about the app.
+ * @returns {String}
+ * @example
+ * // returns Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162
+ * VERSIONINFO()
+ */
+function VERSIONINFO() {}

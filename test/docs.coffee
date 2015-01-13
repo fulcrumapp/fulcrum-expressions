@@ -17,6 +17,17 @@ else
   console.log 'Running debug'
   runtime = require '../runtime'
 
+deviceInfo =
+  deviceManufacturer: 'Apple'
+  deviceModel: 'iPhone6,2'
+  platform: 'iOS'
+  platformVersion: '8.1'
+  application: 'Fulcrum'
+  applicationVersion: '2.7.0'
+  applicationBuild: '2162'
+
+CONFIGURE(deviceInfo)
+
 docs = JSON.parse(fs.readFileSync(__dirname + '/../docs/docs.json'))
 
 shouldBeNull = (value) ->

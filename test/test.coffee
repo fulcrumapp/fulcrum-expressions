@@ -1,4 +1,3 @@
-
 global.Intl = require 'intl'
 
 DIST = process.env.DIST or false
@@ -10,6 +9,15 @@ if DIST
 else
   console.log 'Running debug'
   runtime = require '../runtime'
+
+deviceInfo =
+  deviceManufacturer: 'Apple'
+  deviceModel: 'iPhone6,2'
+  platform: 'iOS'
+  platformVersion: '8.1'
+  application: 'Fulcrum'
+  applicationVersion: '2.7.0'
+  applicationBuild: '2162'
 
 shouldBeNull = (value) ->
   (value is null).should.be.true
@@ -1096,3 +1104,12 @@ describe 'DOLLAR', ->
     DOLLAR(10000 / 3, 2, 'THB').should.eql('฿3,333.33')
     DOLLAR(10000 / 3, 0, 'THB').should.eql('฿3,333')
     DOLLAR(10000 / 3, 4, 'THB').should.eql('฿3,333.3333')
+
+
+describe 'VERSIONINFO', ->
+  it 'returns version info as a string', ->
+    RESETCONFIG()
+
+    CONFIGURE(deviceInfo)
+
+    VERSIONINFO().should.eql('Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162')

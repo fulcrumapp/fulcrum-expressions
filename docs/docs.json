@@ -2747,6 +2747,20 @@
                 "type": "Number",
                 "description": ""
             }
+        },
+        {
+            "name": "VERSIONINFO",
+            "access": "",
+            "virtual": false,
+            "description": "VERSIONINFO\nReturns version information about the app.",
+            "parameters": [],
+            "examples": [
+                "// returns Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162\nVERSIONINFO()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
         }
     ]
 }
