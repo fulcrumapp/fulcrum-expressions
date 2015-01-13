@@ -13,7 +13,9 @@ npm install -g browserify coffee-script
 make
 ```
 
-### Distribute - build final output and optionally copy files to other repos
+### Distribute
+
+Builds the final output and optionally copies output files to other repos
 
 ```sh
 make dist
@@ -25,7 +27,9 @@ make dist
 make test
 ```
 
-### Console - open an interactive node terminal with the functions available to call
+### Console
+
+Starts an interactive node terminal with the functions available to call
 
 ```sh
 ./console
