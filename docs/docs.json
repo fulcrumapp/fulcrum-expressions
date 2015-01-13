@@ -329,7 +329,7 @@
                 }
             ],
             "examples": [
-                "// returns 0.15425144988758405\nCOS(30)"
+                "// returns 0.15425144988758382\nCOS(30)"
             ],
             "returns": {
                 "type": "Number",
