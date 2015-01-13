@@ -3,9 +3,11 @@
 fs = require('fs')
 _ = require('underscore')
 
+SKIP_EXPORTS = []
+
 class DocumentationGenerator
-  generateDocs: (docs) ->
-    _.map docs.functions, (func) =>
+  generateDocs: (functions) ->
+    _.map functions, (func) =>
       schema =
         name: func.name
 
@@ -62,14 +64,14 @@ class DocumentationGenerator
   getDescription: (func) ->
     func.description.replace(new RegExp("^#{func.name}\n"), '')
 
-  generateIndex: (docs) ->
-    titles = _.map docs.functions, (func) =>
+  generateIndex: (functions) ->
+    titles = _.map functions, (func) =>
       "### [#{func.name}](./#{func.name})\n\n#{@getDescription(func)}"
 
     titles.join("\n\n")
 
-  generateAppHelp: (docs) ->
-    functions = _.map docs.functions, (func) =>
+  generateAppHelp: (functions) ->
+    functions = _.map functions, (func) =>
       desc = @getDescription(func)
       desc = desc.replace(/\n/g, "\\n")
 
@@ -84,11 +86,16 @@ class DocumentationGenerator
 
 docs = JSON.parse(fs.readFileSync('./docs/docs.json'))
 
+includeExport = (name) ->
+  _.indexOf(SKIP_EXPORTS, name) is -1
+
+functions = _.select docs.functions, (func) -> includeExport(func.name)
+
 generator = new DocumentationGenerator
 
-files = generator.generateDocs(docs)
-index = generator.generateIndex(docs)
-help  = generator.generateAppHelp(docs)
+files = generator.generateDocs(functions)
+index = generator.generateIndex(functions)
+help  = generator.generateAppHelp(functions)
 
 _.each files, (file) ->
   fs.writeFileSync("./docs/output/#{file.name}.md", file.markdown)
