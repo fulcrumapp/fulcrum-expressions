@@ -1,5 +1,7 @@
 fs = require 'fs'
 _ = require 'underscore'
+path = require 'path'
+CSON = require 'season'
 
 spawnSync = require('child_process').spawnSync or require('spawn-sync')
 
@@ -17,23 +19,9 @@ else
   console.log 'Running debug'
   runtime = require '../runtime'
 
-deviceInfo =
-  deviceManufacturer: 'Apple'
-  deviceModel: 'iPhone6,2'
-  platform: 'iOS'
-  platformVersion: '8.1'
-  application: 'Fulcrum'
-  applicationVersion: '2.7.0'
-  applicationBuild: '2162'
+variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
-feature =
-  recordStatus: 'approved'
-  geometry:
-    type: 'Point'
-    coordinates: [ -82.63814896345139, 27.770756908186286 ]
-
-CONFIGURE(deviceInfo)
-CONFIGURE(feature)
+CONFIGURE(variables)
 
 docs = JSON.parse(fs.readFileSync(__dirname + '/../docs/docs.json'))
 
