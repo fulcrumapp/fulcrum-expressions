@@ -12,7 +12,6 @@ class window.ExpressionFunctions
     { identifier: "COMPACT", description: "Description" }
     { identifier: "CONCATENATE", description: "Returns the concatenation of multiple values." }
     { identifier: "CONFIG", description: "Description" }
-    { identifier: "CONFIGURE", description: "Description" }
     { identifier: "COS", description: "Returns the cosine of a value, in radians." }
     { identifier: "COSH", description: "Returns the hyperbolic cosine of a number." }
     { identifier: "COUNT", description: "Returns a count of the number of numeric values in a dataset." }
@@ -101,7 +100,6 @@ class window.ExpressionFunctions
     { identifier: "REPEATABLEVALUES", description: "Return a specific field from multiple repeatable items" }
     { identifier: "REPEATABLESUM", description: "Return the sum of a specific numeric field across multiple repeatable items" }
     { identifier: "REPLACE", description: "Description" }
-    { identifier: "RESETCONFIG", description: "Description" }
     { identifier: "RIGHT", description: "Description" }
     { identifier: "ROUND", description: "Description" }
     { identifier: "ROUNDDOWN", description: "Description" }

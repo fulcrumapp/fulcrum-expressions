@@ -291,29 +291,6 @@
             }
         },
         {
-            "name": "CONFIGURE",
-            "access": "",
-            "virtual": false,
-            "description": "CONFIGURE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nCONFIGURE()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "COS",
             "access": "",
             "virtual": false,
@@ -2392,29 +2369,6 @@
             ],
             "examples": [
                 "// returns VALUE\nREPLACE()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
-            "name": "RESETCONFIG",
-            "access": "",
-            "virtual": false,
-            "description": "RESETCONFIG\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nRESETCONFIG()"
             ],
             "returns": {
                 "type": "Number",

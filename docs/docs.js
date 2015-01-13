@@ -189,20 +189,6 @@ function CONCATENATE() {}
 function CONFIG() {}
 
 
-////CONFIGURE
-
-/**
- * CONFIGURE
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * CONFIGURE()
- */
-function CONFIGURE() {}
-
-
 ////COS
 
 /**
@@ -1464,20 +1450,6 @@ function REPEATABLESUM() {}
  * REPLACE()
  */
 function REPLACE() {}
-
-
-////RESETCONFIG
-
-/**
- * RESETCONFIG
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * RESETCONFIG()
- */
-function RESETCONFIG() {}
 
 
 ////RIGHT

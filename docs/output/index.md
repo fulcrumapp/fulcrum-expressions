@@ -50,10 +50,6 @@ Returns the concatenation of multiple values.
 
 Description
 
-### [CONFIGURE](./CONFIGURE)
-
-Description
-
 ### [COS](./COS)
 
 Returns the cosine of a value, in radians.
@@ -403,10 +399,6 @@ Return a specific field from multiple repeatable items
 Return the sum of a specific numeric field across multiple repeatable items
 
 ### [REPLACE](./REPLACE)
-
-Description
-
-### [RESETCONFIG](./RESETCONFIG)
 
 Description
 
