@@ -246,7 +246,7 @@
             "name": "CONCATENATE",
             "access": "",
             "virtual": false,
-            "description": "CONCATENATE\nDescription",
+            "description": "CONCATENATE\nReturns the concatenation of multiple values.",
             "parameters": [
                 {
                     "name": "value",
@@ -315,19 +315,19 @@
             "name": "COS",
             "access": "",
             "virtual": false,
-            "description": "COS\nDescription",
+            "description": "COS\nReturns the cosine of a value, in radians.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the cosine. Must be between -1 and 1, inclusive.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCOS()"
+                "// returns 0.15425144988758405\nCOS(30)"
             ],
             "returns": {
                 "type": "Number",

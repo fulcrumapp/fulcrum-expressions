@@ -201,12 +201,12 @@ function CONFIGURE() {}
 
 /**
  * COS
- * Description
- * @param {Number} value argument
+ * Returns the cosine of a value, in radians.
+ * @param {Number} value The value for which to calculate the cosine. Must be between -1 and 1, inclusive.
  * @returns {Number}
  * @example
- * // returns VALUE
- * COS()
+ * // returns 0.15425144988758405
+ * COS(30)
  */
 function COS() {}
 
