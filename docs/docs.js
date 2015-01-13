@@ -49,7 +49,7 @@ function ACOSH() {}
 /**
  * AND
  * Returns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.
- * @param {...*} var_args_expression An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.
+ * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.
  * @returns {Boolean}
  * @example
  * // returns false
@@ -65,12 +65,12 @@ function AND() {}
 
 /**
  * AVERAGE
- * Description
- * @param {Number} value argument
+ * Returns the numerical average value in a dataset, ignoring text.
+ * @param {...Number} var_args_values values to use when calculating the average value.
  * @returns {Number}
  * @example
- * // returns VALUE
- * AVERAGE()
+ * // returns 2
+ * AVERAGE(1, 2, 3)
  */
 function AVERAGE() {}
 
@@ -79,12 +79,16 @@ function AVERAGE() {}
 
 /**
  * CEILING
- * Description
- * @param {Number} value argument
+ * Rounds a number up to the nearest integer multiple of specified significance.
+ * @param {Number} value The value to round up to the nearest integer multiple of factor.
+ * @param {Number} [factor=1] The number to whose multiples value will be rounded.
  * @returns {Number}
  * @example
- * // returns VALUE
- * CEILING()
+ * // returns 139.9
+ * CEILING(139.85, 0.1)
+ * @example
+ * // returns 140
+ * CEILING(139.001)
  */
 function CEILING() {}
 
@@ -93,12 +97,15 @@ function CEILING() {}
 
 /**
  * CHAR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Convert a number into a character according to the current Unicode table.
+ * @param {Number} number The number of the character to look up from the current Unicode table in decimal format.
+ * @returns {String}
  * @example
- * // returns VALUE
- * CHAR()
+ * // returns A
+ * CHAR(65)
+ * @example
+ * // returns Թ
+ * CHAR(1337)
  */
 function CHAR() {}
 
@@ -107,40 +114,26 @@ function CHAR() {}
 
 /**
  * CLEAN
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the text with the non-printable ASCII characters removed.
+ * @param {String} text The text whose non-printable characters are to be removed.
+ * @returns {String}
  * @example
- * // returns VALUE
- * CLEAN()
+ * // returns Test
+ * CLEAN('Test' + CHAR(31))
  */
 function CLEAN() {}
-
-
-////CLEAN_REGEX
-
-/**
- * CLEAN_REGEX
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * CLEAN_REGEX()
- */
-function CLEAN_REGEX() {}
 
 
 ////CODE
 
 /**
  * CODE
- * Description
- * @param {Number} value argument
+ * Returns the numeric Unicode map value of the first character in the string provided.
+ * @param {String} text The string whose first character's Unicode map value will be returned.
  * @returns {Number}
  * @example
- * // returns VALUE
- * CODE()
+ * // returns 84
+ * CODE('Test')
  */
 function CODE() {}
 

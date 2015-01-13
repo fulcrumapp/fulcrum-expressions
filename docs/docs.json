@@ -76,7 +76,7 @@
             "description": "AND\nReturns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.",
             "parameters": [
                 {
-                    "name": "var_args_expression",
+                    "name": "var_args_expressions",
                     "type": "*",
                     "description": "An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.",
                     "default": "",
@@ -97,19 +97,19 @@
             "name": "AVERAGE",
             "access": "",
             "virtual": false,
-            "description": "AVERAGE\nDescription",
+            "description": "AVERAGE\nReturns the numerical average value in a dataset, ignoring text.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "values to use when calculating the average value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nAVERAGE()"
+                "// returns 2\nAVERAGE(1, 2, 3)"
             ],
             "returns": {
                 "type": "Number",
@@ -120,19 +120,28 @@
             "name": "CEILING",
             "access": "",
             "virtual": false,
-            "description": "CEILING\nDescription",
+            "description": "CEILING\nRounds a number up to the nearest integer multiple of specified significance.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to round up to the nearest integer multiple of factor.",
                     "default": "",
                     "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "factor",
+                    "type": "Number",
+                    "description": "The number to whose multiples value will be rounded.",
+                    "default": "1",
+                    "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCEILING()"
+                "// returns 139.9\nCEILING(139.85, 0.1)",
+                "// returns 140\nCEILING(139.001)"
             ],
             "returns": {
                 "type": "Number",
@@ -143,22 +152,23 @@
             "name": "CHAR",
             "access": "",
             "virtual": false,
-            "description": "CHAR\nDescription",
+            "description": "CHAR\nConvert a number into a character according to the current Unicode table.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "number",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number of the character to look up from the current Unicode table in decimal format.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCHAR()"
+                "// returns A\nCHAR(65)",
+                "// returns Թ\nCHAR(1337)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -166,45 +176,22 @@
             "name": "CLEAN",
             "access": "",
             "virtual": false,
-            "description": "CLEAN\nDescription",
+            "description": "CLEAN\nReturns the text with the non-printable ASCII characters removed.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "text",
+                    "type": "String",
+                    "description": "The text whose non-printable characters are to be removed.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCLEAN()"
+                "// returns Test\nCLEAN('Test' + CHAR(31))"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
-            "name": "CLEAN_REGEX",
-            "access": "",
-            "virtual": false,
-            "description": "CLEAN_REGEX\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nCLEAN_REGEX()"
-            ],
-            "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -212,19 +199,19 @@
             "name": "CODE",
             "access": "",
             "virtual": false,
-            "description": "CODE\nDescription",
+            "description": "CODE\nReturns the numeric Unicode map value of the first character in the string provided.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "text",
+                    "type": "String",
+                    "description": "The string whose first character's Unicode map value will be returned.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCODE()"
+                "// returns F\nCODE('Test')"
             ],
             "returns": {
                 "type": "Number",

@@ -131,7 +131,7 @@ exports.FLOOR = (number, significance) ->
   precision = PRECISION(significance)
 
   if number >= 0
-    ROUND Math.floor(number / significance) * significance, precision
+    ROUND(Math.floor(number / significance) * significance, precision)
   else
     -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
 
