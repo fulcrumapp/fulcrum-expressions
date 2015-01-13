@@ -1127,7 +1127,7 @@
                 {
                     "name": "value",
                     "type": "String",
-                    "description": "Value to check.",
+                    "description": "Field value to check.",
                     "default": "",
                     "optional": "",
                     "nullable": ""

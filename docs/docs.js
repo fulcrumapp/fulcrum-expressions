@@ -696,7 +696,7 @@ function INT() {}
 /**
  * ISBLANK
  * Checks whether the field's value is empty.
- * @param {String} value Value to check.
+ * @param {String} value Field value to check.
  * @returns {Boolean}
  * @example
  * // returns true

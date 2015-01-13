@@ -3,7 +3,7 @@
 Checks whether the field's value is empty.
 
 ### Parameters
-`value` : String (required) - Value to check.
+`value` : String (required) - Field value to check.
 
 ### Returns
 Boolean
