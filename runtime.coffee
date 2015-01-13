@@ -87,7 +87,9 @@ class Runtime
     for key of @values
       value = @values[key]
 
-      if @elementsByKey[key].numeric
+      element = @elementsByKey[key]
+
+      if element.numeric or element.format is 'number'
         state["$#{@dataNames[key]}"] = Number(value)
       else
         state["$#{@dataNames[key]}"] = value
