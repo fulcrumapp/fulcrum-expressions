@@ -188,7 +188,7 @@ Rounds a number down to the nearest integer that is less than or equal to it.
 
 ### [ISBLANK](./ISBLANK)
 
-Checks wheter the field's value is empty.
+Checks whether the field's value is empty.
 
 ### [ISERR](./ISERR)
 

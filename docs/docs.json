@@ -1122,7 +1122,7 @@
             "name": "ISBLANK",
             "access": "",
             "virtual": false,
-            "description": "ISBLANK\nChecks wheter the field's value is empty.",
+            "description": "ISBLANK\nChecks whether the field's value is empty.",
             "parameters": [
                 {
                     "name": "value",

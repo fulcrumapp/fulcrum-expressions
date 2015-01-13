@@ -1,6 +1,6 @@
 ## ISBLANK
 
-Checks wheter the field's value is empty.
+Checks whether the field's value is empty.
 
 ### Parameters
 `value` : String (required) - Value to check.
