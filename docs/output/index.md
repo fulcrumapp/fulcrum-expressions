@@ -398,6 +398,14 @@ Description
 
 Description
 
+### [REPEATABLEVALUES](./REPEATABLEVALUES)
+
+Return a specific field from multiple repeatable items
+
+### [REPEATABLESUM](./REPEATABLESUM)
+
+Return the sum of a specific numeric field across multiple repeatable items
+
 ### [REPLACE](./REPLACE)
 
 Description

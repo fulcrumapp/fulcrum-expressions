@@ -1434,6 +1434,38 @@ function RAND() {}
 function RANDBETWEEN() {}
 
 
+////REPEATABLEVALUES
+
+/**
+ * REPEATABLEVALUES
+ * Return a specific field from multiple repeatable items
+ * @param {Object} repeatableVariable The repeatable field variable
+ * @param {String} repeatableDataName The data name of the repeatable field for `repeatableVariable`
+ * @param {String} dataName The data name of the field to extract from each repeatable item
+ * @returns {Array} An array of values of the `dataName` field from each item
+ * @example
+ * // returns [1,2,3]
+ * REPEATABLEVALUES($repeatable_field, 'items', 'cost')
+ */
+function REPEATABLEVALUES() {}
+
+
+////REPEATABLESUM
+
+/**
+ * REPEATABLESUM
+ * Return the sum of a specific numeric field across multiple repeatable items
+ * @param {Object} repeatableVariable The repeatable field variable
+ * @param {String} repeatableDataName The data name of the repeatable field for `repeatableVariable`
+ * @param {String} dataName The data name of the field to extract from each repeatable item
+ * @returns {Number} The sum of the `dataName` field within each repeatable item
+ * @example
+ * // returns 6
+ * REPEATABLESUM($repeatable_field, 'items', 'cost')
+ */
+function REPEATABLESUM() {}
+
+
 ////REPLACE
 
 /**
