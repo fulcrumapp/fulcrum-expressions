@@ -1,4 +1,4 @@
-## Fulcrum Expressions
+## Fulcrum Expressions [![Build Status](https://secure.travis-ci.org/fulcrumapp/fulcrum-expressions.png)](http://travis-ci.org/fulcrumapp/fulcrum-expressions)
 
 This implements the runtime for javascript expressions in Fulcrum.
 
