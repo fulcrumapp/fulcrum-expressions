@@ -11,7 +11,6 @@ class window.ExpressionFunctions
     { identifier: "CODE", description: "Returns the numeric Unicode map value of the first character in the string provided." }
     { identifier: "COMPACT", description: "Description" }
     { identifier: "CONCATENATE", description: "Returns the concatenation of multiple values." }
-    { identifier: "CONFIG", description: "Description" }
     { identifier: "COS", description: "Returns the cosine of a value, in radians." }
     { identifier: "COSH", description: "Returns the hyperbolic cosine of a number." }
     { identifier: "COUNT", description: "Returns a count of the number of numeric values in a dataset." }

@@ -268,29 +268,6 @@
             }
         },
         {
-            "name": "CONFIG",
-            "access": "",
-            "virtual": false,
-            "description": "CONFIG\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nCONFIG()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "COS",
             "access": "",
             "virtual": false,

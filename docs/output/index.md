@@ -46,10 +46,6 @@ Description
 
 Returns the concatenation of multiple values.
 
-### [CONFIG](./CONFIG)
-
-Description
-
 ### [COS](./COS)
 
 Returns the cosine of a value, in radians.

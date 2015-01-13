@@ -175,20 +175,6 @@ function COMPACT() {}
 function CONCATENATE() {}
 
 
-////CONFIG
-
-/**
- * CONFIG
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * CONFIG()
- */
-function CONFIG() {}
-
-
 ////COS
 
 /**
