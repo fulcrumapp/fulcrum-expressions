@@ -120,7 +120,7 @@ exports.ABS = MATH_FUNC(Math.abs)
 exports.ACOS = MATH_FUNC(Math.acos)
 
 exports.ACOSH = (number) ->
-  number ?= NUM(number)
+  number = NUM(number)
 
   Math.log(number + Math.sqrt(number * number - 1))
 
@@ -204,7 +204,12 @@ exports.CONCATENATE = ->
 
 exports.COS = MATH_FUNC(Math.cos)
 
-exports.COSH = MATH_FUNC(Math.cosh)
+exports.COSH = (number) ->
+  number = NUM(number)
+
+  exp = Math.exp(number)
+
+  (exp + 1 / exp) / 2
 
 # _.compact removes '' and 0 from the array, which is somewhat unexpected
 exports.COMPACT = (value) ->

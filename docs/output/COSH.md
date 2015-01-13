@@ -10,6 +10,6 @@ Number
 
 ### Examples
 ```
-// returns VALUE
-COSH()
+// returns 1.5430806348152437
+COSH(1)
 ```

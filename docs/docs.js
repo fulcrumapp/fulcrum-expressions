@@ -197,8 +197,8 @@ function COS() {}
  * @param {Number} value The real number for which to calculate the hyperbolic cosine.
  * @returns {Number}
  * @example
- * // returns VALUE
- * COSH()
+ * // returns 1.5430806348152437
+ * COSH(1)
  */
 function COSH() {}
 
