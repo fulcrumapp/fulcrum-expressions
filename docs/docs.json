@@ -1953,29 +1953,6 @@
             }
         },
         {
-            "name": "NO_VALUE",
-            "access": "",
-            "virtual": false,
-            "description": "NO_VALUE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nNO_VALUE()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "NUM",
             "access": "",
             "virtual": false,

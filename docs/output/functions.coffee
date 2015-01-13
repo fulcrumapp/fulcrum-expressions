@@ -83,7 +83,6 @@ class window.ExpressionFunctions
     { identifier: "N", description: "Description" }
     { identifier: "NOT", description: "Description" }
     { identifier: "NOT_IMPLEMENTED", description: "Description" }
-    { identifier: "NO_VALUE", description: "Description" }
     { identifier: "NUM", description: "Description" }
     { identifier: "NUMS", description: "Description" }
     { identifier: "ODD", description: "Description" }
