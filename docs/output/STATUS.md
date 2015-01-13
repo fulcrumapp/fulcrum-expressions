@@ -6,7 +6,7 @@ Returns the current record status
 No parameters
 
 ### Returns
-Number
+String
 
 ### Examples
 ```

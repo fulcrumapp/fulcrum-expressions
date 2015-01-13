@@ -2580,7 +2580,7 @@
                 "// returns approved\nSTATUS()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },

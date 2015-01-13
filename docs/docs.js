@@ -1586,7 +1586,7 @@ function SQRTPI() {}
 /**
  * STATUS
  * Returns the current record status
- * @returns {Number}
+ * @returns {String}
  * @example
  * // returns approved
  * STATUS()
