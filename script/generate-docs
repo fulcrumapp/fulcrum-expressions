@@ -10,7 +10,7 @@ class DocumentationGenerator
         name: func.name
 
       # strip out the function name if it starts with it
-      description = func.description.replace(new RegExp("^#{func.name}\n"), '')
+      description = @getDescription(func)
 
       parameters = @generateParameters(func.parameters)
       returns    = @generateReturns(func.returns)
@@ -59,11 +59,23 @@ class DocumentationGenerator
     else
       examples.join("\n\n")
 
+  getDescription: (func) ->
+    func.description.replace(new RegExp("^#{func.name}\n"), '')
+
+  generateIndex: (docs) ->
+    titles = _.map docs.functions, (func) =>
+      "### [#{func.name}](./#{func.name})\n\n#{@getDescription(func)}"
+
+    titles.join("\n\n")
 
 docs = JSON.parse(fs.readFileSync('./docs/docs.json'))
 
 generator = new DocumentationGenerator
 
 files = generator.generateDocs(docs)
+index = generator.generateIndex(docs)
 
-console.log _.map(files, (file) -> file.markdown).join("\n\n\n")
+_.each files, (file) ->
+  fs.writeFileSync("./docs/output/#{file.name}.md", file.markdown)
+
+fs.writeFileSync("./docs/output/index.md", index)
