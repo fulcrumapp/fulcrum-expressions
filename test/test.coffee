@@ -1093,7 +1093,6 @@ describe 'DOLLAR', ->
     DOLLAR(10000 / 3, 4).should.eql('€3,333.3333')
 
     RESETCONFIG()
-
     DOLLAR(10000 / 3, 2, 'THB').should.eql('฿3,333.33')
     DOLLAR(10000 / 3, 0, 'THB').should.eql('฿3,333')
     DOLLAR(10000 / 3, 4, 'THB').should.eql('฿3,333.3333')
