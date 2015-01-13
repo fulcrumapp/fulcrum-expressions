@@ -17,7 +17,7 @@ help:
 copy:
 	./script/copy-files
 
-dist: build help copy
+dist: build help test copy
 
 test:
 	./node_modules/mocha/bin/mocha \
