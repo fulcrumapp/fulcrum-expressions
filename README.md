@@ -8,9 +8,14 @@ This implements the runtime for javascript expressions in Fulcrum.
 make
 ```
 
-
 ### Tests
 
 ```sh
 make test
+```
+
+### Console
+
+```sh
+./console
 ```
