@@ -211,7 +211,7 @@
                 }
             ],
             "examples": [
-                "// returns F\nCODE('Test')"
+                "// returns 84\nCODE('Test')"
             ],
             "returns": {
                 "type": "Number",
