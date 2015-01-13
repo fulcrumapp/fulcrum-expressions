@@ -2,6 +2,11 @@
 
 This implements the runtime for javascript expressions in Fulcrum.
 
+### Setup
+```sh
+npm install -g browserify coffee-script
+```
+
 ### Build
 
 ```sh
