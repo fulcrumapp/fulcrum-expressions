@@ -1,15 +1,15 @@
 ## SINH
 
-Description
+Returns the hyperbolic sine of a number
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - a number
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-SINH()
+// returns 1.1752011936438014
+SINH(1)
 ```

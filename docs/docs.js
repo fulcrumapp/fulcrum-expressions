@@ -1512,12 +1512,12 @@ function SIN() {}
 
 /**
  * SINH
- * Description
- * @param {Number} value argument
+ * Returns the hyperbolic sine of a number
+ * @param {Number} value a number
  * @returns {Number}
  * @example
- * // returns VALUE
- * SINH()
+ * // returns 1.1752011936438014
+ * SINH(1)
  */
 function SINH() {}
 

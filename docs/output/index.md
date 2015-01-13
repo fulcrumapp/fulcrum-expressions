@@ -420,7 +420,7 @@ Description
 
 ### [SINH](./SINH)
 
-Description
+Returns the hyperbolic sine of a number
 
 ### [SQRT](./SQRT)
 

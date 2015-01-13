@@ -425,7 +425,6 @@ exports.GCD = ->
 
   result
 
-
 exports.IF = (test, trueValue, falseValue) ->
   if test then trueValue else falseValue
 
@@ -792,7 +791,12 @@ exports.SIGN = (number) ->
 
 exports.SIN = MATH_FUNC(Math.sin)
 
-exports.SINH = MATH_FUNC(Math.sinh)
+exports.SINH = (number) ->
+  number = NUM(number)
+
+  exp = Math.exp(number)
+
+  (exp - 1 / exp) / 2
 
 exports.SQRT = MATH_FUNC(Math.sqrt)
 

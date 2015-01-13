@@ -104,7 +104,7 @@ class window.ExpressionFunctions
     { identifier: "SELECTED", description: "Description" }
     { identifier: "SIGN", description: "Description" }
     { identifier: "SIN", description: "Description" }
-    { identifier: "SINH", description: "Description" }
+    { identifier: "SINH", description: "Returns the hyperbolic sine of a number" }
     { identifier: "SQRT", description: "Description" }
     { identifier: "SQRTPI", description: "Description" }
     { identifier: "STATUS", description: "Returns the current record status" }

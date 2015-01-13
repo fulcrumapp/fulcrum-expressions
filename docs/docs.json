@@ -2471,19 +2471,19 @@
             "name": "SINH",
             "access": "",
             "virtual": false,
-            "description": "SINH\nDescription",
+            "description": "SINH\nReturns the hyperbolic sine of a number",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "a number",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSINH()"
+                "// returns 1.1752011936438014\nSINH(1)"
             ],
             "returns": {
                 "type": "Number",
