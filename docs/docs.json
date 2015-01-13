@@ -249,19 +249,21 @@
             "description": "CONCATENATE\nReturns the concatenation of multiple values.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "var_args_values",
+                    "type": "String",
+                    "description": "Strings to append in sequence.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCONCATENATE()"
+                "// returns This is a sentence.\nCONCATENATE(\"This \", \"is \", \"a \", \"sentence.\")",
+                "// returns 42311\nCONCATENATE(42, 31, 1)",
+                "// returns Age is 42\nCONCATENATE(\"Age \", \"is \", 42)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },

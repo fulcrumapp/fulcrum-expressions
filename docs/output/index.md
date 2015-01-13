@@ -44,7 +44,7 @@ Description
 
 ### [CONCATENATE](./CONCATENATE)
 
-Description
+Returns the concatenation of multiple values.
 
 ### [CONFIG](./CONFIG)
 
@@ -56,7 +56,7 @@ Description
 
 ### [COS](./COS)
 
-Description
+Returns the cosine of a value, in radians.
 
 ### [COSH](./COSH)
 

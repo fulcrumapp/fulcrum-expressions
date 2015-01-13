@@ -159,12 +159,18 @@ function COMPACT() {}
 
 /**
  * CONCATENATE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the concatenation of multiple values.
+ * @param {...String} var_args_values Strings to append in sequence.
+ * @returns {String}
  * @example
- * // returns VALUE
- * CONCATENATE()
+ * // returns This is a sentence.
+ * CONCATENATE("This ", "is ", "a ", "sentence.")
+ * @example
+ * // returns 42311
+ * CONCATENATE(42, 31, 1)
+ * @example
+ * // returns Age is 42
+ * CONCATENATE("Age ", "is ", 42)
  */
 function CONCATENATE() {}
 
