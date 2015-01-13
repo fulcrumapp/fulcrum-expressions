@@ -1,0 +1,2764 @@
+{
+    "functions": [
+        {
+            "name": "ABS",
+            "access": "",
+            "virtual": false,
+            "description": "ABS\nReturns the absolute value of a number.",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "The number of which to return the absolute value.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nABS(-1)"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ACOS",
+            "access": "",
+            "virtual": false,
+            "description": "ACOS\nReturns the inverse cosine of a value, in radians.\nUse the {@link DEGREES} function to convert the result of {@link DEGREES} into degrees.",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 0.643501108793284\nACOS(0.8)"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ACOSH",
+            "access": "",
+            "virtual": false,
+            "description": "ACOSH\nReturns the inverse hyperbolic cosine of a number.\n\nRelated:\n{@link TANH}",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 2.63391579384963\n=ACOSH(7)"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "AND",
+            "access": "",
+            "virtual": false,
+            "description": "AND\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nAND()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "AVERAGE",
+            "access": "",
+            "virtual": false,
+            "description": "AVERAGE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nAVERAGE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CEILING",
+            "access": "",
+            "virtual": false,
+            "description": "CEILING\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCEILING()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CHAR",
+            "access": "",
+            "virtual": false,
+            "description": "CHAR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCHAR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CLEAN",
+            "access": "",
+            "virtual": false,
+            "description": "CLEAN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCLEAN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CLEAN_REGEX",
+            "access": "",
+            "virtual": false,
+            "description": "CLEAN_REGEX\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCLEAN_REGEX()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CODE",
+            "access": "",
+            "virtual": false,
+            "description": "CODE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCODE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COMPACT",
+            "access": "",
+            "virtual": false,
+            "description": "COMPACT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOMPACT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CONCATENATE",
+            "access": "",
+            "virtual": false,
+            "description": "CONCATENATE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCONCATENATE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CONFIG",
+            "access": "",
+            "virtual": false,
+            "description": "CONFIG\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCONFIG()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CONFIGURE",
+            "access": "",
+            "virtual": false,
+            "description": "CONFIGURE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCONFIGURE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COS",
+            "access": "",
+            "virtual": false,
+            "description": "COS\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOS()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COSH",
+            "access": "",
+            "virtual": false,
+            "description": "COSH\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOSH()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COUNT",
+            "access": "",
+            "virtual": false,
+            "description": "COUNT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOUNT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COUNTA",
+            "access": "",
+            "virtual": false,
+            "description": "COUNTA\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOUNTA()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COUNTBLANK",
+            "access": "",
+            "virtual": false,
+            "description": "COUNTBLANK\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOUNTBLANK()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "COUNTRY",
+            "access": "",
+            "virtual": false,
+            "description": "COUNTRY\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCOUNTRY()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CURRENCYCODE",
+            "access": "",
+            "virtual": false,
+            "description": "CURRENCYCODE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCURRENCYCODE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "CURRENCYSYMBOL",
+            "access": "",
+            "virtual": false,
+            "description": "CURRENCYSYMBOL\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nCURRENCYSYMBOL()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DATE",
+            "access": "",
+            "virtual": false,
+            "description": "DATE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDATE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DATEVALUE",
+            "access": "",
+            "virtual": false,
+            "description": "DATEVALUE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDATEVALUE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DAY",
+            "access": "",
+            "virtual": false,
+            "description": "DAY\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDAY()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DAYS360",
+            "access": "",
+            "virtual": false,
+            "description": "DAYS360\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDAYS360()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DECIMALSEPARATOR",
+            "access": "",
+            "virtual": false,
+            "description": "DECIMALSEPARATOR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDECIMALSEPARATOR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DEGREES",
+            "access": "",
+            "virtual": false,
+            "description": "DEGREES\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDEGREES()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "DOLLAR",
+            "access": "",
+            "virtual": false,
+            "description": "DOLLAR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nDOLLAR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "EVEN",
+            "access": "",
+            "virtual": false,
+            "description": "EVEN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nEVEN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "EXACT",
+            "access": "",
+            "virtual": false,
+            "description": "EXACT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nEXACT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "EXP",
+            "access": "",
+            "virtual": false,
+            "description": "EXP\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nEXP()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FACT",
+            "access": "",
+            "virtual": false,
+            "description": "FACT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFACT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FACTDOUBLE",
+            "access": "",
+            "virtual": false,
+            "description": "FACTDOUBLE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFACTDOUBLE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FALSE",
+            "access": "",
+            "virtual": false,
+            "description": "FALSE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFALSE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FIND",
+            "access": "",
+            "virtual": false,
+            "description": "FIND\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFIND()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FIXED",
+            "access": "",
+            "virtual": false,
+            "description": "FIXED\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFIXED()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FLOOR",
+            "access": "",
+            "virtual": false,
+            "description": "FLOOR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFLOOR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FORMATNUMBER",
+            "access": "",
+            "virtual": false,
+            "description": "FORMATNUMBER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFORMATNUMBER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "GCD",
+            "access": "",
+            "virtual": false,
+            "description": "GCD\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nGCD()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "GROUPINGSEPARATOR",
+            "access": "",
+            "virtual": false,
+            "description": "GROUPINGSEPARATOR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nGROUPINGSEPARATOR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "GROUPINGSIZE",
+            "access": "",
+            "virtual": false,
+            "description": "GROUPINGSIZE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nGROUPINGSIZE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "HASERROR",
+            "access": "",
+            "virtual": false,
+            "description": "HASERROR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nHASERROR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "HASOTHER",
+            "access": "",
+            "virtual": false,
+            "description": "HASOTHER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nHASOTHER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "IF",
+            "access": "",
+            "virtual": false,
+            "description": "IF\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nIF()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "IFERROR",
+            "access": "",
+            "virtual": false,
+            "description": "IFERROR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nIFERROR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "INT",
+            "access": "",
+            "virtual": false,
+            "description": "INT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nINT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISBLANK",
+            "access": "",
+            "virtual": false,
+            "description": "ISBLANK\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISBLANK()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISERR",
+            "access": "",
+            "virtual": false,
+            "description": "ISERR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISERR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISERROR",
+            "access": "",
+            "virtual": false,
+            "description": "ISERROR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISERROR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISEVEN",
+            "access": "",
+            "virtual": false,
+            "description": "ISEVEN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISEVEN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISLOGICAL",
+            "access": "",
+            "virtual": false,
+            "description": "ISLOGICAL\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISLOGICAL()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISNAN",
+            "access": "",
+            "virtual": false,
+            "description": "ISNAN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISNAN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISNEW",
+            "access": "",
+            "virtual": false,
+            "description": "ISNEW\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISNEW()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISNONTEXT",
+            "access": "",
+            "virtual": false,
+            "description": "ISNONTEXT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISNONTEXT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISNUMBER",
+            "access": "",
+            "virtual": false,
+            "description": "ISNUMBER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISNUMBER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISODD",
+            "access": "",
+            "virtual": false,
+            "description": "ISODD\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISODD()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISTEXT",
+            "access": "",
+            "virtual": false,
+            "description": "ISTEXT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISTEXT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISUPDATE",
+            "access": "",
+            "virtual": false,
+            "description": "ISUPDATE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nISUPDATE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LANGUAGE",
+            "access": "",
+            "virtual": false,
+            "description": "LANGUAGE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLANGUAGE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LCM",
+            "access": "",
+            "virtual": false,
+            "description": "LCM\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLCM()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LEFT",
+            "access": "",
+            "virtual": false,
+            "description": "LEFT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLEFT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LEN",
+            "access": "",
+            "virtual": false,
+            "description": "LEN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLEN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LN",
+            "access": "",
+            "virtual": false,
+            "description": "LN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LOCALE",
+            "access": "",
+            "virtual": false,
+            "description": "LOCALE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLOCALE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LOG",
+            "access": "",
+            "virtual": false,
+            "description": "LOG\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLOG()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LOG10",
+            "access": "",
+            "virtual": false,
+            "description": "LOG10\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLOG10()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LOWER",
+            "access": "",
+            "virtual": false,
+            "description": "LOWER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nLOWER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MATCH",
+            "access": "",
+            "virtual": false,
+            "description": "MATCH\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMATCH()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MATH_FUNC",
+            "access": "",
+            "virtual": false,
+            "description": "MATH_FUNC\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMATH_FUNC()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MAX",
+            "access": "",
+            "virtual": false,
+            "description": "MAX\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMAX()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MAXA",
+            "access": "",
+            "virtual": false,
+            "description": "MAXA\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMAXA()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MEDIAN",
+            "access": "",
+            "virtual": false,
+            "description": "MEDIAN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMEDIAN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MEMOIZED_FACT",
+            "access": "",
+            "virtual": false,
+            "description": "MEMOIZED_FACT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMEMOIZED_FACT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MEMOIZED_FACTDOUBLE",
+            "access": "",
+            "virtual": false,
+            "description": "MEMOIZED_FACTDOUBLE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMEMOIZED_FACTDOUBLE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MID",
+            "access": "",
+            "virtual": false,
+            "description": "MID\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMID()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MIN",
+            "access": "",
+            "virtual": false,
+            "description": "MIN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMIN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MINA",
+            "access": "",
+            "virtual": false,
+            "description": "MINA\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMINA()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "MOD",
+            "access": "",
+            "virtual": false,
+            "description": "MOD\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nMOD()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "N",
+            "access": "",
+            "virtual": false,
+            "description": "N\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "NOT",
+            "access": "",
+            "virtual": false,
+            "description": "NOT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nNOT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "NOT_IMPLEMENTED",
+            "access": "",
+            "virtual": false,
+            "description": "NOT_IMPLEMENTED\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nNOT_IMPLEMENTED()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "NO_VALUE",
+            "access": "",
+            "virtual": false,
+            "description": "NO_VALUE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nNO_VALUE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "NUM",
+            "access": "",
+            "virtual": false,
+            "description": "NUM\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nNUM()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "NUMS",
+            "access": "",
+            "virtual": false,
+            "description": "NUMS\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nNUMS()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ODD",
+            "access": "",
+            "virtual": false,
+            "description": "ODD\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nODD()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ONCE",
+            "access": "",
+            "virtual": false,
+            "description": "ONCE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nONCE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "OR",
+            "access": "",
+            "virtual": false,
+            "description": "OR\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nOR()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "OTHER",
+            "access": "",
+            "virtual": false,
+            "description": "OTHER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nOTHER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "PI",
+            "access": "",
+            "virtual": false,
+            "description": "PI\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nPI()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "POWER",
+            "access": "",
+            "virtual": false,
+            "description": "POWER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nPOWER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "PRECISION",
+            "access": "",
+            "virtual": false,
+            "description": "PRECISION\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nPRECISION()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "PRODUCT",
+            "access": "",
+            "virtual": false,
+            "description": "PRODUCT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nPRODUCT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "PROPER",
+            "access": "",
+            "virtual": false,
+            "description": "PROPER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nPROPER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "QUOTIENT",
+            "access": "",
+            "virtual": false,
+            "description": "QUOTIENT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nQUOTIENT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "RADIANS",
+            "access": "",
+            "virtual": false,
+            "description": "RADIANS\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nRADIANS()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "RAND",
+            "access": "",
+            "virtual": false,
+            "description": "RAND\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nRAND()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "RANDBETWEEN",
+            "access": "",
+            "virtual": false,
+            "description": "RANDBETWEEN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nRANDBETWEEN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "REPLACE",
+            "access": "",
+            "virtual": false,
+            "description": "REPLACE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nREPLACE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "RESETCONFIG",
+            "access": "",
+            "virtual": false,
+            "description": "RESETCONFIG\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nRESETCONFIG()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "RIGHT",
+            "access": "",
+            "virtual": false,
+            "description": "RIGHT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nRIGHT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ROUND",
+            "access": "",
+            "virtual": false,
+            "description": "ROUND\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nROUND()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ROUNDDOWN",
+            "access": "",
+            "virtual": false,
+            "description": "ROUNDDOWN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nROUNDDOWN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "ROUNDUP",
+            "access": "",
+            "virtual": false,
+            "description": "ROUNDUP\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nROUNDUP()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SEARCH",
+            "access": "",
+            "virtual": false,
+            "description": "SEARCH\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSEARCH()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SELECTED",
+            "access": "",
+            "virtual": false,
+            "description": "SELECTED\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSELECTED()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SIGN",
+            "access": "",
+            "virtual": false,
+            "description": "SIGN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSIGN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SIN",
+            "access": "",
+            "virtual": false,
+            "description": "SIN\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSIN()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SINH",
+            "access": "",
+            "virtual": false,
+            "description": "SINH\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSINH()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SQRT",
+            "access": "",
+            "virtual": false,
+            "description": "SQRT\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSQRT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SQRTPI",
+            "access": "",
+            "virtual": false,
+            "description": "SQRTPI\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSQRTPI()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SUBSTITUTE",
+            "access": "",
+            "virtual": false,
+            "description": "SUBSTITUTE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSUBSTITUTE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SUM",
+            "access": "",
+            "virtual": false,
+            "description": "SUM\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSUM()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "SUMSQ",
+            "access": "",
+            "virtual": false,
+            "description": "SUMSQ\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSUMSQ()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "T",
+            "access": "",
+            "virtual": false,
+            "description": "T\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nT()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "TIMEZONE",
+            "access": "",
+            "virtual": false,
+            "description": "TIMEZONE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nTIMEZONE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "TRIM",
+            "access": "",
+            "virtual": false,
+            "description": "TRIM\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nTRIM()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "TRUE",
+            "access": "",
+            "virtual": false,
+            "description": "TRUE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nTRUE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "UPPER",
+            "access": "",
+            "virtual": false,
+            "description": "UPPER\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nUPPER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "VALUE",
+            "access": "",
+            "virtual": false,
+            "description": "VALUE\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "argument",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nVALUE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        }
+    ]
+}

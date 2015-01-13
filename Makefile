@@ -6,6 +6,10 @@ all: build
 build:
 	browserify -t coffeeify --extension=".coffee" runtime.coffee | \
 		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --compress --mangle
+	./build-docs
+
+docs:
+	./build-docs
 
 test:
 	./node_modules/mocha/bin/mocha \
@@ -14,4 +18,4 @@ test:
 	--compilers coffee:coffee-script/register \
 	$(TESTS)
 
-.PHONY: build test
+.PHONY: build test docs

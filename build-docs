@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./node_modules/jsdoc/jsdoc.js -t templates/haruki docs/docs.js -d console > docs/docs.json
