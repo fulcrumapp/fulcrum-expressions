@@ -986,6 +986,14 @@ exports.FORMATNUMBER = (number, language, options) ->
 
   HostFunctions.formatNumber(number, language, options)
 
+exports.LATITUDE = ->
+  NUM(CONFIG().geometry?.coordinates[1])
+
+exports.LONGITUDE = ->
+  NUM(CONFIG().geometry?.coordinates[0])
+
+exports.STATUS = ->
+  CONFIG().recordStatus ? null
 
 hostFunctionExists = (name) ->
   _.isFunction($$runtime["$$#{name}"])

@@ -1372,6 +1372,20 @@
             }
         },
         {
+            "name": "LATITUDE",
+            "access": "",
+            "virtual": false,
+            "description": "LATITUDE\nReturns the latitude of the current feature (record or repeatable item)",
+            "parameters": [],
+            "examples": [
+                "// returns 27.770756908186286\nLATITUDE()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
             "name": "LCM",
             "access": "",
             "virtual": false,
@@ -1526,6 +1540,20 @@
             ],
             "examples": [
                 "// returns VALUE\nLOG10()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "LONGITUDE",
+            "access": "",
+            "virtual": false,
+            "description": "LONGITUDE\nReturns the longitude of the current feature (record or repeatable item)",
+            "parameters": [],
+            "examples": [
+                "// returns -82.63814896345139\nLONGITUDE()"
             ],
             "returns": {
                 "type": "Number",
@@ -2541,6 +2569,20 @@
             ],
             "returns": {
                 "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "STATUS",
+            "access": "",
+            "virtual": false,
+            "description": "STATUS\nReturns the current record status",
+            "parameters": [],
+            "examples": [
+                "// returns approved\nSTATUS()"
+            ],
+            "returns": {
+                "type": "String",
                 "description": ""
             }
         },

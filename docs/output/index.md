@@ -238,6 +238,10 @@ Description
 
 Description
 
+### [LATITUDE](./LATITUDE)
+
+Returns the latitude of the current feature (record or repeatable item)
+
 ### [LCM](./LCM)
 
 Description
@@ -265,6 +269,10 @@ Description
 ### [LOG10](./LOG10)
 
 Description
+
+### [LONGITUDE](./LONGITUDE)
+
+Returns the longitude of the current feature (record or repeatable item)
 
 ### [LOWER](./LOWER)
 
@@ -441,6 +449,10 @@ Description
 ### [SQRTPI](./SQRTPI)
 
 Description
+
+### [STATUS](./STATUS)
+
+Returns the current record status
 
 ### [SUBSTITUTE](./SUBSTITUTE)
 

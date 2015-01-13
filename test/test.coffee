@@ -1,5 +1,8 @@
 global.Intl = require 'intl'
 
+path = require 'path'
+CSON = require 'season'
+
 DIST = process.env.DIST or false
 
 if DIST
@@ -10,14 +13,7 @@ else
   console.log 'Running debug'
   runtime = require '../runtime'
 
-deviceInfo =
-  deviceManufacturer: 'Apple'
-  deviceModel: 'iPhone6,2'
-  platform: 'iOS'
-  platformVersion: '8.1'
-  application: 'Fulcrum'
-  applicationVersion: '2.7.0'
-  applicationBuild: '2162'
+variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
 shouldBeNull = (value) ->
   (value is null).should.be.true
@@ -1110,6 +1106,42 @@ describe 'VERSIONINFO', ->
   it 'returns version info as a string', ->
     RESETCONFIG()
 
-    CONFIGURE(deviceInfo)
+    CONFIGURE(variables)
 
     VERSIONINFO().should.eql('Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162')
+
+describe 'LATITUDE', ->
+  it 'returns the latitude of the current feature', ->
+    RESETCONFIG()
+
+    CONFIGURE(variables)
+
+    LATITUDE().should.eql(27.770756908186286)
+
+    CONFIGURE(geometry: null)
+
+    LATITUDE().should.be.NaN
+
+describe 'LONGITUDE', ->
+  it 'returns the longitude of the current feature', ->
+    RESETCONFIG()
+
+    CONFIGURE(variables)
+
+    LONGITUDE().should.eql(-82.63814896345139)
+
+    CONFIGURE(geometry: null)
+
+    LONGITUDE().should.be.NaN
+
+describe 'STATUS', ->
+  it 'returns the status of the current record', ->
+    RESETCONFIG()
+
+    CONFIGURE(variables)
+
+    STATUS().should.eql('approved')
+
+    CONFIGURE(recordStatus: null)
+
+    shouldBeNull(STATUS())

@@ -1,0 +1,11 @@
+deviceManufacturer: 'Apple'
+deviceModel: 'iPhone6,2'
+platform: 'iOS'
+platformVersion: '8.1'
+application: 'Fulcrum'
+applicationVersion: '2.7.0'
+applicationBuild: '2162'
+recordStatus: 'approved'
+geometry:
+  type: 'Point'
+  coordinates: [ -82.63814896345139, 27.770756908186286 ]
