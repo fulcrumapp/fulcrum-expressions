@@ -10,6 +10,7 @@ build:
 
 docs:
 	./script/build-docs
+	./script/generate-help
 
 copy:
 	./script/copy-files

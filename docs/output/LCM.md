@@ -1,4 +1,4 @@
-##LCM
+## LCM
 
 Description
 

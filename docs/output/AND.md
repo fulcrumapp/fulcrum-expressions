@@ -1,4 +1,4 @@
-##AND
+## AND
 
 Returns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.
 

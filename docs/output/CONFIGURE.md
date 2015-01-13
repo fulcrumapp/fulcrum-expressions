@@ -1,4 +1,4 @@
-##CONFIGURE
+## CONFIGURE
 
 Description
 

@@ -1,4 +1,4 @@
-##SINH
+## SINH
 
 Description
 

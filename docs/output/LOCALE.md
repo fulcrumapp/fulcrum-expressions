@@ -1,4 +1,4 @@
-##LOCALE
+## LOCALE
 
 Description
 

@@ -1,4 +1,4 @@
-##CURRENCYCODE
+## CURRENCYCODE
 
 Description
 

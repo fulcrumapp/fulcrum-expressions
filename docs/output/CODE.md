@@ -1,4 +1,4 @@
-##CODE
+## CODE
 
 Returns the numeric Unicode map value of the first character in the string provided.
 

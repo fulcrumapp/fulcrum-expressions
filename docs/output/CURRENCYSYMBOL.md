@@ -1,4 +1,4 @@
-##CURRENCYSYMBOL
+## CURRENCYSYMBOL
 
 Description
 

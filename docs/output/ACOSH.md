@@ -1,4 +1,4 @@
-##ACOSH
+## ACOSH
 
 Returns the inverse hyperbolic cosine of a number.
 

@@ -1,4 +1,4 @@
-##RAND
+## RAND
 
 Description
 

@@ -1,4 +1,4 @@
-##SUMSQ
+## SUMSQ
 
 Description
 

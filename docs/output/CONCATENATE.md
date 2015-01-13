@@ -1,4 +1,4 @@
-##CONCATENATE
+## CONCATENATE
 
 Description
 

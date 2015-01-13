@@ -1,4 +1,4 @@
-##CEILING
+## CEILING
 
 Rounds a number up to the nearest integer multiple of specified significance.
 

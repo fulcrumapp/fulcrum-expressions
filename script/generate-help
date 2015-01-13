@@ -17,7 +17,7 @@ class DocumentationGenerator
       examples   = @generateExamples(func.examples)
 
       schema.markdown = """
-    ###{func.name}
+    ## #{func.name}
 
     #{description}
 

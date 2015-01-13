@@ -1,4 +1,4 @@
-##GROUPINGSIZE
+## GROUPINGSIZE
 
 Description
 

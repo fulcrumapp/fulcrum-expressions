@@ -1,4 +1,4 @@
-##GCD
+## GCD
 
 Description
 

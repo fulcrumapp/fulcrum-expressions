@@ -1,4 +1,4 @@
-##DEGREES
+## DEGREES
 
 Description
 

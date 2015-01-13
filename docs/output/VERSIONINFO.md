@@ -1,4 +1,4 @@
-##VERSIONINFO
+## VERSIONINFO
 
 Returns version information about the app.
 

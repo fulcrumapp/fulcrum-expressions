@@ -1,4 +1,4 @@
-##PROPER
+## PROPER
 
 Description
 

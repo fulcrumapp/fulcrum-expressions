@@ -1,4 +1,4 @@
-##CLEAN
+## CLEAN
 
 Returns the text with the non-printable ASCII characters removed.
 

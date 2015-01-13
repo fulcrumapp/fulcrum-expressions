@@ -1,4 +1,4 @@
-##COMPACT
+## COMPACT
 
 Description
 

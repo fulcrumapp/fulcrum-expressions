@@ -1,4 +1,4 @@
-##AVERAGE
+## AVERAGE
 
 Returns the numerical average value in a dataset, ignoring text.
 

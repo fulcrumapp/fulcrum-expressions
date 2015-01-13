@@ -1,4 +1,4 @@
-##ACOS
+## ACOS
 
 Returns the inverse cosine of a value, in radians.
 Use the {@link DEGREES} function to convert the result of {@link DEGREES} into degrees.

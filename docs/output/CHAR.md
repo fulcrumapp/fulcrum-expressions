@@ -1,4 +1,4 @@
-##CHAR
+## CHAR
 
 Convert a number into a character according to the current Unicode table.
 
