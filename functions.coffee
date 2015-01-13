@@ -80,7 +80,10 @@ exports.ABS = MATH_FUNC(Math.abs)
 
 exports.ACOS = MATH_FUNC(Math.acos)
 
-exports.ACOSH = MATH_FUNC(Math.acosh)
+exports.ACOSH = (number) ->
+  number ?= NUM(number)
+
+  Math.log(number + Math.sqrt(number * number - 1))
 
 exports.AND = ->
   _.find(toArray(arguments), (item) -> not item) is undefined

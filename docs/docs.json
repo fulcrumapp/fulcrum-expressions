@@ -39,7 +39,7 @@
                 }
             ],
             "examples": [
-                "// returns 0.643501108793284\nACOS(0.8)"
+                "// returns 0.6435011087932843\nACOS(0.8)"
             ],
             "returns": {
                 "type": "Number",
@@ -62,7 +62,7 @@
                 }
             ],
             "examples": [
-                "// returns 2.63391579384963\n=ACOSH(7)"
+                "// returns 2.6339157938496336\nACOSH(7)"
             ],
             "returns": {
                 "type": "Number",
@@ -73,22 +73,23 @@
             "name": "AND",
             "access": "",
             "virtual": false,
-            "description": "AND\nDescription",
+            "description": "AND\nReturns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "var_args_expression",
+                    "type": "*",
+                    "description": "An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns 1\nAND()"
+                "// returns false\nAND(1, 0, false)",
+                "// returns true\nAND(3 + 3 == 6, 10 + 2 == 12)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -108,7 +109,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nAVERAGE()"
+                "// returns VALUE\nAVERAGE()"
             ],
             "returns": {
                 "type": "Number",
@@ -131,7 +132,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCEILING()"
+                "// returns VALUE\nCEILING()"
             ],
             "returns": {
                 "type": "Number",
@@ -154,7 +155,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCHAR()"
+                "// returns VALUE\nCHAR()"
             ],
             "returns": {
                 "type": "Number",
@@ -177,7 +178,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCLEAN()"
+                "// returns VALUE\nCLEAN()"
             ],
             "returns": {
                 "type": "Number",
@@ -200,7 +201,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCLEAN_REGEX()"
+                "// returns VALUE\nCLEAN_REGEX()"
             ],
             "returns": {
                 "type": "Number",
@@ -223,7 +224,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCODE()"
+                "// returns VALUE\nCODE()"
             ],
             "returns": {
                 "type": "Number",
@@ -246,7 +247,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOMPACT()"
+                "// returns VALUE\nCOMPACT()"
             ],
             "returns": {
                 "type": "Number",
@@ -269,7 +270,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCONCATENATE()"
+                "// returns VALUE\nCONCATENATE()"
             ],
             "returns": {
                 "type": "Number",
@@ -292,7 +293,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCONFIG()"
+                "// returns VALUE\nCONFIG()"
             ],
             "returns": {
                 "type": "Number",
@@ -315,7 +316,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCONFIGURE()"
+                "// returns VALUE\nCONFIGURE()"
             ],
             "returns": {
                 "type": "Number",
@@ -338,7 +339,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOS()"
+                "// returns VALUE\nCOS()"
             ],
             "returns": {
                 "type": "Number",
@@ -361,7 +362,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOSH()"
+                "// returns VALUE\nCOSH()"
             ],
             "returns": {
                 "type": "Number",
@@ -384,7 +385,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOUNT()"
+                "// returns VALUE\nCOUNT()"
             ],
             "returns": {
                 "type": "Number",
@@ -407,7 +408,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOUNTA()"
+                "// returns VALUE\nCOUNTA()"
             ],
             "returns": {
                 "type": "Number",
@@ -430,7 +431,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOUNTBLANK()"
+                "// returns VALUE\nCOUNTBLANK()"
             ],
             "returns": {
                 "type": "Number",
@@ -453,7 +454,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCOUNTRY()"
+                "// returns VALUE\nCOUNTRY()"
             ],
             "returns": {
                 "type": "Number",
@@ -476,7 +477,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCURRENCYCODE()"
+                "// returns VALUE\nCURRENCYCODE()"
             ],
             "returns": {
                 "type": "Number",
@@ -499,7 +500,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nCURRENCYSYMBOL()"
+                "// returns VALUE\nCURRENCYSYMBOL()"
             ],
             "returns": {
                 "type": "Number",
@@ -522,7 +523,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDATE()"
+                "// returns VALUE\nDATE()"
             ],
             "returns": {
                 "type": "Number",
@@ -545,7 +546,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDATEVALUE()"
+                "// returns VALUE\nDATEVALUE()"
             ],
             "returns": {
                 "type": "Number",
@@ -568,7 +569,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDAY()"
+                "// returns VALUE\nDAY()"
             ],
             "returns": {
                 "type": "Number",
@@ -591,7 +592,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDAYS360()"
+                "// returns VALUE\nDAYS360()"
             ],
             "returns": {
                 "type": "Number",
@@ -614,7 +615,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDECIMALSEPARATOR()"
+                "// returns VALUE\nDECIMALSEPARATOR()"
             ],
             "returns": {
                 "type": "Number",
@@ -637,7 +638,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDEGREES()"
+                "// returns VALUE\nDEGREES()"
             ],
             "returns": {
                 "type": "Number",
@@ -660,7 +661,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nDOLLAR()"
+                "// returns VALUE\nDOLLAR()"
             ],
             "returns": {
                 "type": "Number",
@@ -683,7 +684,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nEVEN()"
+                "// returns VALUE\nEVEN()"
             ],
             "returns": {
                 "type": "Number",
@@ -706,7 +707,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nEXACT()"
+                "// returns VALUE\nEXACT()"
             ],
             "returns": {
                 "type": "Number",
@@ -729,7 +730,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nEXP()"
+                "// returns VALUE\nEXP()"
             ],
             "returns": {
                 "type": "Number",
@@ -752,7 +753,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFACT()"
+                "// returns VALUE\nFACT()"
             ],
             "returns": {
                 "type": "Number",
@@ -775,7 +776,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFACTDOUBLE()"
+                "// returns VALUE\nFACTDOUBLE()"
             ],
             "returns": {
                 "type": "Number",
@@ -798,7 +799,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFALSE()"
+                "// returns VALUE\nFALSE()"
             ],
             "returns": {
                 "type": "Number",
@@ -821,7 +822,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFIND()"
+                "// returns VALUE\nFIND()"
             ],
             "returns": {
                 "type": "Number",
@@ -844,7 +845,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFIXED()"
+                "// returns VALUE\nFIXED()"
             ],
             "returns": {
                 "type": "Number",
@@ -867,7 +868,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFLOOR()"
+                "// returns VALUE\nFLOOR()"
             ],
             "returns": {
                 "type": "Number",
@@ -890,7 +891,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nFORMATNUMBER()"
+                "// returns VALUE\nFORMATNUMBER()"
             ],
             "returns": {
                 "type": "Number",
@@ -913,7 +914,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nGCD()"
+                "// returns VALUE\nGCD()"
             ],
             "returns": {
                 "type": "Number",
@@ -936,7 +937,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nGROUPINGSEPARATOR()"
+                "// returns VALUE\nGROUPINGSEPARATOR()"
             ],
             "returns": {
                 "type": "Number",
@@ -959,7 +960,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nGROUPINGSIZE()"
+                "// returns VALUE\nGROUPINGSIZE()"
             ],
             "returns": {
                 "type": "Number",
@@ -982,7 +983,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nHASERROR()"
+                "// returns VALUE\nHASERROR()"
             ],
             "returns": {
                 "type": "Number",
@@ -1005,7 +1006,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nHASOTHER()"
+                "// returns VALUE\nHASOTHER()"
             ],
             "returns": {
                 "type": "Number",
@@ -1028,7 +1029,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nIF()"
+                "// returns VALUE\nIF()"
             ],
             "returns": {
                 "type": "Number",
@@ -1051,7 +1052,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nIFERROR()"
+                "// returns VALUE\nIFERROR()"
             ],
             "returns": {
                 "type": "Number",
@@ -1074,7 +1075,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nINT()"
+                "// returns VALUE\nINT()"
             ],
             "returns": {
                 "type": "Number",
@@ -1097,7 +1098,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISBLANK()"
+                "// returns VALUE\nISBLANK()"
             ],
             "returns": {
                 "type": "Number",
@@ -1120,7 +1121,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISERR()"
+                "// returns VALUE\nISERR()"
             ],
             "returns": {
                 "type": "Number",
@@ -1143,7 +1144,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISERROR()"
+                "// returns VALUE\nISERROR()"
             ],
             "returns": {
                 "type": "Number",
@@ -1166,7 +1167,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISEVEN()"
+                "// returns VALUE\nISEVEN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1189,7 +1190,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISLOGICAL()"
+                "// returns VALUE\nISLOGICAL()"
             ],
             "returns": {
                 "type": "Number",
@@ -1212,7 +1213,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISNAN()"
+                "// returns VALUE\nISNAN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1235,7 +1236,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISNEW()"
+                "// returns VALUE\nISNEW()"
             ],
             "returns": {
                 "type": "Number",
@@ -1258,7 +1259,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISNONTEXT()"
+                "// returns VALUE\nISNONTEXT()"
             ],
             "returns": {
                 "type": "Number",
@@ -1281,7 +1282,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISNUMBER()"
+                "// returns VALUE\nISNUMBER()"
             ],
             "returns": {
                 "type": "Number",
@@ -1304,7 +1305,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISODD()"
+                "// returns VALUE\nISODD()"
             ],
             "returns": {
                 "type": "Number",
@@ -1327,7 +1328,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISTEXT()"
+                "// returns VALUE\nISTEXT()"
             ],
             "returns": {
                 "type": "Number",
@@ -1350,7 +1351,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nISUPDATE()"
+                "// returns VALUE\nISUPDATE()"
             ],
             "returns": {
                 "type": "Number",
@@ -1373,7 +1374,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLANGUAGE()"
+                "// returns VALUE\nLANGUAGE()"
             ],
             "returns": {
                 "type": "Number",
@@ -1396,7 +1397,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLCM()"
+                "// returns VALUE\nLCM()"
             ],
             "returns": {
                 "type": "Number",
@@ -1419,7 +1420,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLEFT()"
+                "// returns VALUE\nLEFT()"
             ],
             "returns": {
                 "type": "Number",
@@ -1442,7 +1443,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLEN()"
+                "// returns VALUE\nLEN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1465,7 +1466,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLN()"
+                "// returns VALUE\nLN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1488,7 +1489,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLOCALE()"
+                "// returns VALUE\nLOCALE()"
             ],
             "returns": {
                 "type": "Number",
@@ -1511,7 +1512,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLOG()"
+                "// returns VALUE\nLOG()"
             ],
             "returns": {
                 "type": "Number",
@@ -1534,7 +1535,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLOG10()"
+                "// returns VALUE\nLOG10()"
             ],
             "returns": {
                 "type": "Number",
@@ -1557,7 +1558,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nLOWER()"
+                "// returns VALUE\nLOWER()"
             ],
             "returns": {
                 "type": "Number",
@@ -1580,7 +1581,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMATCH()"
+                "// returns VALUE\nMATCH()"
             ],
             "returns": {
                 "type": "Number",
@@ -1603,7 +1604,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMATH_FUNC()"
+                "// returns VALUE\nMATH_FUNC()"
             ],
             "returns": {
                 "type": "Number",
@@ -1626,7 +1627,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMAX()"
+                "// returns VALUE\nMAX()"
             ],
             "returns": {
                 "type": "Number",
@@ -1649,7 +1650,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMAXA()"
+                "// returns VALUE\nMAXA()"
             ],
             "returns": {
                 "type": "Number",
@@ -1672,7 +1673,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMEDIAN()"
+                "// returns VALUE\nMEDIAN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1695,7 +1696,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMEMOIZED_FACT()"
+                "// returns VALUE\nMEMOIZED_FACT()"
             ],
             "returns": {
                 "type": "Number",
@@ -1718,7 +1719,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMEMOIZED_FACTDOUBLE()"
+                "// returns VALUE\nMEMOIZED_FACTDOUBLE()"
             ],
             "returns": {
                 "type": "Number",
@@ -1741,7 +1742,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMID()"
+                "// returns VALUE\nMID()"
             ],
             "returns": {
                 "type": "Number",
@@ -1764,7 +1765,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMIN()"
+                "// returns VALUE\nMIN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1787,7 +1788,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMINA()"
+                "// returns VALUE\nMINA()"
             ],
             "returns": {
                 "type": "Number",
@@ -1810,7 +1811,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nMOD()"
+                "// returns VALUE\nMOD()"
             ],
             "returns": {
                 "type": "Number",
@@ -1833,7 +1834,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nN()"
+                "// returns VALUE\nN()"
             ],
             "returns": {
                 "type": "Number",
@@ -1856,7 +1857,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nNOT()"
+                "// returns VALUE\nNOT()"
             ],
             "returns": {
                 "type": "Number",
@@ -1879,7 +1880,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nNOT_IMPLEMENTED()"
+                "// returns VALUE\nNOT_IMPLEMENTED()"
             ],
             "returns": {
                 "type": "Number",
@@ -1902,7 +1903,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nNO_VALUE()"
+                "// returns VALUE\nNO_VALUE()"
             ],
             "returns": {
                 "type": "Number",
@@ -1925,7 +1926,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nNUM()"
+                "// returns VALUE\nNUM()"
             ],
             "returns": {
                 "type": "Number",
@@ -1948,7 +1949,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nNUMS()"
+                "// returns VALUE\nNUMS()"
             ],
             "returns": {
                 "type": "Number",
@@ -1971,7 +1972,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nODD()"
+                "// returns VALUE\nODD()"
             ],
             "returns": {
                 "type": "Number",
@@ -1994,7 +1995,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nONCE()"
+                "// returns VALUE\nONCE()"
             ],
             "returns": {
                 "type": "Number",
@@ -2017,7 +2018,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nOR()"
+                "// returns VALUE\nOR()"
             ],
             "returns": {
                 "type": "Number",
@@ -2040,7 +2041,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nOTHER()"
+                "// returns VALUE\nOTHER()"
             ],
             "returns": {
                 "type": "Number",
@@ -2063,7 +2064,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nPI()"
+                "// returns VALUE\nPI()"
             ],
             "returns": {
                 "type": "Number",
@@ -2086,7 +2087,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nPOWER()"
+                "// returns VALUE\nPOWER()"
             ],
             "returns": {
                 "type": "Number",
@@ -2109,7 +2110,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nPRECISION()"
+                "// returns VALUE\nPRECISION()"
             ],
             "returns": {
                 "type": "Number",
@@ -2132,7 +2133,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nPRODUCT()"
+                "// returns VALUE\nPRODUCT()"
             ],
             "returns": {
                 "type": "Number",
@@ -2155,7 +2156,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nPROPER()"
+                "// returns VALUE\nPROPER()"
             ],
             "returns": {
                 "type": "Number",
@@ -2178,7 +2179,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nQUOTIENT()"
+                "// returns VALUE\nQUOTIENT()"
             ],
             "returns": {
                 "type": "Number",
@@ -2201,7 +2202,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nRADIANS()"
+                "// returns VALUE\nRADIANS()"
             ],
             "returns": {
                 "type": "Number",
@@ -2224,7 +2225,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nRAND()"
+                "// returns VALUE\nRAND()"
             ],
             "returns": {
                 "type": "Number",
@@ -2247,7 +2248,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nRANDBETWEEN()"
+                "// returns VALUE\nRANDBETWEEN()"
             ],
             "returns": {
                 "type": "Number",
@@ -2270,7 +2271,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nREPLACE()"
+                "// returns VALUE\nREPLACE()"
             ],
             "returns": {
                 "type": "Number",
@@ -2293,7 +2294,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nRESETCONFIG()"
+                "// returns VALUE\nRESETCONFIG()"
             ],
             "returns": {
                 "type": "Number",
@@ -2316,7 +2317,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nRIGHT()"
+                "// returns VALUE\nRIGHT()"
             ],
             "returns": {
                 "type": "Number",
@@ -2339,7 +2340,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nROUND()"
+                "// returns VALUE\nROUND()"
             ],
             "returns": {
                 "type": "Number",
@@ -2362,7 +2363,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nROUNDDOWN()"
+                "// returns VALUE\nROUNDDOWN()"
             ],
             "returns": {
                 "type": "Number",
@@ -2385,7 +2386,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nROUNDUP()"
+                "// returns VALUE\nROUNDUP()"
             ],
             "returns": {
                 "type": "Number",
@@ -2408,7 +2409,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSEARCH()"
+                "// returns VALUE\nSEARCH()"
             ],
             "returns": {
                 "type": "Number",
@@ -2431,7 +2432,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSELECTED()"
+                "// returns VALUE\nSELECTED()"
             ],
             "returns": {
                 "type": "Number",
@@ -2454,7 +2455,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSIGN()"
+                "// returns VALUE\nSIGN()"
             ],
             "returns": {
                 "type": "Number",
@@ -2477,7 +2478,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSIN()"
+                "// returns VALUE\nSIN()"
             ],
             "returns": {
                 "type": "Number",
@@ -2500,7 +2501,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSINH()"
+                "// returns VALUE\nSINH()"
             ],
             "returns": {
                 "type": "Number",
@@ -2523,7 +2524,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSQRT()"
+                "// returns VALUE\nSQRT()"
             ],
             "returns": {
                 "type": "Number",
@@ -2546,7 +2547,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSQRTPI()"
+                "// returns VALUE\nSQRTPI()"
             ],
             "returns": {
                 "type": "Number",
@@ -2569,7 +2570,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSUBSTITUTE()"
+                "// returns VALUE\nSUBSTITUTE()"
             ],
             "returns": {
                 "type": "Number",
@@ -2592,7 +2593,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSUM()"
+                "// returns VALUE\nSUM()"
             ],
             "returns": {
                 "type": "Number",
@@ -2615,7 +2616,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nSUMSQ()"
+                "// returns VALUE\nSUMSQ()"
             ],
             "returns": {
                 "type": "Number",
@@ -2638,7 +2639,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nT()"
+                "// returns VALUE\nT()"
             ],
             "returns": {
                 "type": "Number",
@@ -2661,7 +2662,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nTIMEZONE()"
+                "// returns VALUE\nTIMEZONE()"
             ],
             "returns": {
                 "type": "Number",
@@ -2684,7 +2685,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nTRIM()"
+                "// returns VALUE\nTRIM()"
             ],
             "returns": {
                 "type": "Number",
@@ -2707,7 +2708,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nTRUE()"
+                "// returns VALUE\nTRUE()"
             ],
             "returns": {
                 "type": "Number",
@@ -2730,7 +2731,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nUPPER()"
+                "// returns VALUE\nUPPER()"
             ],
             "returns": {
                 "type": "Number",
@@ -2753,7 +2754,7 @@
                 }
             ],
             "examples": [
-                "// returns 1\nVALUE()"
+                "// returns VALUE\nVALUE()"
             ],
             "returns": {
                 "type": "Number",

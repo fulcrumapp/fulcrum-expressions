@@ -21,7 +21,7 @@ function ABS() {}
  * @param {Number} value The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.
  * @returns {Number}
  * @example
- * // returns 0.643501108793284
+ * // returns 0.6435011087932843
  * ACOS(0.8)
  */
 function ACOS() {}
@@ -38,8 +38,8 @@ function ACOS() {}
  * @param {Number} value The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
  * @returns {Number}
  * @example
- * // returns 2.63391579384963
- * =ACOSH(7)
+ * // returns 2.6339157938496336
+ * ACOSH(7)
  */
 function ACOSH() {}
 
@@ -48,12 +48,15 @@ function ACOSH() {}
 
 /**
  * AND
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.
+ * @param {...*} var_args_expression An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.
+ * @returns {Boolean}
  * @example
- * // returns 1
- * AND()
+ * // returns false
+ * AND(1, 0, false)
+ * @example
+ * // returns true
+ * AND(3 + 3 == 6, 10 + 2 == 12)
  */
 function AND() {}
 
@@ -66,7 +69,7 @@ function AND() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * AVERAGE()
  */
 function AVERAGE() {}
@@ -80,7 +83,7 @@ function AVERAGE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CEILING()
  */
 function CEILING() {}
@@ -94,7 +97,7 @@ function CEILING() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CHAR()
  */
 function CHAR() {}
@@ -108,7 +111,7 @@ function CHAR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CLEAN()
  */
 function CLEAN() {}
@@ -122,7 +125,7 @@ function CLEAN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CLEAN_REGEX()
  */
 function CLEAN_REGEX() {}
@@ -136,7 +139,7 @@ function CLEAN_REGEX() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CODE()
  */
 function CODE() {}
@@ -150,7 +153,7 @@ function CODE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COMPACT()
  */
 function COMPACT() {}
@@ -164,7 +167,7 @@ function COMPACT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CONCATENATE()
  */
 function CONCATENATE() {}
@@ -178,7 +181,7 @@ function CONCATENATE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CONFIG()
  */
 function CONFIG() {}
@@ -192,7 +195,7 @@ function CONFIG() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CONFIGURE()
  */
 function CONFIGURE() {}
@@ -206,7 +209,7 @@ function CONFIGURE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COS()
  */
 function COS() {}
@@ -220,7 +223,7 @@ function COS() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COSH()
  */
 function COSH() {}
@@ -234,7 +237,7 @@ function COSH() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COUNT()
  */
 function COUNT() {}
@@ -248,7 +251,7 @@ function COUNT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COUNTA()
  */
 function COUNTA() {}
@@ -262,7 +265,7 @@ function COUNTA() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COUNTBLANK()
  */
 function COUNTBLANK() {}
@@ -276,7 +279,7 @@ function COUNTBLANK() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * COUNTRY()
  */
 function COUNTRY() {}
@@ -290,7 +293,7 @@ function COUNTRY() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CURRENCYCODE()
  */
 function CURRENCYCODE() {}
@@ -304,7 +307,7 @@ function CURRENCYCODE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * CURRENCYSYMBOL()
  */
 function CURRENCYSYMBOL() {}
@@ -318,7 +321,7 @@ function CURRENCYSYMBOL() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DATE()
  */
 function DATE() {}
@@ -332,7 +335,7 @@ function DATE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DATEVALUE()
  */
 function DATEVALUE() {}
@@ -346,7 +349,7 @@ function DATEVALUE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DAY()
  */
 function DAY() {}
@@ -360,7 +363,7 @@ function DAY() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DAYS360()
  */
 function DAYS360() {}
@@ -374,7 +377,7 @@ function DAYS360() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DECIMALSEPARATOR()
  */
 function DECIMALSEPARATOR() {}
@@ -388,7 +391,7 @@ function DECIMALSEPARATOR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DEGREES()
  */
 function DEGREES() {}
@@ -402,7 +405,7 @@ function DEGREES() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * DOLLAR()
  */
 function DOLLAR() {}
@@ -416,7 +419,7 @@ function DOLLAR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * EVEN()
  */
 function EVEN() {}
@@ -430,7 +433,7 @@ function EVEN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * EXACT()
  */
 function EXACT() {}
@@ -444,7 +447,7 @@ function EXACT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * EXP()
  */
 function EXP() {}
@@ -458,7 +461,7 @@ function EXP() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FACT()
  */
 function FACT() {}
@@ -472,7 +475,7 @@ function FACT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FACTDOUBLE()
  */
 function FACTDOUBLE() {}
@@ -486,7 +489,7 @@ function FACTDOUBLE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FALSE()
  */
 function FALSE() {}
@@ -500,7 +503,7 @@ function FALSE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FIND()
  */
 function FIND() {}
@@ -514,7 +517,7 @@ function FIND() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FIXED()
  */
 function FIXED() {}
@@ -528,7 +531,7 @@ function FIXED() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FLOOR()
  */
 function FLOOR() {}
@@ -542,7 +545,7 @@ function FLOOR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * FORMATNUMBER()
  */
 function FORMATNUMBER() {}
@@ -556,7 +559,7 @@ function FORMATNUMBER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * GCD()
  */
 function GCD() {}
@@ -570,7 +573,7 @@ function GCD() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * GROUPINGSEPARATOR()
  */
 function GROUPINGSEPARATOR() {}
@@ -584,7 +587,7 @@ function GROUPINGSEPARATOR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * GROUPINGSIZE()
  */
 function GROUPINGSIZE() {}
@@ -598,7 +601,7 @@ function GROUPINGSIZE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * HASERROR()
  */
 function HASERROR() {}
@@ -612,7 +615,7 @@ function HASERROR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * HASOTHER()
  */
 function HASOTHER() {}
@@ -626,7 +629,7 @@ function HASOTHER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * IF()
  */
 function IF() {}
@@ -640,7 +643,7 @@ function IF() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * IFERROR()
  */
 function IFERROR() {}
@@ -654,7 +657,7 @@ function IFERROR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * INT()
  */
 function INT() {}
@@ -668,7 +671,7 @@ function INT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISBLANK()
  */
 function ISBLANK() {}
@@ -682,7 +685,7 @@ function ISBLANK() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISERR()
  */
 function ISERR() {}
@@ -696,7 +699,7 @@ function ISERR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISERROR()
  */
 function ISERROR() {}
@@ -710,7 +713,7 @@ function ISERROR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISEVEN()
  */
 function ISEVEN() {}
@@ -724,7 +727,7 @@ function ISEVEN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISLOGICAL()
  */
 function ISLOGICAL() {}
@@ -738,7 +741,7 @@ function ISLOGICAL() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISNAN()
  */
 function ISNAN() {}
@@ -752,7 +755,7 @@ function ISNAN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISNEW()
  */
 function ISNEW() {}
@@ -766,7 +769,7 @@ function ISNEW() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISNONTEXT()
  */
 function ISNONTEXT() {}
@@ -780,7 +783,7 @@ function ISNONTEXT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISNUMBER()
  */
 function ISNUMBER() {}
@@ -794,7 +797,7 @@ function ISNUMBER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISODD()
  */
 function ISODD() {}
@@ -808,7 +811,7 @@ function ISODD() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISTEXT()
  */
 function ISTEXT() {}
@@ -822,7 +825,7 @@ function ISTEXT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ISUPDATE()
  */
 function ISUPDATE() {}
@@ -836,7 +839,7 @@ function ISUPDATE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LANGUAGE()
  */
 function LANGUAGE() {}
@@ -850,7 +853,7 @@ function LANGUAGE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LCM()
  */
 function LCM() {}
@@ -864,7 +867,7 @@ function LCM() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LEFT()
  */
 function LEFT() {}
@@ -878,7 +881,7 @@ function LEFT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LEN()
  */
 function LEN() {}
@@ -892,7 +895,7 @@ function LEN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LN()
  */
 function LN() {}
@@ -906,7 +909,7 @@ function LN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LOCALE()
  */
 function LOCALE() {}
@@ -920,7 +923,7 @@ function LOCALE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LOG()
  */
 function LOG() {}
@@ -934,7 +937,7 @@ function LOG() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LOG10()
  */
 function LOG10() {}
@@ -948,7 +951,7 @@ function LOG10() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * LOWER()
  */
 function LOWER() {}
@@ -962,7 +965,7 @@ function LOWER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MATCH()
  */
 function MATCH() {}
@@ -976,7 +979,7 @@ function MATCH() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MATH_FUNC()
  */
 function MATH_FUNC() {}
@@ -990,7 +993,7 @@ function MATH_FUNC() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MAX()
  */
 function MAX() {}
@@ -1004,7 +1007,7 @@ function MAX() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MAXA()
  */
 function MAXA() {}
@@ -1018,7 +1021,7 @@ function MAXA() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MEDIAN()
  */
 function MEDIAN() {}
@@ -1032,7 +1035,7 @@ function MEDIAN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MEMOIZED_FACT()
  */
 function MEMOIZED_FACT() {}
@@ -1046,7 +1049,7 @@ function MEMOIZED_FACT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MEMOIZED_FACTDOUBLE()
  */
 function MEMOIZED_FACTDOUBLE() {}
@@ -1060,7 +1063,7 @@ function MEMOIZED_FACTDOUBLE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MID()
  */
 function MID() {}
@@ -1074,7 +1077,7 @@ function MID() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MIN()
  */
 function MIN() {}
@@ -1088,7 +1091,7 @@ function MIN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MINA()
  */
 function MINA() {}
@@ -1102,7 +1105,7 @@ function MINA() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * MOD()
  */
 function MOD() {}
@@ -1116,7 +1119,7 @@ function MOD() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * N()
  */
 function N() {}
@@ -1130,7 +1133,7 @@ function N() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * NOT()
  */
 function NOT() {}
@@ -1144,7 +1147,7 @@ function NOT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * NOT_IMPLEMENTED()
  */
 function NOT_IMPLEMENTED() {}
@@ -1158,7 +1161,7 @@ function NOT_IMPLEMENTED() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * NO_VALUE()
  */
 function NO_VALUE() {}
@@ -1172,7 +1175,7 @@ function NO_VALUE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * NUM()
  */
 function NUM() {}
@@ -1186,7 +1189,7 @@ function NUM() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * NUMS()
  */
 function NUMS() {}
@@ -1200,7 +1203,7 @@ function NUMS() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ODD()
  */
 function ODD() {}
@@ -1214,7 +1217,7 @@ function ODD() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ONCE()
  */
 function ONCE() {}
@@ -1228,7 +1231,7 @@ function ONCE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * OR()
  */
 function OR() {}
@@ -1242,7 +1245,7 @@ function OR() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * OTHER()
  */
 function OTHER() {}
@@ -1256,7 +1259,7 @@ function OTHER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * PI()
  */
 function PI() {}
@@ -1270,7 +1273,7 @@ function PI() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * POWER()
  */
 function POWER() {}
@@ -1284,7 +1287,7 @@ function POWER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * PRECISION()
  */
 function PRECISION() {}
@@ -1298,7 +1301,7 @@ function PRECISION() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * PRODUCT()
  */
 function PRODUCT() {}
@@ -1312,7 +1315,7 @@ function PRODUCT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * PROPER()
  */
 function PROPER() {}
@@ -1326,7 +1329,7 @@ function PROPER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * QUOTIENT()
  */
 function QUOTIENT() {}
@@ -1340,7 +1343,7 @@ function QUOTIENT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * RADIANS()
  */
 function RADIANS() {}
@@ -1354,7 +1357,7 @@ function RADIANS() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * RAND()
  */
 function RAND() {}
@@ -1368,7 +1371,7 @@ function RAND() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * RANDBETWEEN()
  */
 function RANDBETWEEN() {}
@@ -1382,7 +1385,7 @@ function RANDBETWEEN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * REPLACE()
  */
 function REPLACE() {}
@@ -1396,7 +1399,7 @@ function REPLACE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * RESETCONFIG()
  */
 function RESETCONFIG() {}
@@ -1410,7 +1413,7 @@ function RESETCONFIG() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * RIGHT()
  */
 function RIGHT() {}
@@ -1424,7 +1427,7 @@ function RIGHT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ROUND()
  */
 function ROUND() {}
@@ -1438,7 +1441,7 @@ function ROUND() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ROUNDDOWN()
  */
 function ROUNDDOWN() {}
@@ -1452,7 +1455,7 @@ function ROUNDDOWN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * ROUNDUP()
  */
 function ROUNDUP() {}
@@ -1466,7 +1469,7 @@ function ROUNDUP() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SEARCH()
  */
 function SEARCH() {}
@@ -1480,7 +1483,7 @@ function SEARCH() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SELECTED()
  */
 function SELECTED() {}
@@ -1494,7 +1497,7 @@ function SELECTED() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SIGN()
  */
 function SIGN() {}
@@ -1508,7 +1511,7 @@ function SIGN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SIN()
  */
 function SIN() {}
@@ -1522,7 +1525,7 @@ function SIN() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SINH()
  */
 function SINH() {}
@@ -1536,7 +1539,7 @@ function SINH() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SQRT()
  */
 function SQRT() {}
@@ -1550,7 +1553,7 @@ function SQRT() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SQRTPI()
  */
 function SQRTPI() {}
@@ -1564,7 +1567,7 @@ function SQRTPI() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SUBSTITUTE()
  */
 function SUBSTITUTE() {}
@@ -1578,7 +1581,7 @@ function SUBSTITUTE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SUM()
  */
 function SUM() {}
@@ -1592,7 +1595,7 @@ function SUM() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * SUMSQ()
  */
 function SUMSQ() {}
@@ -1606,7 +1609,7 @@ function SUMSQ() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * T()
  */
 function T() {}
@@ -1620,7 +1623,7 @@ function T() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * TIMEZONE()
  */
 function TIMEZONE() {}
@@ -1634,7 +1637,7 @@ function TIMEZONE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * TRIM()
  */
 function TRIM() {}
@@ -1648,7 +1651,7 @@ function TRIM() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * TRUE()
  */
 function TRUE() {}
@@ -1662,7 +1665,7 @@ function TRUE() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * UPPER()
  */
 function UPPER() {}
@@ -1676,7 +1679,7 @@ function UPPER() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns 1
+ * // returns VALUE
  * VALUE()
  */
 function VALUE() {}
