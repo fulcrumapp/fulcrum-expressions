@@ -158,10 +158,6 @@ Description
 
 Description
 
-### [HASERROR](./HASERROR)
-
-Description
-
 ### [HASOTHER](./HASOTHER)
 
 Description

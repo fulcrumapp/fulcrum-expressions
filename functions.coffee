@@ -102,14 +102,6 @@ exports.N = (value) ->
   return 0 if value is false
   0
 
-exports.HASERROR = ->
-  n = arguments.length
-
-  while n--
-    return true if arguments[n] instanceof Error
-
-  false
-
 exports.ISNAN = (number) ->
   _.isNaN(NUM(number))
 

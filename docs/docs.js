@@ -590,20 +590,6 @@ function GROUPINGSEPARATOR() {}
 function GROUPINGSIZE() {}
 
 
-////HASERROR
-
-/**
- * HASERROR
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * HASERROR()
- */
-function HASERROR() {}
-
-
 ////HASOTHER
 
 /**

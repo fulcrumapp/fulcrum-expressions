@@ -39,7 +39,6 @@ class window.ExpressionFunctions
     { identifier: "GCD", description: "Returns the greatest common divisor of one or more integers." }
     { identifier: "GROUPINGSEPARATOR", description: "Description" }
     { identifier: "GROUPINGSIZE", description: "Description" }
-    { identifier: "HASERROR", description: "Description" }
     { identifier: "HASOTHER", description: "Description" }
     { identifier: "IF", description: "Description" }
     { identifier: "IFERROR", description: "Description" }

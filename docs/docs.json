@@ -957,29 +957,6 @@
             }
         },
         {
-            "name": "HASERROR",
-            "access": "",
-            "virtual": false,
-            "description": "HASERROR\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nHASERROR()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "HASOTHER",
             "access": "",
             "virtual": false,
