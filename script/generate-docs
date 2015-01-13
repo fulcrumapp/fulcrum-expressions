@@ -1,0 +1,69 @@
+#!/usr/bin/env coffee
+
+fs = require('fs')
+_ = require('underscore')
+
+class DocumentationGenerator
+  generateDocs: (docs) ->
+    _.map docs.functions, (func) =>
+      schema =
+        name: func.name
+
+      # strip out the function name if it starts with it
+      description = func.description.replace(new RegExp("^#{func.name}\n"), '')
+
+      parameters = @generateParameters(func.parameters)
+      returns    = @generateReturns(func.returns)
+      examples   = @generateExamples(func.examples)
+
+      schema.markdown = """
+    ###{func.name}
+
+    #{description}
+
+    ### Parameters
+    #{parameters}
+
+    ### Returns
+    #{returns}
+
+    ### Examples
+    #{examples}
+    """
+
+      schema
+
+  generateParameters: (parameters) ->
+    parameters = _.map parameters, (param) ->
+      optionality = if param.optional is true then ' (optional) ' else ' (required) '
+      defaultValue = if param.default.length is 0 then '' else " [default = #{param.default}] "
+      "`#{param.name}` : #{param.type}#{optionality}#{defaultValue}- #{param.description}"
+
+    if parameters.length is 0
+      'No parameters'
+    else
+      parameters.join("\n\n")
+
+  generateReturns: (returns) ->
+    description = if returns.description.length is 0 then '' else " - #{returns.description} "
+    markdown = 'No return value'
+    markdown = "#{returns.type}#{description}" if returns.type
+    markdown
+
+  generateExamples: (examples) ->
+    examples = _.map examples, (example) ->
+      "```\n#{example}\n```"
+
+    if examples.length is 0
+      'No examples'
+    else
+      examples.join("\n\n")
+
+
+docs = JSON.parse(fs.readFileSync('./docs/docs.json'))
+
+generator = new DocumentationGenerator
+
+files = generator.generateDocs(docs)
+
+console.log _.map(files, (file) -> file.markdown).join("\n\n\n")

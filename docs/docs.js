@@ -4,10 +4,13 @@
  * ABS
  * Returns the absolute value of a number.
  * @param {Number} value The number of which to return the absolute value.
- * @returns {Number}
+ * @returns {Number} the absolute value of the `value` parameter
  * @example
  * // returns 1
  * ABS(-1)
+ * @example
+ * // returns 42
+ * ABS(42)
  */
 function ABS() {}
 
