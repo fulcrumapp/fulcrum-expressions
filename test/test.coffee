@@ -19,9 +19,11 @@ deviceInfo =
   applicationVersion: '2.7.0'
   applicationBuild: '2162'
 
-geometry =
-  type: 'Point'
-  coordinates: [ -82.63814896345139, 27.770756908186286 ]
+feature =
+  recordStatus: 'approved'
+  geometry:
+    type: 'Point'
+    coordinates: [ -82.63814896345139, 27.770756908186286 ]
 
 shouldBeNull = (value) ->
   (value is null).should.be.true
@@ -1122,7 +1124,7 @@ describe 'LATITUDE', ->
   it 'returns the latitude of the current feature', ->
     RESETCONFIG()
 
-    CONFIGURE(geometry: geometry)
+    CONFIGURE(feature)
 
     LATITUDE().should.eql(27.770756908186286)
 
@@ -1134,10 +1136,22 @@ describe 'LONGITUDE', ->
   it 'returns the longitude of the current feature', ->
     RESETCONFIG()
 
-    CONFIGURE(geometry: geometry)
+    CONFIGURE(feature)
 
     LONGITUDE().should.eql(-82.63814896345139)
 
     CONFIGURE(geometry: null)
 
     LONGITUDE().should.be.NaN
+
+describe 'STATUS', ->
+  it 'returns the status of the current record', ->
+    RESETCONFIG()
+
+    CONFIGURE(feature)
+
+    STATUS().should.eql('approved')
+
+    CONFIGURE(recordStatus: null)
+
+    shouldBeNull(STATUS())

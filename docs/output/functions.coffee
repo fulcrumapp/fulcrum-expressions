@@ -112,6 +112,7 @@ class window.ExpressionFunctions
     { identifier: "SINH", description: "Description" }
     { identifier: "SQRT", description: "Description" }
     { identifier: "SQRTPI", description: "Description" }
+    { identifier: "STATUS", description: "Returns the current record status" }
     { identifier: "SUBSTITUTE", description: "Description" }
     { identifier: "SUM", description: "Description" }
     { identifier: "SUMSQ", description: "Description" }

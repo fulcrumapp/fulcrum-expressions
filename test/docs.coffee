@@ -27,6 +27,7 @@ deviceInfo =
   applicationBuild: '2162'
 
 feature =
+  recordStatus: 'approved'
   geometry:
     type: 'Point'
     coordinates: [ -82.63814896345139, 27.770756908186286 ]

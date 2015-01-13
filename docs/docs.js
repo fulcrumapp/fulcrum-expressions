@@ -1581,6 +1581,19 @@ function SQRT() {}
 function SQRTPI() {}
 
 
+////STATUS
+
+/**
+ * STATUS
+ * Returns the current record status
+ * @returns {Number}
+ * @example
+ * // returns approved
+ * STATUS()
+ */
+function STATUS() {}
+
+
 ////SUBSTITUTE
 
 /**

@@ -450,6 +450,10 @@ Description
 
 Description
 
+### [STATUS](./STATUS)
+
+Returns the current record status
+
 ### [SUBSTITUTE](./SUBSTITUTE)
 
 Description
