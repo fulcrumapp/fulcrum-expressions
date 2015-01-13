@@ -100,7 +100,7 @@ exports.ROUND = (number, digits = 0) ->
   Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits)
 
 exports.CEILING = (number, significance = 1) ->
-  significance ||= 1
+  significance ?= 1
   significance = ABS(significance)
 
   number = NUM(number)

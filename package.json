@@ -22,6 +22,7 @@
   "devDependencies": {
     "coffee-script": "^1.8.0",
     "coffeeify": "^1.0.0",
+    "fs-sync": "^0.2.5",
     "intl": "^0.1.4",
     "jsdoc": "^3.3.0-alpha13",
     "mocha": "^2.1.0",
