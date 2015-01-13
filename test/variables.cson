@@ -9,3 +9,111 @@ recordStatus: 'approved'
 geometry:
   type: 'Point'
   coordinates: [ -82.63814896345139, 27.770756908186286 ]
+values:
+  form_values:
+    '97ab': "Test Record"
+    '1337': [
+      {
+        id: '1'
+        form_values: {
+          '1338': 1
+        }
+      }
+      {
+        id: '2'
+        form_values: {
+          '1338': 2
+        }
+      }
+      {
+        id: '3'
+        form_values: {
+          '1338': 3
+        }
+      }
+    ]
+
+form:
+  description: 'Test Form'
+  elements: [
+    {
+      data_name: "name"
+      default_value: null
+      description: null
+      disabled: false
+      hidden: false
+      key: "97ab"
+      label: "Name"
+      max_length: null
+      min_length: null
+      numeric: false
+      pattern: null
+      pattern_description: null
+      required: false
+      required_conditions: null
+      required_conditions_type: null
+      type: "TextField"
+      visible_conditions: null
+      visible_conditions_type: null
+    }
+    {
+      data_name: "items"
+      default_value: null
+      description: null
+      disabled: false
+      elements: [
+        data_name: "cost"
+        default_value: null
+        description: null
+        disabled: false
+        format: "decimal"
+        hidden: false
+        key: "1338"
+        label: "Cost"
+        max: null
+        max_length: null
+        min: null
+        min_length: null
+        numeric: true
+        required: false
+        required_conditions: null
+        required_conditions_type: null
+        type: "TextField"
+        visible_conditions: null
+        visible_conditions_type: null
+      ]
+      geometry_required: false
+      geometry_types: ["Point"]
+      hidden: false
+      key: "1337"
+      label: "Items"
+      max_length: null
+      min_length: null
+      required: false
+      required_conditions: null
+      required_conditions_type: null
+      title_field_key: null
+      title_field_keys: ["1ce4"]
+      type: "Repeatable"
+      visible_conditions: null
+      visible_conditions_type: null
+    }
+  ]
+  image: null
+  name: "Test Form"
+  record_title_key: "97ab"
+  status_field:
+    choices: []
+    data_name: "status"
+    default_value: ""
+    description: ""
+    disabled: false
+    enabled: false
+    hidden: false
+    key: "@status"
+    label: "Status"
+    read_only: false
+    required: false
+    type: "StatusField"
+
+  title_field_keys: ["97ab"]

@@ -21,6 +21,53 @@ Defaults =
 
 Config = _.extend({}, Defaults)
 
+repeatableValueElementsCache = {}
+repeatableValueElementsByKeyCache = {}
+repeatableValueElementsByDataNameCache = {}
+
+repeatableValueElements = (repeatable) ->
+  key = repeatable.key
+
+  if repeatableValueElementsCache[key]
+    cached =
+      all: repeatableValueElementsCache[key]
+      byKey: repeatableValueElementsByKeyCache[key]
+      byDataName: repeatableValueElementsByDataNameCache[key]
+
+    return cached
+
+  elements = Utils.flattenElements(repeatable.elements, false)
+
+  repeatableValueElementsCache[key] = all = elements
+  repeatableValueElementsByKeyCache[key] = byKey = {}
+  repeatableValueElementsByDataNameCache[key] = byDataName = {}
+
+  for element in elements
+    byKey[element.key] = element
+    byDataName[element.data_name] = element
+
+  { all: all, byKey: byKey, byDataName: byDataName }
+
+repeatableValues = (repeatable, items, dataName) ->
+  return null unless _.isArray(items)
+
+  {byDataName} = repeatableValueElements(repeatable)
+
+  element = byDataName[dataName]
+
+  return null unless element
+
+  isNumeric = element.numeric or element.format is 'number'
+
+  values = _.map items, (item) ->
+    if element.numeric or element.format is 'number'
+      Number(item.form_values[element.key])
+    else
+      item.form_values[element.key]
+
+  values
+
+
 exports = {}
 
 exports.CONFIGURE = (config, merge=true) ->
@@ -994,6 +1041,13 @@ exports.LONGITUDE = ->
 
 exports.STATUS = ->
   CONFIG().recordStatus ? null
+
+exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName) ->
+  repeatableElement = $$runtime.elementsByDataName[repeatableElementDataName]
+
+  return NO_VALUE unless repeatableElement
+
+  repeatableValues(repeatableElement, repeatableValue, dataName)
 
 hostFunctionExists = (name) ->
   _.isFunction($$runtime["$$#{name}"])

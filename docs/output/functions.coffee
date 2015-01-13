@@ -99,6 +99,7 @@ class window.ExpressionFunctions
     { identifier: "RADIANS", description: "Description" }
     { identifier: "RAND", description: "Description" }
     { identifier: "RANDBETWEEN", description: "Description" }
+    { identifier: "REPEATABLEVALUES", description: "Return a specific field from multiple repeatable items" }
     { identifier: "REPLACE", description: "Description" }
     { identifier: "RESETCONFIG", description: "Description" }
     { identifier: "RIGHT", description: "Description" }

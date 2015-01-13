@@ -2272,6 +2272,45 @@
             }
         },
         {
+            "name": "REPEATABLEVALUES",
+            "access": "",
+            "virtual": false,
+            "description": "REPEATABLEVALUES\nReturn a specific field from multiple repeatable items",
+            "parameters": [
+                {
+                    "name": "repeatableVariable",
+                    "type": "Object",
+                    "description": "The repeatable field variable",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "repeatableDataName",
+                    "type": "String",
+                    "description": "The data name of the repeatable field for `repeatableVariable`",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "dataName",
+                    "type": "String",
+                    "description": "The data name of the field to extract from each repeatable item",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nREPEATABLEVALUES($repeatable_field, 'items', 'cost')"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": "An array of values of the `dataName` field from each item"
+            }
+        },
+        {
             "name": "REPLACE",
             "access": "",
             "virtual": false,

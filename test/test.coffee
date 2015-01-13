@@ -15,6 +15,12 @@ else
 
 variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
+CONFIGURE(variables)
+
+runtime.form = variables.form
+runtime.values = variables.values
+runtime.prepare()
+
 shouldBeNull = (value) ->
   (value is null).should.be.true
 
@@ -1145,3 +1151,15 @@ describe 'STATUS', ->
     CONFIGURE(recordStatus: null)
 
     shouldBeNull(STATUS())
+
+describe 'REPEATABLEVALUES', ->
+  it 'returns a specific field out of a collection of repeatable items', ->
+    RESETCONFIG()
+
+    CONFIGURE(variables)
+
+    $repeatable_field = variables.values.form_values['1337']
+
+    costs = REPEATABLEVALUES($repeatable_field, 'items', 'cost')
+
+    costs.should.eql([1, 2, 3])

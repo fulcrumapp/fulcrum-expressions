@@ -23,6 +23,12 @@ variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
 CONFIGURE(variables)
 
+runtime.form = variables.form
+runtime.values = variables.values
+runtime.prepare()
+
+$repeatable_field = variables.values.form_values['1337']
+
 docs = JSON.parse(fs.readFileSync(__dirname + '/../docs/docs.json'))
 
 shouldBeNull = (value) ->
@@ -44,4 +50,10 @@ describe 'Documentation', ->
 
         (-> eval(example)).should.not.throw
 
-        eval(example).toString().should.eql(returnValue)
+        result = eval(example)
+
+        stringValue = switch true
+          when _.isArray(result) then "[" + _.map(result, (v) -> '' + v).join(',') + "]"
+          else '' + result
+
+        stringValue.should.eql(returnValue)
