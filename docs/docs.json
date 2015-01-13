@@ -1884,29 +1884,6 @@
             }
         },
         {
-            "name": "NOT_IMPLEMENTED",
-            "access": "",
-            "virtual": false,
-            "description": "NOT_IMPLEMENTED\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nNOT_IMPLEMENTED()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "NUM",
             "access": "",
             "virtual": false,

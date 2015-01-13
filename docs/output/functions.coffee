@@ -80,7 +80,6 @@ class window.ExpressionFunctions
     { identifier: "MOD", description: "Description" }
     { identifier: "N", description: "Description" }
     { identifier: "NOT", description: "Description" }
-    { identifier: "NOT_IMPLEMENTED", description: "Description" }
     { identifier: "NUM", description: "Description" }
     { identifier: "NUMS", description: "Description" }
     { identifier: "ODD", description: "Description" }

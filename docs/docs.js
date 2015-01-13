@@ -1168,20 +1168,6 @@ function N() {}
 function NOT() {}
 
 
-////NOT_IMPLEMENTED
-
-/**
- * NOT_IMPLEMENTED
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * NOT_IMPLEMENTED()
- */
-function NOT_IMPLEMENTED() {}
-
-
 ////NUM
 
 /**
