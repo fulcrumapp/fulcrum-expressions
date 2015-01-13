@@ -68,7 +68,6 @@ class window.ExpressionFunctions
     { identifier: "LONGITUDE", description: "Returns the longitude of the current feature (record or repeatable item)" }
     { identifier: "LOWER", description: "Description" }
     { identifier: "MATCH", description: "Description" }
-    { identifier: "MATH_FUNC", description: "Description" }
     { identifier: "MAX", description: "Description" }
     { identifier: "MAXA", description: "Description" }
     { identifier: "MEDIAN", description: "Description" }

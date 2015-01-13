@@ -1000,20 +1000,6 @@ function LOWER() {}
 function MATCH() {}
 
 
-////MATH_FUNC
-
-/**
- * MATH_FUNC
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * MATH_FUNC()
- */
-function MATH_FUNC() {}
-
-
 ////MAX
 
 /**

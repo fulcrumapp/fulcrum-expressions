@@ -1608,29 +1608,6 @@
             }
         },
         {
-            "name": "MATH_FUNC",
-            "access": "",
-            "virtual": false,
-            "description": "MATH_FUNC\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nMATH_FUNC()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "MAX",
             "access": "",
             "virtual": false,

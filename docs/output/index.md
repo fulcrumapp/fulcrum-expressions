@@ -274,10 +274,6 @@ Description
 
 Description
 
-### [MATH_FUNC](./MATH_FUNC)
-
-Description
-
 ### [MAX](./MAX)
 
 Description
