@@ -59,6 +59,7 @@ class window.ExpressionFunctions
     { identifier: "ISTEXT", description: "Description" }
     { identifier: "ISUPDATE", description: "Description" }
     { identifier: "LANGUAGE", description: "Description" }
+    { identifier: "LATITUDE", description: "Returns the latitude of the current feature (record or repeatable item)" }
     { identifier: "LCM", description: "Description" }
     { identifier: "LEFT", description: "Description" }
     { identifier: "LEN", description: "Description" }
@@ -66,6 +67,7 @@ class window.ExpressionFunctions
     { identifier: "LOCALE", description: "Description" }
     { identifier: "LOG", description: "Description" }
     { identifier: "LOG10", description: "Description" }
+    { identifier: "LONGITUDE", description: "Returns the longitude of the current feature (record or repeatable item)" }
     { identifier: "LOWER", description: "Description" }
     { identifier: "MATCH", description: "Description" }
     { identifier: "MATH_FUNC", description: "Description" }

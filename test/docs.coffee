@@ -26,7 +26,13 @@ deviceInfo =
   applicationVersion: '2.7.0'
   applicationBuild: '2162'
 
+feature =
+  geometry:
+    type: 'Point'
+    coordinates: [ -82.63814896345139, 27.770756908186286 ]
+
 CONFIGURE(deviceInfo)
+CONFIGURE(feature)
 
 docs = JSON.parse(fs.readFileSync(__dirname + '/../docs/docs.json'))
 

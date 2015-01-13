@@ -841,6 +841,19 @@ function ISUPDATE() {}
 function LANGUAGE() {}
 
 
+////LATITUDE
+
+/**
+ * LATITUDE
+ * Returns the latitude of the current feature (record or repeatable item)
+ * @returns {Number}
+ * @example
+ * // returns 27.770756908186286
+ * LATITUDE()
+ */
+function LATITUDE() {}
+
+
 ////LCM
 
 /**
@@ -937,6 +950,19 @@ function LOG() {}
  * LOG10()
  */
 function LOG10() {}
+
+
+////LONGITUDE
+
+/**
+ * LONGITUDE
+ * Returns the longitude of the current feature (record or repeatable item)
+ * @returns {Number}
+ * @example
+ * // returns -82.63814896345139
+ * LONGITUDE()
+ */
+function LONGITUDE() {}
 
 
 ////LOWER

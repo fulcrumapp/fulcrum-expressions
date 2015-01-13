@@ -19,6 +19,10 @@ deviceInfo =
   applicationVersion: '2.7.0'
   applicationBuild: '2162'
 
+geometry =
+  type: 'Point'
+  coordinates: [ -82.63814896345139, 27.770756908186286 ]
+
 shouldBeNull = (value) ->
   (value is null).should.be.true
 
@@ -1113,3 +1117,27 @@ describe 'VERSIONINFO', ->
     CONFIGURE(deviceInfo)
 
     VERSIONINFO().should.eql('Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162')
+
+describe 'LATITUDE', ->
+  it 'returns the latitude of the current feature', ->
+    RESETCONFIG()
+
+    CONFIGURE(geometry: geometry)
+
+    LATITUDE().should.eql(27.770756908186286)
+
+    CONFIGURE(geometry: null)
+
+    LATITUDE().should.be.NaN
+
+describe 'LONGITUDE', ->
+  it 'returns the longitude of the current feature', ->
+    RESETCONFIG()
+
+    CONFIGURE(geometry: geometry)
+
+    LONGITUDE().should.eql(-82.63814896345139)
+
+    CONFIGURE(geometry: null)
+
+    LONGITUDE().should.be.NaN
