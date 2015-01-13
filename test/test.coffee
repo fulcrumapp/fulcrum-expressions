@@ -1059,6 +1059,7 @@ describe 'FORMATNUMBER', ->
 
     CONFIGURE(currencyCode: 'BRL')
     FORMATNUMBER(10000 / 3, 'pt-BR', style: 'currency').should.eql('R$3.333,33')
+    FORMATNUMBER(10000 / 3).should.eql('3,333.333')
 
 
     #test formatting currency in different locales
@@ -1081,6 +1082,7 @@ describe 'FORMATNUMBER', ->
 
 describe 'DOLLAR', ->
   it 'returns a string with a formatted dollar amount in the current locale', ->
+    RESETCONFIG()
     DOLLAR(10000 / 3).should.eql('$3,333.33')
     DOLLAR(10000 / 3, 0).should.eql('$3,333')
     DOLLAR(10000 / 3, 4).should.eql('$3,333.3333')
