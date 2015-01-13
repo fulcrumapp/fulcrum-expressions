@@ -1098,19 +1098,20 @@
             "name": "INT",
             "access": "",
             "virtual": false,
-            "description": "INT\nDescription",
+            "description": "INT\nRounds a number down to the nearest integer that is less than or equal to it.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Value to round down to the nearest integer.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nINT()"
+                "// returns 34\nINT(34.24)",
+                "// returns -11\nINT(-10.49)"
             ],
             "returns": {
                 "type": "Number",
@@ -1121,22 +1122,23 @@
             "name": "ISBLANK",
             "access": "",
             "virtual": false,
-            "description": "ISBLANK\nDescription",
+            "description": "ISBLANK\nChecks wheter the field's value is empty.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "Value to check.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISBLANK()"
+                "// returns true\nISBLANK(\"\")",
+                "// returns false\nISBLANK(\"Test\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },

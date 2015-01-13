@@ -678,12 +678,15 @@ function IFERROR() {}
 
 /**
  * INT
- * Description
- * @param {Number} value argument
+ * Rounds a number down to the nearest integer that is less than or equal to it.
+ * @param {Number} value Value to round down to the nearest integer.
  * @returns {Number}
  * @example
- * // returns VALUE
- * INT()
+ * // returns 34
+ * INT(34.24)
+ * @example
+ * // returns -11
+ * INT(-10.49)
  */
 function INT() {}
 
@@ -692,12 +695,15 @@ function INT() {}
 
 /**
  * ISBLANK
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks wheter the field's value is empty.
+ * @param {String} value Value to check.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISBLANK()
+ * // returns true
+ * ISBLANK("")
+ * @example
+ * // returns false
+ * ISBLANK("Test")
  */
 function ISBLANK() {}
 

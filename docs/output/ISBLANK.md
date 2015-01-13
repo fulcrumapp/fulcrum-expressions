@@ -1,15 +1,20 @@
 ## ISBLANK
 
-Description
+Checks wheter the field's value is empty.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - Value to check.
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-ISBLANK()
+// returns true
+ISBLANK("")
+```
+
+```
+// returns false
+ISBLANK("Test")
 ```

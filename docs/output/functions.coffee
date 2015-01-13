@@ -45,8 +45,8 @@ class window.ExpressionFunctions
     { identifier: "HASOTHER", description: "Description" }
     { identifier: "IF", description: "Description" }
     { identifier: "IFERROR", description: "Description" }
-    { identifier: "INT", description: "Description" }
-    { identifier: "ISBLANK", description: "Description" }
+    { identifier: "INT", description: "Rounds a number down to the nearest integer that is less than or equal to it." }
+    { identifier: "ISBLANK", description: "Checks wheter the field's value is empty." }
     { identifier: "ISERR", description: "Description" }
     { identifier: "ISERROR", description: "Description" }
     { identifier: "ISEVEN", description: "Description" }
