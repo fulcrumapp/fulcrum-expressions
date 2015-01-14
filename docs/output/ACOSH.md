@@ -2,9 +2,6 @@
 
 Returns the inverse hyperbolic cosine of a number.
 
-Related:
-{@link TANH}
-
 ### Parameters
 `value` : Number (required) - The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
 

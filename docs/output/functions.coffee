@@ -1,8 +1,8 @@
 class window.ExpressionFunctions
   @FUNCTIONS: [
     { identifier: "ABS", description: "Returns the absolute value of a number." }
-    { identifier: "ACOS", description: "Returns the inverse cosine of a value, in radians.\nUse the {@link DEGREES} function to convert the result of {@link DEGREES} into degrees." }
-    { identifier: "ACOSH", description: "Returns the inverse hyperbolic cosine of a number.\n\nRelated:\n{@link TANH}" }
+    { identifier: "ACOS", description: "Returns the inverse cosine of a value, in radians." }
+    { identifier: "ACOSH", description: "Returns the inverse hyperbolic cosine of a number." }
     { identifier: "AND", description: "Returns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false." }
     { identifier: "AVERAGE", description: "Returns the numerical average value in a dataset, ignoring text." }
     { identifier: "CEILING", description: "Rounds a number up to the nearest integer multiple of specified significance." }

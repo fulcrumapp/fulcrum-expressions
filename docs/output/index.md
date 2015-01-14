@@ -5,14 +5,10 @@ Returns the absolute value of a number.
 ### [ACOS](./ACOS)
 
 Returns the inverse cosine of a value, in radians.
-Use the {@link DEGREES} function to convert the result of {@link DEGREES} into degrees.
 
 ### [ACOSH](./ACOSH)
 
 Returns the inverse hyperbolic cosine of a number.
-
-Related:
-{@link TANH}
 
 ### [AND](./AND)
 
