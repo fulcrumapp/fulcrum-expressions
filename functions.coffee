@@ -196,8 +196,14 @@ exports.COUNTBLANK = (value) ->
 
   results.length
 
-exports.DATE = ->
-  NOT_IMPLEMENTED()
+exports.DATE = (year, month, day) ->
+  year = INT(year)
+  month = INT(month)
+  day = INT(day)
+
+  return NO_VALUE if isNaN(year) or isNaN(month) or isNaN(day)
+
+  new Date("#{year}/#{month}/#{day} 00:00:00")
 
 exports.DATEVALUE = ->
   NOT_IMPLEMENTED()

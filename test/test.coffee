@@ -1174,6 +1174,16 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.eql(6)
 
+describe 'DATE', ->
+  it 'returns a date given a year, month, and day', ->
+    date = DATE(2015, 1, 14)
+    date.getFullYear().should.be.exactly(2015)
+    date.getMonth().should.be.exactly(0)
+    date.getDate().should.be.exactly(14)
+
+    shouldHaveNoValue(DATE('a', 'b', 'c'))
+    shouldHaveNoValue(DATE(new Date))
+
 describe 'X_ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
 
