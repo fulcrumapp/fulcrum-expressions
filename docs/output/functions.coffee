@@ -49,12 +49,12 @@ class window.ExpressionFunctions
     { identifier: "ISEVEN", description: "Description" }
     { identifier: "ISLOGICAL", description: "Description" }
     { identifier: "ISNAN", description: "Description" }
-    { identifier: "ISNEW", description: "Description" }
+    { identifier: "ISNEW", description: "Returns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated." }
     { identifier: "ISNONTEXT", description: "Description" }
     { identifier: "ISNUMBER", description: "Description" }
     { identifier: "ISODD", description: "Description" }
     { identifier: "ISTEXT", description: "Description" }
-    { identifier: "ISUPDATE", description: "Description" }
+    { identifier: "ISUPDATE", description: "Returns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record." }
     { identifier: "LANGUAGE", description: "Description" }
     { identifier: "LATITUDE", description: "Returns the latitude of the current feature (record or repeatable item)" }
     { identifier: "LCM", description: "Description" }

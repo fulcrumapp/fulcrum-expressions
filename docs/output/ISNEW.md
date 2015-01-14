@@ -1,15 +1,15 @@
 ## ISNEW
 
-Description
+Returns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.
 
 ### Parameters
-`value` : Number (required) - argument
+No parameters
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
+// returns true
 ISNEW()
 ```
