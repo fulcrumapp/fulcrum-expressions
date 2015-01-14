@@ -304,7 +304,7 @@ Returns the value provided as a number.
 
 ### [NOT](./NOT)
 
-Description
+Returns the opposite of a logical value - `NOT(true)` returns `false`; `NOT(false)` returns `true`.
 
 ### [NUM](./NUM)
 
@@ -316,7 +316,7 @@ Description
 
 ### [ODD](./ODD)
 
-Description
+Rounds a number up to the nearest odd integer.
 
 ### [ONCE](./ONCE)
 
@@ -324,7 +324,7 @@ Description
 
 ### [OR](./OR)
 
-Description
+Returns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.
 
 ### [OTHER](./OTHER)
 
@@ -332,11 +332,11 @@ Description
 
 ### [PI](./PI)
 
-Description
+Returns the value of Pi to 15 decimal places.
 
 ### [POWER](./POWER)
 
-Description
+Returns a number raised to a power.
 
 ### [PRECISION](./PRECISION)
 
@@ -344,7 +344,7 @@ Description
 
 ### [PRODUCT](./PRODUCT)
 
-Description
+Returns the result of multiplying a series of numbers together.
 
 ### [PROPER](./PROPER)
 

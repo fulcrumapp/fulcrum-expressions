@@ -1,15 +1,15 @@
 ## PI
 
-Description
+Returns the value of Pi to 15 decimal places.
 
 ### Parameters
-`value` : Number (required) - argument
+No parameters
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
+// returns 3.141592653589793
 PI()
 ```

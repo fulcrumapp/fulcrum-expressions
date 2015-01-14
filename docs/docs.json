@@ -1853,22 +1853,23 @@
             "name": "NOT",
             "access": "",
             "virtual": false,
-            "description": "NOT\nDescription",
+            "description": "NOT\nReturns the opposite of a logical value - `NOT(true)` returns `false`; `NOT(false)` returns `true`.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "Boolean",
+                    "description": "The expression or value representing a logical value (`true` or `false`).",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nNOT()"
+                "// returns true\nNOT(false)",
+                "// returns false\nNOT(5)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1922,19 +1923,19 @@
             "name": "ODD",
             "access": "",
             "virtual": false,
-            "description": "ODD\nDescription",
+            "description": "ODD\nRounds a number up to the nearest odd integer.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number to round to the nearest odd integer.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nODD()"
+                "// returns 5\nODD(4.22)"
             ],
             "returns": {
                 "type": "Number",
@@ -1968,22 +1969,23 @@
             "name": "OR",
             "access": "",
             "virtual": false,
-            "description": "OR\nDescription",
+            "description": "OR\nReturns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "Boolean",
+                    "description": "Expression(s) or value(s) representing a logical value (`true` or `false`).",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nOR()"
+                "// returns true\nOR(true, true, false)",
+                "// returns false\nOR(ISEVEN(5),ISODD(6))"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -2014,19 +2016,10 @@
             "name": "PI",
             "access": "",
             "virtual": false,
-            "description": "PI\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "PI\nReturns the value of Pi to 15 decimal places.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nPI()"
+                "// returns 3.141592653589793\nPI()"
             ],
             "returns": {
                 "type": "Number",
@@ -2037,19 +2030,28 @@
             "name": "POWER",
             "access": "",
             "virtual": false,
-            "description": "POWER\nDescription",
+            "description": "POWER\nReturns a number raised to a power.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "base",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number to be raised to the `exponent` power.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "exponent",
+                    "type": "Number",
+                    "description": "The exponent to raise `base` to.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nPOWER()"
+                "// returns 390625\nPOWER(5, 8)",
+                "// returns 3.1622776601683795\nPOWER(10, 0.5)"
             ],
             "returns": {
                 "type": "Number",
@@ -2083,19 +2085,20 @@
             "name": "PRODUCT",
             "access": "",
             "virtual": false,
-            "description": "PRODUCT\nDescription",
+            "description": "PRODUCT\nReturns the result of multiplying a series of numbers together.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values to multiply together.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nPRODUCT()"
+                "// returns 216\nPRODUCT(4, 18, 3)",
+                "// returns 0\nPRODUCT(23, 5, 0)"
             ],
             "returns": {
                 "type": "Number",

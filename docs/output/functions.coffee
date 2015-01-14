@@ -76,17 +76,17 @@ class window.ExpressionFunctions
     { identifier: "MINA", description: "Returns the minimum numeric value in a given set of values." }
     { identifier: "MOD", description: "Returns the result of the modulo operator, the remainder after a division operation." }
     { identifier: "N", description: "Returns the value provided as a number." }
-    { identifier: "NOT", description: "Description" }
+    { identifier: "NOT", description: "Returns the opposite of a logical value - `NOT(true)` returns `false`; `NOT(false)` returns `true`." }
     { identifier: "NUM", description: "Description" }
     { identifier: "NUMS", description: "Description" }
-    { identifier: "ODD", description: "Description" }
+    { identifier: "ODD", description: "Rounds a number up to the nearest odd integer." }
     { identifier: "ONCE", description: "Description" }
-    { identifier: "OR", description: "Description" }
+    { identifier: "OR", description: "Returns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false." }
     { identifier: "OTHER", description: "Description" }
-    { identifier: "PI", description: "Description" }
-    { identifier: "POWER", description: "Description" }
+    { identifier: "PI", description: "Returns the value of Pi to 15 decimal places." }
+    { identifier: "POWER", description: "Returns a number raised to a power." }
     { identifier: "PRECISION", description: "Description" }
-    { identifier: "PRODUCT", description: "Description" }
+    { identifier: "PRODUCT", description: "Returns the result of multiplying a series of numbers together." }
     { identifier: "PROPER", description: "Description" }
     { identifier: "QUOTIENT", description: "Description" }
     { identifier: "RADIANS", description: "Description" }

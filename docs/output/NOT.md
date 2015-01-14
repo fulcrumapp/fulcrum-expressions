@@ -1,15 +1,20 @@
 ## NOT
 
-Description
+Returns the opposite of a logical value - `NOT(true)` returns `false`; `NOT(false)` returns `true`.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Boolean (required) - The expression or value representing a logical value (`true` or `false`).
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-NOT()
+// returns true
+NOT(false)
+```
+
+```
+// returns false
+NOT(5)
 ```

@@ -1169,12 +1169,15 @@ function N() {}
 
 /**
  * NOT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the opposite of a logical value - `NOT(true)` returns `false`; `NOT(false)` returns `true`.
+ * @param {Boolean} value The expression or value representing a logical value (`true` or `false`).
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * NOT()
+ * // returns true
+ * NOT(false)
+ * @example
+ * // returns false
+ * NOT(5)
  */
 function NOT() {}
 
@@ -1211,12 +1214,12 @@ function NUMS() {}
 
 /**
  * ODD
- * Description
- * @param {Number} value argument
+ * Rounds a number up to the nearest odd integer.
+ * @param {Number} value The number to round to the nearest odd integer.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ODD()
+ * // returns 5
+ * ODD(4.22)
  */
 function ODD() {}
 
@@ -1239,12 +1242,15 @@ function ONCE() {}
 
 /**
  * OR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.
+ * @param {...Boolean} value Expression(s) or value(s) representing a logical value (`true` or `false`).
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * OR()
+ * // returns true
+ * OR(true, true, false)
+ * @example
+ * // returns false
+ * OR(ISEVEN(5),ISODD(6))
  */
 function OR() {}
 
@@ -1267,11 +1273,10 @@ function OTHER() {}
 
 /**
  * PI
- * Description
- * @param {Number} value argument
+ * Returns the value of Pi to 15 decimal places.
  * @returns {Number}
  * @example
- * // returns VALUE
+ * // returns 3.141592653589793
  * PI()
  */
 function PI() {}
@@ -1281,12 +1286,16 @@ function PI() {}
 
 /**
  * POWER
- * Description
- * @param {Number} value argument
+ * Returns a number raised to a power.
+ * @param {Number} base The number to be raised to the `exponent` power.
+ * @param {Number} exponent The exponent to raise `base` to.
  * @returns {Number}
  * @example
- * // returns VALUE
- * POWER()
+ * // returns 390625
+ * POWER(5, 8)
+ * @example
+ * // returns 3.1622776601683795
+ * POWER(10, 0.5)
  */
 function POWER() {}
 
@@ -1309,12 +1318,15 @@ function PRECISION() {}
 
 /**
  * PRODUCT
- * Description
- * @param {Number} value argument
+ * Returns the result of multiplying a series of numbers together.
+ * @param {...Number} var_args_values Values to multiply together.
  * @returns {Number}
  * @example
- * // returns VALUE
- * PRODUCT()
+ * // returns 216
+ * PRODUCT(4, 18, 3)
+ * @example
+ * // returns 0
+ * PRODUCT(23, 5, 0)
  */
 function PRODUCT() {}
 
