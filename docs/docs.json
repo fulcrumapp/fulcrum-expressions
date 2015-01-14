@@ -1286,22 +1286,23 @@
             "name": "ISTEXT",
             "access": "",
             "virtual": false,
-            "description": "ISTEXT\nDescription",
+            "description": "ISTEXT\nChecks whether a value is text.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The value to test",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISTEXT()"
+                "// returns true\nISTEXT(\"Text\")",
+                "// returns false\nISTEXT(4)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },

@@ -798,12 +798,15 @@ function ISODD() {}
 
 /**
  * ISTEXT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks whether a value is text.
+ * @param {String} value The value to test
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISTEXT()
+ * // returns true
+ * ISTEXT("Text")
+ * @example
+ * // returns false
+ * ISTEXT(4)
  */
 function ISTEXT() {}
 
