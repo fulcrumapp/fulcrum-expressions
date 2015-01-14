@@ -468,7 +468,7 @@ exports.LCM = ->
   a
 
 exports.LEFT = (value, numberOfCharacters = 1) ->
-  numberOfCharacters ||= 1
+  numberOfCharacters ?= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
 
   return NO_VALUE unless value?
@@ -668,7 +668,7 @@ exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   prefix + replacement + suffix
 
 exports.RIGHT = (value, numberOfCharacters) ->
-  numberOfCharacters ||= 1
+  numberOfCharacters ?= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
 
   return NO_VALUE unless value?
@@ -836,11 +836,9 @@ exports.HASOTHER = (value) ->
      _.isArray(value.other_values) and
      value.other_values.length > 0)
 
-
-# TODO(zhm) what should this return when there isn't an other value?
-# undefined/null/''
 exports.OTHER = (value) ->
-  return NO_VALUE unless exports.HASOTHER(value)
+  return NO_VALUE unless HASOTHER(value)
+  return NO_VALUE if ISBLANK(value.other_values)
   return value.other_values[0]
 
 exports.SELECTED = (value, choice) ->
