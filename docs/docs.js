@@ -740,11 +740,10 @@ function ISNAN() {}
 
 /**
  * ISNEW
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
+ * // returns true
  * ISNEW()
  */
 function ISNEW() {}
@@ -810,11 +809,10 @@ function ISTEXT() {}
 
 /**
  * ISUPDATE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
+ * // returns false
  * ISUPDATE()
  */
 function ISUPDATE() {}

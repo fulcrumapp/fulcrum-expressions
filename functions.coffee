@@ -884,10 +884,10 @@ exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
 
 exports.ISNEW = ->
-  NOT_IMPLEMENTED()
+  CONFIG().featureIsNew is true
 
 exports.ISUPDATE = ->
-  NOT_IMPLEMENTED()
+  not ISNEW()
 
 exports.CONFIG = ->
   Config

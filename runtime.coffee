@@ -45,6 +45,10 @@ class Runtime
 
   elementsByDataName: {}
 
+  featureIsNew: true
+
+  recordIsNew: true
+
   extraVariableNames: [
     'locale',
     'timeZone',

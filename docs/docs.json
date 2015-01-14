@@ -1192,22 +1192,13 @@
             "name": "ISNEW",
             "access": "",
             "virtual": false,
-            "description": "ISNEW\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "ISNEW\nReturns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nISNEW()"
+                "// returns true\nISNEW()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1307,22 +1298,13 @@
             "name": "ISUPDATE",
             "access": "",
             "virtual": false,
-            "description": "ISUPDATE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "ISUPDATE\nReturns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nISUPDATE()"
+                "// returns false\nISUPDATE()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },

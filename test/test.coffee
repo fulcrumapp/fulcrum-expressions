@@ -1171,3 +1171,18 @@ describe 'REPEATABLESUM', ->
     totalCost = REPEATABLESUM($repeatable_field, 'items', 'cost')
 
     totalCost.should.eql(6)
+
+describe 'ISNEW', ->
+  it 'returns a boolean indicating whether the feature is new or an update', ->
+
+    CONFIGURE(featureIsNew: true)
+
+    ISNEW().should.be.true
+    ISUPDATE().should.be.false
+
+    CONFIGURE(featureIsNew: false)
+
+    ISNEW().should.be.false
+    ISUPDATE().should.be.true
+
+    RESETCONFIG()
