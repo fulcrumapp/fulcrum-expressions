@@ -298,6 +298,10 @@ Description
 
 Description
 
+### [MONTH](./MONTH)
+
+Returns the month of a given date.
+
 ### [N](./N)
 
 Description
@@ -465,6 +469,10 @@ Description
 ### [VERSIONINFO](./VERSIONINFO)
 
 Returns version information about the app.
+
+### [YEAR](./YEAR)
+
+Returns the year of a given date.
 
 ### [X_ISNEW](./X_ISNEW)
 
