@@ -59,10 +59,10 @@ class window.ExpressionFunctions
     { identifier: "LCM", description: "Returns the least common multiple of one or more integers." }
     { identifier: "LEFT", description: "Returns a substring from the beginning of a given string." }
     { identifier: "LEN", description: "Returns the length of a string value." }
-    { identifier: "LN", description: "Description" }
+    { identifier: "LN", description: "Returns the the logarithm of a number, base `e` (Euler's number)." }
     { identifier: "LOCALE", description: "Description" }
-    { identifier: "LOG", description: "Description" }
-    { identifier: "LOG10", description: "Description" }
+    { identifier: "LOG", description: "Returns the the logarithm of a number given a base." }
+    { identifier: "LOG10", description: "Returns the the logarithm of a number, base 10." }
     { identifier: "LONGITUDE", description: "Returns the longitude of the current feature (record or repeatable item)" }
     { identifier: "LOWER", description: "Description" }
     { identifier: "MATCH", description: "Description" }

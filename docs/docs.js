@@ -910,12 +910,15 @@ function LEN() {}
 
 /**
  * LN
- * Description
- * @param {Number} value argument
+ * Returns the the logarithm of a number, base `e` (Euler's number).
+ * @param {Number} value The value for which to calculate the logarithm, base `e`. Must be a positive number.
  * @returns {Number}
  * @example
- * // returns VALUE
- * LN()
+ * // returns 1.6094379124341003
+ * LN(5)
+ * @example
+ * // returns NaN
+ * LN("Test")
  */
 function LN() {}
 
@@ -938,12 +941,16 @@ function LOCALE() {}
 
 /**
  * LOG
- * Description
- * @param {Number} value argument
+ * Returns the the logarithm of a number given a base.
+ * @param {Number} value The value for which to calculate the logarithm given `base`.
+ * @param {Number} [base=10] The base to use for the logarithm calculation.
  * @returns {Number}
  * @example
- * // returns VALUE
- * LOG()
+ * // returns 2.8613531161467867
+ * LOG(100, 5)
+ * @example
+ * // returns 2
+ * LOG(100)
  */
 function LOG() {}
 
@@ -952,12 +959,15 @@ function LOG() {}
 
 /**
  * LOG10
- * Description
- * @param {Number} value argument
+ * Returns the the logarithm of a number, base 10.
+ * @param {Number} value The value for which to calculate the logarithm, base 10.
  * @returns {Number}
  * @example
- * // returns VALUE
- * LOG10()
+ * // returns 2
+ * LOG10(100)
+ * @example
+ * // returns 1.6989700043360185
+ * LOG10(50)
  */
 function LOG10() {}
 

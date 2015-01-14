@@ -1433,19 +1433,20 @@
             "name": "LN",
             "access": "",
             "virtual": false,
-            "description": "LN\nDescription",
+            "description": "LN\nReturns the the logarithm of a number, base `e` (Euler's number).",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the logarithm, base `e`. Must be a positive number.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLN()"
+                "// returns 1.6094379124341003\nLN(5)",
+                "// returns NaN\nLN(\"Test\")"
             ],
             "returns": {
                 "type": "Number",
@@ -1479,19 +1480,28 @@
             "name": "LOG",
             "access": "",
             "virtual": false,
-            "description": "LOG\nDescription",
+            "description": "LOG\nReturns the the logarithm of a number given a base.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the logarithm given `base`.",
                     "default": "",
                     "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "base",
+                    "type": "Number",
+                    "description": "The base to use for the logarithm calculation.",
+                    "default": "10",
+                    "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLOG()"
+                "// returns 2.8613531161467867\nLOG(100, 5)",
+                "// returns 2\nLOG(100)"
             ],
             "returns": {
                 "type": "Number",
@@ -1502,19 +1512,20 @@
             "name": "LOG10",
             "access": "",
             "virtual": false,
-            "description": "LOG10\nDescription",
+            "description": "LOG10\nReturns the the logarithm of a number, base 10.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the logarithm, base 10.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLOG10()"
+                "// returns 2\nLOG10(100)",
+                "// returns 1.69897000433602\nLOG10(50)"
             ],
             "returns": {
                 "type": "Number",

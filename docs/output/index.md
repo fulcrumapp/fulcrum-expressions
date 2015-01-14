@@ -236,7 +236,7 @@ Returns the length of a string value.
 
 ### [LN](./LN)
 
-Description
+Returns the the logarithm of a number, base `e` (Euler's number).
 
 ### [LOCALE](./LOCALE)
 
@@ -244,11 +244,11 @@ Description
 
 ### [LOG](./LOG)
 
-Description
+Returns the the logarithm of a number given a base.
 
 ### [LOG10](./LOG10)
 
-Description
+Returns the the logarithm of a number, base 10.
 
 ### [LONGITUDE](./LONGITUDE)
 
