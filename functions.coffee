@@ -82,7 +82,7 @@ exports.AND = ->
 
 exports.AVERAGE = ->
   args = toArray(arguments)
-  return NaN  if args.length is 0
+  return NaN if args.length is 0
   _.inject(args, ((memo, arg) -> memo + +arg), 0) / args.length
 
 exports.ROUND = (number, digits = 0) ->
@@ -96,7 +96,6 @@ exports.CEILING = (number, significance = 1) ->
   significance = ABS(significance)
 
   number = NUM(number)
-  significance = NUM(significance)
 
   return NaN if isNaN(number) or isNaN(significance)
 
@@ -110,11 +109,10 @@ exports.CEILING = (number, significance = 1) ->
     -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
 
 exports.FLOOR = (number, significance) ->
-  significance ||= 1
+  significance ?= 1
   significance = ABS(significance)
 
   number = NUM(number)
-  significance = NUM(significance)
 
   return NaN if isNaN(number) or isNaN(significance)
 
@@ -129,27 +127,26 @@ exports.FLOOR = (number, significance) ->
 
 exports.CHAR = (number) ->
   number = NUM(number)
-  return number if number instanceof Error
   String.fromCharCode number
 
 exports.CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
 
 exports.CLEAN = (text) ->
-  text = text or ''
+  text ?= ''
   text.replace CLEAN_REGEX, ''
 
 exports.CODE = (string) ->
-  string = string.toString() if typeof(string) is 'number'
-  return NaN unless typeof(string) is 'string'
-  (string or '').charCodeAt(0)
+  string = string.toString() if _.isNumber(string)
+  return NaN unless _.isString(string)
+  (string ? '').charCodeAt(0)
 
 exports.CONCATENATE = ->
   strings = _.map toArray(arguments), (arg) ->
-    switch typeof(arg)
-      when 'string'
+    switch true
+      when _.isString(arg)
         arg
-      when 'number'
-        arg + ''
+      when _.isNumber(arg)
+        '' + arg
       else
         ''
 
@@ -168,8 +165,7 @@ exports.COSH = (number) ->
 exports.COMPACT = (value) ->
   return undefined unless _.isArray(value)
 
-  _.filter value, (item) ->
-    item isnt undefined and item isnt null
+  _.filter value, (item) -> item?
 
 exports.COUNT = (value) ->
   return COMPACT(value).length if _.isArray(value)
@@ -183,11 +179,11 @@ exports.COUNTBLANK = (value) ->
 
   results = _.filter value, (item) ->
     switch true
-      when item is undefined or item is null
+      when not item?
         true
       when _.isArray(item)
         item.length is 0
-      when typeof(item) is 'string'
+      when _.isString(item)
         _.isBlank(item)
       else
         false
@@ -236,7 +232,7 @@ exports.EVEN = (value) ->
 
   return NaN unless _.isNumber(value)
 
-  return CEILING(value, -2, -1)
+  CEILING(value, -2, -1)
 
 exports.EXACT = (value1, value2) ->
   _.isEqual(value1, value2)
@@ -253,7 +249,7 @@ exports.FACT = (value) ->
 
   n = Math.floor(value)
 
-  if n is 0 || n is 1
+  if n is 0 or n is 1
     1
   else if MEMOIZED_FACT[n] > 0
     MEMOIZED_FACT[n]
@@ -363,7 +359,7 @@ exports.GCD = ->
 
   result = numbers[0]
 
-  for i in [1..count - 1] by 1
+  for i in [1..count - 1]
     return NaN if numbers[i] < 0
 
     num = numbers[i]
@@ -387,8 +383,7 @@ exports.IFERROR = (value, errorValue) ->
 exports.INT = exports.FLOOR
 
 exports.ISBLANK = (value) ->
-  return true if value is null
-  return true if value is undefined
+  return true unless value?
   return true if _.isNaN(value)
   return false if _.isBoolean(value)
   return false if _.isNumber(value)
@@ -413,9 +408,7 @@ exports.ISBLANK = (value) ->
   Object.keys(value).length is 0
 
 exports.ISERR = (value) ->
-  return true if value is NO_VALUE
-  return true if value is undefined
-  return true if value is null
+  return true unless value?
   return true if isNaN(value)
   return true if value instanceof Error
   false
@@ -478,8 +471,7 @@ exports.LEFT = (value, numberOfCharacters = 1) ->
   numberOfCharacters ||= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
 
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if numberOfCharacters < 0
   return NO_VALUE if isNaN(numberOfCharacters)
@@ -489,8 +481,7 @@ exports.LEFT = (value, numberOfCharacters = 1) ->
   value.substring(0, numberOfCharacters)
 
 exports.LEN = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
 
   value.toString().length
@@ -499,10 +490,9 @@ exports.LN = MATH_FUNC(Math.log)
 
 exports.LOG = (value, base) ->
   value = NUM(value)
-  base = NUM(base or 10)
+  base = NUM(base ? 10)
 
-  return NaN if base is undefined
-  return NaN if base is null
+  return NaN unless base?
   return NaN if isNaN(base)
 
   Math.log(value) / Math.log(base)
@@ -511,8 +501,7 @@ exports.LOG10 = (value) ->
   LOG(value, 10)
 
 exports.LOWER = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
   return NO_VALUE if _.isObject(value)
 
@@ -564,8 +553,7 @@ exports.MID = (value, startPosition, numberOfCharacters) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
 
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if startPosition < 1
   return NO_VALUE if isNaN(startPosition)
@@ -588,7 +576,7 @@ exports.MOD = (number, divisor) ->
   if divisor > 0 then modulus else -modulus
 
 exports.NOT = (value) ->
-  not value
+  not (value ? false)
 
 exports.ODD = (value) ->
   value = NUM(value)
@@ -627,8 +615,7 @@ exports.PRODUCT = ->
   _.inject(numbers, ((memo, number) -> memo *= number), 1)
 
 exports.PROPER = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
   return NO_VALUE if _.isObject(value)
 
@@ -665,9 +652,8 @@ exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
 
+  return NO_VALUE unless value?
   return NO_VALUE if arguments.length < 4
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if startPosition < 1
   return NO_VALUE if isNaN(startPosition)
@@ -685,8 +671,7 @@ exports.RIGHT = (value, numberOfCharacters) ->
   numberOfCharacters ||= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
 
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if numberOfCharacters < 0
   return NO_VALUE if isNaN(numberOfCharacters)
@@ -711,7 +696,7 @@ exports.ROUNDUP = (number, digits = 0) ->
   sign * (Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
 
 exports.SEARCH = (needle, haystack, startPosition) ->
-  startPosition ||= 1
+  startPosition ?= 1
   startPosition = NUM(startPosition)
   startPosition = 1 if isNaN(startPosition)
 
@@ -815,8 +800,7 @@ exports.SUMSQ = ->
   _.inject(numbers, ((memo, number) -> memo += (number * number)), 0)
 
 exports.T = (value) ->
-  return '' if _.isUndefined(value)
-  return '' if _.isNull(value)
+  return '' unless value?
   return value.toString()
 
 exports.TRIM = (value) ->
@@ -826,8 +810,7 @@ exports.TRUE = (value) ->
   true
 
 exports.UPPER = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
   return NO_VALUE if _.isObject(value)
 
