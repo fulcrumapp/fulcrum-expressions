@@ -47,8 +47,6 @@ class Runtime
 
   featureIsNew: true
 
-  recordIsNew: true
-
   extraVariableNames: [
     'locale',
     'timeZone',
