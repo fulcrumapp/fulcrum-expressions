@@ -256,23 +256,23 @@ Returns the longitude of the current feature (record or repeatable item)
 
 ### [LOWER](./LOWER)
 
-Description
+Converts a specified string to lowercase.
 
 ### [MATCH](./MATCH)
 
-Description
+Returns the relative position of an item in a range that matches a specified value.
 
 ### [MAX](./MAX)
 
-Description
+Returns the maximum value in a given set of values.
 
 ### [MAXA](./MAXA)
 
-Description
+Returns the maximum numeric value in a given set of values.
 
 ### [MEDIAN](./MEDIAN)
 
-Description
+Returns the median value in a set of numeric values.
 
 ### [MEMOIZED_FACT](./MEMOIZED_FACT)
 
@@ -284,23 +284,23 @@ Description
 
 ### [MID](./MID)
 
-Description
+Returns a segment of a string value.
 
 ### [MIN](./MIN)
 
-Description
+Returns the minimum value in a given set of values.
 
 ### [MINA](./MINA)
 
-Description
+Returns the minimum numeric value in a given set of values.
 
 ### [MOD](./MOD)
 
-Description
+Returns the result of the modulo operator, the remainder after a division operation.
 
 ### [N](./N)
 
-Description
+Returns the value provided as a number.
 
 ### [NOT](./NOT)
 

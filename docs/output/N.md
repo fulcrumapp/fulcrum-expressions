@@ -1,15 +1,20 @@
 ## N
 
-Description
+Returns the value provided as a number.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - The value to be converted to a number.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-N()
+// returns 10
+N(10)
+```
+
+```
+// returns 1
+N(true)
 ```

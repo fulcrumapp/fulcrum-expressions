@@ -1,15 +1,15 @@
 ## MAXA
 
-Description
+Returns the maximum numeric value in a given set of values.
 
 ### Parameters
-`value` : Number (required) - argument
+`var_args_values` : Number (required) - Values in which to find the maximum numeric value.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-MAXA()
+// returns 10
+MAXA([3, 4, -6, '10'])
 ```

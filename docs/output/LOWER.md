@@ -1,15 +1,15 @@
 ## LOWER
 
-Description
+Converts a specified string to lowercase.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The string to convert to lowercase.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-LOWER()
+// returns empire state building
+LOWER("Empire State Building")
 ```

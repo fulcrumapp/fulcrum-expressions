@@ -1,15 +1,15 @@
 ## MINA
 
-Description
+Returns the minimum numeric value in a given set of values.
 
 ### Parameters
-`value` : Number (required) - argument
+`var_args_values` : Number (required) - Values in which to find the minumum numeric value.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-MINA()
+// returns -6
+MINA([3, 4, -6, '10'])
 ```

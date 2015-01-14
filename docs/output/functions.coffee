@@ -64,18 +64,18 @@ class window.ExpressionFunctions
     { identifier: "LOG", description: "Returns the the logarithm of a number given a base." }
     { identifier: "LOG10", description: "Returns the the logarithm of a number, base 10." }
     { identifier: "LONGITUDE", description: "Returns the longitude of the current feature (record or repeatable item)" }
-    { identifier: "LOWER", description: "Description" }
-    { identifier: "MATCH", description: "Description" }
-    { identifier: "MAX", description: "Description" }
-    { identifier: "MAXA", description: "Description" }
-    { identifier: "MEDIAN", description: "Description" }
+    { identifier: "LOWER", description: "Converts a specified string to lowercase." }
+    { identifier: "MATCH", description: "Returns the relative position of an item in a range that matches a specified value." }
+    { identifier: "MAX", description: "Returns the maximum value in a given set of values." }
+    { identifier: "MAXA", description: "Returns the maximum numeric value in a given set of values." }
+    { identifier: "MEDIAN", description: "Returns the median value in a set of numeric values." }
     { identifier: "MEMOIZED_FACT", description: "Description" }
     { identifier: "MEMOIZED_FACTDOUBLE", description: "Description" }
-    { identifier: "MID", description: "Description" }
-    { identifier: "MIN", description: "Description" }
-    { identifier: "MINA", description: "Description" }
-    { identifier: "MOD", description: "Description" }
-    { identifier: "N", description: "Description" }
+    { identifier: "MID", description: "Returns a segment of a string value." }
+    { identifier: "MIN", description: "Returns the minimum value in a given set of values." }
+    { identifier: "MINA", description: "Returns the minimum numeric value in a given set of values." }
+    { identifier: "MOD", description: "Returns the result of the modulo operator, the remainder after a division operation." }
+    { identifier: "N", description: "Returns the value provided as a number." }
     { identifier: "NOT", description: "Description" }
     { identifier: "NUM", description: "Description" }
     { identifier: "NUMS", description: "Description" }

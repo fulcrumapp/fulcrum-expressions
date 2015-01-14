@@ -1036,7 +1036,7 @@ function MAX() {}
  * @returns {Number}
  * @example
  * // returns 10
- * MAXA(3, 4, -6, "10")
+ * MAXA([3, 4, -6, '10'])
  */
 function MAXA() {}
 
@@ -1090,12 +1090,14 @@ function MEMOIZED_FACTDOUBLE() {}
 
 /**
  * MID
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a segment of a string value.
+ * @param {String} value The string to extract a segment from.
+ * @param {Number} start_position Index from the left of the string from which to begin extracting. First character is index `1`.
+ * @param {Number} number_of_characters Number of characters to extract.
+ * @returns {String}
  * @example
- * // returns VALUE
- * MID()
+ * // returns iOS
+ * MID("Fulcrum for iOS", 13, 3)
  */
 function MID() {}
 
@@ -1104,12 +1106,12 @@ function MID() {}
 
 /**
  * MIN
- * Description
- * @param {Number} value argument
+ * Returns the minimum value in a given set of values.
+ * @param {...Number} var_args_values Values in which to find the minimum value.
  * @returns {Number}
  * @example
- * // returns VALUE
- * MIN()
+ * // returns 1
+ * MIN(3, 1, 322, 76)
  */
 function MIN() {}
 
@@ -1118,12 +1120,12 @@ function MIN() {}
 
 /**
  * MINA
- * Description
- * @param {Number} value argument
+ * Returns the minimum numeric value in a given set of values.
+ * @param {...Number} var_args_values Values in which to find the minumum numeric value.
  * @returns {Number}
  * @example
- * // returns VALUE
- * MINA()
+ * // returns -6
+ * MINA([3, 4, -6, '10'])
  */
 function MINA() {}
 
@@ -1132,12 +1134,16 @@ function MINA() {}
 
 /**
  * MOD
- * Description
- * @param {Number} value argument
+ * Returns the result of the modulo operator, the remainder after a division operation.
+ * @param {Number} dividend The number to be divided to find the remainder.
+ * @param {Number} divisor The number to divide by.
  * @returns {Number}
  * @example
- * // returns VALUE
- * MOD()
+ * // returns 1
+ * MOD(10, 3)
+ * @example
+ * // returns 0
+ * MOD(10, 10)
  */
 function MOD() {}
 
@@ -1146,12 +1152,15 @@ function MOD() {}
 
 /**
  * N
- * Description
- * @param {Number} value argument
+ * Returns the value provided as a number.
+ * @param {Number} value The value to be converted to a number.
  * @returns {Number}
  * @example
- * // returns VALUE
- * N()
+ * // returns 10
+ * N(10)
+ * @example
+ * // returns 1
+ * N(true)
  */
 function N() {}
 

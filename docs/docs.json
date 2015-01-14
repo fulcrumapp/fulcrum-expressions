@@ -1631,7 +1631,7 @@
                 }
             ],
             "examples": [
-                "// returns 10\nMAXA(3, 4, -6, \"10\")"
+                "// returns 10\nMAXA([3, 4, -6, '10'])"
             ],
             "returns": {
                 "type": "Number",
@@ -1712,22 +1712,38 @@
             "name": "MID",
             "access": "",
             "virtual": false,
-            "description": "MID\nDescription",
+            "description": "MID\nReturns a segment of a string value.",
             "parameters": [
                 {
                     "name": "value",
+                    "type": "String",
+                    "description": "The string to extract a segment from.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "start_position",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Index from the left of the string from which to begin extracting. First character is index `1`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "number_of_characters",
+                    "type": "Number",
+                    "description": "Number of characters to extract.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMID()"
+                "// returns iOS\nMID(\"Fulcrum for iOS\", 13, 3)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -1735,19 +1751,19 @@
             "name": "MIN",
             "access": "",
             "virtual": false,
-            "description": "MIN\nDescription",
+            "description": "MIN\nReturns the minimum value in a given set of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values in which to find the minimum value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMIN()"
+                "// returns 1\nMIN(3, 1, 322, 76)"
             ],
             "returns": {
                 "type": "Number",
@@ -1758,19 +1774,19 @@
             "name": "MINA",
             "access": "",
             "virtual": false,
-            "description": "MINA\nDescription",
+            "description": "MINA\nReturns the minimum numeric value in a given set of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values in which to find the minumum numeric value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMINA()"
+                "// returns -6\nMINA([3, 4, -6, '10'])"
             ],
             "returns": {
                 "type": "Number",
@@ -1781,19 +1797,28 @@
             "name": "MOD",
             "access": "",
             "virtual": false,
-            "description": "MOD\nDescription",
+            "description": "MOD\nReturns the result of the modulo operator, the remainder after a division operation.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "dividend",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number to be divided to find the remainder.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "divisor",
+                    "type": "Number",
+                    "description": "The number to divide by.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMOD()"
+                "// returns 1\nMOD(10, 3)",
+                "// returns 0\nMOD(10, 10)"
             ],
             "returns": {
                 "type": "Number",
@@ -1804,19 +1829,20 @@
             "name": "N",
             "access": "",
             "virtual": false,
-            "description": "N\nDescription",
+            "description": "N\nReturns the value provided as a number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to be converted to a number.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nN()"
+                "// returns 10\nN(10)",
+                "// returns 1\nN(true)"
             ],
             "returns": {
                 "type": "Number",

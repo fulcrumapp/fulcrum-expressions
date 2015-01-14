@@ -1,15 +1,20 @@
 ## MEDIAN
 
-Description
+Returns the median value in a set of numeric values.
 
 ### Parameters
-`value` : Number (required) - argument
+`` :  (required) - 
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-MEDIAN()
+// returns 15
+MEDIAN(15,2,9,67,22)
+```
+
+```
+// returns 4
+MEDIAN(1,10,4)
 ```

@@ -1,15 +1,15 @@
 ## MAX
 
-Description
+Returns the maximum value in a given set of values.
 
 ### Parameters
-`value` : Number (required) - argument
+`var_args_values` : Number (required) - Values in which to find the maximum value.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-MAX()
+// returns 322
+MAX(3, 1, 322, 76)
 ```
