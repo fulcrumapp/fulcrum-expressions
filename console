@@ -5,4 +5,5 @@ global.Intl = require('intl')
 require('./dist/expressions')
 
 repl = require('repl')
-repl.start("fulcrum> ")
+
+repl.start('expressions> ')
