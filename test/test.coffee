@@ -1124,7 +1124,7 @@ describe 'LATITUDE', ->
 
     LATITUDE().should.eql(27.770756908186286)
 
-    CONFIGURE(geometry: null)
+    CONFIGURE(featureGeometry: null)
 
     LATITUDE().should.be.NaN
 
@@ -1136,7 +1136,7 @@ describe 'LONGITUDE', ->
 
     LONGITUDE().should.eql(-82.63814896345139)
 
-    CONFIGURE(geometry: null)
+    CONFIGURE(featureGeometry: null)
 
     LONGITUDE().should.be.NaN
 

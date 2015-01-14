@@ -1035,10 +1035,10 @@ exports.FORMATNUMBER = (number, language, options) ->
   HostFunctions.formatNumber(number, language, options)
 
 exports.LATITUDE = ->
-  NUM(CONFIG().geometry?.coordinates[1])
+  NUM(CONFIG().featureGeometry?.coordinates[1])
 
 exports.LONGITUDE = ->
-  NUM(CONFIG().geometry?.coordinates[0])
+  NUM(CONFIG().featureGeometry?.coordinates[0])
 
 exports.STATUS = ->
   CONFIG().recordStatus ? null
