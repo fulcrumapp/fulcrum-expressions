@@ -1,6 +1,6 @@
 ## LATITUDE
 
-Returns the latitude of the current feature (record or repeatable item)
+Returns the latitude of the current feature (record or repeatable item).
 
 ### Parameters
 No parameters

@@ -52,13 +52,13 @@ class window.ExpressionFunctions
     { identifier: "ISNAN", description: "Description" }
     { identifier: "ISNONTEXT", description: "Tests whether a value is non-textual." }
     { identifier: "ISNUMBER", description: "Tests whether a value is a number." }
-    { identifier: "ISODD", description: "Description" }
+    { identifier: "ISODD", description: "Checks whether the provided value is an odd number." }
     { identifier: "ISTEXT", description: "Checks whether a value is text." }
     { identifier: "LANGUAGE", description: "Description" }
-    { identifier: "LATITUDE", description: "Returns the latitude of the current feature (record or repeatable item)" }
-    { identifier: "LCM", description: "Description" }
-    { identifier: "LEFT", description: "Description" }
-    { identifier: "LEN", description: "Description" }
+    { identifier: "LATITUDE", description: "Returns the latitude of the current feature (record or repeatable item)." }
+    { identifier: "LCM", description: "Returns the least common multiple of one or more integers." }
+    { identifier: "LEFT", description: "Returns a substring from the beginning of a given string." }
+    { identifier: "LEN", description: "Returns the length of a string value." }
     { identifier: "LN", description: "Description" }
     { identifier: "LOCALE", description: "Description" }
     { identifier: "LOG", description: "Description" }

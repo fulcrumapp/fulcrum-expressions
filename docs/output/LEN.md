@@ -1,15 +1,15 @@
 ## LEN
 
-Description
+Returns the length of a string value.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The string from which to return the length.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-LEN()
+// returns 30
+LEN("Fulcrum is for data collection")
 ```

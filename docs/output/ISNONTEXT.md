@@ -3,7 +3,7 @@
 Tests whether a value is non-textual.
 
 ### Parameters
-`value` : String (required) - The value to test.
+`value` : String (required) - The value to test as non-text.
 
 ### Returns
 Boolean

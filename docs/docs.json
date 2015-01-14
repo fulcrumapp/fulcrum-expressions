@@ -920,7 +920,7 @@
                 {
                     "name": "var_args_values",
                     "type": "Number",
-                    "description": "Value to consider to calculate greatest common divisor.",
+                    "description": "Value(s) to consider to calculate the greatest common divisor.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -1153,7 +1153,7 @@
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "The value to be verified.",
+                    "description": "The value to be verified as even.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -1225,7 +1225,7 @@
                 {
                     "name": "value",
                     "type": "String",
-                    "description": "The value to test.",
+                    "description": "The value to test as non-text.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -1268,22 +1268,24 @@
             "name": "ISODD",
             "access": "",
             "virtual": false,
-            "description": "ISODD\nDescription",
+            "description": "ISODD\nChecks whether the provided value is an odd number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to be verified as odd.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISODD()"
+                "// returns false\nISODD(4)",
+                "// returns true\nISODD(5)",
+                "// returns true\nISODD(3.12)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1296,7 +1298,7 @@
                 {
                     "name": "value",
                     "type": "String",
-                    "description": "The value to test",
+                    "description": "The value to test as text.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -1338,7 +1340,7 @@
             "name": "LATITUDE",
             "access": "",
             "virtual": false,
-            "description": "LATITUDE\nReturns the latitude of the current feature (record or repeatable item)",
+            "description": "LATITUDE\nReturns the latitude of the current feature (record or repeatable item).",
             "parameters": [],
             "examples": [
                 "// returns 27.770756908186286\nLATITUDE()"
@@ -1352,19 +1354,20 @@
             "name": "LCM",
             "access": "",
             "virtual": false,
-            "description": "LCM\nDescription",
+            "description": "LCM\nReturns the least common multiple of one or more integers.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Value(s) to consider to calculate the least common multiple.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLCM()"
+                "// returns 10\nLCM(2, 5)",
+                "// returns 660\nLCM(5, 22, 12)"
             ],
             "returns": {
                 "type": "Number",
@@ -1375,22 +1378,31 @@
             "name": "LEFT",
             "access": "",
             "virtual": false,
-            "description": "LEFT\nDescription",
+            "description": "LEFT\nReturns a substring from the beginning of a given string.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string value from which the left portion will be returned.",
                     "default": "",
                     "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "number_of_characters",
+                    "type": "Number",
+                    "description": "The number of characters to return from the left side of the string.",
+                    "default": "1",
+                    "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLEFT()"
+                "// returns Ful\nLEFT(\"Fulcrum\", 3)",
+                "// returns F\nLEFT(\"Fulcrum\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -1398,19 +1410,19 @@
             "name": "LEN",
             "access": "",
             "virtual": false,
-            "description": "LEN\nDescription",
+            "description": "LEN\nReturns the length of a string value.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string from which to return the length.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLEN()"
+                "// returns 30\nLEN(\"Fulcrum is for data collection\")"
             ],
             "returns": {
                 "type": "Number",

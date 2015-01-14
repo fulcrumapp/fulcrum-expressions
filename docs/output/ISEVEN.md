@@ -3,7 +3,7 @@
 Checks whether the provided value is an even number.
 
 ### Parameters
-`value` : Number (required) - The value to be verified.
+`value` : Number (required) - The value to be verified as even.
 
 ### Returns
 Boolean

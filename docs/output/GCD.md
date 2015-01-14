@@ -3,7 +3,7 @@
 Returns the greatest common divisor of one or more integers.
 
 ### Parameters
-`var_args_values` : Number (required) - Value to consider to calculate greatest common divisor.
+`var_args_values` : Number (required) - Value(s) to consider to calculate the greatest common divisor.
 
 ### Returns
 Number

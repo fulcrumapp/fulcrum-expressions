@@ -1,15 +1,22 @@
 ## LEFT
 
-Description
+Returns a substring from the beginning of a given string.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The string value from which the left portion will be returned.
+
+`number_of_characters` : Number (optional)  [default = 1] - The number of characters to return from the left side of the string.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-LEFT()
+// returns Ful
+LEFT("Fulcrum", 3)
+```
+
+```
+// returns F
+LEFT("Fulcrum")
 ```

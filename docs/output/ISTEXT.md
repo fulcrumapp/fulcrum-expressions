@@ -3,7 +3,7 @@
 Checks whether a value is text.
 
 ### Parameters
-`value` : String (required) - The value to test
+`value` : String (required) - The value to test as text.
 
 ### Returns
 Boolean

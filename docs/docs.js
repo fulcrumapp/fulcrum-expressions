@@ -566,7 +566,7 @@ function FORMATNUMBER() {}
 /**
  * GCD
  * Returns the greatest common divisor of one or more integers.
- * @param {...Number} var_args_values Value to consider to calculate greatest common divisor.
+ * @param {...Number} var_args_values Value(s) to consider to calculate the greatest common divisor.
  * @returns {Number}
  * @example
  * // returns 1
@@ -715,7 +715,7 @@ function ISERROR() {}
 /**
  * ISEVEN
  * Checks whether the provided value is an even number.
- * @param {Number} value The value to be verified.
+ * @param {Number} value The value to be verified as even.
  * @returns {Boolean}
  * @example
  * // returns true
@@ -766,7 +766,7 @@ function ISNAN() {}
 /**
  * ISNONTEXT
  * Tests whether a value is non-textual.
- * @param {String} value The value to test.
+ * @param {String} value The value to test as non-text.
  * @returns {Boolean}
  * @example
  * // returns true
@@ -795,16 +795,20 @@ function ISNONTEXT() {}
 function ISNUMBER() {}
 
 
-////ISODD
-
 /**
  * ISODD
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks whether the provided value is an odd number.
+ * @param {Number} value The value to be verified as odd.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISODD()
+ * // returns false
+ * ISODD(4)
+ * @example
+ * // returns true
+ * ISODD(5)
+ * @example
+ * // returns true
+ * ISODD(3.12)
  */
 function ISODD() {}
 
@@ -814,7 +818,7 @@ function ISODD() {}
 /**
  * ISTEXT
  * Checks whether a value is text.
- * @param {String} value The value to test
+ * @param {String} value The value to test as text.
  * @returns {Boolean}
  * @example
  * // returns true
@@ -844,7 +848,7 @@ function LANGUAGE() {}
 
 /**
  * LATITUDE
- * Returns the latitude of the current feature (record or repeatable item)
+ * Returns the latitude of the current feature (record or repeatable item).
  * @returns {Number}
  * @example
  * // returns 27.770756908186286
@@ -857,12 +861,15 @@ function LATITUDE() {}
 
 /**
  * LCM
- * Description
- * @param {Number} value argument
+ * Returns the least common multiple of one or more integers.
+ * @param {...Number} var_args_values Value(s) to consider to calculate the least common multiple.
  * @returns {Number}
  * @example
- * // returns VALUE
- * LCM()
+ * // returns 10
+ * LCM(2, 5)
+ * @example
+ * // returns 660
+ * LCM(5, 22, 12)
  */
 function LCM() {}
 
@@ -871,12 +878,16 @@ function LCM() {}
 
 /**
  * LEFT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a substring from the beginning of a given string.
+ * @param {String} value The string value from which the left portion will be returned.
+ * @param {Number} [number_of_characters=1] The number of characters to return from the left side of the string.
+ * @returns {String}
  * @example
- * // returns VALUE
- * LEFT()
+ * // returns Ful
+ * LEFT("Fulcrum", 3)
+ * @example
+ * // returns F
+ * LEFT("Fulcrum")
  */
 function LEFT() {}
 
@@ -885,12 +896,12 @@ function LEFT() {}
 
 /**
  * LEN
- * Description
- * @param {Number} value argument
+ * Returns the length of a string value.
+ * @param {String} value The string from which to return the length.
  * @returns {Number}
  * @example
- * // returns VALUE
- * LEN()
+ * // returns 30
+ * LEN("Fulcrum is for data collection")
  */
 function LEN() {}
 

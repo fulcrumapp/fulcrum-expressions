@@ -208,7 +208,7 @@ Tests whether a value is a number.
 
 ### [ISODD](./ISODD)
 
-Description
+Checks whether the provided value is an odd number.
 
 ### [ISTEXT](./ISTEXT)
 
@@ -220,19 +220,19 @@ Description
 
 ### [LATITUDE](./LATITUDE)
 
-Returns the latitude of the current feature (record or repeatable item)
+Returns the latitude of the current feature (record or repeatable item).
 
 ### [LCM](./LCM)
 
-Description
+Returns the least common multiple of one or more integers.
 
 ### [LEFT](./LEFT)
 
-Description
+Returns a substring from the beginning of a given string.
 
 ### [LEN](./LEN)
 
-Description
+Returns the length of a string value.
 
 ### [LN](./LN)
 
