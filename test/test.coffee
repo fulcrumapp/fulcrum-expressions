@@ -538,6 +538,7 @@ describe 'MAX', ->
     shouldHaveNoValue(MAX(new Date))
     shouldHaveNoValue(MAX(NaN, -2, -3))
     shouldHaveNoValue(MAX())
+    shouldHaveNoValue(MAX(3, 4, 5, 'Test'))
 
 describe 'MAXA', ->
   it 'returns the maximum number in a list of numbers', ->
@@ -553,6 +554,7 @@ describe 'MAXA', ->
     shouldHaveNoValue(MAXA(new Date))
     shouldHaveNoValue(MAXA(NaN, -2, -3))
     shouldHaveNoValue(MAXA())
+    shouldHaveNoValue(MAXA([3, 4, 5, 'Test']))
 
 describe 'MIN', ->
   it 'returns the minimum number in a list of numbers', ->
