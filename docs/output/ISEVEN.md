@@ -1,15 +1,25 @@
 ## ISEVEN
 
-Description
+Checks whether the provided value is an even number.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - The value to be verified.
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-ISEVEN()
+// returns true
+ISEVEN(4)
+```
+
+```
+// returns false
+ISEVEN(5)
+```
+
+```
+// returns true
+ISEVEN(4.12)
 ```

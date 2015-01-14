@@ -714,12 +714,18 @@ function ISERROR() {}
 
 /**
  * ISEVEN
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks whether the provided value is an even number.
+ * @param {Number} value The value to be verified.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISEVEN()
+ * // returns true
+ * ISEVEN(4)
+ * @example
+ * // returns false
+ * ISEVEN(5)
+ * @example
+ * // returns true
+ * ISEVEN(4.12)
  */
 function ISEVEN() {}
 
@@ -728,12 +734,15 @@ function ISEVEN() {}
 
 /**
  * ISLOGICAL
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks whether a value is `true` or `false`.
+ * @param {String} value The value to be verified as `true` or `false`.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISLOGICAL()
+ * // returns true
+ * ISLOGICAL(true)
+ * @example
+ * // returns false
+ * ISLOGICAL("Text")
  */
 function ISLOGICAL() {}
 
@@ -756,12 +765,15 @@ function ISNAN() {}
 
 /**
  * ISNONTEXT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Tests whether a value is non-textual.
+ * @param {String} value The value to test.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISNONTEXT()
+ * // returns true
+ * ISNONTEXT(4)
+ * @example
+ * // returns false
+ * ISNONTEXT("Some text")
  */
 function ISNONTEXT() {}
 
@@ -770,12 +782,15 @@ function ISNONTEXT() {}
 
 /**
  * ISNUMBER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Tests whether a value is a number.
+ * @param {Number} value The value to be verified as a number.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISNUMBER()
+ * // returns true
+ * ISNUMBER(10)
+ * @example
+ * // returns false
+ * ISNUMBER("Some text")
  */
 function ISNUMBER() {}
 

@@ -1,15 +1,20 @@
 ## ISNUMBER
 
-Description
+Tests whether a value is a number.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - The value to be verified as a number.
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-ISNUMBER()
+// returns true
+ISNUMBER(10)
+```
+
+```
+// returns false
+ISNUMBER("Some text")
 ```

@@ -1,15 +1,20 @@
 ## ISNONTEXT
 
-Description
+Tests whether a value is non-textual.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The value to test.
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-ISNONTEXT()
+// returns true
+ISNONTEXT(4)
+```
+
+```
+// returns false
+ISNONTEXT("Some text")
 ```

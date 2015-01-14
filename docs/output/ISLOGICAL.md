@@ -1,15 +1,20 @@
 ## ISLOGICAL
 
-Description
+Checks whether a value is `true` or `false`.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The value to be verified as `true` or `false`.
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-ISLOGICAL()
+// returns true
+ISLOGICAL(true)
+```
+
+```
+// returns false
+ISLOGICAL("Text")
 ```

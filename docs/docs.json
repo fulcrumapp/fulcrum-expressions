@@ -1148,22 +1148,24 @@
             "name": "ISEVEN",
             "access": "",
             "virtual": false,
-            "description": "ISEVEN\nDescription",
+            "description": "ISEVEN\nChecks whether the provided value is an even number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to be verified.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISEVEN()"
+                "// returns true\nISEVEN(4)",
+                "// returns false\nISEVEN(5)",
+                "// returns true\nISEVEN(4.12)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1171,22 +1173,23 @@
             "name": "ISLOGICAL",
             "access": "",
             "virtual": false,
-            "description": "ISLOGICAL\nDescription",
+            "description": "ISLOGICAL\nChecks whether a value is `true` or `false`.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The value to be verified as `true` or `false`.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISLOGICAL()"
+                "// returns true\nISLOGICAL(true)",
+                "// returns false\nISLOGICAL(\"Text\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1217,22 +1220,23 @@
             "name": "ISNONTEXT",
             "access": "",
             "virtual": false,
-            "description": "ISNONTEXT\nDescription",
+            "description": "ISNONTEXT\nTests whether a value is non-textual.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The value to test.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISNONTEXT()"
+                "// returns true\nISNONTEXT(4)",
+                "// returns false\nISNONTEXT(\"Some text\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1240,22 +1244,23 @@
             "name": "ISNUMBER",
             "access": "",
             "virtual": false,
-            "description": "ISNUMBER\nDescription",
+            "description": "ISNUMBER\nTests whether a value is a number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to be verified as a number.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISNUMBER()"
+                "// returns true\nISNUMBER(10)",
+                "// returns false\nISNUMBER(\"Some text\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },

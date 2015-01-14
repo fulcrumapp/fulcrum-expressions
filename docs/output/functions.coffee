@@ -47,13 +47,13 @@ class window.ExpressionFunctions
     { identifier: "ISBLANK", description: "Checks whether the field's value is empty." }
     { identifier: "ISERR", description: "Description" }
     { identifier: "ISERROR", description: "Description" }
-    { identifier: "ISEVEN", description: "Description" }
-    { identifier: "ISLOGICAL", description: "Description" }
+    { identifier: "ISEVEN", description: "Checks whether the provided value is an even number." }
+    { identifier: "ISLOGICAL", description: "Checks whether a value is `true` or `false`." }
     { identifier: "ISNAN", description: "Description" }
-    { identifier: "ISNONTEXT", description: "Description" }
-    { identifier: "ISNUMBER", description: "Description" }
+    { identifier: "ISNONTEXT", description: "Tests whether a value is non-textual." }
+    { identifier: "ISNUMBER", description: "Tests whether a value is a number." }
     { identifier: "ISODD", description: "Description" }
-    { identifier: "ISTEXT", description: "Description" }
+    { identifier: "ISTEXT", description: "Checks whether a value is text." }
     { identifier: "LANGUAGE", description: "Description" }
     { identifier: "LATITUDE", description: "Returns the latitude of the current feature (record or repeatable item)" }
     { identifier: "LCM", description: "Description" }

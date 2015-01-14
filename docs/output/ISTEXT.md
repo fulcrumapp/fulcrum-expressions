@@ -1,15 +1,20 @@
 ## ISTEXT
 
-Description
+Checks whether a value is text.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The value to test
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
-ISTEXT()
+// returns true
+ISTEXT("Text")
+```
+
+```
+// returns false
+ISTEXT(4)
 ```

@@ -188,11 +188,11 @@ Description
 
 ### [ISEVEN](./ISEVEN)
 
-Description
+Checks whether the provided value is an even number.
 
 ### [ISLOGICAL](./ISLOGICAL)
 
-Description
+Checks whether a value is `true` or `false`.
 
 ### [ISNAN](./ISNAN)
 
@@ -200,11 +200,11 @@ Description
 
 ### [ISNONTEXT](./ISNONTEXT)
 
-Description
+Tests whether a value is non-textual.
 
 ### [ISNUMBER](./ISNUMBER)
 
-Description
+Tests whether a value is a number.
 
 ### [ISODD](./ISODD)
 
@@ -212,7 +212,7 @@ Description
 
 ### [ISTEXT](./ISTEXT)
 
-Description
+Checks whether a value is text.
 
 ### [LANGUAGE](./LANGUAGE)
 
