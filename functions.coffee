@@ -205,11 +205,23 @@ exports.DATE = (year, month, day) ->
 
   new Date("#{year}/#{month}/#{day} 00:00:00")
 
-exports.DATEVALUE = ->
-  NOT_IMPLEMENTED()
+exports.DATEVALUE = (text) ->
+  return text if _.isDate(text)
 
-exports.DAY = ->
-  NOT_IMPLEMENTED()
+  text = text.replace(/-/g, '/') if _.isString(text) and text.length <= 10
+
+  date = new Date(text)
+
+  return NO_VALUE if isNaN(date.getTime())
+
+  date
+
+exports.DAY = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getDate()
 
 exports.DAYS360 = ->
   NOT_IMPLEMENTED()

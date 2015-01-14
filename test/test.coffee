@@ -1184,6 +1184,37 @@ describe 'DATE', ->
     shouldHaveNoValue(DATE('a', 'b', 'c'))
     shouldHaveNoValue(DATE(new Date))
 
+describe 'DATE', ->
+  it 'returns a date given a date string', ->
+    dateObject = DATE(2015, 1, 14)
+
+    date = DATEVALUE(dateObject.toString())
+    date.getFullYear().should.be.exactly(2015)
+    date.getMonth().should.be.exactly(0)
+    date.getDate().should.be.exactly(14)
+
+    date = DATEVALUE(dateObject)
+    date.getFullYear().should.be.exactly(2015)
+    date.getMonth().should.be.exactly(0)
+    date.getDate().should.be.exactly(14)
+
+    shouldHaveNoValue(DATEVALUE('a', 'b', 'c'))
+
+describe 'DAY', ->
+  it 'returns a day given a date', ->
+    DAY('2015/12/16').should.be.exactly(16)
+    DAY('2015-12-16').should.be.exactly(16)
+    DAY('2015 12 16').should.be.exactly(16)
+    DAY('12/16/2015').should.be.exactly(16)
+    DAY('12-16-2015').should.be.exactly(16)
+    DAY('12 16 2015').should.be.exactly(16)
+
+    DAY(new Date('2015/12/16 00:00:00')).should.be.exactly(16)
+    DAY(new Date('2015-12-16 00:00:00')).should.be.exactly(16)
+    DAY(new Date('2015 12 16 00:00:00')).should.be.exactly(16)
+
+    shouldHaveNoValue(DAY('not a date'))
+
 describe 'X_ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
 
