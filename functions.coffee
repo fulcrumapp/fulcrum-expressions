@@ -135,6 +135,12 @@ exports.CLEAN = (text) ->
   text ?= ''
   text.replace CLEAN_REGEX, ''
 
+exports.COALESCE = ->
+  if arguments.length is 1 and _.isArray(arguments[0])
+    COALESCE.apply(null, arguments[0])
+  else
+    (_.find toArray(arguments), (value) -> value?) ? NO_VALUE
+
 exports.CODE = (string) ->
   string = string.toString() if _.isNumber(string)
   return NaN unless _.isString(string)
@@ -843,7 +849,7 @@ exports.OTHER = (value) ->
 
 exports.SELECTED = (value, choice) ->
   return false if ISBLANK(value)
-  return false unless choice
+  return false unless choice?
 
   if _.isArray(choice)
     return (choice.filter (item) -> not SELECTED(value, item)).length is 0

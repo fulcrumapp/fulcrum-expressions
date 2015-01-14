@@ -123,6 +123,26 @@ function CHAR() {}
 function CLEAN() {}
 
 
+////COALESCE
+
+/**
+ * COALESCE
+ * Returns the first parameter whose value exists
+ * @param {...*} parameters The value to return if it exists
+ * @returns {*} The first parameter that exists
+ * @example
+ * // returns Test
+ * COALESCE(null, null, 'Test', 1)
+ * @example
+ * // returns 1
+ * COALESCE(1, null, null)
+ * @example
+ * // returns null
+ * COALESCE(null, null, null)
+ */
+function COALESCE() {}
+
+
 ////CODE
 
 /**

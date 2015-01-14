@@ -30,6 +30,10 @@ Convert a number into a character according to the current Unicode table.
 
 Returns the text with the non-printable ASCII characters removed.
 
+### [COALESCE](./COALESCE)
+
+Returns the first parameter whose value exists
+
 ### [CODE](./CODE)
 
 Returns the numeric Unicode map value of the first character in the string provided.

@@ -8,6 +8,7 @@ class window.ExpressionFunctions
     { identifier: "CEILING", description: "Rounds a number up to the nearest integer multiple of specified significance." }
     { identifier: "CHAR", description: "Convert a number into a character according to the current Unicode table." }
     { identifier: "CLEAN", description: "Returns the text with the non-printable ASCII characters removed." }
+    { identifier: "COALESCE", description: "Returns the first parameter whose value exists" }
     { identifier: "CODE", description: "Returns the numeric Unicode map value of the first character in the string provided." }
     { identifier: "COMPACT", description: "Description" }
     { identifier: "CONCATENATE", description: "Returns the concatenation of multiple values." }

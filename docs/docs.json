@@ -197,6 +197,31 @@
             }
         },
         {
+            "name": "COALESCE",
+            "access": "",
+            "virtual": false,
+            "description": "COALESCE\nReturns the first parameter whose value exists",
+            "parameters": [
+                {
+                    "name": "parameters",
+                    "type": "*",
+                    "description": "The value to return if it exists",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Test\nCOALESCE(null, null, 'Test', 1)",
+                "// returns 1\nCOALESCE(1, null, null)",
+                "// returns null\nCOALESCE(null, null, null)"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "The first parameter that exists"
+            }
+        },
+        {
             "name": "CODE",
             "access": "",
             "virtual": false,
