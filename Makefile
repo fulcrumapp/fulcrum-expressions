@@ -17,7 +17,11 @@ help:
 copy:
 	./script/copy-files
 
-dist: build help test copy
+dist: clean build help test
+
+clean:
+	rm dist/*
+	rm docs/output/*
 
 test:
 	./node_modules/mocha/bin/mocha \
@@ -26,4 +30,4 @@ test:
 	--compilers coffee:coffee-script/register \
 	$(TESTS)
 
-.PHONY: build test docs help copy dist
+.PHONY: build test docs help copy clean dist
