@@ -82,6 +82,10 @@ Description
 
 Converts a provided year, month, and day into a date.
 
+### [DATEADD](./DATEADD)
+
+Adds a number of days to a given date
+
 ### [DATEVALUE](./DATEVALUE)
 
 Converts a provided date string in a known format to a date value.
@@ -298,6 +302,10 @@ Returns the minimum numeric value in a given set of values.
 
 Returns the result of the modulo operator, the remainder after a division operation.
 
+### [MONTH](./MONTH)
+
+Returns the month of a given date.
+
 ### [N](./N)
 
 Returns the value provided as a number.
@@ -465,6 +473,10 @@ Description
 ### [VERSIONINFO](./VERSIONINFO)
 
 Returns version information about the app.
+
+### [YEAR](./YEAR)
+
+Returns the year of a given date.
 
 ### [X_ISNEW](./X_ISNEW)
 

@@ -91,10 +91,7 @@ class Runtime
 
       element = @elementsByKey[key]
 
-      if element.numeric or element.format is 'number'
-        state["$#{@dataNames[key]}"] = Number(value)
-      else
-        state["$#{@dataNames[key]}"] = value
+      state["$#{@dataNames[key]}"] = Utils.valueForElement(element, value)
 
     for name in @extraVariableNames
       state["$$#{name}"] = @[name]
@@ -136,7 +133,7 @@ class Runtime
 
         stringValue = @formatValue(rawValue)
 
-        variables[thisVariableName] = if _.isNumber(rawValue) then rawValue else stringValue
+        variables[thisVariableName] = if _.isNumber(rawValue) or _.isDate(rawValue) then rawValue else stringValue
 
       return @createResult(context.key, rawValue, stringValue, null)
     catch ex
@@ -160,6 +157,8 @@ class Runtime
       err = '[Function]'
     else if _.isArray(rawValue)
       err = '[Array]'
+    else if _.isDate(rawValue)
+      err = null
     else if _.isObject(rawValue)
       err = '[Object]'
 
@@ -173,7 +172,7 @@ class Runtime
     else if _.isNumber(value)
       value = value
     else if _.isDate(value)
-      value = value.toString()
+      value = Utils.formatMachineDate(value)
     else if _.isArray(value)
       value = value.map(@formatValue).join(', ')
     else if _.isRegExp(value)

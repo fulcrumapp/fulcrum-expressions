@@ -1174,6 +1174,88 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.eql(6)
 
+describe 'DATE', ->
+  it 'returns a date given a year, month, and day', ->
+    date = DATE(2015, 1, 14)
+    date.getFullYear().should.be.exactly(2015)
+    date.getMonth().should.be.exactly(0)
+    date.getDate().should.be.exactly(14)
+
+    shouldHaveNoValue(DATE('a', 'b', 'c'))
+    shouldHaveNoValue(DATE(new Date))
+
+describe 'DATE', ->
+  it 'returns a date given a date string', ->
+    dateObject = DATE(2015, 1, 14)
+
+    date = DATEVALUE(dateObject.toString())
+    date.getFullYear().should.be.exactly(2015)
+    date.getMonth().should.be.exactly(0)
+    date.getDate().should.be.exactly(14)
+
+    date = DATEVALUE(dateObject)
+    date.getFullYear().should.be.exactly(2015)
+    date.getMonth().should.be.exactly(0)
+    date.getDate().should.be.exactly(14)
+
+    shouldHaveNoValue(DATEVALUE('a', 'b', 'c'))
+
+describe 'DAY', ->
+  it 'returns a day given a date', ->
+    DAY('2015/12/16').should.be.exactly(16)
+    DAY('2015-12-16').should.be.exactly(16)
+    DAY('2015.12.16').should.be.exactly(16)
+    DAY('2015 12 16').should.be.exactly(16)
+    DAY('12/16/2015').should.be.exactly(16)
+    DAY('12-16-2015').should.be.exactly(16)
+    DAY('12.16.2015').should.be.exactly(16)
+    DAY('12 16 2015').should.be.exactly(16)
+    DAY('5/1/2015').should.be.exactly(1)
+
+    DAY(new Date('2015/12/16 00:00:00')).should.be.exactly(16)
+    DAY(new Date('2015-12-16 00:00:00')).should.be.exactly(16)
+    DAY(new Date('2015 12 16 00:00:00')).should.be.exactly(16)
+    DAY(new Date('2015/5/1 00:00:00')).should.be.exactly(1)
+
+    shouldHaveNoValue(DAY('not a date'))
+
+describe 'MONTH', ->
+  it 'returns a month given a date', ->
+    MONTH('2015/12/16').should.be.exactly(12)
+    MONTH('2015-12-16').should.be.exactly(12)
+    MONTH('2015.12.16').should.be.exactly(12)
+    MONTH('2015 12 16').should.be.exactly(12)
+    MONTH('12/16/2015').should.be.exactly(12)
+    MONTH('12.16.2015').should.be.exactly(12)
+    MONTH('12-16-2015').should.be.exactly(12)
+    MONTH('12 16 2015').should.be.exactly(12)
+    MONTH('5/1/2015').should.be.exactly(5)
+
+    MONTH(new Date('2015/12/16 00:00:00')).should.be.exactly(12)
+    MONTH(new Date('2015-12-16 00:00:00')).should.be.exactly(12)
+    MONTH(new Date('2015.12.16 00:00:00')).should.be.exactly(12)
+    MONTH(new Date('2015 12 16 00:00:00')).should.be.exactly(12)
+    MONTH(new Date('2015/5/1 00:00:00')).should.be.exactly(5)
+
+    shouldHaveNoValue(MONTH('not a date'))
+
+describe 'YEAR', ->
+  it 'returns a year given a date', ->
+    YEAR('2015/01/01').should.be.exactly(2015)
+    YEAR('2015-01-01').should.be.exactly(2015)
+    YEAR('2015 12 16').should.be.exactly(2015)
+    YEAR('01/01/2015').should.be.exactly(2015)
+    YEAR('01-01-2015').should.be.exactly(2015)
+    YEAR('01 01 2015').should.be.exactly(2015)
+    YEAR('1/1/2015').should.be.exactly(2015)
+
+    YEAR(new Date('2015/01/01 00:00:00')).should.be.exactly(2015)
+    YEAR(new Date('2015-01-01 00:00:00')).should.be.exactly(2015)
+    YEAR(new Date('2015.01.01 00:00:00')).should.be.exactly(2015)
+    YEAR(new Date('2015 01 01 00:00:00')).should.be.exactly(2015)
+
+    shouldHaveNoValue(YEAR('not a date'))
+
 describe 'X_ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
 

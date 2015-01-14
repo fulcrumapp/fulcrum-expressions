@@ -21,6 +21,7 @@ class window.ExpressionFunctions
     { identifier: "CURRENCYCODE", description: "Description" }
     { identifier: "CURRENCYSYMBOL", description: "Description" }
     { identifier: "DATE", description: "Converts a provided year, month, and day into a date." }
+    { identifier: "DATEADD", description: "Adds a number of days to a given date" }
     { identifier: "DATEVALUE", description: "Converts a provided date string in a known format to a date value." }
     { identifier: "DAY", description: "Returns the day of the month that a specific date falls on, in numeric format." }
     { identifier: "DAYS360", description: "Returns the difference between two days based on the 360 day year used in some financial interest calculations." }
@@ -75,6 +76,7 @@ class window.ExpressionFunctions
     { identifier: "MIN", description: "Returns the minimum value in a given set of values." }
     { identifier: "MINA", description: "Returns the minimum numeric value in a given set of values." }
     { identifier: "MOD", description: "Returns the result of the modulo operator, the remainder after a division operation." }
+    { identifier: "MONTH", description: "Returns the month of a given date." }
     { identifier: "N", description: "Returns the value provided as a number." }
     { identifier: "NOT", description: "Returns the opposite of a logical value - `NOT(true)` returns `false`; `NOT(false)` returns `true`." }
     { identifier: "NUM", description: "Description" }
@@ -117,6 +119,7 @@ class window.ExpressionFunctions
     { identifier: "UPPER", description: "Description" }
     { identifier: "VALUE", description: "Description" }
     { identifier: "VERSIONINFO", description: "Returns version information about the app." }
+    { identifier: "YEAR", description: "Returns the year of a given date." }
     { identifier: "X_ISNEW", description: "Returns a boolean indicating whether the current feature (record or repeatable item) is new. It returns false if it's being updated." }
     { identifier: "X_ISUPDATE", description: "Returns a boolean indicating whether the current feature (record or repeatable item) is being updated. It returns false if it's a new record." }
   ]

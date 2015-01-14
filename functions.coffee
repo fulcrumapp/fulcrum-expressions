@@ -196,14 +196,46 @@ exports.COUNTBLANK = (value) ->
 
   results.length
 
-exports.DATE = ->
-  NOT_IMPLEMENTED()
+exports.DATE = (year, month, day) ->
+  year = INT(year)
+  month = INT(month)
+  day = INT(day)
 
-exports.DATEVALUE = ->
-  NOT_IMPLEMENTED()
+  return NO_VALUE if isNaN(year) or isNaN(month) or isNaN(day)
 
-exports.DAY = ->
-  NOT_IMPLEMENTED()
+  new Date("#{year}/#{month}/#{day} 00:00:00")
+
+exports.DATEADD = (date, number, type='day') ->
+  date = DATEVALUE(date)
+  number = INT(number)
+
+  return NO_VALUE unless date?
+  return NO_VALUE if isNaN(number)
+
+  return NO_VALUE unless type is 'day'
+
+  time = date.getTime()
+  time += (number * (1000 * 60 * 60 * 24))
+
+  new Date(time)
+
+exports.DATEVALUE = (text) ->
+  return text if _.isDate(text)
+
+  text = text.replace(/-/g, '/') if _.isString(text) and text.length <= 10
+
+  date = new Date(text)
+
+  return NO_VALUE if isNaN(date.getTime())
+
+  date
+
+exports.DAY = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getDate()
 
 exports.DAYS360 = ->
   NOT_IMPLEMENTED()
@@ -581,6 +613,13 @@ exports.MOD = (number, divisor) ->
 
   if divisor > 0 then modulus else -modulus
 
+exports.MONTH = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getMonth() + 1
+
 exports.NOT = (value) ->
   not (value ? false)
 
@@ -824,6 +863,13 @@ exports.UPPER = (value) ->
 
 exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
+
+exports.YEAR = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getFullYear()
 
 exports.X_ISNEW = ->
   CONFIG().featureIsNew is true
