@@ -1,4 +1,4 @@
-## ISUPDATE
+## X_ISUPDATE
 
 Returns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.
 
@@ -11,5 +11,5 @@ Boolean
 ### Examples
 ```
 // returns false
-ISUPDATE()
+X_ISUPDATE()
 ```

@@ -736,19 +736,6 @@ function ISLOGICAL() {}
 function ISNAN() {}
 
 
-////ISNEW
-
-/**
- * ISNEW
- * Returns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.
- * @returns {Boolean}
- * @example
- * // returns true
- * ISNEW()
- */
-function ISNEW() {}
-
-
 ////ISNONTEXT
 
 /**
@@ -803,19 +790,6 @@ function ISODD() {}
  * ISTEXT()
  */
 function ISTEXT() {}
-
-
-////ISUPDATE
-
-/**
- * ISUPDATE
- * Returns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.
- * @returns {Boolean}
- * @example
- * // returns false
- * ISUPDATE()
- */
-function ISUPDATE() {}
 
 
 ////LANGUAGE
@@ -1698,3 +1672,29 @@ function VALUE() {}
  * VERSIONINFO()
  */
 function VERSIONINFO() {}
+
+
+////X_ISNEW
+
+/**
+ * X_ISNEW
+ * Returns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * X_ISNEW()
+ */
+function X_ISNEW() {}
+
+
+////X_ISUPDATE
+
+/**
+ * X_ISUPDATE
+ * Returns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.
+ * @returns {Boolean}
+ * @example
+ * // returns false
+ * X_ISUPDATE()
+ */
+function X_ISUPDATE() {}

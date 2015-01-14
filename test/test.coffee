@@ -1172,17 +1172,17 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.eql(6)
 
-describe 'ISNEW', ->
+describe 'X_ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
 
     CONFIGURE(featureIsNew: true)
 
-    ISNEW().should.be.true
-    ISUPDATE().should.be.false
+    X_ISNEW().should.be.true
+    X_ISUPDATE().should.be.false
 
     CONFIGURE(featureIsNew: false)
 
-    ISNEW().should.be.false
-    ISUPDATE().should.be.true
+    X_ISNEW().should.be.false
+    X_ISUPDATE().should.be.true
 
     RESETCONFIG()

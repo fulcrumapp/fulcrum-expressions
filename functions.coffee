@@ -883,11 +883,11 @@ exports.UPPER = (value) ->
 exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
 
-exports.ISNEW = ->
+exports.X_ISNEW = ->
   CONFIG().featureIsNew is true
 
-exports.ISUPDATE = ->
-  not ISNEW()
+exports.X_ISUPDATE = ->
+  not X_ISNEW()
 
 exports.CONFIG = ->
   Config
