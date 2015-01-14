@@ -1525,7 +1525,7 @@
             ],
             "examples": [
                 "// returns 2\nLOG10(100)",
-                "// returns 1.69897000433602\nLOG10(50)"
+                "// returns 1.6989700043360185\nLOG10(50)"
             ],
             "returns": {
                 "type": "Number",
@@ -1550,22 +1550,22 @@
             "name": "LOWER",
             "access": "",
             "virtual": false,
-            "description": "LOWER\nDescription",
+            "description": "LOWER\nConverts a specified string to lowercase.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string to convert to lowercase.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nLOWER()"
+                "// returns empire state building\nLOWER(\"Empire State Building\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -1573,7 +1573,7 @@
             "name": "MATCH",
             "access": "",
             "virtual": false,
-            "description": "MATCH\nDescription",
+            "description": "MATCH\nReturns the relative position of an item in a range that matches a specified value.",
             "parameters": [
                 {
                     "name": "value",
@@ -1596,19 +1596,19 @@
             "name": "MAX",
             "access": "",
             "virtual": false,
-            "description": "MAX\nDescription",
+            "description": "MAX\nReturns the maximum value in a given set of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values in which to find the maximum value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMAX()"
+                "// returns 322\nMAX(3, 1, 322, 76)"
             ],
             "returns": {
                 "type": "Number",
@@ -1619,19 +1619,19 @@
             "name": "MAXA",
             "access": "",
             "virtual": false,
-            "description": "MAXA\nDescription",
+            "description": "MAXA\nReturns the maximum numeric value in a given set of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values in which to find the maximum numeric value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMAXA()"
+                "// returns 10\nMAXA(3, 4, -6, \"10\")"
             ],
             "returns": {
                 "type": "Number",
@@ -1642,19 +1642,20 @@
             "name": "MEDIAN",
             "access": "",
             "virtual": false,
-            "description": "MEDIAN\nDescription",
+            "description": "MEDIAN\nReturns the median value in a set of numeric values.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "",
+                    "type": "",
+                    "description": "",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nMEDIAN()"
+                "// returns 15\nMEDIAN(15,2,9,67,22)",
+                "// returns 4\nMEDIAN(1,10,4)"
             ],
             "returns": {
                 "type": "Number",

@@ -989,12 +989,12 @@ function LONGITUDE() {}
 
 /**
  * LOWER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Converts a specified string to lowercase.
+ * @param {String} value The string to convert to lowercase.
+ * @returns {String}
  * @example
- * // returns VALUE
- * LOWER()
+ * // returns empire state building
+ * LOWER("Empire State Building")
  */
 function LOWER() {}
 
@@ -1003,7 +1003,7 @@ function LOWER() {}
 
 /**
  * MATCH
- * Description
+ * Returns the relative position of an item in a range that matches a specified value.
  * @param {Number} value argument
  * @returns {Number}
  * @example
@@ -1017,12 +1017,12 @@ function MATCH() {}
 
 /**
  * MAX
- * Description
- * @param {Number} value argument
+ * Returns the maximum value in a given set of values.
+ * @param {...Number} var_args_values Values in which to find the maximum value.
  * @returns {Number}
  * @example
- * // returns VALUE
- * MAX()
+ * // returns 322
+ * MAX(3, 1, 322, 76)
  */
 function MAX() {}
 
@@ -1031,12 +1031,12 @@ function MAX() {}
 
 /**
  * MAXA
- * Description
- * @param {Number} value argument
+ * Returns the maximum numeric value in a given set of values.
+ * @param {...Number} var_args_values Values in which to find the maximum numeric value.
  * @returns {Number}
  * @example
- * // returns VALUE
- * MAXA()
+ * // returns 10
+ * MAXA(3, 4, -6, "10")
  */
 function MAXA() {}
 
@@ -1045,12 +1045,15 @@ function MAXA() {}
 
 /**
  * MEDIAN
- * Description
- * @param {Number} value argument
+ * Returns the median value in a set of numeric values.
+ * @param {..Number} var_args_values Values in which to find the median value.
  * @returns {Number}
  * @example
- * // returns VALUE
- * MEDIAN()
+ * // returns 15
+ * MEDIAN(15,2,9,67,22)
+ * @example
+ * // returns 4
+ * MEDIAN(1,10,4)
  */
 function MEDIAN() {}
 
