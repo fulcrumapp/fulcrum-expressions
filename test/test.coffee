@@ -1215,6 +1215,21 @@ describe 'DAY', ->
 
     shouldHaveNoValue(DAY('not a date'))
 
+describe 'MONTH', ->
+  it 'returns a month given a date', ->
+    MONTH('2015/12/16').should.be.exactly(12)
+    MONTH('2015-12-16').should.be.exactly(12)
+    MONTH('2015 12 16').should.be.exactly(12)
+    MONTH('12/16/2015').should.be.exactly(12)
+    MONTH('12-16-2015').should.be.exactly(12)
+    MONTH('12 16 2015').should.be.exactly(12)
+
+    MONTH(new Date('2015/12/16 00:00:00')).should.be.exactly(12)
+    MONTH(new Date('2015-12-16 00:00:00')).should.be.exactly(12)
+    MONTH(new Date('2015 12 16 00:00:00')).should.be.exactly(12)
+
+    shouldHaveNoValue(MONTH('not a date'))
+
 describe 'X_ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
 

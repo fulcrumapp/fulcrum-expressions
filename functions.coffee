@@ -599,6 +599,13 @@ exports.MOD = (number, divisor) ->
 
   if divisor > 0 then modulus else -modulus
 
+exports.MONTH = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getMonth() + 1
+
 exports.NOT = (value) ->
   not (value ? false)
 

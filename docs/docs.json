@@ -1771,6 +1771,29 @@
             }
         },
         {
+            "name": "MONTH",
+            "access": "",
+            "virtual": false,
+            "description": "MONTH\nReturns the month of a given date.",
+            "parameters": [
+                {
+                    "name": "date",
+                    "type": "Date",
+                    "description": "a date",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 12\nMONTH(\"2015/12/16\")"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
             "name": "N",
             "access": "",
             "virtual": false,

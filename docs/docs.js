@@ -1100,6 +1100,20 @@ function MINA() {}
 function MOD() {}
 
 
+////MONTH
+
+/**
+ * MONTH
+ * Returns the month of a given date.
+ * @param {Date} date a date
+ * @returns {Number}
+ * @example
+ * // returns 12
+ * MONTH("2015/12/16")
+ */
+function MONTH() {}
+
+
 ////N
 
 /**
