@@ -10,6 +10,6 @@ Number
 
 ### Examples
 ```
-// returns 0.15425144988758382
+// returns 0.15425144988758405
 COS(30)
 ```
