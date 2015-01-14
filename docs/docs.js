@@ -20,7 +20,6 @@ function ABS() {}
 /**
  * ACOS
  * Returns the inverse cosine of a value, in radians.
- * Use the {@link DEGREES} function to convert the result of {@link DEGREES} into degrees.
  * @param {Number} value The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.
  * @returns {Number}
  * @example
@@ -35,9 +34,6 @@ function ACOS() {}
 /**
  * ACOSH
  * Returns the inverse hyperbolic cosine of a number.
- *
- * Related:
- * {@link TANH}
  * @param {Number} value The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
  * @returns {Number}
  * @example

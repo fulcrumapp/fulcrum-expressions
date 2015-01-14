@@ -28,7 +28,7 @@
             "name": "ACOS",
             "access": "",
             "virtual": false,
-            "description": "ACOS\nReturns the inverse cosine of a value, in radians.\nUse the {@link DEGREES} function to convert the result of {@link DEGREES} into degrees.",
+            "description": "ACOS\nReturns the inverse cosine of a value, in radians.",
             "parameters": [
                 {
                     "name": "value",
@@ -51,7 +51,7 @@
             "name": "ACOSH",
             "access": "",
             "virtual": false,
-            "description": "ACOSH\nReturns the inverse hyperbolic cosine of a number.\n\nRelated:\n{@link TANH}",
+            "description": "ACOSH\nReturns the inverse hyperbolic cosine of a number.",
             "parameters": [
                 {
                     "name": "value",
