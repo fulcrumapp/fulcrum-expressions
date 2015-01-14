@@ -483,19 +483,67 @@
             "description": "DATE\nConverts a provided year, month, and day into a date.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "year",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "year",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "month",
+                    "type": "Number",
+                    "description": "month",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "day",
+                    "type": "Number",
+                    "description": "day",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nDATE()"
+                "// returns Wed Dec 16 2015 00:00:00 GMT-0500 (EST)\nDATE(2015, 12, 16)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Date",
+                "description": ""
+            }
+        },
+        {
+            "name": "DATEADD",
+            "access": "",
+            "virtual": false,
+            "description": "DATEADD\nAdds a number of days to a given date",
+            "parameters": [
+                {
+                    "name": "date",
+                    "type": "Date",
+                    "description": "date",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "days",
+                    "type": "Number",
+                    "description": "the number of days to add",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Sun Jan 11 2015 00:00:00 GMT-0500 (EST)\nDATEADD('2015-01-01', 10)",
+                "// returns Fri May 01 2015 01:00:00 GMT-0400 (EDT)\nDATEADD('2015-01-31', 90)"
+            ],
+            "returns": {
+                "type": "Date",
                 "description": ""
             }
         },

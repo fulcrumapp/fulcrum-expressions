@@ -205,6 +205,20 @@ exports.DATE = (year, month, day) ->
 
   new Date("#{year}/#{month}/#{day} 00:00:00")
 
+exports.DATEADD = (date, number, type='day') ->
+  date = DATEVALUE(date)
+  number = INT(number)
+
+  return NO_VALUE unless date?
+  return NO_VALUE if isNaN(number)
+
+  return NO_VALUE unless type is 'day'
+
+  time = date.getTime()
+  time += (number * (1000 * 60 * 60 * 24))
+
+  new Date(time)
+
 exports.DATEVALUE = (text) ->
   return text if _.isDate(text)
 

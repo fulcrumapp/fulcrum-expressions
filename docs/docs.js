@@ -308,13 +308,33 @@ function CURRENCYSYMBOL() {}
 /**
  * DATE
  * Converts a provided year, month, and day into a date.
- * @param {Number} value argument
- * @returns {Number}
+ * @param {Number} year year
+ * @param {Number} month month
+ * @param {Number} day day
+ * @returns {Date}
  * @example
- * // returns VALUE
- * DATE()
+ * // returns Wed Dec 16 2015 00:00:00 GMT-0500 (EST)
+ * DATE(2015, 12, 16)
  */
 function DATE() {}
+
+
+////DATEADD
+
+/**
+ * DATEADD
+ * Adds a number of days to a given date
+ * @param {Date} date date
+ * @param {Number} days the number of days to add
+ * @returns {Date}
+ * @example
+ * // returns Sun Jan 11 2015 00:00:00 GMT-0500 (EST)
+ * DATEADD('2015-01-01', 10)
+ * @example
+ * // returns Fri May 01 2015 01:00:00 GMT-0400 (EDT)
+ * DATEADD('2015-01-31', 90)
+ */
+function DATEADD() {}
 
 
 ////DATEVALUE

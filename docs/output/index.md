@@ -82,6 +82,10 @@ Description
 
 Converts a provided year, month, and day into a date.
 
+### [DATEADD](./DATEADD)
+
+Adds a number of days to a given date
+
 ### [DATEVALUE](./DATEVALUE)
 
 Converts a provided date string in a known format to a date value.

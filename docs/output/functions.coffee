@@ -21,6 +21,7 @@ class window.ExpressionFunctions
     { identifier: "CURRENCYCODE", description: "Description" }
     { identifier: "CURRENCYSYMBOL", description: "Description" }
     { identifier: "DATE", description: "Converts a provided year, month, and day into a date." }
+    { identifier: "DATEADD", description: "Adds a number of days to a given date" }
     { identifier: "DATEVALUE", description: "Converts a provided date string in a known format to a date value." }
     { identifier: "DAY", description: "Returns the day of the month that a specific date falls on, in numeric format." }
     { identifier: "DAYS360", description: "Returns the difference between two days based on the 360 day year used in some financial interest calculations." }
