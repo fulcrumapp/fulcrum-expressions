@@ -199,7 +199,7 @@ function CONCATENATE() {}
  * @param {Number} value The value for which to calculate the cosine. Must be between -1 and 1, inclusive.
  * @returns {Number}
  * @example
- * // returns 0.15425144988758382
+ * // returns 0.15425144988758405
  * COS(30)
  */
 function COS() {}
