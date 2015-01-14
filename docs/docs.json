@@ -2774,6 +2774,29 @@
             }
         },
         {
+            "name": "YEAR",
+            "access": "",
+            "virtual": false,
+            "description": "YEAR\nReturns the year of a given date.",
+            "parameters": [
+                {
+                    "name": "date",
+                    "type": "Date",
+                    "description": "a date",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 2015\nYEAR(\"2015/1/1\")"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": ""
+            }
+        },
+        {
             "name": "X_ISNEW",
             "access": "",
             "virtual": false,

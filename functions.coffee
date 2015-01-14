@@ -850,6 +850,13 @@ exports.UPPER = (value) ->
 exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
 
+exports.YEAR = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getFullYear()
+
 exports.X_ISNEW = ->
   CONFIG().featureIsNew is true
 

@@ -1704,6 +1704,20 @@ function VALUE() {}
 function VERSIONINFO() {}
 
 
+////YEAR
+
+/**
+ * YEAR
+ * Returns the year of a given date.
+ * @param {Date} date a date
+ * @returns {Number}
+ * @example
+ * // returns 2015
+ * YEAR("2015/1/1")
+ */
+function YEAR() {}
+
+
 ////X_ISNEW
 
 /**
