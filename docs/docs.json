@@ -2729,7 +2729,7 @@
             "name": "X_ISNEW",
             "access": "",
             "virtual": false,
-            "description": "X_ISNEW\nReturns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.",
+            "description": "X_ISNEW\nReturns a boolean indicating whether the current feature (record or repeatable item) is new. It returns false if it's being updated.",
             "parameters": [],
             "examples": [
                 "// returns true\nX_ISNEW()"
@@ -2743,7 +2743,7 @@
             "name": "X_ISUPDATE",
             "access": "",
             "virtual": false,
-            "description": "X_ISUPDATE\nReturns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.",
+            "description": "X_ISUPDATE\nReturns a boolean indicating whether the current feature (record or repeatable item) is being updated. It returns false if it's a new record.",
             "parameters": [],
             "examples": [
                 "// returns false\nX_ISUPDATE()"

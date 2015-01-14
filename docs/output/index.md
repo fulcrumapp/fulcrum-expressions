@@ -468,8 +468,8 @@ Returns version information about the app.
 
 ### [X_ISNEW](./X_ISNEW)
 
-Returns a boolean indicating whether the current feature (record or repeatable item is new. It returns false if it's being updated.
+Returns a boolean indicating whether the current feature (record or repeatable item) is new. It returns false if it's being updated.
 
 ### [X_ISUPDATE](./X_ISUPDATE)
 
-Returns a boolean indicating whether the current feature (record or repeatable item is being updated. It returns false if it's a new record.
+Returns a boolean indicating whether the current feature (record or repeatable item) is being updated. It returns false if it's a new record.
