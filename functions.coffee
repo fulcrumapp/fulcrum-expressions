@@ -567,7 +567,24 @@ exports.MAXA = ->
   MAX.apply(null, arguments[0])
 
 exports.MEDIAN = ->
-  NOT_IMPLEMENTED()
+  numbers = _.flatten(toArray(arguments))
+  numbers = _.map(numbers, NUM)
+
+  return NO_VALUE unless _.isArray(numbers)
+  return NO_VALUE if numbers.length is 0
+
+  hasNaN = _.some(numbers, isNaN)
+
+  return NO_VALUE if hasNaN
+
+  numbers.sort (a, b) -> a - b
+
+  half = Math.floor(numbers.length / 2)
+
+  if numbers.length % 2
+    numbers[half]
+  else
+    (numbers[half - 1] + numbers[half]) / 2.0
 
 exports.MIN = ->
   numbers = _.flatten(toArray(arguments))

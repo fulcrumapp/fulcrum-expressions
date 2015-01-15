@@ -556,6 +556,23 @@ describe 'MAXA', ->
     shouldHaveNoValue(MAXA())
     shouldHaveNoValue(MAXA([3, 4, 5, 'Test']))
 
+describe 'MEDIAN', ->
+  it 'returns the median number in a list of numbers', ->
+    MEDIAN(1, 2, 3).should.be.exactly(2)
+    MEDIAN(2, 3, 3, 5, 7, 10).should.be.exactly(4)
+    MEDIAN(10, 3, 7, 5, 3, 2).should.be.exactly(4)
+    MEDIAN(10, 3, 5, 3, 2).should.be.exactly(3)
+    MEDIAN('1.11', '2.22', '3.33').should.be.exactly(2.22)
+    MEDIAN(-1, -2, -3).should.be.exactly(-2)
+
+    shouldHaveNoValue(MEDIAN([]))
+    shouldHaveNoValue(MEDIAN({}))
+    shouldHaveNoValue(MEDIAN(undefined))
+    shouldHaveNoValue(MEDIAN(null))
+    shouldHaveNoValue(MEDIAN(new Date))
+    shouldHaveNoValue(MEDIAN(NaN, -2, -3))
+    shouldHaveNoValue(MEDIAN())
+
 describe 'MIN', ->
   it 'returns the minimum number in a list of numbers', ->
     MIN(1, 2, 3).should.be.exactly(1)
