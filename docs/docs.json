@@ -2713,7 +2713,7 @@
             "name": "STATUS",
             "access": "",
             "virtual": false,
-            "description": "STATUS\nReturns the current record status",
+            "description": "STATUS\nReturns the current record status value if the status field has been enabled for the app, otherwise null.",
             "parameters": [],
             "examples": [
                 "// returns approved\nSTATUS()"
