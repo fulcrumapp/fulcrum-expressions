@@ -74,9 +74,9 @@ class Runtime
     'recordAltitude',
     'recordVerticalAccuracy',
     'recordHorizontalAccuracy',
-    'createdAt',
-    'updatedAt',
-    'geometry'
+    'featureCreatedAt',
+    'featureUpdatedAt',
+    'featureGeometry'
   ]
 
   setupValues: ->
