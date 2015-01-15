@@ -1662,13 +1662,26 @@ function SQRTPI() {}
 
 /**
  * STATUS
- * Returns the current record status value if the status field has been enabled for the app, otherwise null.
+ * Returns the current record status value.
  * @returns {String}
  * @example
  * // returns approved
  * STATUS()
  */
 function STATUS() {}
+
+
+////STATUSLABEL
+
+/**
+ * STATUSLABEL
+ * Returns the current record status label.
+ * @returns {String}
+ * @example
+ * // returns Approved
+ * STATUSLABEL()
+ */
+function STATUSLABEL() {}
 
 
 ////SUBSTITUTE

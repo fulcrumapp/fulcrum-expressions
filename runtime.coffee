@@ -45,6 +45,8 @@ class Runtime
 
   elementsByDataName: {}
 
+  statusesByValue: {}
+
   featureIsNew: true
 
   extraVariableNames: [
@@ -103,6 +105,10 @@ class Runtime
 
   prepare: ->
     @elements = Utils.flattenElements(@form.elements)
+
+    if @form.status_field and @form.status_field.choices
+      _.each @form.status_field.choices, (choice) =>
+        @statusesByValue[choice.value] = choice.label
 
     _.each @elements, (element) =>
       @elementsByKey[element.key] = element

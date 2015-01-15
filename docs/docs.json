@@ -2713,10 +2713,24 @@
             "name": "STATUS",
             "access": "",
             "virtual": false,
-            "description": "STATUS\nReturns the current record status value if the status field has been enabled for the app, otherwise null.",
+            "description": "STATUS\nReturns the current record status value.",
             "parameters": [],
             "examples": [
                 "// returns approved\nSTATUS()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "STATUSLABEL",
+            "access": "",
+            "virtual": false,
+            "description": "STATUSLABEL\nReturns the current record status label.",
+            "parameters": [],
+            "examples": [
+                "// returns Approved\nSTATUSLABEL()"
             ],
             "returns": {
                 "type": "String",

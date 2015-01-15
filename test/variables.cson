@@ -6,6 +6,7 @@ application: 'Fulcrum'
 applicationVersion: '2.7.0'
 applicationBuild: '2162'
 recordStatus: 'approved'
+recordStatusLabel: 'Approved'
 featureIsNew: true
 featureGeometry:
   type: 'Point'
@@ -104,7 +105,13 @@ form:
   name: "Test Form"
   record_title_key: "97ab"
   status_field:
-    choices: []
+    choices: [
+      {
+        label: "Approved"
+        value: "approved"
+        color: "#FF0000"
+      }
+    ]
     data_name: "status"
     default_value: ""
     description: ""

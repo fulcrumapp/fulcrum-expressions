@@ -1171,6 +1171,20 @@ describe 'STATUS', ->
 
     shouldBeNull(STATUS())
 
+describe 'STATUSLABEL', ->
+  it 'returns the status label of the current record', ->
+    RESETCONFIG()
+
+    CONFIGURE(variables)
+
+    STATUSLABEL().should.eql('Approved')
+
+    RESETCONFIG()
+
+    CONFIGURE(recordStatusLabel: null)
+
+    shouldBeNull(STATUSLABEL())
+
 describe 'REPEATABLEVALUES', ->
   it 'returns a specific field out of a collection of repeatable items', ->
     RESETCONFIG()
