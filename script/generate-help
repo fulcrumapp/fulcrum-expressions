@@ -2,6 +2,7 @@
 
 fs = require('fs')
 _ = require('underscore')
+marked = require('marked')
 
 SKIP_EXPORTS = []
 
@@ -102,7 +103,7 @@ permalink: /developers/expressions/#{func.name.toLowerCase()}/
   generateAppHelp: (functions) ->
     functions = _.map functions, (func) =>
       desc = @getDescription(func)
-      desc = desc.replace(/\n/g, "\\n")
+      desc = marked(desc.replace(/\n/g, "\\n")).replace(/^<p>/, '').replace(/<\/p>\n$/, '')
 
       "    { identifier: \"#{func.name}\", description: \"#{desc}\" }"
 
