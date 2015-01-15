@@ -1693,9 +1693,9 @@
             "description": "MEDIAN\nReturns the median value in a set of numeric values.",
             "parameters": [
                 {
-                    "name": "",
-                    "type": "",
-                    "description": "",
+                    "name": "var_args_values",
+                    "type": "Number",
+                    "description": "Values in which to find the median value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""

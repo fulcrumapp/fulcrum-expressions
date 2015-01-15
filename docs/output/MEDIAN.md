@@ -3,7 +3,7 @@
 Returns the median value in a set of numeric values.
 
 ### Parameters
-`` :  (required) - 
+`var_args_values` : Number (required) - Values in which to find the median value.
 
 ### Returns
 Number

@@ -1069,7 +1069,7 @@ function MAXA() {}
 /**
  * MEDIAN
  * Returns the median value in a set of numeric values.
- * @param {..Number} var_args_values Values in which to find the median value.
+ * @param {...Number} var_args_values Values in which to find the median value.
  * @returns {Number}
  * @example
  * // returns 15
