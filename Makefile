@@ -20,8 +20,8 @@ copy:
 dist: clean build help test
 
 clean:
-	rm dist/*
-	rm docs/output/*
+	rm -f dist/*
+	rm -f docs/output/*
 
 test:
 	./node_modules/mocha/bin/mocha \
