@@ -13,7 +13,7 @@ docs:
 	./script/build-docs
 
 help:
-	mkdir -p docs/output
+	mkdir -p docs/output/help
 	./script/generate-help
 
 copy:
@@ -23,7 +23,7 @@ dist: clean build help test
 
 clean:
 	rm -f dist/*
-	rm -f docs/output/*
+	rm -rf docs/output/*
 
 test:
 	./node_modules/mocha/bin/mocha \

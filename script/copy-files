@@ -37,4 +37,4 @@ if web
   copyFile('./docs/output/functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'expression_functions.js.coffee'))
 
 if site
-  copyFile('./docs/output', path.join(site, 'developers', 'expressions'))
+  copyFile('./docs/output/help', path.join(site, 'developers', 'expressions'))

@@ -68,9 +68,22 @@ class DocumentationGenerator
 
   generateIndex: (functions) ->
     titles = _.map functions, (func) =>
-      "### [#{func.name}](./#{func.name})\n\n#{@getDescription(func)}"
+      "### [#{func.name}](/developers/expressions/#{func.name.toLowerCase()})\n\n#{@getDescription(func)}"
 
-    titles.join("\n\n")
+    """
+---
+layout: docs
+category: expressions
+section: developers
+class: docs
+title: "Developers | Expressions"
+description: Expressions
+developer: true
+permalink: /developers/expressions/
+---
+
+#{titles.join("\n\n")}
+"""
 
   helpFrontMatter: (func) ->
     """
@@ -114,8 +127,8 @@ index = generator.generateIndex(functions)
 help  = generator.generateAppHelp(functions)
 
 _.each files, (file) ->
-  fs.writeFileSync("./docs/output/#{file.name.toLowerCase()}.md", file.fullMarkdown)
+  fs.writeFileSync("./docs/output/help/#{file.name.toLowerCase()}.md", file.fullMarkdown)
 
-fs.writeFileSync("./docs/output/index.md", index)
+fs.writeFileSync("./docs/output/help/index.md", index)
 
 fs.writeFileSync("./docs/output/functions.coffee", help)
