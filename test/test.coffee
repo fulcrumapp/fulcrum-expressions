@@ -17,6 +17,10 @@ variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
 CONFIGURE(variables)
 
+resetConfig = ->
+  RESETCONFIG()
+  CONFIGURE(variables)
+
 runtime.form = variables.form
 runtime.values = variables.values
 runtime.prepare()
@@ -29,6 +33,9 @@ shouldHaveNoValue = (value) ->
 
 shouldBeUndefined = (value) ->
   (value is undefined).should.be.true
+
+beforeEach ->
+  resetConfig()
 
 describe 'NUMS', ->
   it 'returns an array of numbers from the arguments', ->
@@ -1107,11 +1114,8 @@ describe 'FORMATNUMBER', ->
     FORMATNUMBER(10000 / 3, 'fr-FR', style: 'currency').should.eql('3 333,33 $US')
     FORMATNUMBER(10000 / 3, 'en-US', style: 'currency').should.eql('$3,333.33')
 
-    RESETCONFIG()
-
 describe 'DOLLAR', ->
   it 'returns a string with a formatted dollar amount in the current locale', ->
-    RESETCONFIG()
     DOLLAR(10000 / 3).should.eql('$3,333.33')
     DOLLAR(10000 / 3, 0).should.eql('$3,333')
     DOLLAR(10000 / 3, 4).should.eql('$3,333.3333')
@@ -1121,7 +1125,8 @@ describe 'DOLLAR', ->
     DOLLAR(10000 / 3, 0).should.eql('€3,333')
     DOLLAR(10000 / 3, 4).should.eql('€3,333.3333')
 
-    RESETCONFIG()
+    resetConfig()
+
     DOLLAR(10000 / 3, 2, 'THB').should.eql('฿3,333.33')
     DOLLAR(10000 / 3, 0, 'THB').should.eql('฿3,333')
     DOLLAR(10000 / 3, 4, 'THB').should.eql('฿3,333.3333')
@@ -1129,16 +1134,10 @@ describe 'DOLLAR', ->
 
 describe 'VERSIONINFO', ->
   it 'returns version info as a string', ->
-    RESETCONFIG()
-
-    CONFIGURE(variables)
-
     VERSIONINFO().should.eql('Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162')
 
 describe 'LATITUDE', ->
   it 'returns the latitude of the current feature', ->
-    RESETCONFIG()
-
     CONFIGURE(variables)
 
     LATITUDE().should.eql(27.770756908186286)
@@ -1149,10 +1148,6 @@ describe 'LATITUDE', ->
 
 describe 'LONGITUDE', ->
   it 'returns the longitude of the current feature', ->
-    RESETCONFIG()
-
-    CONFIGURE(variables)
-
     LONGITUDE().should.eql(-82.63814896345139)
 
     CONFIGURE(featureGeometry: null)
@@ -1161,10 +1156,6 @@ describe 'LONGITUDE', ->
 
 describe 'STATUS', ->
   it 'returns the status of the current record', ->
-    RESETCONFIG()
-
-    CONFIGURE(variables)
-
     STATUS().should.eql('approved')
 
     CONFIGURE(recordStatus: null)
@@ -1173,24 +1164,14 @@ describe 'STATUS', ->
 
 describe 'STATUSLABEL', ->
   it 'returns the status label of the current record', ->
-    RESETCONFIG()
-
-    CONFIGURE(variables)
-
     STATUSLABEL().should.eql('Approved')
 
-    RESETCONFIG()
-
-    CONFIGURE(recordStatusLabel: null)
+    CONFIGURE(recordStatus: null)
 
     shouldBeNull(STATUSLABEL())
 
 describe 'REPEATABLEVALUES', ->
   it 'returns a specific field out of a collection of repeatable items', ->
-    RESETCONFIG()
-
-    CONFIGURE(variables)
-
     $repeatable_field = variables.values.form_values['1337']
 
     costs = REPEATABLEVALUES($repeatable_field, 'items', 'cost')
@@ -1289,7 +1270,6 @@ describe 'YEAR', ->
 
 describe 'X_ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
-
     CONFIGURE(featureIsNew: true)
 
     X_ISNEW().should.be.true
@@ -1299,5 +1279,3 @@ describe 'X_ISNEW', ->
 
     X_ISNEW().should.be.false
     X_ISUPDATE().should.be.true
-
-    RESETCONFIG()
