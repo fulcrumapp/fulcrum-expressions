@@ -6,7 +6,8 @@ application: 'Fulcrum'
 applicationVersion: '2.7.0'
 applicationBuild: '2162'
 recordStatus: 'approved'
-geometry:
+featureIsNew: true
+featureGeometry:
   type: 'Point'
   coordinates: [ -82.63814896345139, 27.770756908186286 ]
 values:

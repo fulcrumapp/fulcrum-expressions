@@ -2,6 +2,7 @@ fs = require 'fs'
 _ = require 'underscore'
 path = require 'path'
 CSON = require 'season'
+Utils = require '../utils'
 
 spawnSync = require('child_process').spawnSync or require('spawn-sync')
 
@@ -54,6 +55,7 @@ describe 'Documentation', ->
 
         stringValue = switch true
           when _.isArray(result) then "[" + _.map(result, (v) -> '' + v).join(',') + "]"
+          when _.isDate(result) then Utils.formatMachineDate(result)
           else '' + result
 
         stringValue.should.eql(returnValue)

@@ -21,53 +21,6 @@ Defaults =
 
 Config = _.extend({}, Defaults)
 
-repeatableValueElementsCache = {}
-repeatableValueElementsByKeyCache = {}
-repeatableValueElementsByDataNameCache = {}
-
-repeatableValueElements = (repeatable) ->
-  key = repeatable.key
-
-  if repeatableValueElementsCache[key]
-    cached =
-      all: repeatableValueElementsCache[key]
-      byKey: repeatableValueElementsByKeyCache[key]
-      byDataName: repeatableValueElementsByDataNameCache[key]
-
-    return cached
-
-  elements = Utils.flattenElements(repeatable.elements, false)
-
-  repeatableValueElementsCache[key] = all = elements
-  repeatableValueElementsByKeyCache[key] = byKey = {}
-  repeatableValueElementsByDataNameCache[key] = byDataName = {}
-
-  for element in elements
-    byKey[element.key] = element
-    byDataName[element.data_name] = element
-
-  { all: all, byKey: byKey, byDataName: byDataName }
-
-repeatableValues = (repeatable, items, dataName) ->
-  return null unless _.isArray(items)
-
-  {byDataName} = repeatableValueElements(repeatable)
-
-  element = byDataName[dataName]
-
-  return null unless element
-
-  isNumeric = element.numeric or element.format is 'number'
-
-  values = _.map items, (item) ->
-    if element.numeric or element.format is 'number'
-      Number(item.form_values[element.key])
-    else
-      item.form_values[element.key]
-
-  values
-
-
 exports = {}
 
 exports.CONFIGURE = (config, merge=true) ->
@@ -102,14 +55,6 @@ exports.N = (value) ->
   return 0 if value is false
   0
 
-exports.HASERROR = ->
-  n = arguments.length
-
-  while n--
-    return true if arguments[n] instanceof Error
-
-  false
-
 exports.ISNAN = (number) ->
   _.isNaN(NUM(number))
 
@@ -128,7 +73,7 @@ exports.ABS = MATH_FUNC(Math.abs)
 exports.ACOS = MATH_FUNC(Math.acos)
 
 exports.ACOSH = (number) ->
-  number ?= NUM(number)
+  number = NUM(number)
 
   Math.log(number + Math.sqrt(number * number - 1))
 
@@ -137,7 +82,7 @@ exports.AND = ->
 
 exports.AVERAGE = ->
   args = toArray(arguments)
-  return NaN  if args.length is 0
+  return NaN if args.length is 0
   _.inject(args, ((memo, arg) -> memo + +arg), 0) / args.length
 
 exports.ROUND = (number, digits = 0) ->
@@ -151,7 +96,6 @@ exports.CEILING = (number, significance = 1) ->
   significance = ABS(significance)
 
   number = NUM(number)
-  significance = NUM(significance)
 
   return NaN if isNaN(number) or isNaN(significance)
 
@@ -165,11 +109,10 @@ exports.CEILING = (number, significance = 1) ->
     -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
 
 exports.FLOOR = (number, significance) ->
-  significance ||= 1
+  significance ?= 1
   significance = ABS(significance)
 
   number = NUM(number)
-  significance = NUM(significance)
 
   return NaN if isNaN(number) or isNaN(significance)
 
@@ -184,27 +127,32 @@ exports.FLOOR = (number, significance) ->
 
 exports.CHAR = (number) ->
   number = NUM(number)
-  return number if number instanceof Error
   String.fromCharCode number
 
 exports.CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
 
 exports.CLEAN = (text) ->
-  text = text or ''
+  text ?= ''
   text.replace CLEAN_REGEX, ''
 
+exports.COALESCE = ->
+  if arguments.length is 1 and _.isArray(arguments[0])
+    COALESCE.apply(null, arguments[0])
+  else
+    (_.find toArray(arguments), (value) -> value?) ? NO_VALUE
+
 exports.CODE = (string) ->
-  string = string.toString() if typeof(string) is 'number'
-  return NaN unless typeof(string) is 'string'
-  (string or '').charCodeAt(0)
+  string = string.toString() if _.isNumber(string)
+  return NaN unless _.isString(string)
+  (string ? '').charCodeAt(0)
 
 exports.CONCATENATE = ->
   strings = _.map toArray(arguments), (arg) ->
-    switch typeof(arg)
-      when 'string'
+    switch true
+      when _.isString(arg)
         arg
-      when 'number'
-        arg + ''
+      when _.isNumber(arg)
+        '' + arg
       else
         ''
 
@@ -212,14 +160,18 @@ exports.CONCATENATE = ->
 
 exports.COS = MATH_FUNC(Math.cos)
 
-exports.COSH = MATH_FUNC(Math.cosh)
+exports.COSH = (number) ->
+  number = NUM(number)
+
+  exp = Math.exp(number)
+
+  (exp + 1 / exp) / 2
 
 # _.compact removes '' and 0 from the array, which is somewhat unexpected
 exports.COMPACT = (value) ->
   return undefined unless _.isArray(value)
 
-  _.filter value, (item) ->
-    item isnt undefined and item isnt null
+  _.filter value, (item) -> item?
 
 exports.COUNT = (value) ->
   return COMPACT(value).length if _.isArray(value)
@@ -233,25 +185,57 @@ exports.COUNTBLANK = (value) ->
 
   results = _.filter value, (item) ->
     switch true
-      when item is undefined or item is null
+      when not item?
         true
       when _.isArray(item)
         item.length is 0
-      when typeof(item) is 'string'
+      when _.isString(item)
         _.isBlank(item)
       else
         false
 
   results.length
 
-exports.DATE = ->
-  NOT_IMPLEMENTED()
+exports.DATE = (year, month, day) ->
+  year = INT(year)
+  month = INT(month)
+  day = INT(day)
 
-exports.DATEVALUE = ->
-  NOT_IMPLEMENTED()
+  return NO_VALUE if isNaN(year) or isNaN(month) or isNaN(day)
 
-exports.DAY = ->
-  NOT_IMPLEMENTED()
+  new Date("#{year}/#{month}/#{day} 00:00:00")
+
+exports.DATEADD = (date, number, type='day') ->
+  date = DATEVALUE(date)
+  number = INT(number)
+
+  return NO_VALUE unless date?
+  return NO_VALUE if isNaN(number)
+
+  return NO_VALUE unless type is 'day'
+
+  time = date.getTime()
+  time += (number * (1000 * 60 * 60 * 24))
+
+  new Date(time)
+
+exports.DATEVALUE = (text) ->
+  return text if _.isDate(text)
+
+  text = text.replace(/-/g, '/') if _.isString(text) and text.length <= 10
+
+  date = new Date(text)
+
+  return NO_VALUE if isNaN(date.getTime())
+
+  date
+
+exports.DAY = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getDate()
 
 exports.DAYS360 = ->
   NOT_IMPLEMENTED()
@@ -286,7 +270,7 @@ exports.EVEN = (value) ->
 
   return NaN unless _.isNumber(value)
 
-  return CEILING(value, -2, -1)
+  CEILING(value, -2, -1)
 
 exports.EXACT = (value1, value2) ->
   _.isEqual(value1, value2)
@@ -303,7 +287,7 @@ exports.FACT = (value) ->
 
   n = Math.floor(value)
 
-  if n is 0 || n is 1
+  if n is 0 or n is 1
     1
   else if MEMOIZED_FACT[n] > 0
     MEMOIZED_FACT[n]
@@ -413,7 +397,7 @@ exports.GCD = ->
 
   result = numbers[0]
 
-  for i in [1..count - 1] by 1
+  for i in [1..count - 1]
     return NaN if numbers[i] < 0
 
     num = numbers[i]
@@ -428,7 +412,6 @@ exports.GCD = ->
 
   result
 
-
 exports.IF = (test, trueValue, falseValue) ->
   if test then trueValue else falseValue
 
@@ -438,8 +421,7 @@ exports.IFERROR = (value, errorValue) ->
 exports.INT = exports.FLOOR
 
 exports.ISBLANK = (value) ->
-  return true if value is null
-  return true if value is undefined
+  return true unless value?
   return true if _.isNaN(value)
   return false if _.isBoolean(value)
   return false if _.isNumber(value)
@@ -464,9 +446,7 @@ exports.ISBLANK = (value) ->
   Object.keys(value).length is 0
 
 exports.ISERR = (value) ->
-  return true if value is NO_VALUE
-  return true if value is undefined
-  return true if value is null
+  return true unless value?
   return true if isNaN(value)
   return true if value instanceof Error
   false
@@ -526,11 +506,10 @@ exports.LCM = ->
   a
 
 exports.LEFT = (value, numberOfCharacters = 1) ->
-  numberOfCharacters ||= 1
+  numberOfCharacters ?= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
 
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if numberOfCharacters < 0
   return NO_VALUE if isNaN(numberOfCharacters)
@@ -540,8 +519,7 @@ exports.LEFT = (value, numberOfCharacters = 1) ->
   value.substring(0, numberOfCharacters)
 
 exports.LEN = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
 
   value.toString().length
@@ -550,10 +528,9 @@ exports.LN = MATH_FUNC(Math.log)
 
 exports.LOG = (value, base) ->
   value = NUM(value)
-  base = NUM(base or 10)
+  base = NUM(base ? 10)
 
-  return NaN if base is undefined
-  return NaN if base is null
+  return NaN unless base?
   return NaN if isNaN(base)
 
   Math.log(value) / Math.log(base)
@@ -562,8 +539,7 @@ exports.LOG10 = (value) ->
   LOG(value, 10)
 
 exports.LOWER = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
   return NO_VALUE if _.isObject(value)
 
@@ -591,7 +567,24 @@ exports.MAXA = ->
   MAX.apply(null, arguments[0])
 
 exports.MEDIAN = ->
-  NOT_IMPLEMENTED()
+  numbers = _.flatten(toArray(arguments))
+  numbers = _.map(numbers, NUM)
+
+  return NO_VALUE unless _.isArray(numbers)
+  return NO_VALUE if numbers.length is 0
+
+  hasNaN = _.some(numbers, isNaN)
+
+  return NO_VALUE if hasNaN
+
+  numbers.sort (a, b) -> a - b
+
+  half = Math.floor(numbers.length / 2)
+
+  if numbers.length % 2
+    numbers[half]
+  else
+    (numbers[half - 1] + numbers[half]) / 2.0
 
 exports.MIN = ->
   numbers = _.flatten(toArray(arguments))
@@ -615,8 +608,7 @@ exports.MID = (value, startPosition, numberOfCharacters) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
 
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if startPosition < 1
   return NO_VALUE if isNaN(startPosition)
@@ -638,8 +630,15 @@ exports.MOD = (number, divisor) ->
 
   if divisor > 0 then modulus else -modulus
 
+exports.MONTH = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getMonth() + 1
+
 exports.NOT = (value) ->
-  not value
+  not (value ? false)
 
 exports.ODD = (value) ->
   value = NUM(value)
@@ -678,8 +677,7 @@ exports.PRODUCT = ->
   _.inject(numbers, ((memo, number) -> memo *= number), 1)
 
 exports.PROPER = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
   return NO_VALUE if _.isObject(value)
 
@@ -716,9 +714,8 @@ exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
 
+  return NO_VALUE unless value?
   return NO_VALUE if arguments.length < 4
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if startPosition < 1
   return NO_VALUE if isNaN(startPosition)
@@ -733,11 +730,10 @@ exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   prefix + replacement + suffix
 
 exports.RIGHT = (value, numberOfCharacters) ->
-  numberOfCharacters ||= 1
+  numberOfCharacters ?= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
 
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if numberOfCharacters < 0
   return NO_VALUE if isNaN(numberOfCharacters)
@@ -762,7 +758,7 @@ exports.ROUNDUP = (number, digits = 0) ->
   sign * (Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
 
 exports.SEARCH = (needle, haystack, startPosition) ->
-  startPosition ||= 1
+  startPosition ?= 1
   startPosition = NUM(startPosition)
   startPosition = 1 if isNaN(startPosition)
 
@@ -795,7 +791,12 @@ exports.SIGN = (number) ->
 
 exports.SIN = MATH_FUNC(Math.sin)
 
-exports.SINH = MATH_FUNC(Math.sinh)
+exports.SINH = (number) ->
+  number = NUM(number)
+
+  exp = Math.exp(number)
+
+  (exp - 1 / exp) / 2
 
 exports.SQRT = MATH_FUNC(Math.sqrt)
 
@@ -861,8 +862,7 @@ exports.SUMSQ = ->
   _.inject(numbers, ((memo, number) -> memo += (number * number)), 0)
 
 exports.T = (value) ->
-  return '' if _.isUndefined(value)
-  return '' if _.isNull(value)
+  return '' unless value?
   return value.toString()
 
 exports.TRIM = (value) ->
@@ -872,8 +872,7 @@ exports.TRUE = (value) ->
   true
 
 exports.UPPER = (value) ->
-  return NO_VALUE if value is undefined
-  return NO_VALUE if value is null
+  return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
   return NO_VALUE if _.isObject(value)
 
@@ -882,11 +881,18 @@ exports.UPPER = (value) ->
 exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
 
-exports.ISNEW = ->
-  NOT_IMPLEMENTED()
+exports.YEAR = (date) ->
+  date = DATEVALUE(date)
 
-exports.ISUPDATE = ->
-  NOT_IMPLEMENTED()
+  return NO_VALUE unless date?
+
+  date.getFullYear()
+
+exports.X_ISNEW = ->
+  CONFIG().featureIsNew is true
+
+exports.X_ISUPDATE = ->
+  not X_ISNEW()
 
 exports.CONFIG = ->
   Config
@@ -899,16 +905,14 @@ exports.HASOTHER = (value) ->
      _.isArray(value.other_values) and
      value.other_values.length > 0)
 
-
-# TODO(zhm) what should this return when there isn't an other value?
-# undefined/null/''
 exports.OTHER = (value) ->
-  return NO_VALUE unless exports.HASOTHER(value)
+  return NO_VALUE unless HASOTHER(value)
+  return NO_VALUE if ISBLANK(value.other_values)
   return value.other_values[0]
 
 exports.SELECTED = (value, choice) ->
   return false if ISBLANK(value)
-  return false unless choice
+  return false unless choice?
 
   if _.isArray(choice)
     return (choice.filter (item) -> not SELECTED(value, item)).length is 0
@@ -1034,10 +1038,10 @@ exports.FORMATNUMBER = (number, language, options) ->
   HostFunctions.formatNumber(number, language, options)
 
 exports.LATITUDE = ->
-  NUM(CONFIG().geometry?.coordinates[1])
+  NUM(CONFIG().featureGeometry?.coordinates[1])
 
 exports.LONGITUDE = ->
-  NUM(CONFIG().geometry?.coordinates[0])
+  NUM(CONFIG().featureGeometry?.coordinates[0])
 
 exports.STATUS = ->
   CONFIG().recordStatus ? null
@@ -1047,7 +1051,7 @@ exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName
 
   return NO_VALUE unless repeatableElement
 
-  repeatableValues(repeatableElement, repeatableValue, dataName)
+  Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
 
 exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) ->
   SUM.apply(null, REPEATABLEVALUES(repeatableValue, repeatableElementDataName, dataName))
