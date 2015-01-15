@@ -89,16 +89,16 @@ class window.ExpressionFunctions
     { identifier: "POWER", description: "Returns a number raised to a power." }
     { identifier: "PRECISION", description: "Description" }
     { identifier: "PRODUCT", description: "Returns the result of multiplying a series of numbers together." }
-    { identifier: "PROPER", description: "Description" }
-    { identifier: "QUOTIENT", description: "Description" }
-    { identifier: "RADIANS", description: "Description" }
-    { identifier: "RAND", description: "Description" }
-    { identifier: "RANDBETWEEN", description: "Description" }
+    { identifier: "PROPER", description: "Capitalizes each word in a string (title case)." }
+    { identifier: "QUOTIENT", description: "Returns the result of dividing one number by another." }
+    { identifier: "RADIANS", description: "Converts a number of degrees to radians." }
+    { identifier: "RAND", description: "Returns a random number between 0 and 1." }
+    { identifier: "RANDBETWEEN", description: "Returns a random integer between two values." }
     { identifier: "REPEATABLEVALUES", description: "Return a specific field from multiple repeatable items" }
     { identifier: "REPEATABLESUM", description: "Return the sum of a specific numeric field across multiple repeatable items" }
-    { identifier: "REPLACE", description: "Description" }
-    { identifier: "RIGHT", description: "Description" }
-    { identifier: "ROUND", description: "Description" }
+    { identifier: "REPLACE", description: "Replaces a piece of a text string with a different string." }
+    { identifier: "RIGHT", description: "Returns a substring from the end of a given string." }
+    { identifier: "ROUND", description: "Rounds a number to a specified number of decimal places according to standard rounding rules." }
     { identifier: "ROUNDDOWN", description: "Description" }
     { identifier: "ROUNDUP", description: "Description" }
     { identifier: "SEARCH", description: "Description" }

@@ -356,23 +356,23 @@ Returns the result of multiplying a series of numbers together.
 
 ### [PROPER](./PROPER)
 
-Description
+Capitalizes each word in a string (title case).
 
 ### [QUOTIENT](./QUOTIENT)
 
-Description
+Returns the result of dividing one number by another.
 
 ### [RADIANS](./RADIANS)
 
-Description
+Converts a number of degrees to radians.
 
 ### [RAND](./RAND)
 
-Description
+Returns a random number between 0 and 1.
 
 ### [RANDBETWEEN](./RANDBETWEEN)
 
-Description
+Returns a random integer between two values.
 
 ### [REPEATABLEVALUES](./REPEATABLEVALUES)
 
@@ -384,15 +384,15 @@ Return the sum of a specific numeric field across multiple repeatable items
 
 ### [REPLACE](./REPLACE)
 
-Description
+Replaces a piece of a text string with a different string.
 
 ### [RIGHT](./RIGHT)
 
-Description
+Returns a substring from the end of a given string.
 
 ### [ROUND](./ROUND)
 
-Description
+Rounds a number to a specified number of decimal places according to standard rounding rules.
 
 ### [ROUNDDOWN](./ROUNDDOWN)
 

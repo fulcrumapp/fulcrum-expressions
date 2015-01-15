@@ -1,15 +1,15 @@
 ## RADIANS
 
-Description
+Converts a number of degrees to radians.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : Number (required) - The number of degrees to be converted.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-RADIANS()
+// returns 0.5235987755982988
+RADIANS(30)
 ```

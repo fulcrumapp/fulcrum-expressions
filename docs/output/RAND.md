@@ -1,15 +1,15 @@
 ## RAND
 
-Description
+Returns a random number between 0 and 1.
 
 ### Parameters
-`value` : Number (required) - argument
+No parameters
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-RAND()
+// returns true
+RAND() > 0
 ```

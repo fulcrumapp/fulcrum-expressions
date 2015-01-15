@@ -1,15 +1,15 @@
 ## PROPER
 
-Description
+Capitalizes each word in a string (title case).
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - String to capitalize words within.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-PROPER()
+// returns Fulcrum Mobile Data Collection
+PROPER("fulcrum mobile data collection")
 ```

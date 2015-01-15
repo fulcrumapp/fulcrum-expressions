@@ -1372,12 +1372,12 @@ function PRODUCT() {}
 
 /**
  * PROPER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Capitalizes each word in a string (title case).
+ * @param {String} value String to capitalize words within.
+ * @returns {String}
  * @example
- * // returns VALUE
- * PROPER()
+ * // returns Fulcrum Mobile Data Collection
+ * PROPER("fulcrum mobile data collection")
  */
 function PROPER() {}
 
@@ -1386,12 +1386,19 @@ function PROPER() {}
 
 /**
  * QUOTIENT
- * Description
- * @param {Number} value argument
+ * Returns the result of dividing one number by another.
+ * @param {Number} dividend The number to divide.
+ * @param {Number} divisor The number to be divided by.
  * @returns {Number}
  * @example
- * // returns VALUE
- * QUOTIENT()
+ * // returns 6
+ * QUOTIENT(30, 5)
+ * @example
+ * // returns 0
+ * QUOTIENT(0, 10)
+ * @example
+ * // returns NaN
+ * QUOTIENT(45, 0)
  */
 function QUOTIENT() {}
 
@@ -1400,12 +1407,12 @@ function QUOTIENT() {}
 
 /**
  * RADIANS
- * Description
- * @param {Number} value argument
+ * Converts a number of degrees to radians.
+ * @param {Number} value The number of degrees to be converted.
  * @returns {Number}
  * @example
- * // returns VALUE
- * RADIANS()
+ * // returns 0.5235987755982988
+ * RADIANS(30)
  */
 function RADIANS() {}
 
@@ -1414,12 +1421,11 @@ function RADIANS() {}
 
 /**
  * RAND
- * Description
- * @param {Number} value argument
+ * Returns a random number between 0 and 1.
  * @returns {Number}
  * @example
- * // returns VALUE
- * RAND()
+ * // returns true
+ * RAND() > 0
  */
 function RAND() {}
 
@@ -1428,12 +1434,13 @@ function RAND() {}
 
 /**
  * RANDBETWEEN
- * Description
- * @param {Number} value argument
+ * Returns a random integer between two values.
+ * @param {Number} value Low value of the range.
+ * @param {Number} value High value of the range.
  * @returns {Number}
  * @example
- * // returns VALUE
- * RANDBETWEEN()
+ * // returns true
+ * 4 < RANDBETWEEN(4, 9) < 9
  */
 function RANDBETWEEN() {}
 
@@ -1474,12 +1481,15 @@ function REPEATABLESUM() {}
 
 /**
  * REPLACE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Replaces a piece of a text string with a different string.
+ * @param {String} text A piece of text to be searched.
+ * @param {Number} start_position Position within the string to begin the search.
+ * @param {Number} num_characters Number of characters in original string to be replaced.
+ * @param {String} replacement String to replace `num_characters` with.
+ * @returns {String}
  * @example
- * // returns VALUE
- * REPLACE()
+ * // returns Fulcrum is a great platform
+ * REPLACE("Fulcrum is a good platform", 14, 4, "great")
  */
 function REPLACE() {}
 
@@ -1488,12 +1498,16 @@ function REPLACE() {}
 
 /**
  * RIGHT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a substring from the end of a given string.
+ * @param {String} value The string value from which the right portion will be returned.
+ * @param {Number} [number_of_characters=1] The number of characters to return from the right side of the string.
+ * @returns {String}
  * @example
- * // returns VALUE
- * RIGHT()
+ * // returns crum
+ * RIGHT("Fulcrum", 4)
+ * @example
+ * // returns m
+ * RIGHT("Fulcrum")
  */
 function RIGHT() {}
 
@@ -1502,12 +1516,16 @@ function RIGHT() {}
 
 /**
  * ROUND
- * Description
- * @param {Number} value argument
+ * Rounds a number to a specified number of decimal places according to standard rounding rules.
+ * @param {Number} value The value to be rounded to `places`.
+ * @param {Number} places The number of decimal places to which to round `value`.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ROUND()
+ * // returns 179.8
+ * ROUND(179.848, 1)
+ * @example
+ * // returns 900
+ * ROUND(918.268, -2)
  */
 function ROUND() {}
 
