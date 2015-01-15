@@ -1043,6 +1043,13 @@ exports.LONGITUDE = ->
 exports.STATUS = ->
   CONFIG().recordStatus ? null
 
+exports.STATUSLABEL = ->
+  status = CONFIG().recordStatus ? null
+  if status
+    $$runtime.statusesByValue[status] ? null
+  else
+    null
+
 exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName) ->
   repeatableElement = $$runtime.elementsByDataName[repeatableElementDataName]
 
