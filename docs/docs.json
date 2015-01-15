@@ -594,29 +594,6 @@
             }
         },
         {
-            "name": "DAYS360",
-            "access": "",
-            "virtual": false,
-            "description": "DAYS360\nReturns the difference between two days based on the 360 day year used in some financial interest calculations.",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nDAYS360()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "DECIMALSEPARATOR",
             "access": "",
             "virtual": false,

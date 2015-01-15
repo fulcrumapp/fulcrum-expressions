@@ -237,9 +237,6 @@ exports.DAY = (date) ->
 
   date.getDate()
 
-exports.DAYS360 = ->
-  NOT_IMPLEMENTED()
-
 exports.DEGREES = (value) ->
   value = NUM(value)
   return NaN unless _.isNumber(value)
