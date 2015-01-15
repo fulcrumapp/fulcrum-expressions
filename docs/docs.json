@@ -301,7 +301,7 @@
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "The value for which to calculate the cosine. Must be between -1 and 1, inclusive.",
+                    "description": "The value for which to calculate the cosine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2493,19 +2493,28 @@
             "name": "ROUNDDOWN",
             "access": "",
             "virtual": false,
-            "description": "ROUNDDOWN\nDescription",
+            "description": "ROUNDDOWN\nRounds a number down to a desired number of decimal places.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to round down.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "places",
+                    "type": "Number",
+                    "description": "The number of places to which to round down.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nROUNDDOWN()"
+                "// returns 156.82\nROUNDDOWN(156.826, 2)",
+                "// returns 156\nROUNDDOWN(156.826, 0)"
             ],
             "returns": {
                 "type": "Number",
@@ -2516,19 +2525,28 @@
             "name": "ROUNDUP",
             "access": "",
             "virtual": false,
-            "description": "ROUNDUP\nDescription",
+            "description": "ROUNDUP\nRounds a number up to a desired number of decimal places.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to round up.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "places",
+                    "type": "Number",
+                    "description": "The number of places to which to round up.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nROUNDUP()"
+                "// returns 156.83\nROUNDUP(156.826, 2)",
+                "// returns 157\nROUNDUP(156.826, 0)"
             ],
             "returns": {
                 "type": "Number",
@@ -2539,19 +2557,35 @@
             "name": "SEARCH",
             "access": "",
             "virtual": false,
-            "description": "SEARCH\nDescription",
+            "description": "SEARCH\nReturns the position at which a specified string is first found within a block of text. Ignores case.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "search_for",
+                    "type": "String",
+                    "description": "String to search for within `text_to_search`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "text_to_search",
+                    "type": "String",
+                    "description": "Text to search for the first instance of `search_for`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "starting_at",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "argument Position index to begin the search.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSEARCH()"
+                "// returns 37\nSEARCH(\"collect\", \"Data analysts love Fulcrum for data collection needs\", 12)"
             ],
             "returns": {
                 "type": "Number",
@@ -2585,19 +2619,20 @@
             "name": "SIGN",
             "access": "",
             "virtual": false,
-            "description": "SIGN\nDescription",
+            "description": "SIGN\nReturns the sign of a given input number. `-1` if negative, `1` if positive, `0` if zero.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to return the sign of.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSIGN()"
+                "// returns 1\nSIGN(43)",
+                "// returns -1\nSIGN(-3)"
             ],
             "returns": {
                 "type": "Number",
@@ -2608,19 +2643,19 @@
             "name": "SIN",
             "access": "",
             "virtual": false,
-            "description": "SIN\nDescription",
+            "description": "SIN\nReturns the sine of a value, in radians.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the sine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSIN()"
+                "// returns -0.9880316240928618\nSIN(30)"
             ],
             "returns": {
                 "type": "Number",
@@ -2636,7 +2671,7 @@
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "a number",
+                    "description": "The value for which to calculate the hyperbolic sine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2654,19 +2689,20 @@
             "name": "SQRT",
             "access": "",
             "virtual": false,
-            "description": "SQRT\nDescription",
+            "description": "SQRT\nCalculates the square root of a given number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number for which to calculate the square root.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSQRT()"
+                "// returns 2.23606797749979\nSQRT(5)",
+                "// returns NaN\nSQRT(-9)"
             ],
             "returns": {
                 "type": "Number",
@@ -2677,19 +2713,19 @@
             "name": "SQRTPI",
             "access": "",
             "virtual": false,
-            "description": "SQRTPI\nDescription",
+            "description": "SQRTPI\nCalculates the square root of the product of Pi and a given number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to multiply with Pi and return the square root.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSQRTPI()"
+                "// returns 4.3416075273496055\nSQRTPI(6)"
             ],
             "returns": {
                 "type": "Number",

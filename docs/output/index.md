@@ -396,15 +396,15 @@ Rounds a number to a specified number of decimal places according to standard ro
 
 ### [ROUNDDOWN](./ROUNDDOWN)
 
-Description
+Rounds a number down to a desired number of decimal places.
 
 ### [ROUNDUP](./ROUNDUP)
 
-Description
+Rounds a number up to a desired number of decimal places.
 
 ### [SEARCH](./SEARCH)
 
-Description
+Returns the position at which a specified string is first found within a block of text. Ignores case.
 
 ### [SELECTED](./SELECTED)
 
@@ -412,11 +412,11 @@ Description
 
 ### [SIGN](./SIGN)
 
-Description
+Returns the sign of a given input number. `-1` if negative, `1` if positive, `0` if zero.
 
 ### [SIN](./SIN)
 
-Description
+Returns the sine of a value, in radians.
 
 ### [SINH](./SINH)
 
@@ -424,11 +424,11 @@ Returns the hyperbolic sine of a number
 
 ### [SQRT](./SQRT)
 
-Description
+Calculates the square root of a given number.
 
 ### [SQRTPI](./SQRTPI)
 
-Description
+Calculates the square root of the product of Pi and a given number.
 
 ### [STATUS](./STATUS)
 

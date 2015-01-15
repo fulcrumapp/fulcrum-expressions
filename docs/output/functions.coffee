@@ -99,15 +99,15 @@ class window.ExpressionFunctions
     { identifier: "REPLACE", description: "Replaces a piece of a text string with a different string." }
     { identifier: "RIGHT", description: "Returns a substring from the end of a given string." }
     { identifier: "ROUND", description: "Rounds a number to a specified number of decimal places according to standard rounding rules." }
-    { identifier: "ROUNDDOWN", description: "Description" }
-    { identifier: "ROUNDUP", description: "Description" }
-    { identifier: "SEARCH", description: "Description" }
+    { identifier: "ROUNDDOWN", description: "Rounds a number down to a desired number of decimal places." }
+    { identifier: "ROUNDUP", description: "Rounds a number up to a desired number of decimal places." }
+    { identifier: "SEARCH", description: "Returns the position at which a specified string is first found within a block of text. Ignores case." }
     { identifier: "SELECTED", description: "Description" }
-    { identifier: "SIGN", description: "Description" }
-    { identifier: "SIN", description: "Description" }
+    { identifier: "SIGN", description: "Returns the sign of a given input number. `-1` if negative, `1` if positive, `0` if zero." }
+    { identifier: "SIN", description: "Returns the sine of a value, in radians." }
     { identifier: "SINH", description: "Returns the hyperbolic sine of a number" }
-    { identifier: "SQRT", description: "Description" }
-    { identifier: "SQRTPI", description: "Description" }
+    { identifier: "SQRT", description: "Calculates the square root of a given number." }
+    { identifier: "SQRTPI", description: "Calculates the square root of the product of Pi and a given number." }
     { identifier: "STATUS", description: "Returns the current record status" }
     { identifier: "SUBSTITUTE", description: "Description" }
     { identifier: "SUM", description: "Description" }

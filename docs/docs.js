@@ -196,7 +196,7 @@ function CONCATENATE() {}
 /**
  * COS
  * Returns the cosine of a value, in radians.
- * @param {Number} value The value for which to calculate the cosine. Must be between -1 and 1, inclusive.
+ * @param {Number} value The value for which to calculate the cosine.
  * @returns {Number}
  * @example
  * // returns 0.15425144988758405
@@ -1534,12 +1534,16 @@ function ROUND() {}
 
 /**
  * ROUNDDOWN
- * Description
- * @param {Number} value argument
+ * Rounds a number down to a desired number of decimal places.
+ * @param {Number} value The value to round down.
+ * @param {Number} places The number of places to which to round down.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ROUNDDOWN()
+ * // returns 156.82
+ * ROUNDDOWN(156.826, 2)
+ * @example
+ * // returns 156
+ * ROUNDDOWN(156.826, 0)
  */
 function ROUNDDOWN() {}
 
@@ -1548,12 +1552,16 @@ function ROUNDDOWN() {}
 
 /**
  * ROUNDUP
- * Description
- * @param {Number} value argument
+ * Rounds a number up to a desired number of decimal places.
+ * @param {Number} value The value to round up.
+ * @param {Number} places The number of places to which to round up.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ROUNDUP()
+ * // returns 156.83
+ * ROUNDUP(156.826, 2)
+ * @example
+ * // returns 157
+ * ROUNDUP(156.826, 0)
  */
 function ROUNDUP() {}
 
@@ -1562,12 +1570,14 @@ function ROUNDUP() {}
 
 /**
  * SEARCH
- * Description
- * @param {Number} value argument
+ * Returns the position at which a specified string is first found within a block of text. Ignores case.
+ * @param {String} search_for String to search for within `text_to_search`.
+ * @param {String} text_to_search Text to search for the first instance of `search_for`.
+ * @param {Number} starting_at argument Position index to begin the search.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SEARCH()
+ * // returns 37
+ * SEARCH("collect", "Data analysts love Fulcrum for data collection needs", 12)
  */
 function SEARCH() {}
 
@@ -1590,12 +1600,15 @@ function SELECTED() {}
 
 /**
  * SIGN
- * Description
- * @param {Number} value argument
+ * Returns the sign of a given input number. `-1` if negative, `1` if positive, `0` if zero.
+ * @param {Number} value The value to return the sign of.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SIGN()
+ * // returns 1
+ * SIGN(43)
+ * @example
+ * // returns -1
+ * SIGN(-3)
  */
 function SIGN() {}
 
@@ -1604,12 +1617,12 @@ function SIGN() {}
 
 /**
  * SIN
- * Description
- * @param {Number} value argument
+ * Returns the sine of a value, in radians.
+ * @param {Number} value The value for which to calculate the sine.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SIN()
+ * // returns -0.9880316240928618
+ * SIN(30)
  */
 function SIN() {}
 
@@ -1619,7 +1632,7 @@ function SIN() {}
 /**
  * SINH
  * Returns the hyperbolic sine of a number
- * @param {Number} value a number
+ * @param {Number} value The value for which to calculate the hyperbolic sine.
  * @returns {Number}
  * @example
  * // returns 1.1752011936438014
@@ -1632,12 +1645,15 @@ function SINH() {}
 
 /**
  * SQRT
- * Description
- * @param {Number} value argument
+ * Calculates the square root of a given number.
+ * @param {Number} value The number for which to calculate the square root.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SQRT()
+ * // returns 2.23606797749979
+ * SQRT(5)
+ * @example
+ * // returns NaN
+ * SQRT(-9)
  */
 function SQRT() {}
 
@@ -1646,12 +1662,12 @@ function SQRT() {}
 
 /**
  * SQRTPI
- * Description
- * @param {Number} value argument
+ * Calculates the square root of the product of Pi and a given number.
+ * @param {Number} value The value to multiply with Pi and return the square root.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SQRTPI()
+ * // returns 4.3416075273496055
+ * SQRTPI(6)
  */
 function SQRTPI() {}
 

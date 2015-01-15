@@ -3,7 +3,7 @@
 Returns the hyperbolic sine of a number
 
 ### Parameters
-`value` : Number (required) - a number
+`value` : Number (required) - The value for which to calculate the hyperbolic sine.
 
 ### Returns
 Number
