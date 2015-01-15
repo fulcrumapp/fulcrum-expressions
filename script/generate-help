@@ -33,6 +33,8 @@ class DocumentationGenerator
     #{examples}
     """
 
+      schema.fullMarkdown = @helpFrontMatter(func) + "\n\n" + schema.markdown
+
       schema
 
   generateParameters: (parameters) ->
@@ -70,6 +72,20 @@ class DocumentationGenerator
 
     titles.join("\n\n")
 
+  helpFrontMatter: (func) ->
+    """
+---
+layout: docs
+category: expressions
+section: developers
+class: docs
+title: "Developers | Expressions | #{func.name}"
+description: "#{func.name}"
+developer: true
+permalink: /developers/expressions/#{func.name.toLowerCase()}/
+---
+"""
+
   generateAppHelp: (functions) ->
     functions = _.map functions, (func) =>
       desc = @getDescription(func)
@@ -98,7 +114,7 @@ index = generator.generateIndex(functions)
 help  = generator.generateAppHelp(functions)
 
 _.each files, (file) ->
-  fs.writeFileSync("./docs/output/#{file.name}.md", file.markdown)
+  fs.writeFileSync("./docs/output/#{file.name.toLowerCase()}.md", file.fullMarkdown)
 
 fs.writeFileSync("./docs/output/index.md", index)
 
