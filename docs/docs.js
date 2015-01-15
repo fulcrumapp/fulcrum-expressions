@@ -48,7 +48,7 @@ function ACOSH() {}
 /**
  * AND
  * Returns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.
- * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.
+ * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.
  * @returns {Boolean}
  * @example
  * // returns false
@@ -1280,7 +1280,7 @@ function ONCE() {}
 /**
  * OR
  * Returns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.
- * @param {...Boolean} value Expression(s) or value(s) representing a logical value (`true` or `false`).
+ * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.
  * @returns {Boolean}
  * @example
  * // returns true
@@ -1703,12 +1703,12 @@ function SUBSTITUTE() {}
 
 /**
  * SUM
- * Description
- * @param {Number} value argument
+ * Calculates the sum of a range of values.
+ * @param {...Number} var_args_values Values to add together.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SUM()
+ * // returns 219
+ * SUM(4, 10, 22, 183)
  */
 function SUM() {}
 
@@ -1717,12 +1717,12 @@ function SUM() {}
 
 /**
  * SUMSQ
- * Description
- * @param {Number} value argument
+ * Calculates the sum of the squares of a range of values.
+ * @param {Number} var_args_values Values to square and sum.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SUMSQ()
+ * // returns 50
+ * SUMSQ(3, 4, 5)
  */
 function SUMSQ() {}
 
@@ -1731,12 +1731,12 @@ function SUMSQ() {}
 
 /**
  * T
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns string as text.
+ * @param {String} value The string to convert to text.
+ * @returns {String}
  * @example
- * // returns VALUE
- * T()
+ * // returns Fulcrum
+ * T("Fulcrum")
  */
 function T() {}
 
@@ -1759,12 +1759,12 @@ function TIMEZONE() {}
 
 /**
  * TRIM
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Strips the leading and trailing spaces from a string.
+ * @param {String} value argument
+ * @returns {String}
  * @example
- * // returns VALUE
- * TRIM()
+ * // returns Fulcrum is cross-platform
+ * TRIM("  Fulcrum is cross-platform ")
  */
 function TRIM() {}
 
@@ -1773,11 +1773,10 @@ function TRIM() {}
 
 /**
  * TRUE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the boolean value `true`.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
+ * // returns true
  * TRUE()
  */
 function TRUE() {}
@@ -1787,12 +1786,12 @@ function TRUE() {}
 
 /**
  * UPPER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Converts a specified string to uppercase.
+ * @param {String} value The string to convert to uppercase.
+ * @returns {String}
  * @example
- * // returns VALUE
- * UPPER()
+ * // returns EMPIRE STATE BUILDING
+ * UPPER("Empire State Building")
  */
 function UPPER() {}
 

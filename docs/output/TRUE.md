@@ -1,15 +1,15 @@
 ## TRUE
 
-Description
+Returns the boolean value `true`.
 
 ### Parameters
-`value` : Number (required) - argument
+No parameters
 
 ### Returns
-Number
+Boolean
 
 ### Examples
 ```
-// returns VALUE
+// returns true
 TRUE()
 ```

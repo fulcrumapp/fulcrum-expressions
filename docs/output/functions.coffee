@@ -110,13 +110,13 @@ class window.ExpressionFunctions
     { identifier: "SQRTPI", description: "Calculates the square root of the product of Pi and a given number." }
     { identifier: "STATUS", description: "Returns the current record status" }
     { identifier: "SUBSTITUTE", description: "Description" }
-    { identifier: "SUM", description: "Description" }
-    { identifier: "SUMSQ", description: "Description" }
-    { identifier: "T", description: "Description" }
+    { identifier: "SUM", description: "Calculates the sum of a range of values." }
+    { identifier: "SUMSQ", description: "Calculates the sum of the squares of a range of values." }
+    { identifier: "T", description: "Returns string as text." }
     { identifier: "TIMEZONE", description: "Description" }
-    { identifier: "TRIM", description: "Description" }
-    { identifier: "TRUE", description: "Description" }
-    { identifier: "UPPER", description: "Description" }
+    { identifier: "TRIM", description: "Strips the leading and trailing spaces from a string." }
+    { identifier: "TRUE", description: "Returns the boolean value `true`." }
+    { identifier: "UPPER", description: "Converts a specified string to uppercase." }
     { identifier: "VALUE", description: "Description" }
     { identifier: "VERSIONINFO", description: "Returns version information about the app." }
     { identifier: "YEAR", description: "Returns the year of a given date." }

@@ -3,7 +3,7 @@
 Returns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.
 
 ### Parameters
-`value` : Boolean (required) - Expression(s) or value(s) representing a logical value (`true` or `false`).
+`var_args_expressions` : * (required) - An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.
 
 ### Returns
 Boolean

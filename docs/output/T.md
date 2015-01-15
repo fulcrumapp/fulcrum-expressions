@@ -1,15 +1,15 @@
 ## T
 
-Description
+Returns string as text.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The string to convert to text.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-T()
+// returns Fulcrum
+T("Fulcrum")
 ```

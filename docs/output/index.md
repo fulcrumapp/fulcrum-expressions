@@ -440,15 +440,15 @@ Description
 
 ### [SUM](./SUM)
 
-Description
+Calculates the sum of a range of values.
 
 ### [SUMSQ](./SUMSQ)
 
-Description
+Calculates the sum of the squares of a range of values.
 
 ### [T](./T)
 
-Description
+Returns string as text.
 
 ### [TIMEZONE](./TIMEZONE)
 
@@ -456,15 +456,15 @@ Description
 
 ### [TRIM](./TRIM)
 
-Description
+Strips the leading and trailing spaces from a string.
 
 ### [TRUE](./TRUE)
 
-Description
+Returns the boolean value `true`.
 
 ### [UPPER](./UPPER)
 
-Description
+Converts a specified string to uppercase.
 
 ### [VALUE](./VALUE)
 

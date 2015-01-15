@@ -79,7 +79,7 @@
                 {
                     "name": "var_args_expressions",
                     "type": "*",
-                    "description": "An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.",
+                    "description": "An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2043,9 +2043,9 @@
             "description": "OR\nReturns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Boolean",
-                    "description": "Expression(s) or value(s) representing a logical value (`true` or `false`).",
+                    "name": "var_args_expressions",
+                    "type": "*",
+                    "description": "An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2773,19 +2773,19 @@
             "name": "SUM",
             "access": "",
             "virtual": false,
-            "description": "SUM\nDescription",
+            "description": "SUM\nCalculates the sum of a range of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values to add together.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSUM()"
+                "// returns 219\nSUM(4, 10, 22, 183)"
             ],
             "returns": {
                 "type": "Number",
@@ -2796,19 +2796,19 @@
             "name": "SUMSQ",
             "access": "",
             "virtual": false,
-            "description": "SUMSQ\nDescription",
+            "description": "SUMSQ\nCalculates the sum of the squares of a range of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values to square and sum.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSUMSQ()"
+                "// returns 50\nSUMSQ(3, 4, 5)"
             ],
             "returns": {
                 "type": "Number",
@@ -2819,22 +2819,22 @@
             "name": "T",
             "access": "",
             "virtual": false,
-            "description": "T\nDescription",
+            "description": "T\nReturns string as text.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string to convert to text.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nT()"
+                "// returns Fulcrum\nT(\"Fulcrum\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2865,11 +2865,11 @@
             "name": "TRIM",
             "access": "",
             "virtual": false,
-            "description": "TRIM\nDescription",
+            "description": "TRIM\nStrips the leading and trailing spaces from a string.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
+                    "type": "String",
                     "description": "argument",
                     "default": "",
                     "optional": "",
@@ -2877,10 +2877,10 @@
                 }
             ],
             "examples": [
-                "// returns VALUE\nTRIM()"
+                "// returns Fulcrum is cross-platform\nTRIM(\"  Fulcrum is cross-platform \")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2888,22 +2888,13 @@
             "name": "TRUE",
             "access": "",
             "virtual": false,
-            "description": "TRUE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "TRUE\nReturns the boolean value `true`.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nTRUE()"
+                "// returns true\nTRUE()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -2911,22 +2902,22 @@
             "name": "UPPER",
             "access": "",
             "virtual": false,
-            "description": "UPPER\nDescription",
+            "description": "UPPER\nConverts a specified string to uppercase.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string to convert to uppercase.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nUPPER()"
+                "// returns EMPIRE STATE BUILDING\nUPPER(\"Empire State Building\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },

@@ -1,15 +1,15 @@
 ## SUMSQ
 
-Description
+Calculates the sum of the squares of a range of values.
 
 ### Parameters
-`value` : Number (required) - argument
+`var_args_values` : Number (required) - Values to square and sum.
 
 ### Returns
 Number
 
 ### Examples
 ```
-// returns VALUE
-SUMSQ()
+// returns 50
+SUMSQ(3, 4, 5)
 ```

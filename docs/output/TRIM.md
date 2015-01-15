@@ -1,15 +1,15 @@
 ## TRIM
 
-Description
+Strips the leading and trailing spaces from a string.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - argument
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-TRIM()
+// returns Fulcrum is cross-platform
+TRIM("  Fulcrum is cross-platform ")
 ```

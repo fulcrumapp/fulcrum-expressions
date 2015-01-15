@@ -1,15 +1,15 @@
 ## UPPER
 
-Description
+Converts a specified string to uppercase.
 
 ### Parameters
-`value` : Number (required) - argument
+`value` : String (required) - The string to convert to uppercase.
 
 ### Returns
-Number
+String
 
 ### Examples
 ```
-// returns VALUE
-UPPER()
+// returns EMPIRE STATE BUILDING
+UPPER("Empire State Building")
 ```
