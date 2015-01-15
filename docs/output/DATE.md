@@ -14,6 +14,6 @@ Date
 
 ### Examples
 ```
-// returns Wed Dec 16 2015 00:00:00 GMT-0500 (EST)
+// returns 2015-12-16
 DATE(2015, 12, 16)
 ```

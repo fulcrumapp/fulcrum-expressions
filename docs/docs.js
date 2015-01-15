@@ -313,7 +313,7 @@ function CURRENCYSYMBOL() {}
  * @param {Number} day day
  * @returns {Date}
  * @example
- * // returns Wed Dec 16 2015 00:00:00 GMT-0500 (EST)
+ * // returns 2015-12-16
  * DATE(2015, 12, 16)
  */
 function DATE() {}
@@ -328,10 +328,10 @@ function DATE() {}
  * @param {Number} days the number of days to add
  * @returns {Date}
  * @example
- * // returns Sun Jan 11 2015 00:00:00 GMT-0500 (EST)
+ * // returns 2015-01-11
  * DATEADD('2015-01-01', 10)
  * @example
- * // returns Fri May 01 2015 01:00:00 GMT-0400 (EDT)
+ * // returns 2015-05-01
  * DATEADD('2015-01-31', 90)
  */
 function DATEADD() {}

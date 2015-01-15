@@ -12,11 +12,11 @@ Date
 
 ### Examples
 ```
-// returns Sun Jan 11 2015 00:00:00 GMT-0500 (EST)
+// returns 2015-01-11
 DATEADD('2015-01-01', 10)
 ```
 
 ```
-// returns Fri May 01 2015 01:00:00 GMT-0400 (EDT)
+// returns 2015-05-01
 DATEADD('2015-01-31', 90)
 ```

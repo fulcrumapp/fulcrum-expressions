@@ -508,7 +508,7 @@
                 }
             ],
             "examples": [
-                "// returns Wed Dec 16 2015 00:00:00 GMT-0500 (EST)\nDATE(2015, 12, 16)"
+                "// returns 2015-12-16\nDATE(2015, 12, 16)"
             ],
             "returns": {
                 "type": "Date",
@@ -539,8 +539,8 @@
                 }
             ],
             "examples": [
-                "// returns Sun Jan 11 2015 00:00:00 GMT-0500 (EST)\nDATEADD('2015-01-01', 10)",
-                "// returns Fri May 01 2015 01:00:00 GMT-0400 (EDT)\nDATEADD('2015-01-31', 90)"
+                "// returns 2015-01-11\nDATEADD('2015-01-01', 10)",
+                "// returns 2015-05-01\nDATEADD('2015-01-31', 90)"
             ],
             "returns": {
                 "type": "Date",
