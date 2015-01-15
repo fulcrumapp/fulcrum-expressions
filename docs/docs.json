@@ -79,7 +79,7 @@
                 {
                     "name": "var_args_expressions",
                     "type": "*",
-                    "description": "An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.",
+                    "description": "An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -301,7 +301,7 @@
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "The value for which to calculate the cosine. Must be between -1 and 1, inclusive.",
+                    "description": "The value for which to calculate the cosine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2043,9 +2043,9 @@
             "description": "OR\nReturns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Boolean",
-                    "description": "Expression(s) or value(s) representing a logical value (`true` or `false`).",
+                    "name": "var_args_expressions",
+                    "type": "*",
+                    "description": "An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2180,22 +2180,22 @@
             "name": "PROPER",
             "access": "",
             "virtual": false,
-            "description": "PROPER\nDescription",
+            "description": "PROPER\nCapitalizes each word in a string (title case).",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "String to capitalize words within.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nPROPER()"
+                "// returns Fulcrum Mobile Data Collection\nPROPER(\"fulcrum mobile data collection\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2203,19 +2203,29 @@
             "name": "QUOTIENT",
             "access": "",
             "virtual": false,
-            "description": "QUOTIENT\nDescription",
+            "description": "QUOTIENT\nReturns the result of dividing one number by another.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "dividend",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number to divide.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "divisor",
+                    "type": "Number",
+                    "description": "The number to be divided by.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nQUOTIENT()"
+                "// returns 6\nQUOTIENT(30, 5)",
+                "// returns 0\nQUOTIENT(0, 10)",
+                "// returns NaN\nQUOTIENT(45, 0)"
             ],
             "returns": {
                 "type": "Number",
@@ -2226,19 +2236,19 @@
             "name": "RADIANS",
             "access": "",
             "virtual": false,
-            "description": "RADIANS\nDescription",
+            "description": "RADIANS\nConverts a number of degrees to radians.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number of degrees to be converted.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nRADIANS()"
+                "// returns 0.5235987755982988\nRADIANS(30)"
             ],
             "returns": {
                 "type": "Number",
@@ -2249,19 +2259,10 @@
             "name": "RAND",
             "access": "",
             "virtual": false,
-            "description": "RAND\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "RAND\nReturns a random number between 0 and 1.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nRAND()"
+                "// returns true\nRAND() > 0"
             ],
             "returns": {
                 "type": "Number",
@@ -2272,19 +2273,27 @@
             "name": "RANDBETWEEN",
             "access": "",
             "virtual": false,
-            "description": "RANDBETWEEN\nDescription",
+            "description": "RANDBETWEEN\nReturns a random integer between two values.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Low value of the range.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "High value of the range.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nRANDBETWEEN()"
+                "// returns true\n4 < RANDBETWEEN(4, 9) < 9"
             ],
             "returns": {
                 "type": "Number",
@@ -2373,22 +2382,46 @@
             "name": "REPLACE",
             "access": "",
             "virtual": false,
-            "description": "REPLACE\nDescription",
+            "description": "REPLACE\nReplaces a piece of a text string with a different string.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "text",
+                    "type": "String",
+                    "description": "A piece of text to be searched.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "start_position",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Position within the string to begin the search.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "num_characters",
+                    "type": "Number",
+                    "description": "Number of characters in original string to be replaced.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "replacement",
+                    "type": "String",
+                    "description": "String to replace `num_characters` with.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nREPLACE()"
+                "// returns Fulcrum is a great platform\nREPLACE(\"Fulcrum is a good platform\", 14, 4, \"great\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2396,22 +2429,31 @@
             "name": "RIGHT",
             "access": "",
             "virtual": false,
-            "description": "RIGHT\nDescription",
+            "description": "RIGHT\nReturns a substring from the end of a given string.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string value from which the right portion will be returned.",
                     "default": "",
                     "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "number_of_characters",
+                    "type": "Number",
+                    "description": "The number of characters to return from the right side of the string.",
+                    "default": "1",
+                    "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nRIGHT()"
+                "// returns crum\nRIGHT(\"Fulcrum\", 4)",
+                "// returns m\nRIGHT(\"Fulcrum\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2419,19 +2461,28 @@
             "name": "ROUND",
             "access": "",
             "virtual": false,
-            "description": "ROUND\nDescription",
+            "description": "ROUND\nRounds a number to a specified number of decimal places according to standard rounding rules.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to be rounded to `places`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "places",
+                    "type": "Number",
+                    "description": "The number of decimal places to which to round `value`.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nROUND()"
+                "// returns 179.8\nROUND(179.848, 1)",
+                "// returns 900\nROUND(918.268, -2)"
             ],
             "returns": {
                 "type": "Number",
@@ -2442,19 +2493,28 @@
             "name": "ROUNDDOWN",
             "access": "",
             "virtual": false,
-            "description": "ROUNDDOWN\nDescription",
+            "description": "ROUNDDOWN\nRounds a number down to a desired number of decimal places.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to round down.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "places",
+                    "type": "Number",
+                    "description": "The number of places to which to round down.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nROUNDDOWN()"
+                "// returns 156.82\nROUNDDOWN(156.826, 2)",
+                "// returns 156\nROUNDDOWN(156.826, 0)"
             ],
             "returns": {
                 "type": "Number",
@@ -2465,19 +2525,28 @@
             "name": "ROUNDUP",
             "access": "",
             "virtual": false,
-            "description": "ROUNDUP\nDescription",
+            "description": "ROUNDUP\nRounds a number up to a desired number of decimal places.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to round up.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "places",
+                    "type": "Number",
+                    "description": "The number of places to which to round up.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nROUNDUP()"
+                "// returns 156.83\nROUNDUP(156.826, 2)",
+                "// returns 157\nROUNDUP(156.826, 0)"
             ],
             "returns": {
                 "type": "Number",
@@ -2488,19 +2557,35 @@
             "name": "SEARCH",
             "access": "",
             "virtual": false,
-            "description": "SEARCH\nDescription",
+            "description": "SEARCH\nReturns the position at which a specified string is first found within a block of text. Ignores case.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "search_for",
+                    "type": "String",
+                    "description": "String to search for within `text_to_search`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "text_to_search",
+                    "type": "String",
+                    "description": "Text to search for the first instance of `search_for`.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "starting_at",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "argument Position index to begin the search.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSEARCH()"
+                "// returns 37\nSEARCH(\"collect\", \"Data analysts love Fulcrum for data collection needs\", 12)"
             ],
             "returns": {
                 "type": "Number",
@@ -2534,19 +2619,20 @@
             "name": "SIGN",
             "access": "",
             "virtual": false,
-            "description": "SIGN\nDescription",
+            "description": "SIGN\nReturns the sign of a given input number. `-1` if negative, `1` if positive, `0` if zero.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to return the sign of.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSIGN()"
+                "// returns 1\nSIGN(43)",
+                "// returns -1\nSIGN(-3)"
             ],
             "returns": {
                 "type": "Number",
@@ -2557,19 +2643,19 @@
             "name": "SIN",
             "access": "",
             "virtual": false,
-            "description": "SIN\nDescription",
+            "description": "SIN\nReturns the sine of a value, in radians.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value for which to calculate the sine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSIN()"
+                "// returns -0.9880316240928618\nSIN(30)"
             ],
             "returns": {
                 "type": "Number",
@@ -2585,7 +2671,7 @@
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "a number",
+                    "description": "The value for which to calculate the hyperbolic sine.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -2603,19 +2689,20 @@
             "name": "SQRT",
             "access": "",
             "virtual": false,
-            "description": "SQRT\nDescription",
+            "description": "SQRT\nCalculates the square root of a given number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The number for which to calculate the square root.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSQRT()"
+                "// returns 2.23606797749979\nSQRT(5)",
+                "// returns NaN\nSQRT(-9)"
             ],
             "returns": {
                 "type": "Number",
@@ -2626,19 +2713,19 @@
             "name": "SQRTPI",
             "access": "",
             "virtual": false,
-            "description": "SQRTPI\nDescription",
+            "description": "SQRTPI\nCalculates the square root of the product of Pi and a given number.",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "The value to multiply with Pi and return the square root.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSQRTPI()"
+                "// returns 4.3416075273496055\nSQRTPI(6)"
             ],
             "returns": {
                 "type": "Number",
@@ -2686,19 +2773,19 @@
             "name": "SUM",
             "access": "",
             "virtual": false,
-            "description": "SUM\nDescription",
+            "description": "SUM\nCalculates the sum of a range of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values to add together.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSUM()"
+                "// returns 219\nSUM(4, 10, 22, 183)"
             ],
             "returns": {
                 "type": "Number",
@@ -2709,19 +2796,19 @@
             "name": "SUMSQ",
             "access": "",
             "virtual": false,
-            "description": "SUMSQ\nDescription",
+            "description": "SUMSQ\nCalculates the sum of the squares of a range of values.",
             "parameters": [
                 {
-                    "name": "value",
+                    "name": "var_args_values",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "Values to square and sum.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSUMSQ()"
+                "// returns 50\nSUMSQ(3, 4, 5)"
             ],
             "returns": {
                 "type": "Number",
@@ -2732,22 +2819,22 @@
             "name": "T",
             "access": "",
             "virtual": false,
-            "description": "T\nDescription",
+            "description": "T\nReturns string as text.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string to convert to text.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nT()"
+                "// returns Fulcrum\nT(\"Fulcrum\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2778,11 +2865,11 @@
             "name": "TRIM",
             "access": "",
             "virtual": false,
-            "description": "TRIM\nDescription",
+            "description": "TRIM\nStrips the leading and trailing spaces from a string.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
+                    "type": "String",
                     "description": "argument",
                     "default": "",
                     "optional": "",
@@ -2790,10 +2877,10 @@
                 }
             ],
             "examples": [
-                "// returns VALUE\nTRIM()"
+                "// returns Fulcrum is cross-platform\nTRIM(\"  Fulcrum is cross-platform \")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
@@ -2801,22 +2888,13 @@
             "name": "TRUE",
             "access": "",
             "virtual": false,
-            "description": "TRUE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "TRUE\nReturns the boolean value `true`.",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nTRUE()"
+                "// returns true\nTRUE()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -2824,22 +2902,22 @@
             "name": "UPPER",
             "access": "",
             "virtual": false,
-            "description": "UPPER\nDescription",
+            "description": "UPPER\nConverts a specified string to uppercase.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "The string to convert to uppercase.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nUPPER()"
+                "// returns EMPIRE STATE BUILDING\nUPPER(\"Empire State Building\")"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },

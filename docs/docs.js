@@ -48,7 +48,7 @@ function ACOSH() {}
 /**
  * AND
  * Returns true if all of the provided arguments are logically true, and false if any of the provided arguments are logically false.
- * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. TRUE or FALSE, or an expression that can be converted to a logical value.
+ * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.
  * @returns {Boolean}
  * @example
  * // returns false
@@ -196,7 +196,7 @@ function CONCATENATE() {}
 /**
  * COS
  * Returns the cosine of a value, in radians.
- * @param {Number} value The value for which to calculate the cosine. Must be between -1 and 1, inclusive.
+ * @param {Number} value The value for which to calculate the cosine.
  * @returns {Number}
  * @example
  * // returns 0.15425144988758405
@@ -1280,7 +1280,7 @@ function ONCE() {}
 /**
  * OR
  * Returns `true` if any of the provided arguments are logically true, and `false` if all of the provided arguments are logically false.
- * @param {...Boolean} value Expression(s) or value(s) representing a logical value (`true` or `false`).
+ * @param {...*} var_args_expressions An expression or reference that represents some logical value, i.e. `true` or `false`, or an expression that can be converted to a logical value.
  * @returns {Boolean}
  * @example
  * // returns true
@@ -1372,12 +1372,12 @@ function PRODUCT() {}
 
 /**
  * PROPER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Capitalizes each word in a string (title case).
+ * @param {String} value String to capitalize words within.
+ * @returns {String}
  * @example
- * // returns VALUE
- * PROPER()
+ * // returns Fulcrum Mobile Data Collection
+ * PROPER("fulcrum mobile data collection")
  */
 function PROPER() {}
 
@@ -1386,12 +1386,19 @@ function PROPER() {}
 
 /**
  * QUOTIENT
- * Description
- * @param {Number} value argument
+ * Returns the result of dividing one number by another.
+ * @param {Number} dividend The number to divide.
+ * @param {Number} divisor The number to be divided by.
  * @returns {Number}
  * @example
- * // returns VALUE
- * QUOTIENT()
+ * // returns 6
+ * QUOTIENT(30, 5)
+ * @example
+ * // returns 0
+ * QUOTIENT(0, 10)
+ * @example
+ * // returns NaN
+ * QUOTIENT(45, 0)
  */
 function QUOTIENT() {}
 
@@ -1400,12 +1407,12 @@ function QUOTIENT() {}
 
 /**
  * RADIANS
- * Description
- * @param {Number} value argument
+ * Converts a number of degrees to radians.
+ * @param {Number} value The number of degrees to be converted.
  * @returns {Number}
  * @example
- * // returns VALUE
- * RADIANS()
+ * // returns 0.5235987755982988
+ * RADIANS(30)
  */
 function RADIANS() {}
 
@@ -1414,12 +1421,11 @@ function RADIANS() {}
 
 /**
  * RAND
- * Description
- * @param {Number} value argument
+ * Returns a random number between 0 and 1.
  * @returns {Number}
  * @example
- * // returns VALUE
- * RAND()
+ * // returns true
+ * RAND() > 0
  */
 function RAND() {}
 
@@ -1428,12 +1434,13 @@ function RAND() {}
 
 /**
  * RANDBETWEEN
- * Description
- * @param {Number} value argument
+ * Returns a random integer between two values.
+ * @param {Number} value Low value of the range.
+ * @param {Number} value High value of the range.
  * @returns {Number}
  * @example
- * // returns VALUE
- * RANDBETWEEN()
+ * // returns true
+ * 4 < RANDBETWEEN(4, 9) < 9
  */
 function RANDBETWEEN() {}
 
@@ -1474,12 +1481,15 @@ function REPEATABLESUM() {}
 
 /**
  * REPLACE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Replaces a piece of a text string with a different string.
+ * @param {String} text A piece of text to be searched.
+ * @param {Number} start_position Position within the string to begin the search.
+ * @param {Number} num_characters Number of characters in original string to be replaced.
+ * @param {String} replacement String to replace `num_characters` with.
+ * @returns {String}
  * @example
- * // returns VALUE
- * REPLACE()
+ * // returns Fulcrum is a great platform
+ * REPLACE("Fulcrum is a good platform", 14, 4, "great")
  */
 function REPLACE() {}
 
@@ -1488,12 +1498,16 @@ function REPLACE() {}
 
 /**
  * RIGHT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a substring from the end of a given string.
+ * @param {String} value The string value from which the right portion will be returned.
+ * @param {Number} [number_of_characters=1] The number of characters to return from the right side of the string.
+ * @returns {String}
  * @example
- * // returns VALUE
- * RIGHT()
+ * // returns crum
+ * RIGHT("Fulcrum", 4)
+ * @example
+ * // returns m
+ * RIGHT("Fulcrum")
  */
 function RIGHT() {}
 
@@ -1502,12 +1516,16 @@ function RIGHT() {}
 
 /**
  * ROUND
- * Description
- * @param {Number} value argument
+ * Rounds a number to a specified number of decimal places according to standard rounding rules.
+ * @param {Number} value The value to be rounded to `places`.
+ * @param {Number} places The number of decimal places to which to round `value`.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ROUND()
+ * // returns 179.8
+ * ROUND(179.848, 1)
+ * @example
+ * // returns 900
+ * ROUND(918.268, -2)
  */
 function ROUND() {}
 
@@ -1516,12 +1534,16 @@ function ROUND() {}
 
 /**
  * ROUNDDOWN
- * Description
- * @param {Number} value argument
+ * Rounds a number down to a desired number of decimal places.
+ * @param {Number} value The value to round down.
+ * @param {Number} places The number of places to which to round down.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ROUNDDOWN()
+ * // returns 156.82
+ * ROUNDDOWN(156.826, 2)
+ * @example
+ * // returns 156
+ * ROUNDDOWN(156.826, 0)
  */
 function ROUNDDOWN() {}
 
@@ -1530,12 +1552,16 @@ function ROUNDDOWN() {}
 
 /**
  * ROUNDUP
- * Description
- * @param {Number} value argument
+ * Rounds a number up to a desired number of decimal places.
+ * @param {Number} value The value to round up.
+ * @param {Number} places The number of places to which to round up.
  * @returns {Number}
  * @example
- * // returns VALUE
- * ROUNDUP()
+ * // returns 156.83
+ * ROUNDUP(156.826, 2)
+ * @example
+ * // returns 157
+ * ROUNDUP(156.826, 0)
  */
 function ROUNDUP() {}
 
@@ -1544,12 +1570,14 @@ function ROUNDUP() {}
 
 /**
  * SEARCH
- * Description
- * @param {Number} value argument
+ * Returns the position at which a specified string is first found within a block of text. Ignores case.
+ * @param {String} search_for String to search for within `text_to_search`.
+ * @param {String} text_to_search Text to search for the first instance of `search_for`.
+ * @param {Number} starting_at argument Position index to begin the search.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SEARCH()
+ * // returns 37
+ * SEARCH("collect", "Data analysts love Fulcrum for data collection needs", 12)
  */
 function SEARCH() {}
 
@@ -1572,12 +1600,15 @@ function SELECTED() {}
 
 /**
  * SIGN
- * Description
- * @param {Number} value argument
+ * Returns the sign of a given input number. `-1` if negative, `1` if positive, `0` if zero.
+ * @param {Number} value The value to return the sign of.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SIGN()
+ * // returns 1
+ * SIGN(43)
+ * @example
+ * // returns -1
+ * SIGN(-3)
  */
 function SIGN() {}
 
@@ -1586,12 +1617,12 @@ function SIGN() {}
 
 /**
  * SIN
- * Description
- * @param {Number} value argument
+ * Returns the sine of a value, in radians.
+ * @param {Number} value The value for which to calculate the sine.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SIN()
+ * // returns -0.9880316240928618
+ * SIN(30)
  */
 function SIN() {}
 
@@ -1601,7 +1632,7 @@ function SIN() {}
 /**
  * SINH
  * Returns the hyperbolic sine of a number
- * @param {Number} value a number
+ * @param {Number} value The value for which to calculate the hyperbolic sine.
  * @returns {Number}
  * @example
  * // returns 1.1752011936438014
@@ -1614,12 +1645,15 @@ function SINH() {}
 
 /**
  * SQRT
- * Description
- * @param {Number} value argument
+ * Calculates the square root of a given number.
+ * @param {Number} value The number for which to calculate the square root.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SQRT()
+ * // returns 2.23606797749979
+ * SQRT(5)
+ * @example
+ * // returns NaN
+ * SQRT(-9)
  */
 function SQRT() {}
 
@@ -1628,12 +1662,12 @@ function SQRT() {}
 
 /**
  * SQRTPI
- * Description
- * @param {Number} value argument
+ * Calculates the square root of the product of Pi and a given number.
+ * @param {Number} value The value to multiply with Pi and return the square root.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SQRTPI()
+ * // returns 4.3416075273496055
+ * SQRTPI(6)
  */
 function SQRTPI() {}
 
@@ -1669,12 +1703,12 @@ function SUBSTITUTE() {}
 
 /**
  * SUM
- * Description
- * @param {Number} value argument
+ * Calculates the sum of a range of values.
+ * @param {...Number} var_args_values Values to add together.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SUM()
+ * // returns 219
+ * SUM(4, 10, 22, 183)
  */
 function SUM() {}
 
@@ -1683,12 +1717,12 @@ function SUM() {}
 
 /**
  * SUMSQ
- * Description
- * @param {Number} value argument
+ * Calculates the sum of the squares of a range of values.
+ * @param {Number} var_args_values Values to square and sum.
  * @returns {Number}
  * @example
- * // returns VALUE
- * SUMSQ()
+ * // returns 50
+ * SUMSQ(3, 4, 5)
  */
 function SUMSQ() {}
 
@@ -1697,12 +1731,12 @@ function SUMSQ() {}
 
 /**
  * T
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns string as text.
+ * @param {String} value The string to convert to text.
+ * @returns {String}
  * @example
- * // returns VALUE
- * T()
+ * // returns Fulcrum
+ * T("Fulcrum")
  */
 function T() {}
 
@@ -1725,12 +1759,12 @@ function TIMEZONE() {}
 
 /**
  * TRIM
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Strips the leading and trailing spaces from a string.
+ * @param {String} value argument
+ * @returns {String}
  * @example
- * // returns VALUE
- * TRIM()
+ * // returns Fulcrum is cross-platform
+ * TRIM("  Fulcrum is cross-platform ")
  */
 function TRIM() {}
 
@@ -1739,11 +1773,10 @@ function TRIM() {}
 
 /**
  * TRUE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the boolean value `true`.
+ * @returns {Boolean}
  * @example
- * // returns VALUE
+ * // returns true
  * TRUE()
  */
 function TRUE() {}
@@ -1753,12 +1786,12 @@ function TRUE() {}
 
 /**
  * UPPER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Converts a specified string to uppercase.
+ * @param {String} value The string to convert to uppercase.
+ * @returns {String}
  * @example
- * // returns VALUE
- * UPPER()
+ * // returns EMPIRE STATE BUILDING
+ * UPPER("Empire State Building")
  */
 function UPPER() {}
 
