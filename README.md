@@ -27,7 +27,7 @@ Copies the build output and docs to the other repositories (each are optional, b
 
 You can define the paths to the Fulcrum repos using environment variables in your shell config:
 
-```
+```sh
 export FULCRUM_ANDROID=/path/to/android/app
 export FULCRUM_IOS=/path/to/ios/app
 export FULCRUM_WEB=/path/to/web/app
@@ -39,6 +39,8 @@ Or you can assign them in the make command:
 ```sh
 FULCRUM_SITE=$HOME/dev/fulcrumapp.com make dist copy
 ```
+
+Once you have the environment variables set, you can run:
 
 ```sh
 make copy
