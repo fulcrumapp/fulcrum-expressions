@@ -24,7 +24,7 @@ class Utils
           Array.prototype.push.apply(flat, children)
 
   @valueForElement: (element, value) ->
-    if element.numeric or element.display?.style is 'number'
+    if element.numeric or element.display?.style is 'number' or element.display?.style is 'currency'
       Number(value)
     else if (element.type is 'DateTimeField' or element.type is 'DateField') and value and value.length <= 10
       parseValue = "#{value.replace(/-/g, '/')} 00:00:00"
