@@ -24,7 +24,7 @@ class Utils
           Array.prototype.push.apply(flat, children)
 
   @valueForElement: (element, value) ->
-    if element.numeric or element.format is 'number'
+    if element.numeric or element.display?.style is 'number'
       Number(value)
     else if (element.type is 'DateTimeField' or element.type is 'DateField') and value and value.length <= 10
       parseValue = "#{value.replace(/-/g, '/')} 00:00:00"
@@ -63,8 +63,6 @@ class Utils
     element = byDataName[dataName]
 
     return null unless element
-
-    isNumeric = element.numeric or element.format is 'number'
 
     values = _.map items, (item) ->
       Utils.valueForElement(element, item.form_values[element.key])
