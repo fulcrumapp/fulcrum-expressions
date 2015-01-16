@@ -51,6 +51,7 @@ class Runtime
 
   extraVariableNames: [
     'locale',
+    'language',
     'timeZone',
     'decimalSeparator',
     'groupingSeparator',
