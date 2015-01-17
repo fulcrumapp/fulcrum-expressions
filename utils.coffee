@@ -44,9 +44,9 @@ class Utils
       value
 
   @numberValue: (value) ->
-    value ||= null
+    value ||= undefined
 
-    if value? then Number(value) else null
+    if value? then Number(value) else undefined
 
   @repeatableValueElements: (repeatable) ->
     key = repeatable.key
