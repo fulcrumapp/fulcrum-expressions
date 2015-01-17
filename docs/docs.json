@@ -2593,6 +2593,29 @@
             }
         },
         {
+            "name": "SHOWERRORS",
+            "access": "",
+            "virtual": false,
+            "description": "SHOWERRORS\nDescription",
+            "parameters": [
+                {
+                    "name": "show",
+                    "type": "Boolean",
+                    "description": "Show full error messages. This can help diagnose problems in expressions on the mobile device.",
+                    "default": "true",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nSHOWERRORS()"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
             "name": "SIGN",
             "access": "",
             "virtual": false,

@@ -49,6 +49,8 @@ class Runtime
 
   featureIsNew: true
 
+  showErrors: false
+
   extraVariableNames: [
     'locale',
     'language',
@@ -127,6 +129,8 @@ class Runtime
     thisVariableName = "$#{context.dataName}"
 
     try
+      $$runtime.showErrors = false
+
       variables.$$current = $$runtime.$$currentValue = variables[thisVariableName]
 
       stringValue = rawValue = variables.$$result = undefined
@@ -142,18 +146,18 @@ class Runtime
 
         variables[thisVariableName] = if _.isNumber(rawValue) or _.isDate(rawValue) then rawValue else stringValue
 
-      return @createResult(context.key, rawValue, stringValue, null)
+      return @createResult(context.key, rawValue, stringValue, null, $$runtime.showErrors)
     catch ex
       console.log "JS ERROR : #{context.dataName} : #{ex.toString()}"
 
       variables[thisVariableName] = undefined
 
-      return @createResult(context.key, null, null, ex.toString())
+      return @createResult(context.key, null, null, ex.toString(), $$runtime.showErrors)
 
   coalesce: ->
     _.find Utils.toArray(arguments), (argument) -> not _.isUndefined(argument)
 
-  createResult: (key, rawValue, stringValue, err) ->
+  createResult: (key, rawValue, stringValue, err, showErrors) ->
     if err
       err = err.toString()
     else if _.isUndefined(rawValue)
@@ -168,6 +172,8 @@ class Runtime
       err = null
     else if _.isObject(rawValue)
       err = '[Object]'
+
+    err = null unless showErrors
 
     { key: key, value: stringValue, error: err }
 

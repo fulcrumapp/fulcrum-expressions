@@ -1582,6 +1582,20 @@ function SEARCH() {}
 function SELECTED() {}
 
 
+////SHOWERRORS
+
+/**
+ * SHOWERRORS
+ * Description
+ * @param {Boolean} [show=true] Show full error messages. This can help diagnose problems in expressions on the mobile device.
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * SHOWERRORS()
+ */
+function SHOWERRORS() {}
+
+
 ////SIGN
 
 /**

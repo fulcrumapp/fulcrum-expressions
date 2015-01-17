@@ -1060,6 +1060,9 @@ exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName
 exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) ->
   SUM.apply(null, REPEATABLEVALUES(repeatableValue, repeatableElementDataName, dataName))
 
+exports.SHOWERRORS = (showErrors=true) ->
+  $$runtime.showErrors = showErrors
+
 hostFunctionExists = (name) ->
   _.isFunction($$runtime["$$#{name}"])
 
