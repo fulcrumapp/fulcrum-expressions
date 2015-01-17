@@ -2,6 +2,7 @@
 
 global.Intl = require('intl')
 
+require('coffee-script/register')
 require('./dist/expressions')
 
 repl = require('repl')
