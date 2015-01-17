@@ -16,6 +16,7 @@
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
   "license": "BSD",
   "dependencies": {
+    "object-inspect": "^1.0.0",
     "underscore": "^1.7.0",
     "underscore.string": "^2.4.0"
   },
