@@ -158,22 +158,23 @@ class Runtime
     _.find Utils.toArray(arguments), (argument) -> not _.isUndefined(argument)
 
   createResult: (key, rawValue, stringValue, err, showErrors) ->
-    if err
-      err = err.toString()
-    else if _.isUndefined(rawValue)
-      err = '[Undefined]'
-    else if _.isNaN(rawValue)
-      err = '[Not a Number]'
-    else if _.isFunction(rawValue)
-      err = '[Function]'
-    else if _.isArray(rawValue)
-      err = '[Array]'
-    else if _.isDate(rawValue)
+    if showErrors
+      if err
+        err = err.toString()
+      else if _.isUndefined(rawValue)
+        err = '[Undefined]'
+      else if _.isNaN(rawValue)
+        err = '[Not a Number]'
+      else if _.isFunction(rawValue)
+        err = '[Function]'
+      else if _.isArray(rawValue)
+        err = '[Array]'
+      else if _.isDate(rawValue)
+        err = null
+      else if _.isObject(rawValue)
+        err = '[Object]'
+    else
       err = null
-    else if _.isObject(rawValue)
-      err = '[Object]'
-
-    err = null unless showErrors
 
     { key: key, value: stringValue, error: err }
 
