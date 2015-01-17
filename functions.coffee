@@ -1074,6 +1074,8 @@ exports.TYPEOF = (value) ->
       'undefined'
     when _.isNull(value)
       'null'
+    when _.isNaN(value)
+      'nan'
     when _.isNumber(value)
       'number'
     when _.isString(value)

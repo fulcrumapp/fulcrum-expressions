@@ -1008,7 +1008,7 @@ describe 'TYPEOF', ->
     TYPEOF(undefined).should.eql('undefined')
     TYPEOF('test').should.eql('string')
     TYPEOF(1).should.eql('number')
-    TYPEOF(NaN).should.eql('number')
+    TYPEOF(NaN).should.eql('nan')
     TYPEOF(new Date).should.eql('date')
     TYPEOF(->).should.eql('function')
     TYPEOF(true).should.eql('boolean')
