@@ -1795,6 +1795,38 @@ function TRIM() {}
 function TRUE() {}
 
 
+////TYPEOF
+
+/**
+ * TYPEOF
+ * Returns the type of a value
+ * @param {*} value A value to get the type of
+ * @returns {String} The type of the value
+ * @example
+ * // returns string
+ * TYPEOF('test')
+ * @example
+ * // returns number
+ * TYPEOF(1)
+ * @example
+ * // returns boolean
+ * TYPEOF(true)
+ * @example
+ * // returns null
+ * TYPEOF(null)
+ * @example
+ * // returns date
+ * TYPEOF(new Date)
+ * @example
+ * // returns object
+ * TYPEOF({ name: 'Test' })
+ * @example
+ * // returns array
+ * TYPEOF([1, 2, 3])
+ */
+function TYPEOF() {}
+
+
 ////UPPER
 
 /**

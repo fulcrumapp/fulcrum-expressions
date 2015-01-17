@@ -1063,6 +1063,31 @@ exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) -
 exports.SHOWERRORS = (showErrors=true) ->
   $$runtime.showErrors = showErrors
 
+exports.TYPEOF = (value) ->
+  switch true
+    when _.isUndefined(value)
+      'undefined'
+    when _.isNull(value)
+      'null'
+    when _.isNumber(value)
+      'number'
+    when _.isString(value)
+      'string'
+    when _.isBoolean(value)
+      'boolean'
+    when _.isDate(value)
+      'date'
+    when _.isArray(value)
+      'array'
+    when _.isRegExp(value)
+      'regexp'
+    when _.isFunction(value)
+      'function'
+    when _.isObject(value)
+      'object'
+    else
+      'unknown'
+
 hostFunctionExists = (name) ->
   _.isFunction($$runtime["$$#{name}"])
 

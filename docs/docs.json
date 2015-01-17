@@ -2913,6 +2913,35 @@
             }
         },
         {
+            "name": "TYPEOF",
+            "access": "",
+            "virtual": false,
+            "description": "TYPEOF\nReturns the type of a value",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "*",
+                    "description": "A value to get the type of",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns string\nTYPEOF('test')",
+                "// returns number\nTYPEOF(1)",
+                "// returns boolean\nTYPEOF(true)",
+                "// returns null\nTYPEOF(null)",
+                "// returns date\nTYPEOF(new Date)",
+                "// returns object\nTYPEOF({ name: 'Test' })",
+                "// returns array\nTYPEOF([1, 2, 3])"
+            ],
+            "returns": {
+                "type": "String",
+                "description": "The type of the value"
+            }
+        },
+        {
             "name": "UPPER",
             "access": "",
             "virtual": false,

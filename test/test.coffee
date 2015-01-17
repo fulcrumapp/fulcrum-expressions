@@ -996,6 +996,21 @@ describe 'TRIM', ->
     TRIM(undefined).should.eql('')
     TRIM(null).should.eql('')
 
+describe 'TYPEOF', ->
+  it 'returns the type of a variable', ->
+    TYPEOF(null).should.eql('null')
+    TYPEOF(undefined).should.eql('undefined')
+    TYPEOF('test').should.eql('string')
+    TYPEOF(1).should.eql('number')
+    TYPEOF(NaN).should.eql('number')
+    TYPEOF(new Date).should.eql('date')
+    TYPEOF(->).should.eql('function')
+    TYPEOF(true).should.eql('boolean')
+    TYPEOF(/test/).should.eql('regexp')
+    TYPEOF({}).should.eql('object')
+    TYPEOF([]).should.eql('array')
+    TYPEOF(arguments).should.eql('object')
+
 describe 'UPPER', ->
   it 'returns the string as upper case', ->
     UPPER('ABC').should.eql('ABC')
