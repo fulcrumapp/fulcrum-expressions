@@ -183,6 +183,8 @@ class Runtime
       value = null
     else if _.isNull(value)
       value = null
+    else if _.isNaN(value)
+      value = null
     else if _.isNumber(value)
       value = value
     else if _.isDate(value)
@@ -192,8 +194,6 @@ class Runtime
     else if _.isRegExp(value)
       value = value.toString()
     else if _.isFunction(value)
-      value = null
-    else if _.isNaN(value)
       value = null
 
     value
