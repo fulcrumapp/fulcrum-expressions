@@ -654,6 +654,20 @@ function IF() {}
 function IFERROR() {}
 
 
+////INSPECT
+
+/**
+ * INSPECT
+ * Returns the string representation of a value. This function is useful for troubleshooting expressions.
+ * @param {Number} value The value to inspect
+ * @returns {String}
+ * @example
+ * // returns [ 1, 2, 3 ]
+ * INSPECT([1, 2, 3])
+ */
+function INSPECT() {}
+
+
 ////INT
 
 /**

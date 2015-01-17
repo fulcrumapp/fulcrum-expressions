@@ -343,6 +343,12 @@ describe 'IFERROR', ->
     IFERROR(EVEN(null), 'ERR').should.eql('ERR')
     IFERROR(EVEN(7), 'ERR').should.be.exactly(8)
 
+describe 'INSPECT', ->
+  it 'returns the string representation of a value', ->
+    INSPECT({ test: 'yes' }).should.eql("{ test: 'yes' }")
+    INSPECT(null).should.eql('null')
+    INSPECT(undefined).should.eql('undefined')
+
 describe 'ISBLANK', ->
   it 'tests if a value is blank', ->
     ISBLANK('').should.be.true

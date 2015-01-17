@@ -4,6 +4,8 @@ _.str = require('underscore.string')
 
 _.mixin(_.str.exports())
 
+inspect = require('object-inspect')
+
 Utils = require('./utils')
 
 toArray = Utils.toArray
@@ -414,6 +416,9 @@ exports.IF = (test, trueValue, falseValue) ->
 
 exports.IFERROR = (value, errorValue) ->
   if ISERR(value) then errorValue else value
+
+exports.INSPECT = (value) ->
+  inspect(value)
 
 exports.INT = exports.FLOOR
 

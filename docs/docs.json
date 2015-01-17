@@ -1076,6 +1076,29 @@
             }
         },
         {
+            "name": "INSPECT",
+            "access": "",
+            "virtual": false,
+            "description": "INSPECT\nReturns the string representation of a value. This function is useful for troubleshooting expressions.",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Number",
+                    "description": "The value to inspect",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [ 1, 2, 3 ]\nINSPECT([1, 2, 3])"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "INT",
             "access": "",
             "virtual": false,
