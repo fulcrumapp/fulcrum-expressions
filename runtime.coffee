@@ -89,7 +89,7 @@ class Runtime
     names = @dataNames
 
     for key of names
-      state["$#{names[key]}"] = null
+      state["$#{names[key]}"] = undefined
 
     for key of @values
       value = @values[key]
