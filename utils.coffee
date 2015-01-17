@@ -24,13 +24,29 @@ class Utils
           Array.prototype.push.apply(flat, children)
 
   @valueForElement: (element, value) ->
-    if element.numeric or element.display?.style is 'number' or element.display?.style is 'currency'
-      Number(value)
-    else if (element.type is 'DateTimeField' or element.type is 'DateField') and value and value.length <= 10
-      parseValue = "#{value.replace(/-/g, '/')} 00:00:00"
-      new Date(parseValue)
+    if Utils.isNumericElement(element)
+      Utils.numberValue(value)
+    else if Utils.isDateElement(element)
+      Utils.dateValue(value)
     else
       value
+
+  @isNumericElement: (element) ->
+    element.numeric or element.display?.style is 'number' or element.display?.style is 'currency'
+
+  @isDateElement: (element) ->
+    element.type is 'DateTimeField' or element.type is 'DateField'
+
+  @dateValue: (value) ->
+    if value and value.length <= 10
+      new Date("#{value.replace(/-/g, '/')} 00:00:00")
+    else
+      value
+
+  @numberValue: (value) ->
+    value ||= null
+
+    if value? then Number(value) else null
 
   @repeatableValueElements: (repeatable) ->
     key = repeatable.key
