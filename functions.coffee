@@ -36,7 +36,7 @@ exports.CONFIGURE = (config, merge=true) ->
 exports.RESETCONFIG = ->
   Config = _.extend({}, Defaults)
 
-exports.NO_VALUE = null
+exports.NO_VALUE = undefined
 
 exports.NOT_IMPLEMENTED = ->
   throw new Error('Not Implemented')
@@ -1046,14 +1046,14 @@ exports.LONGITUDE = ->
   NUM(CONFIG().featureGeometry?.coordinates[0])
 
 exports.STATUS = ->
-  CONFIG().recordStatus ? null
+  CONFIG().recordStatus ? NO_VALUE
 
 exports.STATUSLABEL = ->
-  status = CONFIG().recordStatus ? null
+  status = CONFIG().recordStatus ? NO_VALUE
   if status
-    $$runtime.statusesByValue[status] ? null
+    $$runtime.statusesByValue[status] ? NO_VALUE
   else
-    null
+    NO_VALUE
 
 exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName) ->
   repeatableElement = $$runtime.elementsByDataName[repeatableElementDataName]

@@ -214,7 +214,7 @@
             "examples": [
                 "// returns Test\nCOALESCE(null, null, 'Test', 1)",
                 "// returns 1\nCOALESCE(1, null, null)",
-                "// returns null\nCOALESCE(null, null, null)"
+                "// returns undefined\nCOALESCE(null, null, null)"
             ],
             "returns": {
                 "type": "*",

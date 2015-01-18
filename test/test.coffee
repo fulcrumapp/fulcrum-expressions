@@ -305,18 +305,18 @@ describe 'FIND', ->
     FIND(4, '1234').should.be.exactly(4)
     FIND('', 'test').should.be.exactly(1)
     FIND('t', 'test', 2).should.be.exactly(4)
-    shouldBeNull(FIND('abc', 'def'))
-    shouldBeNull(FIND('abc', undefined))
-    shouldBeNull(FIND('abc', null))
-    shouldBeNull(FIND('abc', NaN))
-    shouldBeNull(FIND('abc', true))
-    shouldBeNull(FIND('abc', []))
-    shouldBeNull(FIND(null, 'abc'))
-    shouldBeNull(FIND(undefined, 'abc'))
-    shouldBeNull(FIND(NaN, 'abc'))
-    shouldBeNull(FIND([], 'abc'))
-    shouldBeNull(FIND({}, 'abc'))
-    shouldBeNull(FIND('t', 'test', 1000))
+    shouldHaveNoValue(FIND('abc', 'def'))
+    shouldHaveNoValue(FIND('abc', undefined))
+    shouldHaveNoValue(FIND('abc', null))
+    shouldHaveNoValue(FIND('abc', NaN))
+    shouldHaveNoValue(FIND('abc', true))
+    shouldHaveNoValue(FIND('abc', []))
+    shouldHaveNoValue(FIND(null, 'abc'))
+    shouldHaveNoValue(FIND(undefined, 'abc'))
+    shouldHaveNoValue(FIND(NaN, 'abc'))
+    shouldHaveNoValue(FIND([], 'abc'))
+    shouldHaveNoValue(FIND({}, 'abc'))
+    shouldHaveNoValue(FIND('t', 'test', 1000))
 
 describe 'GCD', ->
   it 'returns the greatest common divisor of two or more integers', ->
@@ -451,13 +451,13 @@ describe 'LEFT', ->
     LEFT('', 1000).should.eql('')
     LEFT(7000, 2).should.eql('70')
     LEFT(true, 4).should.eql('true')
-    shouldBeNull(LEFT('abc', -1))
-    shouldBeNull(LEFT('abc', '-1'))
-    shouldBeNull(LEFT({}, 4))
-    shouldBeNull(LEFT({}))
-    shouldBeNull(LEFT(undefined))
-    shouldBeNull(LEFT(null))
-    shouldBeNull(LEFT(new Date))
+    shouldHaveNoValue(LEFT('abc', -1))
+    shouldHaveNoValue(LEFT('abc', '-1'))
+    shouldHaveNoValue(LEFT({}, 4))
+    shouldHaveNoValue(LEFT({}))
+    shouldHaveNoValue(LEFT(undefined))
+    shouldHaveNoValue(LEFT(null))
+    shouldHaveNoValue(LEFT(new Date))
 
 describe 'LEN', ->
   it 'returns the length of a string', ->
@@ -467,11 +467,11 @@ describe 'LEN', ->
     LEN(800).should.be.exactly(3)
     LEN(-800).should.be.exactly(4)
     LEN(-1 / 3).should.be.exactly(19)
-    shouldBeNull(LEN({}, 4))
-    shouldBeNull(LEN({}))
-    shouldBeNull(LEN(undefined))
-    shouldBeNull(LEN(null))
-    shouldBeNull(LEN(new Date))
+    shouldHaveNoValue(LEN({}, 4))
+    shouldHaveNoValue(LEN({}))
+    shouldHaveNoValue(LEN(undefined))
+    shouldHaveNoValue(LEN(null))
+    shouldHaveNoValue(LEN(new Date))
 
 describe 'LN', ->
   it 'returns the natural logarithm of a number', ->
@@ -827,13 +827,13 @@ describe 'RIGHT', ->
     RIGHT('', 1000).should.eql('')
     RIGHT(7000, 2).should.eql('00')
     RIGHT(true, 4).should.eql('true')
-    shouldBeNull(RIGHT('abc', -1))
-    shouldBeNull(RIGHT('abc', '-1'))
-    shouldBeNull(RIGHT({}, 4))
-    shouldBeNull(RIGHT({}))
-    shouldBeNull(RIGHT(undefined))
-    shouldBeNull(RIGHT(null))
-    shouldBeNull(RIGHT(new Date))
+    shouldHaveNoValue(RIGHT('abc', -1))
+    shouldHaveNoValue(RIGHT('abc', '-1'))
+    shouldHaveNoValue(RIGHT({}, 4))
+    shouldHaveNoValue(RIGHT({}))
+    shouldHaveNoValue(RIGHT(undefined))
+    shouldHaveNoValue(RIGHT(null))
+    shouldHaveNoValue(RIGHT(new Date))
 
 describe 'ROUNDDOWN', ->
   it 'round down the given number to the specified number of digits', ->
@@ -883,18 +883,18 @@ describe 'SEARCH', ->
     SEARCH(4, '1234').should.be.exactly(4)
     SEARCH('', 'test').should.be.exactly(1)
     SEARCH('t', 'test', 2).should.be.exactly(4)
-    shouldBeNull(SEARCH('abc', 'def'))
-    shouldBeNull(SEARCH('abc', undefined))
-    shouldBeNull(SEARCH('abc', null))
-    shouldBeNull(SEARCH('abc', NaN))
-    shouldBeNull(SEARCH('abc', true))
-    shouldBeNull(SEARCH('abc', []))
-    shouldBeNull(SEARCH(null, 'abc'))
-    shouldBeNull(SEARCH(undefined, 'abc'))
-    shouldBeNull(SEARCH(NaN, 'abc'))
-    shouldBeNull(SEARCH([], 'abc'))
-    shouldBeNull(SEARCH({}, 'abc'))
-    shouldBeNull(SEARCH('t', 'test', 1000))
+    shouldHaveNoValue(SEARCH('abc', 'def'))
+    shouldHaveNoValue(SEARCH('abc', undefined))
+    shouldHaveNoValue(SEARCH('abc', null))
+    shouldHaveNoValue(SEARCH('abc', NaN))
+    shouldHaveNoValue(SEARCH('abc', true))
+    shouldHaveNoValue(SEARCH('abc', []))
+    shouldHaveNoValue(SEARCH(null, 'abc'))
+    shouldHaveNoValue(SEARCH(undefined, 'abc'))
+    shouldHaveNoValue(SEARCH(NaN, 'abc'))
+    shouldHaveNoValue(SEARCH([], 'abc'))
+    shouldHaveNoValue(SEARCH({}, 'abc'))
+    shouldHaveNoValue(SEARCH('t', 'test', 1000))
 
 describe 'SIGN', ->
   it 'return the sign of a number', ->
@@ -1181,7 +1181,7 @@ describe 'STATUS', ->
 
     CONFIGURE(recordStatus: null)
 
-    shouldBeNull(STATUS())
+    shouldHaveNoValue(STATUS())
 
 describe 'STATUSLABEL', ->
   it 'returns the status label of the current record', ->
@@ -1189,7 +1189,7 @@ describe 'STATUSLABEL', ->
 
     CONFIGURE(recordStatus: null)
 
-    shouldBeNull(STATUSLABEL())
+    shouldHaveNoValue(STATUSLABEL())
 
 describe 'REPEATABLEVALUES', ->
   it 'returns a specific field out of a collection of repeatable items', ->

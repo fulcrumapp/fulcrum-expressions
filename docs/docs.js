@@ -137,7 +137,7 @@ function CLEAN() {}
  * // returns 1
  * COALESCE(1, null, null)
  * @example
- * // returns null
+ * // returns undefined
  * COALESCE(null, null, null)
  */
 function COALESCE() {}
