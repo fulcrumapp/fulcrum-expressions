@@ -25,17 +25,6 @@ Config = _.extend({}, Defaults)
 
 exports = {}
 
-exports.CONFIGURE = (config, merge=true) ->
-  if merge
-    _.extend(Config, config)
-  else
-    Config = config
-
-  Config
-
-exports.RESETCONFIG = ->
-  Config = _.extend({}, Defaults)
-
 exports.NO_VALUE = undefined
 
 exports.NOT_IMPLEMENTED = ->
@@ -43,32 +32,6 @@ exports.NOT_IMPLEMENTED = ->
 
 exports.MATH_FUNC = MATH_FUNC = (mathFunction) ->
   -> mathFunction.apply(Math, toArray(arguments).map(NUM))
-
-exports.NUMS = ->
-  toArray(arguments).map(NUM)
-
-exports.NUM = (value) ->
-  return NaN if isNaN(value)
-  parseFloat(value)
-
-exports.N = (value) ->
-  return value if _.isNumber(value)
-  return 1 if value is true
-  return 0 if value is false
-  0
-
-exports.ISNAN = (number) ->
-  _.isNaN(NUM(number))
-
-exports.PRECISION = (number) ->
-  number = NUM(number)
-  return NaN if ISNAN(number)
-
-  parts = (number + '').split('.')
-
-  return 0 if parts.length < 2
-
-  parts[1].length
 
 exports.ABS = MATH_FUNC(Math.abs)
 
@@ -82,16 +45,22 @@ exports.ACOSH = (number) ->
 exports.AND = ->
   _.find(toArray(arguments), (item) -> not item) is undefined
 
+exports.APPLICATION = ->
+  Config.application ? ''
+
+exports.APPLICATIONBUILD = ->
+  Config.applicationBuild ? ''
+
+exports.APPLICATIONINFO = (separator=' ') ->
+  _.compact([ APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD() ]).join(separator)
+
+exports.APPLICATIONVERSION = ->
+  Config.applicationVersion ? ''
+
 exports.AVERAGE = ->
   args = toArray(arguments)
   return NaN if args.length is 0
   _.inject(args, ((memo, arg) -> memo + +arg), 0) / args.length
-
-exports.ROUND = (number, digits = 0) ->
-  number = NUM(number)
-  digits = NUM(digits)
-
-  Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits)
 
 exports.CEILING = (number, significance = 1) ->
   significance ?= 1
@@ -110,28 +79,11 @@ exports.CEILING = (number, significance = 1) ->
   else
     -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
 
-exports.FLOOR = (number, significance) ->
-  significance ?= 1
-  significance = ABS(significance)
-
-  number = NUM(number)
-
-  return NaN if isNaN(number) or isNaN(significance)
-
-  return 0 if significance is 0
-
-  precision = PRECISION(significance)
-
-  if number >= 0
-    ROUND(Math.floor(number / significance) * significance, precision)
-  else
-    -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
-
 exports.CHAR = (number) ->
   number = NUM(number)
   String.fromCharCode number
 
-exports.CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
+CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
 
 exports.CLEAN = (text) ->
   text ?= ''
@@ -148,6 +100,12 @@ exports.CODE = (string) ->
   return NaN unless _.isString(string)
   (string ? '').charCodeAt(0)
 
+# _.compact removes '' and 0 from the array, which is somewhat unexpected
+exports.COMPACT = (value) ->
+  return undefined unless _.isArray(value)
+
+  _.filter value, (item) -> item?
+
 exports.CONCATENATE = ->
   strings = _.map toArray(arguments), (arg) ->
     switch true
@@ -160,6 +118,17 @@ exports.CONCATENATE = ->
 
   strings.join('')
 
+exports.CONFIG = ->
+  Config
+
+exports.CONFIGURE = (config, merge=true) ->
+  if merge
+    _.extend(Config, config)
+  else
+    Config = config
+
+  Config
+
 exports.COS = MATH_FUNC(Math.cos)
 
 exports.COSH = (number) ->
@@ -168,12 +137,6 @@ exports.COSH = (number) ->
   exp = Math.exp(number)
 
   (exp + 1 / exp) / 2
-
-# _.compact removes '' and 0 from the array, which is somewhat unexpected
-exports.COMPACT = (value) ->
-  return undefined unless _.isArray(value)
-
-  _.filter value, (item) -> item?
 
 exports.COUNT = (value) ->
   return COMPACT(value).length if _.isArray(value)
@@ -197,6 +160,15 @@ exports.COUNTBLANK = (value) ->
         false
 
   results.length
+
+exports.COUNTRY = ->
+  Config.country or Defaults.country
+
+exports.CURRENCYCODE = ->
+  Config.currencyCode or Defaults.currencyCode
+
+exports.CURRENCYSYMBOL = ->
+  Config.currencySymbol or Defaults.currencySymbol
 
 exports.DATE = (year, month, day) ->
   year = INT(year)
@@ -239,10 +211,22 @@ exports.DAY = (date) ->
 
   date.getDate()
 
+exports.DECIMALSEPARATOR = ->
+  Config.decimalSeparator or Defaults.decimalSeparator
+
 exports.DEGREES = (value) ->
   value = NUM(value)
   return NaN unless _.isNumber(value)
   180.0 * value / Math.PI
+
+exports.DEVICEINFO = (separator=' ') ->
+  _.compact([ DEVICEMANUFACTURER(), DEVICEMODEL() ]).join(separator)
+
+exports.DEVICEMODEL = ->
+  Config.deviceModel ? ''
+
+exports.DEVICEMANUFACTURER = ->
+  Config.deviceManufacturer ? ''
 
 exports.DOLLAR = (value, decimals=2, currency=null, language=null) ->
   decimals = NUM(decimals)
@@ -386,6 +370,72 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
   else
     integerString + DECIMALSEPARATOR() + fractionPart.toString()
 
+exports.FLOOR = (number, significance) ->
+  significance ?= 1
+  significance = ABS(significance)
+
+  number = NUM(number)
+
+  return NaN if isNaN(number) or isNaN(significance)
+
+  return 0 if significance is 0
+
+  precision = PRECISION(significance)
+
+  if number >= 0
+    ROUND(Math.floor(number / significance) * significance, precision)
+  else
+    -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
+
+exports.FORMATNUMBER = (number, language, options) ->
+  number ?= NUM(number)
+  language ?= LANGUAGE()
+
+  options ?= {}
+
+  style = 'decimal'
+  style = 'currency' if options.style is 'currency'
+  style = 'percent'  if options.style is 'percent'
+
+  options.style = style
+
+  if options.style is 'currency'
+    options.currency ?= CURRENCYCODE()
+
+  hasSignificantDigitsOption = _.isNumber(options.minimumSignificantDigits) or _.isNumber(options.maximumSignificantDigits)
+
+  if hasSignificantDigitsOption
+    options.minimumSignificantDigits ?= 1
+    options.minimumSignificantDigits = NUM(options.minimumSignificantDigits)
+    options.minimumSignificantDigits = MIN(MAX(options.minimumSignificantDigits, 1), 21)
+
+    options.maximumSignificantDigits ?= options.minimumSignificantDigits
+    options.maximumSignificantDigits = NUM(options.maximumSignificantDigits)
+    options.maximumSignificantDigits = MIN(MAX(options.maximumSignificantDigits, 1), 21)
+  else
+    options.minimumIntegerDigits ?= 1
+    options.minimumIntegerDigits = NUM(options.minimumIntegerDigits)
+    options.minimumIntegerDigits = MIN(MAX(options.minimumIntegerDigits, 1), 21)
+
+    options.minimumFractionDigits ?= if options.style is 'currency' then 2 else 0
+    options.minimumFractionDigits = NUM(options.minimumFractionDigits)
+    options.minimumFractionDigits = MIN(MAX(options.minimumFractionDigits, 0), 20)
+
+    if options.style is 'currency'
+      options.maximumFractionDigits ?= 2
+    else if options.style is 'percent'
+      options.maximumFractionDigits ?= MAX(options.minimumFractionDigits, 0)
+    else
+      options.maximumFractionDigits ?= MAX(options.minimumFractionDigits, 3)
+
+    options.maximumFractionDigits = NUM(options.maximumFractionDigits)
+    options.maximumFractionDigits = MIN(MAX(options.maximumFractionDigits, 0), 20)
+
+  unless _.isBoolean(options.useGrouping)
+    options.useGrouping = true
+
+  HostFunctions.formatNumber(number, language, options)
+
 exports.GCD = ->
   numbers = toArray(arguments).map(NUM)
 
@@ -413,6 +463,18 @@ exports.GCD = ->
 
 exports.GETRESULT = ->
   $$runtime.$$result
+
+exports.GROUPINGSEPARATOR = ->
+  Config.groupingSeparator or Defaults.groupingSeparator
+
+exports.GROUPINGSIZE = ->
+  Config.groupingSize or Defaults.groupingSize
+
+exports.HASOTHER = (value) ->
+  !!(value and
+     value.other_values and
+     _.isArray(value.other_values) and
+     value.other_values.length > 0)
 
 exports.IF = (test, trueValue, falseValue) ->
   if test then trueValue else falseValue
@@ -462,6 +524,17 @@ exports.ISERROR = (value) ->
 exports.ISLOGICAL = (value) ->
   _.isBoolean(value)
 
+exports.ISNAN = (number) ->
+  _.isNaN(NUM(number))
+
+exports.ISEVEN = (value) ->
+  value = NUM(value)
+
+  return false unless _.isNumber(value)
+  return false if isNaN(value)
+
+  (Math.floor(Math.abs(value)) & 1) is 0
+
 exports.ISNONTEXT = (value) ->
   not _.isString(value)
 
@@ -476,16 +549,14 @@ exports.ISODD = (value) ->
 
   (Math.floor(Math.abs(value)) & 1) is 1
 
-exports.ISEVEN = (value) ->
-  value = NUM(value)
-
-  return false unless _.isNumber(value)
-  return false if isNaN(value)
-
-  (Math.floor(Math.abs(value)) & 1) is 0
-
 exports.ISTEXT = (value) ->
   _.isString(value)
+
+exports.LANGUAGE = ->
+  Config.language or Defaults.language
+
+exports.LATITUDE = ->
+  NUM(CONFIG().featureGeometry?.coordinates[1])
 
 exports.LCM = ->
   numbers = toArray(arguments).map (num) -> INT(num)
@@ -531,6 +602,9 @@ exports.LEN = (value) ->
 
 exports.LN = MATH_FUNC(Math.log)
 
+exports.LOCALE = ->
+  Config.locale or Defaults.locale
+
 exports.LOG = (value, base) ->
   value = NUM(value)
   base = NUM(base ? 10)
@@ -542,6 +616,9 @@ exports.LOG = (value, base) ->
 
 exports.LOG10 = (value) ->
   LOG(value, 10)
+
+exports.LONGITUDE = ->
+  NUM(CONFIG().featureGeometry?.coordinates[0])
 
 exports.LOWER = (value) ->
   return NO_VALUE unless value?
@@ -591,6 +668,20 @@ exports.MEDIAN = ->
   else
     (numbers[half - 1] + numbers[half]) / 2.0
 
+exports.MID = (value, startPosition, numberOfCharacters) ->
+  startPosition = FLOOR(startPosition)
+  numberOfCharacters = FLOOR(numberOfCharacters)
+
+  return NO_VALUE unless value?
+  return NO_VALUE if _.isObject(value)
+  return NO_VALUE if startPosition < 1
+  return NO_VALUE if isNaN(startPosition)
+  return NO_VALUE if numberOfCharacters < 0
+  return NO_VALUE if isNaN(numberOfCharacters)
+
+  value = value.toString()
+  value.substr(startPosition - 1, numberOfCharacters)
+
 exports.MIN = ->
   numbers = _.flatten(toArray(arguments))
   numbers = _.map(numbers, NUM)
@@ -608,20 +699,6 @@ exports.MINA = ->
   return NO_VALUE unless _.isArray(arguments[0])
 
   MIN.apply(null, arguments[0])
-
-exports.MID = (value, startPosition, numberOfCharacters) ->
-  startPosition = FLOOR(startPosition)
-  numberOfCharacters = FLOOR(numberOfCharacters)
-
-  return NO_VALUE unless value?
-  return NO_VALUE if _.isObject(value)
-  return NO_VALUE if startPosition < 1
-  return NO_VALUE if isNaN(startPosition)
-  return NO_VALUE if numberOfCharacters < 0
-  return NO_VALUE if isNaN(numberOfCharacters)
-
-  value = value.toString()
-  value.substr(startPosition - 1, numberOfCharacters)
 
 exports.MOD = (number, divisor) ->
   number = NUM(number)
@@ -642,8 +719,21 @@ exports.MONTH = (date) ->
 
   date.getMonth() + 1
 
+exports.N = (value) ->
+  return value if _.isNumber(value)
+  return 1 if value is true
+  return 0 if value is false
+  0
+
 exports.NOT = (value) ->
   not (value ? false)
+
+exports.NUM = (value) ->
+  return NaN if isNaN(value)
+  parseFloat(value)
+
+exports.NUMS = ->
+  toArray(arguments).map(NUM)
 
 exports.ODD = (value) ->
   value = NUM(value)
@@ -655,11 +745,28 @@ exports.ODD = (value) ->
 
   if value >= 0 then temp else -temp
 
+exports.ONCE = (value) ->
+  $$runtime.$$currentValue ? value
+
 exports.OR = ->
   _.find(toArray(arguments), (item) -> item) isnt undefined
 
+exports.OTHER = (value) ->
+  return NO_VALUE unless HASOTHER(value)
+  return NO_VALUE if ISBLANK(value.other_values)
+  return value.other_values[0]
+
 exports.PI = ->
   Math.PI
+
+exports.PLATFORM = ->
+  Config.platform ? ''
+
+exports.PLATFORMINFO = (separator=' ') ->
+  _.compact([ PLATFORM(), PLATFORMVERSION() ]).join(separator)
+
+exports.PLATFORMVERSION = ->
+  Config.platformVersion ? ''
 
 exports.POWER = (number, power) ->
   number = NUM(number)
@@ -669,6 +776,16 @@ exports.POWER = (number, power) ->
   return NaN if isNaN(power)
 
   Math.pow(number, power)
+
+exports.PRECISION = (number) ->
+  number = NUM(number)
+  return NaN if ISNAN(number)
+
+  parts = (number + '').split('.')
+
+  return 0 if parts.length < 2
+
+  parts[1].length
 
 exports.PRODUCT = ->
   numbers = toArray(arguments).map(NUM)
@@ -715,6 +832,16 @@ exports.RANDBETWEEN = (low, high) ->
 
   low + Math.ceil((high - low + 1) * Math.random()) - 1
 
+exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName) ->
+  repeatableElement = $$runtime.elementsByDataName[repeatableElementDataName]
+
+  return NO_VALUE unless repeatableElement
+
+  Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
+
+exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) ->
+  SUM.apply(null, REPEATABLEVALUES(repeatableValue, repeatableElementDataName, dataName))
+
 exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
@@ -734,6 +861,9 @@ exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
 
   prefix + replacement + suffix
 
+exports.RESETCONFIG = ->
+  Config = _.extend({}, Defaults)
+
 exports.RIGHT = (value, numberOfCharacters) ->
   numberOfCharacters ?= 1
   numberOfCharacters = FLOOR(numberOfCharacters)
@@ -745,6 +875,12 @@ exports.RIGHT = (value, numberOfCharacters) ->
 
   value = value.toString()
   value.substring(value.length - numberOfCharacters)
+
+exports.ROUND = (number, digits = 0) ->
+  number = NUM(number)
+  digits = NUM(digits)
+
+  Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits)
 
 exports.ROUNDDOWN = (number, digits = 0) ->
   number = NUM(number)
@@ -781,6 +917,27 @@ exports.SEARCH = (needle, haystack, startPosition) ->
 
   index + 1
 
+exports.SELECTED = (value, choice) ->
+  return false if ISBLANK(value)
+  return false unless choice?
+
+  if _.isArray(choice)
+    return (choice.filter (item) -> not SELECTED(value, item)).length is 0
+
+  if value and value.choice_values
+    return true if _.contains(value.choice_values, choice)
+
+  if value and value.other_values
+    return true if _.contains(value.other_values, choice)
+
+  false
+
+exports.SETRESULT = (result) ->
+  $$runtime.$$result = result
+
+exports.SHOWERRORS = (showErrors=true) ->
+  $$runtime.showErrors = showErrors
+
 exports.SIGN = (number) ->
   number = NUM(number)
 
@@ -807,6 +964,16 @@ exports.SQRT = MATH_FUNC(Math.sqrt)
 
 exports.SQRTPI = (number) ->
   SQRT(NUM(number) * Math.PI)
+
+exports.STATUS = ->
+  CONFIG().recordStatus ? NO_VALUE
+
+exports.STATUSLABEL = ->
+  status = CONFIG().recordStatus ? NO_VALUE
+  if status
+    $$runtime.statusesByValue[status] ? NO_VALUE
+  else
+    NO_VALUE
 
 exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
   occurrence = FLOOR(occurrence)
@@ -870,209 +1037,14 @@ exports.T = (value) ->
   return '' unless value?
   return value.toString()
 
+exports.TIMEZONE = ->
+  Config.timeZone or Defaults.timeZone
+
 exports.TRIM = (value) ->
   _.trim(value)
 
 exports.TRUE = (value) ->
   true
-
-exports.UPPER = (value) ->
-  return NO_VALUE unless value?
-  return NO_VALUE if _.isArray(value)
-  return NO_VALUE if _.isObject(value)
-
-  value.toString().toUpperCase()
-
-exports.VALUE = (value) ->
-  NOT_IMPLEMENTED()
-
-exports.YEAR = (date) ->
-  date = DATEVALUE(date)
-
-  return NO_VALUE unless date?
-
-  date.getFullYear()
-
-exports.X_ISNEW = ->
-  CONFIG().featureIsNew is true
-
-exports.X_ISUPDATE = ->
-  not X_ISNEW()
-
-exports.CONFIG = ->
-  Config
-
-# Fulcrum Functions
-
-exports.HASOTHER = (value) ->
-  !!(value and
-     value.other_values and
-     _.isArray(value.other_values) and
-     value.other_values.length > 0)
-
-exports.OTHER = (value) ->
-  return NO_VALUE unless HASOTHER(value)
-  return NO_VALUE if ISBLANK(value.other_values)
-  return value.other_values[0]
-
-exports.SELECTED = (value, choice) ->
-  return false if ISBLANK(value)
-  return false unless choice?
-
-  if _.isArray(choice)
-    return (choice.filter (item) -> not SELECTED(value, item)).length is 0
-
-  if value and value.choice_values
-    return true if _.contains(value.choice_values, choice)
-
-  if value and value.other_values
-    return true if _.contains(value.other_values, choice)
-
-  false
-
-exports.ONCE = (value) ->
-  $$runtime.$$currentValue ? value
-
-exports.LOCALE = ->
-  Config.locale or Defaults.locale
-
-exports.LANGUAGE = ->
-  Config.language or Defaults.language
-
-exports.COUNTRY = ->
-  Config.country or Defaults.country
-
-exports.GROUPINGSIZE = ->
-  Config.groupingSize or Defaults.groupingSize
-
-exports.DECIMALSEPARATOR = ->
-  Config.decimalSeparator or Defaults.decimalSeparator
-
-exports.GROUPINGSEPARATOR = ->
-  Config.groupingSeparator or Defaults.groupingSeparator
-
-exports.TIMEZONE = ->
-  Config.timeZone or Defaults.timeZone
-
-exports.CURRENCYCODE = ->
-  Config.currencyCode or Defaults.currencyCode
-
-exports.CURRENCYSYMBOL = ->
-  Config.currencySymbol or Defaults.currencySymbol
-
-exports.DEVICEMODEL = ->
-  Config.deviceModel ? ''
-
-exports.DEVICEMANUFACTURER = ->
-  Config.deviceManufacturer ? ''
-
-exports.PLATFORM = ->
-  Config.platform ? ''
-
-exports.PLATFORMVERSION = ->
-  Config.platformVersion ? ''
-
-exports.APPLICATION = ->
-  Config.application ? ''
-
-exports.APPLICATIONVERSION = ->
-  Config.applicationVersion ? ''
-
-exports.APPLICATIONBUILD = ->
-  Config.applicationBuild ? ''
-
-exports.DEVICEINFO = (separator=' ') ->
-  _.compact([ DEVICEMANUFACTURER(), DEVICEMODEL() ]).join(separator)
-
-exports.PLATFORMINFO = (separator=' ') ->
-  _.compact([ PLATFORM(), PLATFORMVERSION() ]).join(separator)
-
-exports.APPLICATIONINFO = (separator=' ') ->
-  _.compact([ APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD() ]).join(separator)
-
-exports.VERSIONINFO = (separator=' ') ->
-  _.compact([ DEVICEINFO(), PLATFORMINFO(), APPLICATIONINFO() ]).join(separator)
-
-exports.FORMATNUMBER = (number, language, options) ->
-  number ?= NUM(number)
-  language ?= LANGUAGE()
-
-  options ?= {}
-
-  style = 'decimal'
-  style = 'currency' if options.style is 'currency'
-  style = 'percent'  if options.style is 'percent'
-
-  options.style = style
-
-  if options.style is 'currency'
-    options.currency ?= CURRENCYCODE()
-
-  hasSignificantDigitsOption = _.isNumber(options.minimumSignificantDigits) or _.isNumber(options.maximumSignificantDigits)
-
-  if hasSignificantDigitsOption
-    options.minimumSignificantDigits ?= 1
-    options.minimumSignificantDigits = NUM(options.minimumSignificantDigits)
-    options.minimumSignificantDigits = MIN(MAX(options.minimumSignificantDigits, 1), 21)
-
-    options.maximumSignificantDigits ?= options.minimumSignificantDigits
-    options.maximumSignificantDigits = NUM(options.maximumSignificantDigits)
-    options.maximumSignificantDigits = MIN(MAX(options.maximumSignificantDigits, 1), 21)
-  else
-    options.minimumIntegerDigits ?= 1
-    options.minimumIntegerDigits = NUM(options.minimumIntegerDigits)
-    options.minimumIntegerDigits = MIN(MAX(options.minimumIntegerDigits, 1), 21)
-
-    options.minimumFractionDigits ?= if options.style is 'currency' then 2 else 0
-    options.minimumFractionDigits = NUM(options.minimumFractionDigits)
-    options.minimumFractionDigits = MIN(MAX(options.minimumFractionDigits, 0), 20)
-
-    if options.style is 'currency'
-      options.maximumFractionDigits ?= 2
-    else if options.style is 'percent'
-      options.maximumFractionDigits ?= MAX(options.minimumFractionDigits, 0)
-    else
-      options.maximumFractionDigits ?= MAX(options.minimumFractionDigits, 3)
-
-    options.maximumFractionDigits = NUM(options.maximumFractionDigits)
-    options.maximumFractionDigits = MIN(MAX(options.maximumFractionDigits, 0), 20)
-
-  unless _.isBoolean(options.useGrouping)
-    options.useGrouping = true
-
-  HostFunctions.formatNumber(number, language, options)
-
-exports.LATITUDE = ->
-  NUM(CONFIG().featureGeometry?.coordinates[1])
-
-exports.LONGITUDE = ->
-  NUM(CONFIG().featureGeometry?.coordinates[0])
-
-exports.STATUS = ->
-  CONFIG().recordStatus ? NO_VALUE
-
-exports.STATUSLABEL = ->
-  status = CONFIG().recordStatus ? NO_VALUE
-  if status
-    $$runtime.statusesByValue[status] ? NO_VALUE
-  else
-    NO_VALUE
-
-exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName) ->
-  repeatableElement = $$runtime.elementsByDataName[repeatableElementDataName]
-
-  return NO_VALUE unless repeatableElement
-
-  Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
-
-exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) ->
-  SUM.apply(null, REPEATABLEVALUES(repeatableValue, repeatableElementDataName, dataName))
-
-exports.SETRESULT = (result) ->
-  $$runtime.$$result = result
-
-exports.SHOWERRORS = (showErrors=true) ->
-  $$runtime.showErrors = showErrors
 
 exports.TYPEOF = (value) ->
   switch true
@@ -1100,6 +1072,34 @@ exports.TYPEOF = (value) ->
       'object'
     else
       'unknown'
+
+exports.UPPER = (value) ->
+  return NO_VALUE unless value?
+  return NO_VALUE if _.isArray(value)
+  return NO_VALUE if _.isObject(value)
+
+  value.toString().toUpperCase()
+
+exports.VALUE = (value) ->
+  NOT_IMPLEMENTED()
+
+exports.VERSIONINFO = (separator=' ') ->
+  _.compact([ DEVICEINFO(), PLATFORMINFO(), APPLICATIONINFO() ]).join(separator)
+
+exports.YEAR = (date) ->
+  date = DATEVALUE(date)
+
+  return NO_VALUE unless date?
+
+  date.getFullYear()
+
+exports.X_ISNEW = ->
+  CONFIG().featureIsNew is true
+
+exports.X_ISUPDATE = ->
+  not X_ISNEW()
+
+
 
 hostFunctionExists = (name) ->
   _.isFunction($$runtime["$$#{name}"])
