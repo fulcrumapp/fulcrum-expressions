@@ -1375,8 +1375,8 @@
                 }
             ],
             "examples": [
-                "// returns true\nISSELECTED({ choice_values: ['001', '002', '003'] }, '001')",
-                "// returns false\nISSELECTED({ choice_values: ['001', '002', '003'] }, '004')"
+                "// returns true\n// $choice_field has Red, Green, and Blue selected\nISSELECTED($choice_field, 'Red')",
+                "// returns false\n// $choice_field has Red, Green, and Blue selected\nISSELECTED($choice_field, 'Orange')"
             ],
             "returns": {
                 "type": "Boolean",

@@ -49,6 +49,9 @@ describe 'Documentation', ->
 
         return if returnValue is 'VALUE'
 
+        # make the docs for things that need a choice field nicer
+        $choice_field = { choice_values: ['Red', 'Green', 'Blue'] }
+
         (-> eval(example)).should.not.throw
 
         result = eval(example)

@@ -860,10 +860,12 @@ function ISODD() {}
  * @returns {Boolean}
  * @example
  * // returns true
- * ISSELECTED({ choice_values: ['001', '002', '003'] }, '001')
+ * // $choice_field has Red, Green, and Blue selected
+ * ISSELECTED($choice_field, 'Red')
  * @example
  * // returns false
- * ISSELECTED({ choice_values: ['001', '002', '003'] }, '004')
+ * // $choice_field has Red, Green, and Blue selected
+ * ISSELECTED($choice_field, 'Orange')
  */
 function ISSELECTED() {}
 
