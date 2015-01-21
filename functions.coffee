@@ -549,6 +549,21 @@ exports.ISODD = (value) ->
 
   (Math.floor(Math.abs(value)) & 1) is 1
 
+exports.ISSELECTED = (value, choice) ->
+  return false if ISBLANK(value)
+  return false unless choice?
+
+  if _.isArray(choice)
+    return (choice.filter (item) -> not ISSELECTED(value, item)).length is 0
+
+  if value and value.choice_values
+    return true if _.contains(value.choice_values, choice)
+
+  if value and value.other_values
+    return true if _.contains(value.other_values, choice)
+
+  false
+
 exports.ISTEXT = (value) ->
   _.isString(value)
 
@@ -917,21 +932,6 @@ exports.SEARCH = (needle, haystack, startPosition) ->
 
   index + 1
 
-exports.SELECTED = (value, choice) ->
-  return false if ISBLANK(value)
-  return false unless choice?
-
-  if _.isArray(choice)
-    return (choice.filter (item) -> not SELECTED(value, item)).length is 0
-
-  if value and value.choice_values
-    return true if _.contains(value.choice_values, choice)
-
-  if value and value.other_values
-    return true if _.contains(value.other_values, choice)
-
-  false
-
 exports.SETRESULT = (result) ->
   $$runtime.$$result = result
 
@@ -1084,7 +1084,7 @@ exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
 
 exports.VERSIONINFO = (separator=', ') ->
-  _.compact([ DEVICEINFO(), PLATFORMINFO(), APPLICATIONINFO() ]).join(separator)
+  _.compact([ DEVICEINFO(' '), PLATFORMINFO(' '), APPLICATIONINFO(' ') ]).join(separator)
 
 exports.YEAR = (date) ->
   date = DATEVALUE(date)

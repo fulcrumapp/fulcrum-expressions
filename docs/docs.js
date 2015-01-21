@@ -850,6 +850,24 @@ function ISNUMBER() {}
 function ISODD() {}
 
 
+////ISSELECTED
+
+/**
+ * ISSELECTED
+ * Description
+ * @param {*} value The choice field, classification field to check for a value being selected
+ * @param {String} choice The choice value to check for
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * ISSELECTED({ choice_values: ['001', '002', '003'] }, '001')
+ * @example
+ * // returns false
+ * ISSELECTED({ choice_values: ['001', '002', '003'] }, '004')
+ */
+function ISSELECTED() {}
+
+
 ////ISTEXT
 
 /**
@@ -1596,20 +1614,6 @@ function ROUNDUP() {}
 function SEARCH() {}
 
 
-////SELECTED
-
-/**
- * SELECTED
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * SELECTED()
- */
-function SELECTED() {}
-
-
 ////SETRESULT
 
 /**
@@ -1904,7 +1908,7 @@ function VALUE() {}
  * Returns version information about the app.
  * @returns {String}
  * @example
- * // returns Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162
+ * // returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162
  * VERSIONINFO()
  */
 function VERSIONINFO() {}

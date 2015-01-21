@@ -1352,6 +1352,38 @@
             }
         },
         {
+            "name": "ISSELECTED",
+            "access": "",
+            "virtual": false,
+            "description": "ISSELECTED\nDescription",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "*",
+                    "description": "The choice field, classification field to check for a value being selected",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "choice",
+                    "type": "String",
+                    "description": "The choice value to check for",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nISSELECTED({ choice_values: ['001', '002', '003'] }, '001')",
+                "// returns false\nISSELECTED({ choice_values: ['001', '002', '003'] }, '004')"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
             "name": "ISTEXT",
             "access": "",
             "virtual": false,
@@ -2607,29 +2639,6 @@
             }
         },
         {
-            "name": "SELECTED",
-            "access": "",
-            "virtual": false,
-            "description": "SELECTED\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nSELECTED()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "SETRESULT",
             "access": "",
             "virtual": false,
@@ -3054,7 +3063,7 @@
             "description": "VERSIONINFO\nReturns version information about the app.",
             "parameters": [],
             "examples": [
-                "// returns Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162\nVERSIONINFO()"
+                "// returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162\nVERSIONINFO()"
             ],
             "returns": {
                 "type": "String",

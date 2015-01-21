@@ -1031,20 +1031,20 @@ describe 'UPPER', ->
     shouldHaveNoValue(UPPER(null))
     shouldHaveNoValue(UPPER(new Date))
 
-describe 'SELECTED', ->
+describe 'ISSELECTED', ->
   it 'returns true if a choice value is selected', ->
-    SELECTED(choice_values: ['test'], 'test').should.be.true
-    SELECTED(choice_values: ['1', '2'], '1').should.be.true
-    SELECTED(choice_values: ['1', '2'], ['1', '2']).should.be.true
-    SELECTED(choice_values: ['1', '2'], ['1', '2', '3']).should.be.false
-    SELECTED(other_values: ['test'], 'test').should.be.true
-    SELECTED(other_values: [], 'test').should.be.false
-    SELECTED(other_values: null, 'test').should.be.false
-    SELECTED().should.be.false
-    SELECTED(null).should.be.false
-    SELECTED(choice_values: ['1']).should.be.false
-    SELECTED(choice_values: ['1'], other_values: ['2'], '1').should.be.true
-    SELECTED(choice_values: ['1'], other_values: ['2'], '2').should.be.true
+    ISSELECTED(choice_values: ['test'], 'test').should.be.true
+    ISSELECTED(choice_values: ['1', '2'], '1').should.be.true
+    ISSELECTED(choice_values: ['1', '2'], ['1', '2']).should.be.true
+    ISSELECTED(choice_values: ['1', '2'], ['1', '2', '3']).should.be.false
+    ISSELECTED(other_values: ['test'], 'test').should.be.true
+    ISSELECTED(other_values: [], 'test').should.be.false
+    ISSELECTED(other_values: null, 'test').should.be.false
+    ISSELECTED().should.be.false
+    ISSELECTED(null).should.be.false
+    ISSELECTED(choice_values: ['1']).should.be.false
+    ISSELECTED(choice_values: ['1'], other_values: ['2'], '1').should.be.true
+    ISSELECTED(choice_values: ['1'], other_values: ['2'], '2').should.be.true
 
 describe 'CONFIG', ->
   it 'returns the current config', ->
@@ -1155,7 +1155,7 @@ describe 'DOLLAR', ->
 
 describe 'VERSIONINFO', ->
   it 'returns version info as a string', ->
-    VERSIONINFO().should.eql('Apple iPhone6,2 iOS 8.1 Fulcrum 2.7.0 2162')
+    VERSIONINFO().should.eql('Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162')
 
 describe 'LATITUDE', ->
   it 'returns the latitude of the current feature', ->
