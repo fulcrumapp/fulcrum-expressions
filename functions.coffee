@@ -51,7 +51,7 @@ exports.APPLICATION = ->
 exports.APPLICATIONBUILD = ->
   Config.applicationBuild ? ''
 
-exports.APPLICATIONINFO = (separator=' ') ->
+exports.APPLICATIONINFO = (separator=', ') ->
   _.compact([ APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD() ]).join(separator)
 
 exports.APPLICATIONVERSION = ->
@@ -219,7 +219,7 @@ exports.DEGREES = (value) ->
   return NaN unless _.isNumber(value)
   180.0 * value / Math.PI
 
-exports.DEVICEINFO = (separator=' ') ->
+exports.DEVICEINFO = (separator=', ') ->
   _.compact([ DEVICEMANUFACTURER(), DEVICEMODEL() ]).join(separator)
 
 exports.DEVICEMODEL = ->
@@ -762,7 +762,7 @@ exports.PI = ->
 exports.PLATFORM = ->
   Config.platform ? ''
 
-exports.PLATFORMINFO = (separator=' ') ->
+exports.PLATFORMINFO = (separator=', ') ->
   _.compact([ PLATFORM(), PLATFORMVERSION() ]).join(separator)
 
 exports.PLATFORMVERSION = ->
@@ -1083,7 +1083,7 @@ exports.UPPER = (value) ->
 exports.VALUE = (value) ->
   NOT_IMPLEMENTED()
 
-exports.VERSIONINFO = (separator=' ') ->
+exports.VERSIONINFO = (separator=', ') ->
   _.compact([ DEVICEINFO(), PLATFORMINFO(), APPLICATIONINFO() ]).join(separator)
 
 exports.YEAR = (date) ->
