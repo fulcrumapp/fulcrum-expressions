@@ -584,6 +584,20 @@ function FORMATNUMBER() {}
 function GCD() {}
 
 
+////GETRESULT
+
+/**
+ * GETRESULT
+ * Returns the current result value for the current expression
+ * @returns {*} the current result value
+ * @example
+ * // returns 1
+ * SETRESULT(1)
+ * GETRESULT()
+ */
+function GETRESULT() {}
+
+
 ////GROUPINGSEPARATOR
 
 /**
@@ -1594,6 +1608,20 @@ function SEARCH() {}
  * SELECTED()
  */
 function SELECTED() {}
+
+
+////SETRESULT
+
+/**
+ * SETRESULT
+ * Sets the current result value for the current expression. This is useful in multiline expressions to set the result value.
+ * @param {*} value the value to set as the result of the expression
+ * @returns {*} the current result value after the value has been set
+ * @example
+ * // returns 1
+ * SETRESULT(1)
+ */
+function SETRESULT() {}
 
 
 ////SHOWERRORS

@@ -133,14 +133,14 @@ class Runtime
 
       variables.$$current = $$runtime.$$currentValue = variables[thisVariableName]
 
-      stringValue = rawValue = variables.$$result = undefined
+      stringValue = rawValue = $$runtime.$$result = undefined
 
       if context.expression and context.expression.length > 0
         evalResult = undefined
 
         `with (variables) { evalResult = eval(context.expression) }`
 
-        rawValue = @coalesce(variables.$$result, evalResult)
+        rawValue = @coalesce($$runtime.$$result, evalResult)
 
         stringValue = @formatValue(rawValue)
 

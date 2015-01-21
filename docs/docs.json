@@ -961,6 +961,20 @@
             }
         },
         {
+            "name": "GETRESULT",
+            "access": "",
+            "virtual": false,
+            "description": "GETRESULT\nReturns the current result value for the current expression",
+            "parameters": [],
+            "examples": [
+                "// returns 1\nSETRESULT(1)\nGETRESULT()"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the current result value"
+            }
+        },
+        {
             "name": "GROUPINGSEPARATOR",
             "access": "",
             "virtual": false,
@@ -2613,6 +2627,29 @@
             "returns": {
                 "type": "Number",
                 "description": ""
+            }
+        },
+        {
+            "name": "SETRESULT",
+            "access": "",
+            "virtual": false,
+            "description": "SETRESULT\nSets the current result value for the current expression. This is useful in multiline expressions to set the result value.",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "*",
+                    "description": "the value to set as the result of the expression",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nSETRESULT(1)"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the current result value after the value has been set"
             }
         },
         {

@@ -411,6 +411,9 @@ exports.GCD = ->
 
   result
 
+exports.GETRESULT = ->
+  $$runtime.$$result
+
 exports.IF = (test, trueValue, falseValue) ->
   if test then trueValue else falseValue
 
@@ -1064,6 +1067,9 @@ exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName
 
 exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) ->
   SUM.apply(null, REPEATABLEVALUES(repeatableValue, repeatableElementDataName, dataName))
+
+exports.SETRESULT = (result) ->
+  $$runtime.$$result = result
 
 exports.SHOWERRORS = (showErrors=true) ->
   $$runtime.showErrors = showErrors
