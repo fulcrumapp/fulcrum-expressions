@@ -2866,22 +2866,13 @@
             "name": "TIMEZONE",
             "access": "",
             "virtual": false,
-            "description": "TIMEZONE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "TIMEZONE\nReturns the timezone according to the current device settings",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nTIMEZONE()"
+                "// returns America/New_York\nTIMEZONE()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },

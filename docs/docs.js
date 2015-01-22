@@ -1827,11 +1827,10 @@ function T() {}
 
 /**
  * TIMEZONE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the timezone according to the current device settings
+ * @returns {String}
  * @example
- * // returns VALUE
+ * // returns America/New_York
  * TIMEZONE()
  */
 function TIMEZONE() {}

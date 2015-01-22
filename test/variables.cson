@@ -6,6 +6,7 @@ application: 'Fulcrum'
 applicationVersion: '2.7.0'
 applicationBuild: '2162'
 recordStatus: 'approved'
+timeZone: 'America/New_York'
 featureIsNew: true
 featureGeometry:
   type: 'Point'
