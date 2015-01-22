@@ -86,6 +86,9 @@ permalink: /developers/expressions/
 #{titles.join("\n\n")}
 """
 
+  cleanDescription: (func) ->
+    marked(@getDescription(func)).replace(/(<([^>]+)>)/ig, '').replace(/\n/g, '')
+
   helpFrontMatter: (func) ->
     """
 ---
@@ -93,7 +96,7 @@ layout: docs
 category: expressions
 section: developers
 class: docs
-title: "Developers | Expressions | #{func.name}"
+title: "Developers | Expressions | #{func.name} - #{@cleanDescription(func)}"
 description: "#{func.name}"
 developer: true
 permalink: /developers/expressions/#{func.name.toLowerCase()}/
