@@ -15,7 +15,8 @@ SKIP_EXPORTS = [
   'ISERR',
   'ISERROR',
   'LANGUAGE',
-  'LOCALE'
+  'LOCALE',
+  'T'
 ]
 
 class DocumentationGenerator
