@@ -530,18 +530,18 @@
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "String",
+                    "description": "a string containing a date",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nDATEVALUE()"
+                "// returns 2015-01-01\nDATEVALUE('2015/01/01')"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Date",
                 "description": ""
             }
         },

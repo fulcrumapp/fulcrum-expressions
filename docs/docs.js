@@ -348,11 +348,11 @@ function DATEADD() {}
 /**
  * DATEVALUE
  * Converts a provided date string in a known format to a date value.
- * @param {Number} value argument
- * @returns {Number}
+ * @param {String} value a string containing a date
+ * @returns {Date}
  * @example
- * // returns VALUE
- * DATEVALUE()
+ * // returns 2015-01-01
+ * DATEVALUE('2015-01-01')
  */
 function DATEVALUE() {}
 
