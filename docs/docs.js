@@ -1101,34 +1101,6 @@ function MAXA() {}
 function MEDIAN() {}
 
 
-////MEMOIZED_FACT
-
-/**
- * MEMOIZED_FACT
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * MEMOIZED_FACT()
- */
-function MEMOIZED_FACT() {}
-
-
-////MEMOIZED_FACTDOUBLE
-
-/**
- * MEMOIZED_FACTDOUBLE
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * MEMOIZED_FACTDOUBLE()
- */
-function MEMOIZED_FACTDOUBLE() {}
-
-
 ////MID
 
 /**
