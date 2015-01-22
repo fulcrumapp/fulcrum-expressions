@@ -27,9 +27,6 @@ exports = {}
 
 exports.NO_VALUE = undefined
 
-exports.NOT_IMPLEMENTED = ->
-  throw new Error('Not Implemented')
-
 exports.MATH_FUNC = MATH_FUNC = (mathFunction) ->
   -> mathFunction.apply(Math, toArray(arguments).map(NUM))
 
