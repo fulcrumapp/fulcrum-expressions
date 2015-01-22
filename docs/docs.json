@@ -572,23 +572,14 @@
             "name": "DECIMALSEPARATOR",
             "access": "",
             "virtual": false,
-            "description": "DECIMALSEPARATOR\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "DECIMALSEPARATOR\nReturns the current decimal separator given the current device locale",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nDECIMALSEPARATOR()"
+                "// returns .\nDECIMALSEPARATOR()"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the current decimal separator"
             }
         },
         {

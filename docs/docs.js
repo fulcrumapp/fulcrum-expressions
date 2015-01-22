@@ -375,11 +375,10 @@ function DAY() {}
 
 /**
  * DECIMALSEPARATOR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the current decimal separator given the current device locale
+ * @returns {String} the current decimal separator
  * @example
- * // returns VALUE
+ * // returns .
  * DECIMALSEPARATOR()
  */
 function DECIMALSEPARATOR() {}
