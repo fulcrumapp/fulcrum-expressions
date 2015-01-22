@@ -1156,22 +1156,23 @@
             "name": "ISERR",
             "access": "",
             "virtual": false,
-            "description": "ISERR\nDescription",
+            "description": "ISERR\nChecks whether the value is an error",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "*",
+                    "description": "a value",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISERR()"
+                "// returns true\nISERR(new Error)",
+                "// returns false\nISERR(1)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
@@ -1179,22 +1180,23 @@
             "name": "ISERROR",
             "access": "",
             "virtual": false,
-            "description": "ISERROR\nDescription",
+            "description": "ISERROR\nChecks whether the value is an error",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "a value",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISERROR()"
+                "// returns true\nISERROR(new Error)",
+                "// returns false\nISERROR(1)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },

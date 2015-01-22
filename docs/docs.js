@@ -742,12 +742,15 @@ function ISBLANK() {}
 
 /**
  * ISERR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks whether the value is an error
+ * @param {*} value a value
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISERR()
+ * // returns true
+ * ISERR(new Error)
+ * @example
+ * // returns false
+ * ISERR(1)
  */
 function ISERR() {}
 
@@ -756,12 +759,15 @@ function ISERR() {}
 
 /**
  * ISERROR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Checks whether the value is an error
+ * @param {Number} value a value
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISERROR()
+ * // returns true
+ * ISERROR(new Error)
+ * @example
+ * // returns false
+ * ISERROR(1)
  */
 function ISERROR() {}
 

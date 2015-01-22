@@ -11,7 +11,9 @@ SKIP_EXPORTS = [
   'DECIMALSEPARATOR',
   'GROUPINGSEPARATOR',
   'GROUPINGSIZE',
-  'IFERROR'
+  'IFERROR',
+  'ISERR',
+  'ISERROR'
 ]
 
 class DocumentationGenerator
