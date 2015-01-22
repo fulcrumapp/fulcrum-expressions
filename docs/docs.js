@@ -260,11 +260,12 @@ function COUNTA() {}
 /**
  * COUNTBLANK
  * Returns the number of blank values in a dataset.
- * @param {Number} value argument
- * @returns {Number}
+ * @param {Array} value an array of items
+ * @returns {Number} the number of blank items in the array
  * @example
- * // returns VALUE
- * COUNTBLANK()
+ * // returns 3
+ * // since null and '' are blank values
+ * COUNTBLANK([null, null, '', 1])
  */
 function COUNTBLANK() {}
 

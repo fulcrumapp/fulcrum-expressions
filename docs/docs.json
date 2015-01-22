@@ -394,19 +394,19 @@
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "Array",
+                    "description": "an array of items",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCOUNTBLANK()"
+                "// returns 3\n// since null and '' are blank values\nCOUNTBLANK([null, null, '', 1])"
             ],
             "returns": {
                 "type": "Number",
-                "description": ""
+                "description": "the number of blank items in the array"
             }
         },
         {
