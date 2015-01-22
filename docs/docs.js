@@ -925,11 +925,10 @@ function ISTEXT() {}
 
 /**
  * LANGUAGE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the language code for the current device locale
+ * @returns {String} the BCP 47 language code
  * @example
- * // returns VALUE
+ * // returns en-US
  * LANGUAGE()
  */
 function LANGUAGE() {}

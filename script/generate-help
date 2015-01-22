@@ -13,7 +13,8 @@ SKIP_EXPORTS = [
   'GROUPINGSIZE',
   'IFERROR',
   'ISERR',
-  'ISERROR'
+  'ISERROR',
+  'LANGUAGE'
 ]
 
 class DocumentationGenerator

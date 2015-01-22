@@ -1407,23 +1407,14 @@
             "name": "LANGUAGE",
             "access": "",
             "virtual": false,
-            "description": "LANGUAGE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "LANGUAGE\nReturns the language code for the current device locale",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nLANGUAGE()"
+                "// returns en-US\nLANGUAGE()"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the BCP 47 language code"
             }
         },
         {
