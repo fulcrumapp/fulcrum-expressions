@@ -1253,22 +1253,24 @@
             "name": "ISNAN",
             "access": "",
             "virtual": false,
-            "description": "ISNAN\nDescription",
+            "description": "ISNAN\nTest whether a value is not a number",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "a value",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nISNAN()"
+                "// returns true\nISNAN(NaN)",
+                "// returns true\nISNAN('aaa' / 7)",
+                "// returns false\nISNAN(7)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },

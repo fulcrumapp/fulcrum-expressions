@@ -813,12 +813,18 @@ function ISLOGICAL() {}
 
 /**
  * ISNAN
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Test whether a value is not a number
+ * @param {Number} value a value
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * ISNAN()
+ * // returns true
+ * ISNAN(NaN)
+ * @example
+ * // returns true
+ * ISNAN('aaa' / 7)
+ * @example
+ * // returns false
+ * ISNAN(7)
  */
 function ISNAN() {}
 
