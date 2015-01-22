@@ -403,11 +403,22 @@ function DEGREES() {}
 /**
  * DOLLAR
  * Formats a number into the locale-specific currency format.
- * @param {Number} value argument
- * @returns {Number}
+ * @param {Number} value a dollar amount
+ * @param {Number} [decimals=2] the number of decimal places (default is 2)
+ * @param {String} [currency=locale default] the currency code to display (e.g. USD, EUR, or AUD)
+ * @param {String} [language=locale default] the language locale used to format the currency. (e.g. en-US, pt-BR, or en-GB)
+ * @returns {String} formatted currency
  * @example
- * // returns VALUE
- * DOLLAR()
+ * // returns $1,234.57
+ * DOLLAR(1234.567)
+ * @example
+ * // returns 1 234,57 $US
+ * // USD formatted in French
+ * DOLLAR(1234.567, 2, 'USD', 'fr-FR')
+ * @example
+ * // returns €1.234,57
+ * // Euro formatted in Portuguese
+ * DOLLAR(1234.567, 2, 'EUR', 'pt-BR')
  */
 function DOLLAR() {}
 

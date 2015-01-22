@@ -614,18 +614,44 @@
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "a dollar amount",
                     "default": "",
                     "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "decimals",
+                    "type": "Number",
+                    "description": "the number of decimal places (default is 2)",
+                    "default": "2",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "currency",
+                    "type": "String",
+                    "description": "the currency code to display (e.g. USD, EUR, or AUD)",
+                    "default": "locale default",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "language",
+                    "type": "String",
+                    "description": "the language locale used to format the currency. (e.g. en-US, pt-BR, or en-GB)",
+                    "default": "locale default",
+                    "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nDOLLAR()"
+                "// returns $1,234.57\nDOLLAR(1234.567)",
+                "// returns 1 234,57 $US\n// USD formatted in French\nDOLLAR(1234.567, 2, 'USD', 'fr-FR')",
+                "// returns €1.234,57\n// Euro formatted in Portuguese\nDOLLAR(1234.567, 2, 'EUR', 'pt-BR')"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "formatted currency"
             }
         },
         {
