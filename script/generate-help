@@ -87,7 +87,7 @@ permalink: /developers/expressions/
 """
 
   cleanDescription: (func) ->
-    marked(@getDescription(func)).replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ')
+    marked(@getDescription(func)).replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim()
 
   helpFrontMatter: (func) ->
     """
