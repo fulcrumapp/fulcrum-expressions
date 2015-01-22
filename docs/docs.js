@@ -625,11 +625,10 @@ function GETRESULT() {}
 
 /**
  * GROUPINGSEPARATOR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the currency thousands separator for the current device locale
+ * @returns {String}
  * @example
- * // returns VALUE
+ * // returns ,
  * GROUPINGSEPARATOR()
  */
 function GROUPINGSEPARATOR() {}

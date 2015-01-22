@@ -980,22 +980,13 @@
             "name": "GROUPINGSEPARATOR",
             "access": "",
             "virtual": false,
-            "description": "GROUPINGSEPARATOR\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "GROUPINGSEPARATOR\nReturns the currency thousands separator for the current device locale",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nGROUPINGSEPARATOR()"
+                "// returns ,\nGROUPINGSEPARATOR()"
             ],
             "returns": {
-                "type": "Number",
+                "type": "String",
                 "description": ""
             }
         },
