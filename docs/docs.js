@@ -679,12 +679,13 @@ function IF() {}
 
 /**
  * IFERROR
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the first argument if it is not an error value, otherwise returns the second argument if present, or a blank if the second argument is absent.
+ * @param {*} value value
+ * @param {*} value_if_error the value to return if the first value is an error
+ * @returns {*}
  * @example
- * // returns VALUE
- * IFERROR()
+ * // returns 1
+ * IFERROR(new Error('This is an error'), 1)
  */
 function IFERROR() {}
 

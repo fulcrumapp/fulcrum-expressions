@@ -1054,22 +1054,30 @@
             "name": "IFERROR",
             "access": "",
             "virtual": false,
-            "description": "IFERROR\nDescription",
+            "description": "IFERROR\nReturns the first argument if it is not an error value, otherwise returns the second argument if present, or a blank if the second argument is absent.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "*",
+                    "description": "value",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value_if_error",
+                    "type": "*",
+                    "description": "the value to return if the first value is an error",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nIFERROR()"
+                "// returns 1\nIFERROR(new Error('This is an error'), 1)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "*",
                 "description": ""
             }
         },
