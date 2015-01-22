@@ -37,4 +37,6 @@ if web
   copyFile('./docs/output/functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'expression_functions.js.coffee'))
 
 if site
+  fs.remove(path.join(site, 'developers', 'expressions'))
+  fs.mkdir(path.join(site, 'developers', 'expressions'))
   copyFile('./docs/output/help', path.join(site, 'developers', 'expressions'))
