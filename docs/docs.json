@@ -1355,7 +1355,7 @@
             "name": "ISSELECTED",
             "access": "",
             "virtual": false,
-            "description": "ISSELECTED\nDescription",
+            "description": "ISSELECTED\nChecks whether a given choice is selected for a choice field or classification field",
             "parameters": [
                 {
                     "name": "value",
