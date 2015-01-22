@@ -2378,7 +2378,7 @@
                 }
             ],
             "examples": [
-                "// returns Fulcrum is a great platform\nREPLACE(\"Fulcrum is a good platform\", 14, 4, \"great\")"
+                "// returns Data collection inspection\nREPLACE(\"Data collection survey\", 17, 6, \"inspection\")"
             ],
             "returns": {
                 "type": "String",

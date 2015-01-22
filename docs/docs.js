@@ -1527,8 +1527,8 @@ function REPEATABLESUM() {}
  * @param {String} replacement String to replace `num_characters` with.
  * @returns {String}
  * @example
- * // returns Fulcrum is a great platform
- * REPLACE("Fulcrum is a good platform", 14, 4, "great")
+ * // returns Data collection inspection
+ * REPLACE("Data collection survey", 17, 6, "inspection")
  */
 function REPLACE() {}
 
