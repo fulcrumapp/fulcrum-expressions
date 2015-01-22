@@ -4,7 +4,11 @@ fs = require('fs')
 _ = require('underscore')
 marked = require('marked')
 
-SKIP_EXPORTS = []
+SKIP_EXPORTS = [
+  'COUNTRY',
+  'CURRENCYCODE',
+  'CURRENCYSYMBOL'
+]
 
 class DocumentationGenerator
   generateDocs: (functions) ->
