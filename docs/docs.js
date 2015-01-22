@@ -1528,6 +1528,7 @@ function REPEATABLESUM() {}
  * @returns {String}
  * @example
  * // returns Data collection inspection
+ * // replaces 'survey' with 'inspection'
  * REPLACE("Data collection survey", 17, 6, "inspection")
  */
 function REPLACE() {}
