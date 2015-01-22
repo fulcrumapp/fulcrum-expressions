@@ -1734,52 +1734,6 @@
             }
         },
         {
-            "name": "MEMOIZED_FACT",
-            "access": "",
-            "virtual": false,
-            "description": "MEMOIZED_FACT\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nMEMOIZED_FACT()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
-            "name": "MEMOIZED_FACTDOUBLE",
-            "access": "",
-            "virtual": false,
-            "description": "MEMOIZED_FACTDOUBLE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nMEMOIZED_FACTDOUBLE()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "MID",
             "access": "",
             "virtual": false,
