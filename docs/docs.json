@@ -427,46 +427,28 @@
             "name": "CURRENCYCODE",
             "access": "",
             "virtual": false,
-            "description": "CURRENCYCODE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "CURRENCYCODE\nReturns the currency code for the current device locale",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nCURRENCYCODE()"
+                "// returns USD\nCURRENCYCODE()"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the ISO 4217 currency code according to the current device settings"
             }
         },
         {
             "name": "CURRENCYSYMBOL",
             "access": "",
             "virtual": false,
-            "description": "CURRENCYSYMBOL\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "CURRENCYSYMBOL\nReturns the currency symbol for the current device locale",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nCURRENCYSYMBOL()"
+                "// returns $\nCURRENCYSYMBOL()"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the currency symbol"
             }
         },
         {

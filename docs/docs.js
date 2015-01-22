@@ -287,11 +287,10 @@ function COUNTRY() {}
 
 /**
  * CURRENCYCODE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the currency code for the current device locale
+ * @returns {String} the ISO 4217 currency code according to the current device settings
  * @example
- * // returns VALUE
+ * // returns USD
  * CURRENCYCODE()
  */
 function CURRENCYCODE() {}
@@ -301,11 +300,10 @@ function CURRENCYCODE() {}
 
 /**
  * CURRENCYSYMBOL
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the currency symbol for the current device locale
+ * @returns {String} the currency symbol
  * @example
- * // returns VALUE
+ * // returns $
  * CURRENCYSYMBOL()
  */
 function CURRENCYSYMBOL() {}
