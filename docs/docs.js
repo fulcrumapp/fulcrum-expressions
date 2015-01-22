@@ -1374,12 +1374,18 @@ function POWER() {}
 
 /**
  * PRECISION
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the precision of a number
+ * @param {Number} value a number
+ * @returns {Number} the number of decimal places
  * @example
- * // returns VALUE
- * PRECISION()
+ * // returns 3
+ * PRECISION(1.333)
+ * @example
+ * // returns 1
+ * PRECISION(1.3)
+ * @example
+ * // returns 0
+ * PRECISION(1)
  */
 function PRECISION() {}
 

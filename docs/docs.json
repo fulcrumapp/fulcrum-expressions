@@ -2091,23 +2091,25 @@
             "name": "PRECISION",
             "access": "",
             "virtual": false,
-            "description": "PRECISION\nDescription",
+            "description": "PRECISION\nReturns the precision of a number",
             "parameters": [
                 {
                     "name": "value",
                     "type": "Number",
-                    "description": "argument",
+                    "description": "a number",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nPRECISION()"
+                "// returns 3\nPRECISION(1.333)",
+                "// returns 1\nPRECISION(1.3)",
+                "// returns 0\nPRECISION(1)"
             ],
             "returns": {
                 "type": "Number",
-                "description": ""
+                "description": "the number of decimal places"
             }
         },
         {
