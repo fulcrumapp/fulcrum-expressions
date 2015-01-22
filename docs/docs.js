@@ -854,7 +854,7 @@ function ISODD() {}
 
 /**
  * ISSELECTED
- * Description
+ * Checks whether a given choice is selected for a choice field or classification field
  * @param {*} value The choice field, classification field to check for a value being selected
  * @param {String} choice The choice value to check for
  * @returns {Boolean}
