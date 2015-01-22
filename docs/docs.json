@@ -1928,19 +1928,20 @@
             "name": "NUMS",
             "access": "",
             "virtual": false,
-            "description": "NUMS\nDescription",
+            "description": "NUMS\nConverts multiple parameters to an array of numbers",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "var_args_values",
+                    "type": "*",
+                    "description": "the values to convert to numbers",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nNUMS()"
+                "// returns [1,2,3]\nNUMS('1' ,'2', '3')",
+                "// returns [1,2,NaN]\nNUMS('1' ,'2', 'a')"
             ],
             "returns": {
                 "type": "Number",
@@ -1974,7 +1975,7 @@
             "name": "ONCE",
             "access": "",
             "virtual": false,
-            "description": "ONCE\nDescription",
+            "description": "ONCE\nReturns a value once, given the current value. This is useful to perform a calculation only once, the first time it's evalulated.",
             "parameters": [
                 {
                     "name": "value",
@@ -1986,7 +1987,7 @@
                 }
             ],
             "examples": [
-                "// returns VALUE\nONCE()"
+                "// returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162\nONCE(VERSIONINFO())"
             ],
             "returns": {
                 "type": "Number",

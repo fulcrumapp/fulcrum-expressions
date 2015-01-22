@@ -1267,12 +1267,15 @@ function NUM() {}
 
 /**
  * NUMS
- * Description
- * @param {Number} value argument
+ * Converts multiple parameters to an array of numbers
+ * @param {...*} var_args_values the values to convert to numbers
  * @returns {Number}
  * @example
- * // returns VALUE
- * NUMS()
+ * // returns [1,2,3]
+ * NUMS('1' ,'2', '3')
+ * @example
+ * // returns [1,2,NaN]
+ * NUMS('1' ,'2', 'a')
  */
 function NUMS() {}
 
@@ -1295,12 +1298,12 @@ function ODD() {}
 
 /**
  * ONCE
- * Description
+ * Returns a value once, given the current value. This is useful to perform a calculation only once, the first time it's evalulated.
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns VALUE
- * ONCE()
+ * // returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162
+ * ONCE(VERSIONINFO())
  */
 function ONCE() {}
 
