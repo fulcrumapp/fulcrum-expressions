@@ -274,11 +274,10 @@ function COUNTBLANK() {}
 
 /**
  * COUNTRY
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the current country according to the device locale settings
+ * @returns {String} The country code of the current locale
  * @example
- * // returns VALUE
+ * // returns US
  * COUNTRY()
  */
 function COUNTRY() {}

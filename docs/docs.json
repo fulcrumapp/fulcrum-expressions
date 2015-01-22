@@ -413,23 +413,14 @@
             "name": "COUNTRY",
             "access": "",
             "virtual": false,
-            "description": "COUNTRY\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "COUNTRY\nReturns the current country according to the device locale settings",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nCOUNTRY()"
+                "// returns US\nCOUNTRY()"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "The country code of the current locale"
             }
         },
         {
