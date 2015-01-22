@@ -994,23 +994,14 @@
             "name": "GROUPINGSIZE",
             "access": "",
             "virtual": false,
-            "description": "GROUPINGSIZE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "GROUPINGSIZE\nReturns the number of digits between the grouping separators for numbers in the current device locale. e.g. 3 if the current locale uses a thousands separator",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nGROUPINGSIZE()"
+                "// returns 3\nGROUPINGSIZE()"
             ],
             "returns": {
                 "type": "Number",
-                "description": ""
+                "description": "The number of digits used for the grouping separator."
             }
         },
         {

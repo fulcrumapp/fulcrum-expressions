@@ -638,11 +638,10 @@ function GROUPINGSEPARATOR() {}
 
 /**
  * GROUPINGSIZE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the number of digits between the grouping separators for numbers in the current device locale. e.g. 3 if the current locale uses a thousands separator
+ * @returns {Number} The number of digits used for the grouping separator.
  * @example
- * // returns VALUE
+ * // returns 3
  * GROUPINGSIZE()
  */
 function GROUPINGSIZE() {}
