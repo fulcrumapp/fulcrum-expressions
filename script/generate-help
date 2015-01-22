@@ -96,8 +96,8 @@ layout: docs
 category: expressions
 section: developers
 class: docs
-title: "Developers | Expressions | #{func.name} - #{@cleanDescription(func)}"
-description: "#{func.name}"
+title: "Developers | Expressions | #{func.name}"
+description: "#{@cleanDescription(func)}"
 developer: true
 permalink: /developers/expressions/#{func.name.toLowerCase()}/
 ---
