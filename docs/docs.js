@@ -1543,11 +1543,11 @@ function REPLACE() {}
  * @param {Number} [number_of_characters=1] The number of characters to return from the right side of the string.
  * @returns {String}
  * @example
- * // returns crum
- * RIGHT("Fulcrum", 4)
+ * // returns DEFG
+ * RIGHT("ABCDEFG", 4)
  * @example
- * // returns m
- * RIGHT("Fulcrum")
+ * // returns 1
+ * RIGHT("000001")
  */
 function RIGHT() {}
 
@@ -1756,12 +1756,27 @@ function STATUSLABEL() {}
 
 /**
  * SUBSTITUTE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Replaces existing text with new text in a string.
+ * @param {String} text A text value to look in
+ * @param {String} search_for A text value to replace
+ * @param {String} replace_with A text value to replace it with
+ * @param {String} occurrence The instance of the search text to replace (e.g. 4 will only replace the 4th instance)
+ * @returns {String} the new text string
  * @example
- * // returns VALUE
- * SUBSTITUTE()
+ * // returns The record data is stored in a record database
+ * // replaces all occurrences
+ * SUBSTITUTE('The data is stored in a database', 'data', 'record data')
+ * @example
+ * // returns The record data is stored in a database
+ * // replaces the first occurrence
+ * SUBSTITUTE('The data is stored in a database', 'data', 'record data', 1)
+ * @example
+ * // returns The data is stored in a record database
+ * // replaces the 2nd occurrence
+ * SUBSTITUTE('The data is stored in a database', 'data', 'record data', 2)
+ * @example
+ * // returns The dAtA is stored in A dAtAbAse
+ * SUBSTITUTE('The data is stored in a database', 'a', 'A')
  */
 function SUBSTITUTE() {}
 

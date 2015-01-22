@@ -2378,7 +2378,7 @@
                 }
             ],
             "examples": [
-                "// returns Data collection inspection\nREPLACE(\"Data collection survey\", 17, 6, \"inspection\")"
+                "// returns Data collection inspection\n// replaces 'survey' with 'inspection'\nREPLACE(\"Data collection survey\", 17, 6, \"inspection\")"
             ],
             "returns": {
                 "type": "String",
@@ -2409,8 +2409,8 @@
                 }
             ],
             "examples": [
-                "// returns crum\nRIGHT(\"Fulcrum\", 4)",
-                "// returns m\nRIGHT(\"Fulcrum\")"
+                "// returns DEFG\nRIGHT(\"ABCDEFG\", 4)",
+                "// returns 1\nRIGHT(\"000001\")"
             ],
             "returns": {
                 "type": "String",
@@ -2747,23 +2747,50 @@
             "name": "SUBSTITUTE",
             "access": "",
             "virtual": false,
-            "description": "SUBSTITUTE\nDescription",
+            "description": "SUBSTITUTE\nReplaces existing text with new text in a string.",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "text",
+                    "type": "String",
+                    "description": "A text value to look in",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "search_for",
+                    "type": "String",
+                    "description": "A text value to replace",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "replace_with",
+                    "type": "String",
+                    "description": "A text value to replace it with",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "occurrence",
+                    "type": "String",
+                    "description": "The instance of the search text to replace (e.g. 4 will only replace the 4th instance)",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nSUBSTITUTE()"
+                "// returns The record data is stored in a record database\n// replaces all occurrences\nSUBSTITUTE('The data is stored in a database', 'data', 'record data')",
+                "// returns The record data is stored in a database\n// replaces the first occurrence\nSUBSTITUTE('The data is stored in a database', 'data', 'record data', 1)",
+                "// returns The data is stored in a record database\n// replaces the 2nd occurrence\nSUBSTITUTE('The data is stored in a database', 'data', 'record data', 2)",
+                "// returns The dAtA is stored in A dAtAbAse\nSUBSTITUTE('The data is stored in a database', 'a', 'A')"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the new text string"
             }
         },
         {
