@@ -526,8 +526,8 @@ function FALSE() {}
  * @param {Number} starting_at argument Position index to begin the search.
  * @returns {Number}
  * @example
- * // returns 15
- * FIND("haystack", "Needle in the haystack")
+ * // returns 5
+ * FIND("needle", "the needle is in the haystack")
  */
 function FIND() {}
 

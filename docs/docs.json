@@ -826,7 +826,7 @@
                 }
             ],
             "examples": [
-                "// returns 15\nFIND(\"haystack\", \"Needle in the haystack\")"
+                "// returns 5\nFIND(\"needle\", \"the needle is in the haystack\")"
             ],
             "returns": {
                 "type": "Number",
