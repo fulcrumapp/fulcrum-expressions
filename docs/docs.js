@@ -651,12 +651,12 @@ function GROUPINGSIZE() {}
 
 /**
  * HASOTHER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Tests whether a choice field or classification field has an 'Other' value entered
+ * @param {Object} field the choice field or classification to test
+ * @returns {Boolean}
  * @example
- * // returns VALUE
- * HASOTHER()
+ * // returns false
+ * HASOTHER($choice_field)
  */
 function HASOTHER() {}
 

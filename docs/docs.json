@@ -1008,22 +1008,22 @@
             "name": "HASOTHER",
             "access": "",
             "virtual": false,
-            "description": "HASOTHER\nDescription",
+            "description": "HASOTHER\nTests whether a choice field or classification field has an 'Other' value entered",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "field",
+                    "type": "Object",
+                    "description": "the choice field or classification to test",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nHASOTHER()"
+                "// returns false\nHASOTHER($choice_field)"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Boolean",
                 "description": ""
             }
         },
