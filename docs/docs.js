@@ -402,7 +402,7 @@ function DEGREES() {}
 
 /**
  * DOLLAR
- * Formats a number into the locale-specific currency format. This function is useful when including a currency amount in a longer piece of text. To display just a currency in a calculated field, it's recommended to set the display type of the calculated field to 'Currency' and just return a number in the expression. When the display type of the calculated field is set to currency, the number is automatically displayed as a formatted currency.
+ * Formats a number into a locale-specific currency format. This function is useful when including a currency amount in a longer piece of text. To display just a currency in a calculated field, it's recommended to set the display type of the calculated field to 'Currency' and just return a number in the expression. When the display type of the calculated field is set to currency, the number is automatically displayed as a formatted currency.
  * @param {Number} value a dollar amount
  * @param {Number} [decimals=2] the number of decimal places (default is 2)
  * @param {String} [currency=locale default] the currency code to display (e.g. USD, EUR, or AUD)
