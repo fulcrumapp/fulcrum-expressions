@@ -1080,9 +1080,6 @@ exports.UPPER = (value) ->
 
   value.toString().toUpperCase()
 
-exports.VALUE = (value) ->
-  NOT_IMPLEMENTED()
-
 exports.VERSIONINFO = (separator=', ') ->
   _.compact([ DEVICEINFO(' '), PLATFORMINFO(' '), APPLICATIONINFO(' ') ]).join(separator)
 

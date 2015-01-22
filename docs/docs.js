@@ -1889,20 +1889,6 @@ function TYPEOF() {}
 function UPPER() {}
 
 
-////VALUE
-
-/**
- * VALUE
- * Description
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * VALUE()
- */
-function VALUE() {}
-
-
 ////VERSIONINFO
 
 /**

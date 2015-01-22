@@ -3034,29 +3034,6 @@
             }
         },
         {
-            "name": "VALUE",
-            "access": "",
-            "virtual": false,
-            "description": "VALUE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nVALUE()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "VERSIONINFO",
             "access": "",
             "virtual": false,
