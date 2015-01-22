@@ -1017,11 +1017,10 @@ function LN() {}
 
 /**
  * LOCALE
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the current locale code
+ * @returns {String} the current locale
  * @example
- * // returns VALUE
+ * // returns en_US
  * LOCALE()
  */
 function LOCALE() {}

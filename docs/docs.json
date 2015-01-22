@@ -1538,23 +1538,14 @@
             "name": "LOCALE",
             "access": "",
             "virtual": false,
-            "description": "LOCALE\nDescription",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
+            "description": "LOCALE\nReturns the current locale code",
+            "parameters": [],
             "examples": [
-                "// returns VALUE\nLOCALE()"
+                "// returns en_US\nLOCALE()"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the current locale"
             }
         },
         {
