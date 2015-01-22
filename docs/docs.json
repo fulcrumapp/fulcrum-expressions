@@ -538,7 +538,7 @@
                 }
             ],
             "examples": [
-                "// returns 2015-01-01\nDATEVALUE('2015/01/01')"
+                "// returns 2015-01-01\nDATEVALUE('2015-01-01')"
             ],
             "returns": {
                 "type": "Date",
@@ -553,15 +553,15 @@
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "Date",
+                    "description": "a date to extract the day from",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nDAY()"
+                "// returns 31\nDAY('2015-12-31')"
             ],
             "returns": {
                 "type": "Number",

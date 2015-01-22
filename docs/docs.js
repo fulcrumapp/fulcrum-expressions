@@ -362,11 +362,11 @@ function DATEVALUE() {}
 /**
  * DAY
  * Returns the day of the month that a specific date falls on, in numeric format.
- * @param {Number} value argument
+ * @param {Date} value a date to extract the day from
  * @returns {Number}
  * @example
- * // returns VALUE
- * DAY()
+ * // returns 31
+ * DAY('2015-12-31')
  */
 function DAY() {}
 
