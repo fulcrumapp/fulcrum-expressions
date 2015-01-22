@@ -1329,12 +1329,12 @@ function OR() {}
 
 /**
  * OTHER
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns the current 'Other' value for a choice field or classification field
+ * @param {Object} field The choice field or classification field variable
+ * @returns {String} the current 'Other' value
  * @example
- * // returns VALUE
- * OTHER()
+ * // returns undefined
+ * OTHER($choice_field)
  */
 function OTHER() {}
 

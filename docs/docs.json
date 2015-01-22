@@ -2022,23 +2022,23 @@
             "name": "OTHER",
             "access": "",
             "virtual": false,
-            "description": "OTHER\nDescription",
+            "description": "OTHER\nReturns the current 'Other' value for a choice field or classification field",
             "parameters": [
                 {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "name": "field",
+                    "type": "Object",
+                    "description": "The choice field or classification field variable",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nOTHER()"
+                "// returns undefined\nOTHER($choice_field)"
             ],
             "returns": {
-                "type": "Number",
-                "description": ""
+                "type": "String",
+                "description": "the current 'Other' value"
             }
         },
         {
