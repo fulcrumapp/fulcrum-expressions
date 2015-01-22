@@ -1056,20 +1056,6 @@ function LONGITUDE() {}
 function LOWER() {}
 
 
-////MATCH
-
-/**
- * MATCH
- * Returns the relative position of an item in a range that matches a specified value.
- * @param {Number} value argument
- * @returns {Number}
- * @example
- * // returns VALUE
- * MATCH()
- */
-function MATCH() {}
-
-
 ////MAX
 
 /**

@@ -642,9 +642,6 @@ exports.LOWER = (value) ->
 
   value.toString().toLowerCase()
 
-exports.MATCH = ->
-  NOT_IMPLEMENTED()
-
 exports.MAX = ->
   numbers = _.flatten(toArray(arguments))
   numbers = _.map(numbers, NUM)

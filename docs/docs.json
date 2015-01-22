@@ -1664,29 +1664,6 @@
             }
         },
         {
-            "name": "MATCH",
-            "access": "",
-            "virtual": false,
-            "description": "MATCH\nReturns the relative position of an item in a range that matches a specified value.",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "Number",
-                    "description": "argument",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// returns VALUE\nMATCH()"
-            ],
-            "returns": {
-                "type": "Number",
-                "description": ""
-            }
-        },
-        {
             "name": "MAX",
             "access": "",
             "virtual": false,
