@@ -1645,7 +1645,7 @@ function SETRESULT() {}
 
 /**
  * SHOWERRORS
- * Description
+ * Enable verbose errors to displays in the app. This is useful for troubleshooting complex expressions.
  * @param {Boolean} [show=true] Show full error messages. This can help diagnose problems in expressions on the mobile device.
  * @returns {Boolean}
  * @example

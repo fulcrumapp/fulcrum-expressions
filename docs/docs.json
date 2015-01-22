@@ -2596,7 +2596,7 @@
             "name": "SHOWERRORS",
             "access": "",
             "virtual": false,
-            "description": "SHOWERRORS\nDescription",
+            "description": "SHOWERRORS\nEnable verbose errors to displays in the app. This is useful for troubleshooting complex expressions.",
             "parameters": [
                 {
                     "name": "show",
