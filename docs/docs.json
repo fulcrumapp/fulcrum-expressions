@@ -1903,19 +1903,21 @@
             "name": "NUM",
             "access": "",
             "virtual": false,
-            "description": "NUM\nDescription",
+            "description": "NUM\nConverts any value to a number",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "*",
+                    "description": "a value to convert to a number",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nNUM()"
+                "// returns 12\nNUM('12')",
+                "// returns 12\nNUM(12)",
+                "// returns NaN\nNUM('a')"
             ],
             "returns": {
                 "type": "Number",

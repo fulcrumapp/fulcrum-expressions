@@ -1247,12 +1247,18 @@ function NOT() {}
 
 /**
  * NUM
- * Description
- * @param {Number} value argument
+ * Converts any value to a number
+ * @param {*} value a value to convert to a number
  * @returns {Number}
  * @example
- * // returns VALUE
- * NUM()
+ * // returns 12
+ * NUM('12')
+ * @example
+ * // returns 12
+ * NUM(12)
+ * @example
+ * // returns NaN
+ * NUM('a')
  */
 function NUM() {}
 
