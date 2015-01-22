@@ -248,22 +248,22 @@
             "name": "COMPACT",
             "access": "",
             "virtual": false,
-            "description": "COMPACT\nDescription",
+            "description": "COMPACT\nRemoves empty items from an array",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "Array",
+                    "description": "an array of items",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCOMPACT()"
+                "// returns [1,2,3]\nCOMPACT([null, 1, undefined, null, 2, 3])"
             ],
             "returns": {
-                "type": "Number",
+                "type": "Array",
                 "description": ""
             }
         },
@@ -342,46 +342,48 @@
             "name": "COUNT",
             "access": "",
             "virtual": false,
-            "description": "COUNT\nReturns a count of the number of numeric values in a dataset.",
+            "description": "COUNT\nReturns a count of the number of *numeric* values in a dataset.",
             "parameters": [
                 {
-                    "name": "var_args_values",
-                    "type": "Number",
-                    "description": "Value to include in the count.",
+                    "name": "values",
+                    "type": "Array",
+                    "description": "an array of numbers",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCOUNT()"
+                "// returns 5\nCOUNT([11, 22, 33, 44, 55])",
+                "// returns 0\n// since it only counts numeric arguments\nCOUNT(['a', 'b', 'c', 'd', 'e'])"
             ],
             "returns": {
-                "type": "String",
-                "description": ""
+                "type": "Number",
+                "description": "the count of numeric values in the array"
             }
         },
         {
             "name": "COUNTA",
             "access": "",
             "virtual": false,
-            "description": "COUNTA\nReturns a count of the number of values in a dataset.",
+            "description": "COUNTA\nReturns a count of values in a dataset.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "Array",
+                    "description": "an array of values",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nCOUNTA()"
+                "// returns 5\nCOUNTA([11, 22, 33, 44, 55])",
+                "// returns 5\n// since it counts all arguments\nCOUNTA(['a', 'b', 'c', 'd', 'e'])"
             ],
             "returns": {
                 "type": "Number",
-                "description": ""
+                "description": "the count of items in the array"
             }
         },
         {

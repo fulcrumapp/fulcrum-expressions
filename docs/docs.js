@@ -161,12 +161,12 @@ function CODE() {}
 
 /**
  * COMPACT
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Removes empty items from an array
+ * @param {Array} value an array of items
+ * @returns {Array}
  * @example
- * // returns VALUE
- * COMPACT()
+ * // returns [1,2,3]
+ * COMPACT([null, 1, undefined, null, 2, 3])
  */
 function COMPACT() {}
 
@@ -223,12 +223,16 @@ function COSH() {}
 
 /**
  * COUNT
- * Returns a count of the number of numeric values in a dataset.
- * @param {...Number} var_args_values Value to include in the count.
- * @returns {String}
+ * Returns a count of the number of *numeric* values in a dataset.
+ * @param {Array} values an array of numbers
+ * @returns {Number} the count of numeric values in the array
  * @example
- * // returns VALUE
- * COUNT()
+ * // returns 5
+ * COUNT([11, 22, 33, 44, 55])
+ * @example
+ * // returns 0
+ * // since it only counts numeric arguments
+ * COUNT(['a', 'b', 'c', 'd', 'e'])
  */
 function COUNT() {}
 
@@ -237,12 +241,16 @@ function COUNT() {}
 
 /**
  * COUNTA
- * Returns a count of the number of values in a dataset.
- * @param {Number} value argument
- * @returns {Number}
+ * Returns a count of values in a dataset.
+ * @param {Array} value an array of values
+ * @returns {Number} the count of items in the array
  * @example
- * // returns VALUE
- * COUNTA()
+ * // returns 5
+ * COUNTA([11, 22, 33, 44, 55])
+ * @example
+ * // returns 5
+ * // since it counts all arguments
+ * COUNTA(['a', 'b', 'c', 'd', 'e'])
  */
 function COUNTA() {}
 

@@ -136,11 +136,16 @@ exports.COSH = (number) ->
   (exp + 1 / exp) / 2
 
 exports.COUNT = (value) ->
-  return COMPACT(value).length if _.isArray(value)
-  NaN
+  return NO_VALUE unless _.isArray(value)
 
-exports.COUNTA = ->
-  COUNT(toArray(arguments))
+  numbers = _.select COMPACT(value).map(NUM), (num) -> not isNaN(num)
+
+  numbers.length
+
+exports.COUNTA = (value) ->
+  return NO_VALUE unless _.isArray(value)
+
+  value.length
 
 exports.COUNTBLANK = (value) ->
   return NaN unless _.isArray(value)

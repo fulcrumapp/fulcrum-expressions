@@ -206,23 +206,23 @@ describe 'COMPACT', ->
     COMPACT(['', 0, 1]).should.eql(['', 0, 1])
 
 describe 'COUNT', ->
-  it 'returns the count of items', ->
+  it 'returns the count of numeric items', ->
     COUNT([1, 2, 3]).should.be.exactly(3)
     COUNT([]).should.be.exactly(0)
-    COUNT(null).should.be.NaN
-    COUNT(undefined).should.be.NaN
-    COUNT({}).should.be.NaN
+    shouldHaveNoValue(COUNT(null))
+    shouldHaveNoValue(COUNT(undefined))
+    shouldHaveNoValue(COUNT({}))
     COUNT([undefined]).should.be.exactly(0)
     COUNT([null]).should.be.exactly(0)
     COUNT([0]).should.be.exactly(1)
 
 describe 'COUNTA', ->
   it 'returns the count of items', ->
-    COUNTA(1, 2, 3).should.be.exactly(3)
-    COUNTA().should.be.exactly(0)
-    COUNTA(null).should.be.exactly(0)
-    COUNTA(undefined).should.be.exactly(0)
-    COUNTA({}).should.be.exactly(1)
+    COUNTA([1, 2, 3]).should.be.exactly(3)
+    shouldHaveNoValue(COUNTA())
+    shouldHaveNoValue(COUNTA(null))
+    shouldHaveNoValue(COUNTA(undefined))
+    shouldHaveNoValue(COUNTA({}))
     COUNTA([0]).should.be.exactly(1)
 
 describe 'COUNTBLANK', ->
