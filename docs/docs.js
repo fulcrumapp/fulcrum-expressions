@@ -665,12 +665,17 @@ function HASOTHER() {}
 
 /**
  * IF
- * Description
- * @param {Number} value argument
- * @returns {Number}
+ * Returns one value if a logical expression is true and another if it is false.
+ * @param {*} value logical expression
+ * @param {*} value_if_true The value to return if the expression is true
+ * @param {*} value_if_false The value to return if the expression is false
+ * @returns {*}
  * @example
- * // returns VALUE
- * IF()
+ * // returns 1 is less than 3
+ * IF(1 > 3, '1 is greater than 3', '1 is less than 3')
+ * @example
+ * // returns Red is selected
+ * IF(ISSELECTED($choice_field, 'Red'), 'Red is selected', 'Red is not selected')
  */
 function IF() {}
 

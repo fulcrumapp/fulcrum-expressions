@@ -1031,22 +1031,39 @@
             "name": "IF",
             "access": "",
             "virtual": false,
-            "description": "IF\nDescription",
+            "description": "IF\nReturns one value if a logical expression is true and another if it is false.",
             "parameters": [
                 {
                     "name": "value",
-                    "type": "Number",
-                    "description": "argument",
+                    "type": "*",
+                    "description": "logical expression",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value_if_true",
+                    "type": "*",
+                    "description": "The value to return if the expression is true",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value_if_false",
+                    "type": "*",
+                    "description": "The value to return if the expression is false",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// returns VALUE\nIF()"
+                "// returns 1 is less than 3\nIF(1 > 3, '1 is greater than 3', '1 is less than 3')",
+                "// returns Red is selected\nIF(ISSELECTED($choice_field, 'Red'), 'Red is selected', 'Red is not selected')"
             ],
             "returns": {
-                "type": "Number",
+                "type": "*",
                 "description": ""
             }
         },
