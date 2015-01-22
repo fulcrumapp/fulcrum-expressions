@@ -16,8 +16,11 @@ SKIP_EXPORTS = [
   'ISERROR',
   'LANGUAGE',
   'LOCALE',
+  'N',
   'T',
-  'TIMEZONE'
+  'TIMEZONE',
+  'X_ISNEW',
+  'X_ISUPDATE'
 ]
 
 class DocumentationGenerator
