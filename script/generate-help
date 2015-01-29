@@ -131,8 +131,9 @@ permalink: /developers/expressions/#{func.name.toLowerCase()}/
     functions = _.map functions, (func) =>
       desc = @getDescription(func)
       desc = marked(desc.replace(/\n/g, "\\n")).replace(/^<p>/, '').replace(/<\/p>\n$/, '')
+      tip = desc.replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim()
 
-      "    { identifier: \"#{func.name}\", description: \"#{desc}\" }"
+      "    { identifier: \"#{func.name}\", description: \"#{desc}\", tip: \"#{tip}\" }"
 
     """
     class window.ExpressionFunctions
