@@ -9,6 +9,11 @@ build:
 		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --compress --mangle
 	./script/build-docs
 
+debug:
+	mkdir -p dist
+	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
+	./script/build-docs
+
 docs:
 	./script/build-docs
 
@@ -32,4 +37,4 @@ test:
 	--compilers coffee:coffee-script/register \
 	$(TESTS)
 
-.PHONY: build test docs help copy clean dist
+.PHONY: build debug test docs help copy clean dist
