@@ -3,6 +3,7 @@
 fs = require('fs')
 _ = require('underscore')
 marked = require('marked')
+entities = new (require('html-entities').AllHtmlEntities)
 
 SKIP_EXPORTS = [
   'COUNTRY',
@@ -127,11 +128,14 @@ permalink: /developers/expressions/#{func.name.toLowerCase()}/
 ---
 """
 
+  escapeLiteral: (literal) ->
+    literal.replace(/"/, "\\\"")
+
   generateAppHelp: (functions) ->
     functions = _.map functions, (func) =>
       desc = @getDescription(func)
-      desc = marked(desc.replace(/\n/g, "\\n")).replace(/^<p>/, '').replace(/<\/p>\n$/, '')
-      tip = desc.replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim()
+      desc = @escapeLiteral(marked(desc.replace(/\n/g, "\\n")).replace(/^<p>/, '').replace(/<\/p>\n$/, ''))
+      tip = entities.decode(desc.replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim())
 
       "    { identifier: \"#{func.name}\", description: \"#{desc}\", tip: \"#{tip}\" }"
 

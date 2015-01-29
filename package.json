@@ -24,6 +24,7 @@
     "coffee-script": "^1.8.0",
     "coffeeify": "^1.0.0",
     "fs-sync": "^0.2.5",
+    "html-entities": "^1.1.2",
     "intl": "^0.1.4",
     "jsdoc": "^3.3.0-alpha13",
     "marked": "^0.3.2",
