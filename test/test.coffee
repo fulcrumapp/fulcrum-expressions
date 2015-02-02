@@ -1300,6 +1300,23 @@ describe 'MONTH', ->
 
     shouldHaveNoValue(MONTH('not a date'))
 
+describe 'TIMEDIFF', ->
+  it 'returns the number of minutes between 2 times', ->
+    TIMEDIFF('00:00', '00:01').should.be.exactly(1 / 60)
+    TIMEDIFF('14:00', '18:00').should.be.exactly(4)
+    TIMEDIFF('02:00', '01:00').should.be.exactly(23)
+    TIMEDIFF('02:00', '02:00').should.be.exactly(0)
+
+    TIMEDIFF('00:00', '00:01', 'minutes').should.be.exactly(1)
+    TIMEDIFF('14:00', '18:00', 'minutes').should.be.exactly(4 * 60)
+    TIMEDIFF('02:00', '01:00', 'minutes').should.be.exactly(23 * 60)
+
+    shouldHaveNoValue(TIMEDIFF(1, 2))
+    shouldHaveNoValue(TIMEDIFF('0000', '0001'))
+    shouldHaveNoValue(TIMEDIFF('2:00', '6:00'))
+    shouldHaveNoValue(TIMEDIFF(new Date, null))
+    shouldHaveNoValue(TIMEDIFF('2:00', undefined))
+
 describe 'YEAR', ->
   it 'returns a year given a date', ->
     YEAR('2015/01/01').should.be.exactly(2015)

@@ -2864,6 +2864,47 @@
             }
         },
         {
+            "name": "TIMEDIFF",
+            "access": "",
+            "virtual": false,
+            "description": "TIMEDIFF\nReturns the difference between 2 time fields",
+            "parameters": [
+                {
+                    "name": "startTimeField",
+                    "type": "String",
+                    "description": "The time field containing the start time",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "endTimeField",
+                    "type": "String",
+                    "description": "The time field containing the end time",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "format",
+                    "type": "String",
+                    "description": "The format of the output. Either `hours` (default) or `minutes`.",
+                    "default": "'hours'",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 8\nTIMEDIFF('09:00', '17:00')",
+                "// returns 120\nTIMEDIFF('09:00', '11:00', 'minutes')",
+                "// returns 23\nTIMEDIFF('02:00', '01:00')"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": "The number of hours (default) or the number of minutes between the 2 specified times"
+            }
+        },
+        {
             "name": "TIMEZONE",
             "access": "",
             "virtual": false,

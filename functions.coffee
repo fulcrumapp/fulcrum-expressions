@@ -1040,6 +1040,47 @@ exports.T = (value) ->
   return '' unless value?
   return value.toString()
 
+exports.TIMEDIFF = (startTime, endTime, format='hours') ->
+  return NO_VALUE unless _.isString(startTime) and _.isString(endTime)
+
+  return NO_VALUE unless _.contains(['hours', 'minutes'], format)
+
+  return NO_VALUE if startTime.length isnt 5
+  return NO_VALUE if startTime[2] isnt ':'
+
+  return NO_VALUE if endTime.length isnt 5
+  return NO_VALUE if endTime[2] isnt ':'
+
+  time1 = startTime.split(':')
+  time2 = endTime.split(':')
+
+  beginHour = NUM(time1[0])
+  beginMinute = NUM(time1[1])
+
+  endHour = NUM(time2[0])
+  endMinute = NUM(time2[1])
+
+  return NO_VALUE if beginHour > 23 or beginHour < 0
+  return NO_VALUE if endHour > 23 or endHour < 0
+
+  return NO_VALUE if beginMinute > 59 or beginMinute < 0
+  return NO_VALUE if endMinute > 59 or endMinute < 0
+
+  beginMinutes = (beginHour * 60) + beginMinute
+  endMinutes = (endHour * 60) + endMinute
+
+  totalMinutes = (endMinutes - beginMinutes)
+
+  totalMinutes = if totalMinutes >= 0
+    totalMinutes
+  else
+    1440 + totalMinutes
+
+  if format is 'hours'
+    totalMinutes / 60
+  else
+    totalMinutes
+
 exports.TIMEZONE = ->
   Config.timeZone or Defaults.timeZone
 

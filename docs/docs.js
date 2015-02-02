@@ -1826,6 +1826,29 @@ function SUMSQ() {}
 function T() {}
 
 
+
+////TIMEDIFF
+
+/**
+ * TIMEDIFF
+ * Returns the difference between 2 time fields
+ * @param {String} startTimeField The time field containing the start time
+ * @param {String} endTimeField The time field containing the end time
+ * @param {String} [format='hours'] The format of the output. Either `hours` (default) or `minutes`.
+ * @returns {Number} The number of hours (default) or the number of minutes between the 2 specified times
+ * @example
+ * // returns 8
+ * TIMEDIFF('09:00', '17:00')
+ * @example
+ * // returns 120
+ * TIMEDIFF('09:00', '11:00', 'minutes')
+ * @example
+ * // returns 23
+ * TIMEDIFF('02:00', '01:00')
+ */
+function TIMEDIFF() {}
+
+
 ////TIMEZONE
 
 /**
