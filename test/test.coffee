@@ -1228,6 +1228,37 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.be.NaN
 
+  it 'returns the sum of a specific numeric field when some of the items have no value', ->
+    $repeatable_field = [
+      {
+        id: '1'
+        form_values: {
+          '1338': 1
+        }
+      }
+      {
+        id: '2'
+        form_values: {
+        }
+      }
+      {
+        id: '3'
+        form_values: {
+          '1338': 4
+        }
+      }
+      {
+        id: '4'
+        form_values: {
+          '1338': ''
+        }
+      }
+    ]
+
+    totalCost = REPEATABLESUM($repeatable_field, 'cost')
+
+    totalCost.should.be.exactly(5)
+
   it 'returns no value if the data name of the field does not exist', ->
     $repeatable_field = variables.values.form_values['1337']
 

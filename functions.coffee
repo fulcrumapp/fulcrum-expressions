@@ -858,7 +858,7 @@ exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
   Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
 
 exports.REPEATABLESUM = (repeatableValue, dataName) ->
-  SUM.apply(null, REPEATABLEVALUES(repeatableValue, dataName))
+  SUM.apply(null, _.reject(REPEATABLEVALUES(repeatableValue, dataName), isNaN))
 
 exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   startPosition = FLOOR(startPosition)
