@@ -846,15 +846,19 @@ exports.RANDBETWEEN = (low, high) ->
 
   low + Math.ceil((high - low + 1) * Math.random()) - 1
 
-exports.REPEATABLEVALUES = (repeatableValue, repeatableElementDataName, dataName) ->
-  repeatableElement = $$runtime.elementsByDataName[repeatableElementDataName]
+exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
+  dataElement = $$runtime.elementsByDataName[dataName]
+
+  return NO_VALUE unless dataElement
+
+  repeatableElement = Utils.nearestRepeatable(dataElement)
 
   return NO_VALUE unless repeatableElement
 
   Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
 
-exports.REPEATABLESUM = (repeatableValue, repeatableElementDataName, dataName) ->
-  SUM.apply(null, REPEATABLEVALUES(repeatableValue, repeatableElementDataName, dataName))
+exports.REPEATABLESUM = (repeatableValue, dataName) ->
+  SUM.apply(null, REPEATABLEVALUES(repeatableValue, dataName))
 
 exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   startPosition = FLOOR(startPosition)

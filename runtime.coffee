@@ -107,7 +107,7 @@ class Runtime
     functions.CONFIGURE(@, false)
 
   prepare: ->
-    @elements = Utils.flattenElements(@form.elements)
+    @elements = Utils.flattenElements(@form.elements, true, true)
 
     if @form.status_field and @form.status_field.choices
       _.each @form.status_field.choices, (choice) =>

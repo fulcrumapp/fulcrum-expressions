@@ -10,18 +10,30 @@ class Utils
   @toArray = (arrayLike) ->
     Array::slice.call arrayLike, 0
 
-  @flattenElements = (elements, recurseRepeatables=true) ->
+  @flattenElements = (elements, recurseRepeatables=true, assignParent=false, parent=undefined) ->
     _.tap [], (flat) ->
       _.each elements, (element) ->
+        element.parent = parent if assignParent
+
         flat.push(element)
 
         recurse = true
         recurse = false if not recurseRepeatables and element.type is 'Repeatable'
 
         if recurse and element.elements
-          children = Utils.flattenElements(element.elements)
+          children = Utils.flattenElements(element.elements, recurseRepeatables, assignParent, element)
 
           Array.prototype.push.apply(flat, children)
+
+  @nearestRepeatable: (element) ->
+    iterator = element
+
+    while iterator
+      return iterator if iterator.type is 'Repeatable'
+
+      iterator = iterator.parent
+
+    null
 
   @valueForElement: (element, value) ->
     if Utils.isNumericElement(element)

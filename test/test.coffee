@@ -1195,17 +1195,45 @@ describe 'REPEATABLEVALUES', ->
   it 'returns a specific field out of a collection of repeatable items', ->
     $repeatable_field = variables.values.form_values['1337']
 
-    costs = REPEATABLEVALUES($repeatable_field, 'items', 'cost')
+    costs = REPEATABLEVALUES($repeatable_field, 'cost')
 
     costs.should.eql([1, 2, 3])
+
+  it 'returns a specific field out of a blank collection of repeatable items', ->
+    $repeatable_field = []
+
+    costs = REPEATABLEVALUES($repeatable_field, 'cost')
+
+    costs.should.eql([])
+
+  it 'returns no value if the data name of the field does not exist', ->
+    $repeatable_field = variables.values.form_values['1337']
+
+    costs = REPEATABLEVALUES($repeatable_field, 'does_not_exist')
+
+    shouldHaveNoValue(costs)
 
 describe 'REPEATABLESUM', ->
   it 'returns the sum of a specific numeric field within a repeatable field', ->
     $repeatable_field = variables.values.form_values['1337']
 
-    totalCost = REPEATABLESUM($repeatable_field, 'items', 'cost')
+    totalCost = REPEATABLESUM($repeatable_field, 'cost')
 
     totalCost.should.eql(6)
+
+  it 'returns the sum of a specific numeric field within a blank collection of repeatable items', ->
+    $repeatable_field = []
+
+    totalCost = REPEATABLESUM($repeatable_field, 'cost')
+
+    totalCost.should.be.NaN
+
+  it 'returns no value if the data name of the field does not exist', ->
+    $repeatable_field = variables.values.form_values['1337']
+
+    totalCost = REPEATABLESUM($repeatable_field, 'does_not_exist')
+
+    totalCost.should.be.NaN
 
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->

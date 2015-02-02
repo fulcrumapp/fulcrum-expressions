@@ -2292,14 +2292,6 @@
                     "nullable": ""
                 },
                 {
-                    "name": "repeatableDataName",
-                    "type": "String",
-                    "description": "The data name of the repeatable field for `repeatableVariable`",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                },
-                {
                     "name": "dataName",
                     "type": "String",
                     "description": "The data name of the field to extract from each repeatable item",
@@ -2309,7 +2301,7 @@
                 }
             ],
             "examples": [
-                "// returns [1,2,3]\nREPEATABLEVALUES($repeatable_field, 'items', 'cost')"
+                "// returns [1,2,3]\nREPEATABLEVALUES($repeatable_field, 'cost')"
             ],
             "returns": {
                 "type": "Array",
@@ -2331,14 +2323,6 @@
                     "nullable": ""
                 },
                 {
-                    "name": "repeatableDataName",
-                    "type": "String",
-                    "description": "The data name of the repeatable field for `repeatableVariable`",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                },
-                {
                     "name": "dataName",
                     "type": "String",
                     "description": "The data name of the field to extract from each repeatable item",
@@ -2348,7 +2332,7 @@
                 }
             ],
             "examples": [
-                "// returns 6\nREPEATABLESUM($repeatable_field, 'items', 'cost')"
+                "// returns 6\nREPEATABLESUM($repeatable_field, 'cost')"
             ],
             "returns": {
                 "type": "Number",
