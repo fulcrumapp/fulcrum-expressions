@@ -1305,7 +1305,12 @@ describe 'TIMEDIFF', ->
     TIMEDIFF('00:00', '00:01').should.be.exactly(1 / 60)
     TIMEDIFF('14:00', '18:00').should.be.exactly(4)
     TIMEDIFF('02:00', '01:00').should.be.exactly(23)
-    TIMEDIFF('02:00', '02:00').should.be.exactly(0)
+    TIMEDIFF('02:00', '02:00').should.be.exactly(24)
+    TIMEDIFF('22:00', '06:00').should.be.exactly(8)
+    TIMEDIFF('12:00', '19:00').should.be.exactly(7)
+    TIMEDIFF('23:59', '00:00').should.be.exactly(1 / 60)
+    TIMEDIFF('23:59', '00:01').should.be.exactly(2 / 60)
+    TIMEDIFF('00:00', '23:59').should.be.exactly(1439 / 60)
 
     TIMEDIFF('00:00', '00:01', 'minutes').should.be.exactly(1)
     TIMEDIFF('14:00', '18:00', 'minutes').should.be.exactly(4 * 60)

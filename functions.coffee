@@ -1071,10 +1071,13 @@ exports.TIMEDIFF = (startTime, endTime, format='hours') ->
 
   totalMinutes = (endMinutes - beginMinutes)
 
-  totalMinutes = if totalMinutes >= 0
-    totalMinutes
-  else
-    1440 + totalMinutes
+  totalMinutes =
+    if totalMinutes is 0
+      1440
+    else if totalMinutes > 0
+      totalMinutes
+    else
+      1440 + totalMinutes
 
   if format is 'hours'
     totalMinutes / 60
