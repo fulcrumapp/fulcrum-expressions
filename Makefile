@@ -5,8 +5,12 @@ all: build
 
 build:
 	mkdir -p dist
+	# Note: DO NOT pass --compress to uglifyjs. The Rhino JS interpreter on Android
+	# does not work well with the transformations it applies to the code. It results
+	# in a more complex (or, different) AST which results in StackOverflowError's while
+	# parsing the source.
 	browserify -t coffeeify --extension=".coffee" runtime.coffee | \
-		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --compress --mangle
+		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --mangle
 	./script/build-docs
 
 debug:
