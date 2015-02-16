@@ -80,6 +80,23 @@ exports.CHAR = (number) ->
   number = NUM(number)
   String.fromCharCode number
 
+exports.CHOICEVALUE = (field) ->
+  values = CHOICEVALUES(field)
+
+  return NO_VALUE unless _.isArray(values)
+  return NO_VALUE if values.length is 0
+
+  values[0]
+
+exports.CHOICEVALUES = (field) ->
+  return NO_VALUE unless field?.choice_values? or field?.other_values?
+
+  return [] if ISBLANK(field)
+
+  values = [].concat(field.choice_values).concat(field.other_values)
+
+  _.compact(values)
+
 CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
 
 exports.CLEAN = (text) ->

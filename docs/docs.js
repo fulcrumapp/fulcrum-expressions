@@ -109,6 +109,34 @@ function CEILING() {}
 function CHAR() {}
 
 
+////CHOICEVALUE
+
+/**
+ * CHOICEVALUE
+ * Returns the selected value for a choice field or classification field
+ * @param {Object} field The choice field or classification field
+ * @returns {String} the selected value
+ * @example
+ * // returns Red
+ * CHOICEVALUE($choice_field)
+ */
+function CHOICEVALUE() {}
+
+
+////CHOICEVALUES
+
+/**
+ * CHOICEVALUES
+ * Returns the selected values for a choice field or classification field
+ * @param {Object} field The choice field or classification field
+ * @returns {String} the selected value
+ * @example
+ * // returns [Red,Green,Blue]
+ * CHOICEVALUES($choice_field)
+ */
+function CHOICEVALUES() {}
+
+
 ////CLEAN
 
 /**
