@@ -96,7 +96,8 @@ class Runtime
 
       element = @elementsByKey[key]
 
-      state["$#{@dataNames[key]}"] = Utils.valueForElement(element, value)
+      if element and @dataNames[key]
+        state["$#{@dataNames[key]}"] = Utils.valueForElement(element, value)
 
     for name in @extraVariableNames
       state["$$#{name}"] = @[name]
