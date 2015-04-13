@@ -38,7 +38,7 @@ class DocumentationGenerator
       examples   = @generateExamples(func.examples)
 
       schema.markdown = """
-    ## #{func.name}
+    # #{func.name}
 
     #{description}
 
@@ -121,7 +121,7 @@ layout: docs
 category: expressions
 section: developers
 class: docs
-title: "Developers | Expressions | #{func.name}"
+title: "#{func.name} | Developers | Expressions"
 description: "#{@cleanDescription(func)}"
 developer: true
 permalink: /developers/expressions/#{func.name.toLowerCase()}/
