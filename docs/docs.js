@@ -1331,7 +1331,7 @@ function ODD() {}
 
 /**
  * ONCE
- * Returns a value once, given the current value. This is useful to perform a calculation only once, the first time it's evalulated.
+ * Returns a value once, given the current value. This is useful to perform a calculation only once, the first time it's evaluated.
  * @param {Number} value argument
  * @returns {Number}
  * @example

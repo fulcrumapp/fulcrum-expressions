@@ -2038,7 +2038,7 @@
             "name": "ONCE",
             "access": "",
             "virtual": false,
-            "description": "ONCE\nReturns a value once, given the current value. This is useful to perform a calculation only once, the first time it's evalulated.",
+            "description": "ONCE\nReturns a value once, given the current value. This is useful to perform a calculation only once, the first time it's evaluated.",
             "parameters": [
                 {
                     "name": "value",
