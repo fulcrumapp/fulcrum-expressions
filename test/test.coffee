@@ -300,6 +300,10 @@ describe 'DEGREES', ->
     DEGREES(NaN).should.be.NaN
     DEGREES(true).should.be.NaN
 
+describe 'EMAIL', ->
+  it 'returns the email', ->
+    EMAIL().should.eql 'test@example.com'
+
 describe 'EVEN', ->
   it 'returns number rounded up to the nearest even integer', ->
     EVEN(0).should.be.exactly(0)
@@ -1382,6 +1386,10 @@ describe 'MONTH', ->
     MONTH(new Date('2015/5/1 00:00:00')).should.be.exactly(5)
 
     shouldHaveNoValue(MONTH('not a date'))
+
+describe 'ROLE', ->
+  it 'returns the role name', ->
+    ROLE().should.eql 'Owner'
 
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->

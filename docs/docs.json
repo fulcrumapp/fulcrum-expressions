@@ -701,6 +701,20 @@
             }
         },
         {
+            "name": "EMAIL",
+            "access": "",
+            "virtual": false,
+            "description": "EMAIL\nReturns the email address of the current user",
+            "parameters": [],
+            "examples": [
+                "// returns test@example.com\nEMAIL()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "EVEN",
             "access": "",
             "virtual": false,
@@ -2458,6 +2472,20 @@
             "examples": [
                 "// returns DEFG\nRIGHT(\"ABCDEFG\", 4)",
                 "// returns 1\nRIGHT(\"000001\")"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "ROLE",
+            "access": "",
+            "virtual": false,
+            "description": "ROLE\nReturns the role name of the current user",
+            "parameters": [],
+            "examples": [
+                "// returns Owner\nROLE()"
             ],
             "returns": {
                 "type": "String",

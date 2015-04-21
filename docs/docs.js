@@ -451,6 +451,19 @@ function DEGREES() {}
 function DOLLAR() {}
 
 
+////EMAIL
+
+/**
+ * EMAIL
+ * Returns the email address of the current user
+ * @returns {String}
+ * @example
+ * // returns test@example.com
+ * EMAIL()
+ */
+function EMAIL() {}
+
+
 ////EVEN
 
 /**
@@ -1581,6 +1594,19 @@ function REPLACE() {}
  * RIGHT("000001")
  */
 function RIGHT() {}
+
+
+////ROLE
+
+/**
+ * ROLE
+ * Returns the role name of the current user
+ * @returns {String}
+ * @example
+ * // returns Owner
+ * ROLE()
+ */
+function ROLE() {}
 
 
 ////ROUND

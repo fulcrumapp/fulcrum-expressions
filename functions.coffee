@@ -267,6 +267,9 @@ exports.DOLLAR = (value, decimals=2, currency=null, language=null) ->
 
   FORMATNUMBER(value, language, options)
 
+exports.EMAIL = ->
+  CONFIG().userEmail ? NO_VALUE
+
 exports.EVEN = (value) ->
   value = NUM(value)
 
@@ -910,6 +913,9 @@ exports.RIGHT = (value, numberOfCharacters) ->
 
   value = value.toString()
   value.substring(value.length - numberOfCharacters)
+
+exports.ROLE = ->
+  CONFIG().userRoleName ? NO_VALUE
 
 exports.ROUND = (number, digits = 0) ->
   number = NUM(number)

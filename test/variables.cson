@@ -7,6 +7,8 @@ applicationVersion: '2.7.0'
 applicationBuild: '2162'
 recordStatus: 'approved'
 timeZone: 'America/New_York'
+userEmail: 'test@example.com'
+userRoleName: 'Owner'
 featureIsNew: true
 featureGeometry:
   type: 'Point'
