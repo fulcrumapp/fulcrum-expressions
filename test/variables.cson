@@ -7,7 +7,8 @@ applicationVersion: '2.7.0'
 applicationBuild: '2162'
 recordStatus: 'approved'
 timeZone: 'America/New_York'
-userEmail: 'test@example.com'
+userName: 'test@example.com'
+userFullName: 'John Smith'
 userRoleName: 'Owner'
 featureIsNew: true
 featureGeometry:

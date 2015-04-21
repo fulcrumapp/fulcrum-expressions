@@ -1150,6 +1150,12 @@ exports.UPPER = (value) ->
 
   value.toString().toUpperCase()
 
+exports.USERNAME = ->
+  CONFIG().userName ? NO_VALUE
+
+exports.USERFULLNAME = ->
+  CONFIG().userFullName ? NO_VALUE
+
 exports.VERSIONINFO = (separator=', ') ->
   _.compact([ DEVICEINFO(' '), PLATFORMINFO(' '), APPLICATIONINFO(' ') ]).join(separator)
 

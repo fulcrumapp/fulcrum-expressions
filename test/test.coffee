@@ -300,10 +300,6 @@ describe 'DEGREES', ->
     DEGREES(NaN).should.be.NaN
     DEGREES(true).should.be.NaN
 
-describe 'EMAIL', ->
-  it 'returns the email', ->
-    EMAIL().should.eql 'test@example.com'
-
 describe 'EVEN', ->
   it 'returns number rounded up to the nearest even integer', ->
     EVEN(0).should.be.exactly(0)
@@ -1412,6 +1408,14 @@ describe 'TIMEDIFF', ->
     shouldHaveNoValue(TIMEDIFF('2:00', '6:00'))
     shouldHaveNoValue(TIMEDIFF(new Date, null))
     shouldHaveNoValue(TIMEDIFF('2:00', undefined))
+
+describe 'USERFULLNAME', ->
+  it 'returns the user full name', ->
+    USERFULLNAME().should.eql 'John Smith'
+
+describe 'USERNAME', ->
+  it 'returns the username/email', ->
+    USERNAME().should.eql 'test@example.com'
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->
