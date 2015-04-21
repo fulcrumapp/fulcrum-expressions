@@ -94,7 +94,7 @@ class DocumentationGenerator
 
   generateIndex: (functions) ->
     titles = _.map functions, (func) =>
-      "### [#{func.name}](/developers/expressions/#{func.name.toLowerCase()})\n\n#{@getDescription(func)}"
+      "### [#{func.name}](/developers/expressions/#{func.name.toLowerCase()}/)\n\n#{@getDescription(func)}"
 
     """
 ---
