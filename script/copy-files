@@ -39,4 +39,4 @@ if web
 if site
   fs.remove(path.join(site, 'developers', 'expressions'))
   fs.mkdir(path.join(site, 'developers', 'expressions'))
-  copyFile('./docs/output/help', path.join(site, 'developers', 'expressions'))
+  copyFile('./docs/output/help', path.join(site, '_developers', 'expressions'))

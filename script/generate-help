@@ -38,7 +38,7 @@ class DocumentationGenerator
       examples   = @generateExamples(func.examples)
 
       schema.markdown = """
-    # #{func.name}
+    ## #{func.name}
 
     #{description}
 
@@ -98,9 +98,10 @@ class DocumentationGenerator
 
     """
 ---
-layout: docs
+layout: guide
 category: expressions
-section: developers
+section: expressions
+backto: expressions
 class: docs
 title: "Developers | Expressions"
 description: Expressions
@@ -119,11 +120,12 @@ permalink: /developers/expressions/
   helpFrontMatter: (func) ->
     """
 ---
-layout: docs
+layout: guide
 category: expressions
-section: developers
+section: expressions
+backto: expressions
 class: docs
-title: "#{func.name} | Developers | Expressions"
+title: "#{func.name}"
 description: "#{@cleanDescription(func)}"
 developer: true
 permalink: /developers/expressions/#{func.name.toLowerCase()}/
@@ -164,6 +166,6 @@ help  = generator.generateAppHelp(functions)
 _.each files, (file) ->
   fs.writeFileSync("./docs/output/help/#{file.name.toLowerCase()}.md", file.fullMarkdown)
 
-fs.writeFileSync("./docs/output/help/index.md", index)
+# fs.writeFileSync("./docs/output/help/index.md", index)
 
 fs.writeFileSync("./docs/output/functions.coffee", help)
