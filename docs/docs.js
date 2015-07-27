@@ -451,6 +451,19 @@ function DEGREES() {}
 function DOLLAR() {}
 
 
+////EMAIL
+
+/**
+ * EMAIL
+ * Returns the email address of the current user
+ * @returns {String}
+ * @example
+ * // returns test@example.com
+ * EMAIL()
+ */
+function EMAIL() {}
+
+
 ////EVEN
 
 /**
@@ -1987,19 +2000,6 @@ function UPPER() {}
  * USERFULLNAME()
  */
 function USERFULLNAME() {}
-
-
-////USERNAME
-
-/**
- * USERNAME
- * Returns the email address of the current user
- * @returns {String}
- * @example
- * // returns test@example.com
- * USERNAME()
- */
-function USERNAME() {}
 
 
 ////VERSIONINFO

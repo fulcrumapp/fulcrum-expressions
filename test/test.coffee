@@ -1363,6 +1363,10 @@ describe 'DAY', ->
 
     shouldHaveNoValue(DAY('not a date'))
 
+describe 'EMAIL', ->
+  it 'returns the email', ->
+    EMAIL().should.eql 'test@example.com'
+
 describe 'MONTH', ->
   it 'returns a month given a date', ->
     MONTH('2015/12/16').should.be.exactly(12)
@@ -1412,10 +1416,6 @@ describe 'TIMEDIFF', ->
 describe 'USERFULLNAME', ->
   it 'returns the user full name', ->
     USERFULLNAME().should.eql 'John Smith'
-
-describe 'USERNAME', ->
-  it 'returns the username/email', ->
-    USERNAME().should.eql 'test@example.com'
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->

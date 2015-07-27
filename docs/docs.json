@@ -701,6 +701,20 @@
             }
         },
         {
+            "name": "EMAIL",
+            "access": "",
+            "virtual": false,
+            "description": "EMAIL\nReturns the email address of the current user",
+            "parameters": [],
+            "examples": [
+                "// returns test@example.com\nEMAIL()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "EVEN",
             "access": "",
             "virtual": false,
@@ -3075,20 +3089,6 @@
             "parameters": [],
             "examples": [
                 "// returns John Smith\nUSERFULLNAME()"
-            ],
-            "returns": {
-                "type": "String",
-                "description": ""
-            }
-        },
-        {
-            "name": "USERNAME",
-            "access": "",
-            "virtual": false,
-            "description": "USERNAME\nReturns the email address of the current user",
-            "parameters": [],
-            "examples": [
-                "// returns test@example.com\nUSERNAME()"
             ],
             "returns": {
                 "type": "String",
