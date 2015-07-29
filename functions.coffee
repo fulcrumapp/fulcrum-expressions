@@ -866,6 +866,16 @@ exports.RANDBETWEEN = (low, high) ->
 
   low + Math.ceil((high - low + 1) * Math.random()) - 1
 
+exports.RECORDID = ->
+  CONFIG().recordID ? NO_VALUE
+
+exports.REPEATABLEID = ->
+  CONFIG().featureID ? NO_VALUE
+
+exports.REPEATABLENUMBER = ->
+  return NO_VALUE unless CONFIG().featureIndex?
+  CONFIG().featureIndex + 1
+
 exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
   dataElement = $$runtime.elementsByDataName[dataName]
 

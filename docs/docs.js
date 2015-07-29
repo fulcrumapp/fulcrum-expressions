@@ -1530,6 +1530,45 @@ function RAND() {}
 function RANDBETWEEN() {}
 
 
+////RECORDID
+
+/**
+ * RECORDID
+ * Returns the ID of the current record. This function will always return the top level record ID even when used inside a repeatable. To get the repeatable item ID, use the `REPEATABLEID` function.
+ * @returns {String} The ID of the current record
+ * @example
+ * // returns 96eb35f5-13d8-4666-b188-8108019d0984
+ * RECORDID()
+ */
+function RECORDID() {}
+
+
+////REPEATABLEID
+
+/**
+ * REPEATABLEID
+ * Returns the ID of the current repeatable item.
+ * @returns {String} The ID of the current repeatable item
+ * @example
+ * // returns 859fdb06-4e7d-4bed-b1d2-af168db71522
+ * REPEATABLEID()
+ */
+function REPEATABLEID() {}
+
+
+////REPEATABLENUMBER
+
+/**
+ * REPEATABLENUMBER
+ * Returns the sequential number of a repeatable item.
+ * @returns {Number} The ordinal of this repeatable item within the repeatable
+ * @example
+ * // returns 4
+ * REPEATABLENUMBER()
+ */
+function REPEATABLENUMBER() {}
+
+
 ////REPEATABLEVALUES
 
 /**

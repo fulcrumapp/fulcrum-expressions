@@ -1387,6 +1387,18 @@ describe 'MONTH', ->
 
     shouldHaveNoValue(MONTH('not a date'))
 
+describe 'RECORDID', ->
+  it 'returns the record ID', ->
+    RECORDID().should.eql '96eb35f5-13d8-4666-b188-8108019d0984'
+
+describe 'REPEATABLEID', ->
+  it 'returns the repeatable item ID', ->
+    REPEATABLEID().should.eql '859fdb06-4e7d-4bed-b1d2-af168db71522'
+
+describe 'REPEATABLENUMBER', ->
+  it 'returns the repeatable item number', ->
+    REPEATABLENUMBER().should.eql 4
+
 describe 'ROLE', ->
   it 'returns the role name', ->
     ROLE().should.eql 'Owner'
