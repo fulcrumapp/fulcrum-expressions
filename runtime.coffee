@@ -68,6 +68,8 @@ class Runtime
     'application',
     'applicationVersion',
     'applicationBuild',
+    'userEmail',
+    'userRoleName',
     'recordStatus',
     'recordSystemCreatedAt',
     'recordSystemUpdatedAt',

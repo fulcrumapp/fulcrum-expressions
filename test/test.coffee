@@ -1363,6 +1363,10 @@ describe 'DAY', ->
 
     shouldHaveNoValue(DAY('not a date'))
 
+describe 'EMAIL', ->
+  it 'returns the email', ->
+    EMAIL().should.eql 'test@example.com'
+
 describe 'MONTH', ->
   it 'returns a month given a date', ->
     MONTH('2015/12/16').should.be.exactly(12)
@@ -1382,6 +1386,22 @@ describe 'MONTH', ->
     MONTH(new Date('2015/5/1 00:00:00')).should.be.exactly(5)
 
     shouldHaveNoValue(MONTH('not a date'))
+
+describe 'RECORDID', ->
+  it 'returns the record ID', ->
+    RECORDID().should.eql '96eb35f5-13d8-4666-b188-8108019d0984'
+
+describe 'REPEATABLEID', ->
+  it 'returns the repeatable item ID', ->
+    REPEATABLEID().should.eql '859fdb06-4e7d-4bed-b1d2-af168db71522'
+
+describe 'REPEATABLENUMBER', ->
+  it 'returns the repeatable item number', ->
+    REPEATABLENUMBER().should.eql 4
+
+describe 'ROLE', ->
+  it 'returns the role name', ->
+    ROLE().should.eql 'Owner'
 
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
@@ -1404,6 +1424,10 @@ describe 'TIMEDIFF', ->
     shouldHaveNoValue(TIMEDIFF('2:00', '6:00'))
     shouldHaveNoValue(TIMEDIFF(new Date, null))
     shouldHaveNoValue(TIMEDIFF('2:00', undefined))
+
+describe 'USERFULLNAME', ->
+  it 'returns the user full name', ->
+    USERFULLNAME().should.eql 'John Smith'
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->

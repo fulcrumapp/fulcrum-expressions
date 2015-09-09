@@ -5,8 +5,14 @@ platformVersion: '8.1'
 application: 'Fulcrum'
 applicationVersion: '2.7.0'
 applicationBuild: '2162'
+recordID: '96eb35f5-13d8-4666-b188-8108019d0984'
 recordStatus: 'approved'
 timeZone: 'America/New_York'
+userEmail: 'test@example.com'
+userFullName: 'John Smith'
+userRoleName: 'Owner'
+featureID: '859fdb06-4e7d-4bed-b1d2-af168db71522'
+featureIndex: 3
 featureIsNew: true
 featureGeometry:
   type: 'Point'

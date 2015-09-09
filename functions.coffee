@@ -267,6 +267,9 @@ exports.DOLLAR = (value, decimals=2, currency=null, language=null) ->
 
   FORMATNUMBER(value, language, options)
 
+exports.EMAIL = ->
+  CONFIG().userEmail ? NO_VALUE
+
 exports.EVEN = (value) ->
   value = NUM(value)
 
@@ -863,6 +866,16 @@ exports.RANDBETWEEN = (low, high) ->
 
   low + Math.ceil((high - low + 1) * Math.random()) - 1
 
+exports.RECORDID = ->
+  CONFIG().recordID ? NO_VALUE
+
+exports.REPEATABLEID = ->
+  CONFIG().featureID ? NO_VALUE
+
+exports.REPEATABLENUMBER = ->
+  return NO_VALUE unless CONFIG().featureIndex?
+  CONFIG().featureIndex + 1
+
 exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
   dataElement = $$runtime.elementsByDataName[dataName]
 
@@ -910,6 +923,9 @@ exports.RIGHT = (value, numberOfCharacters) ->
 
   value = value.toString()
   value.substring(value.length - numberOfCharacters)
+
+exports.ROLE = ->
+  CONFIG().userRoleName ? NO_VALUE
 
 exports.ROUND = (number, digits = 0) ->
   number = NUM(number)
@@ -1143,6 +1159,9 @@ exports.UPPER = (value) ->
   return NO_VALUE if _.isObject(value)
 
   value.toString().toUpperCase()
+
+exports.USERFULLNAME = ->
+  CONFIG().userFullName ? NO_VALUE
 
 exports.VERSIONINFO = (separator=', ') ->
   _.compact([ DEVICEINFO(' '), PLATFORMINFO(' '), APPLICATIONINFO(' ') ]).join(separator)

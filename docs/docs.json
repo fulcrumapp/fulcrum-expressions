@@ -701,6 +701,20 @@
             }
         },
         {
+            "name": "EMAIL",
+            "access": "",
+            "virtual": false,
+            "description": "EMAIL\nReturns the email address of the current user",
+            "parameters": [],
+            "examples": [
+                "// returns test@example.com\nEMAIL()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "EVEN",
             "access": "",
             "virtual": false,
@@ -2324,6 +2338,48 @@
             }
         },
         {
+            "name": "RECORDID",
+            "access": "",
+            "virtual": false,
+            "description": "RECORDID\nReturns the ID of the current record. This function will always return the top level record ID even when used inside a repeatable. To get the repeatable item ID, use the `REPEATABLEID` function.",
+            "parameters": [],
+            "examples": [
+                "// returns 96eb35f5-13d8-4666-b188-8108019d0984\nRECORDID()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": "The ID of the current record"
+            }
+        },
+        {
+            "name": "REPEATABLEID",
+            "access": "",
+            "virtual": false,
+            "description": "REPEATABLEID\nReturns the ID of the current repeatable item.",
+            "parameters": [],
+            "examples": [
+                "// returns 859fdb06-4e7d-4bed-b1d2-af168db71522\nREPEATABLEID()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": "The ID of the current repeatable item"
+            }
+        },
+        {
+            "name": "REPEATABLENUMBER",
+            "access": "",
+            "virtual": false,
+            "description": "REPEATABLENUMBER\nReturns the sequential number of a repeatable item.",
+            "parameters": [],
+            "examples": [
+                "// returns 4\nREPEATABLENUMBER()"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": "The ordinal of this repeatable item within the repeatable"
+            }
+        },
+        {
             "name": "REPEATABLEVALUES",
             "access": "",
             "virtual": false,
@@ -2458,6 +2514,20 @@
             "examples": [
                 "// returns DEFG\nRIGHT(\"ABCDEFG\", 4)",
                 "// returns 1\nRIGHT(\"000001\")"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "ROLE",
+            "access": "",
+            "virtual": false,
+            "description": "ROLE\nReturns the role name of the current user",
+            "parameters": [],
+            "examples": [
+                "// returns Owner\nROLE()"
             ],
             "returns": {
                 "type": "String",
@@ -3047,6 +3117,20 @@
             ],
             "examples": [
                 "// returns EMPIRE STATE BUILDING\nUPPER(\"Empire State Building\")"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "USERFULLNAME",
+            "access": "",
+            "virtual": false,
+            "description": "USERFULLNAME\nReturns the full name of the current user",
+            "parameters": [],
+            "examples": [
+                "// returns John Smith\nUSERFULLNAME()"
             ],
             "returns": {
                 "type": "String",
