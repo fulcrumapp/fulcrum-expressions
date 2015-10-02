@@ -4,7 +4,12 @@ This implements the runtime for javascript expressions in Fulcrum.
 
 ### Setup
 ```sh
+# install browserify and coffee-script globally
 npm install -g browserify coffee-script
+
+# cd to the fulcrum-expressions directory
+# install other modules locally (--link makes coffee-script link to the -g)
+npm install --link coffeeify jsdoc object-inspect uglify-js underscore underscore.string marked html-entities coffee-script mocha should season intl
 ```
 
 ### Build
