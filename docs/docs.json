@@ -135,7 +135,7 @@
                     "name": "factor",
                     "type": "Number",
                     "description": "The number to whose multiples value will be rounded.",
-                    "default": 1,
+                    "default": "1",
                     "optional": true,
                     "nullable": ""
                 }
@@ -669,7 +669,7 @@
                     "name": "decimals",
                     "type": "Number",
                     "description": "the number of decimal places (default is 2)",
-                    "default": 2,
+                    "default": "2",
                     "optional": true,
                     "nullable": ""
                 },
@@ -1550,7 +1550,7 @@
                     "name": "number_of_characters",
                     "type": "Number",
                     "description": "The number of characters to return from the left side of the string.",
-                    "default": 1,
+                    "default": "1",
                     "optional": true,
                     "nullable": ""
                 }
@@ -1643,7 +1643,7 @@
                     "name": "base",
                     "type": "Number",
                     "description": "The base to use for the logarithm calculation.",
-                    "default": 10,
+                    "default": "10",
                     "optional": true,
                     "nullable": ""
                 }
@@ -2506,7 +2506,7 @@
                     "name": "number_of_characters",
                     "type": "Number",
                     "description": "The number of characters to return from the right side of the string.",
-                    "default": 1,
+                    "default": "1",
                     "optional": true,
                     "nullable": ""
                 }
@@ -2702,7 +2702,7 @@
                     "name": "show",
                     "type": "Boolean",
                     "description": "Show full error messages. This can help diagnose problems in expressions on the mobile device.",
-                    "default": true,
+                    "default": "true",
                     "optional": true,
                     "nullable": ""
                 }

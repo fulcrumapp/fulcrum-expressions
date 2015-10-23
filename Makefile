@@ -23,6 +23,7 @@ docs:
 
 help:
 	mkdir -p docs/output/help
+	mkdir -p docs/output/help/reference
 	./script/generate-help
 
 copy:

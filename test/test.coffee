@@ -1,4 +1,4 @@
-# global.Intl = require 'intl'
+global.Intl = require 'intl'
 
 path = require 'path'
 CSON = require 'season'

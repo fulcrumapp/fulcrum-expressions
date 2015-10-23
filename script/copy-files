@@ -7,7 +7,7 @@ path = require 'path'
 android = process.env.FULCRUM_ANDROID
 ios     = process.env.FULCRUM_IOS
 web     = process.env.FULCRUM_WEB
-site    = process.env.FULCRUM_SITE
+site    = process.env.FULCRUM_DEV_SITE
 
 if not android and not ios and not web and not site
    console.error """
@@ -15,7 +15,7 @@ if not android and not ios and not web and not site
    FULCRUM_ANDROID
    FULCRUM_IOS
    FULCRUM_WEB
-   FULCRUM_SITE
+   FULCRUM_DEV_SITE
    """
 
    process.exit(1)
@@ -37,6 +37,6 @@ if web
   copyFile('./docs/output/functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'expression_functions.js.coffee'))
 
 if site
-  fs.remove(path.join(site, 'developers', 'expressions'))
-  fs.mkdir(path.join(site, 'developers', 'expressions'))
-  copyFile('./docs/output/help', path.join(site, '_developers', 'expressions'))
+  fs.remove(path.join(site, '_expressions', 'reference'))
+  fs.mkdir(path.join(site, '_expressions', 'reference'))
+  copyFile('./docs/output/help', path.join(site, '_expressions'))

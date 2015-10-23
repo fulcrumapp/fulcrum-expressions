@@ -94,19 +94,16 @@ class DocumentationGenerator
 
   generateIndex: (functions) ->
     titles = _.map functions, (func) =>
-      "### [#{func.name}](/developers/expressions/#{func.name.toLowerCase()}/)\n\n#{@getDescription(func)}"
+      "### [#{func.name}](/expressions/reference/#{func.name.toLowerCase()}/)\n\n#{@getDescription(func)}"
 
     """
 ---
-layout: guide
-category: expressions
+layout: default
 section: expressions
-backto: expressions
-class: docs
-title: "Developers | Expressions"
-description: Expressions
-developer: true
-permalink: /developers/expressions/
+order: 2
+title: "Function Reference"
+description: "Function reference for calculation fields"
+category: section
 ---
 
 # Calculation Expressions
@@ -120,15 +117,12 @@ permalink: /developers/expressions/
   helpFrontMatter: (func) ->
     """
 ---
-layout: guide
-category: expressions
+layout: default
 section: expressions
-backto: expressions
-class: docs
 title: "#{func.name}"
 description: "#{@cleanDescription(func)}"
-developer: true
-permalink: /developers/expressions/#{func.name.toLowerCase()}/
+category: section
+permalink: /expressions/reference/#{func.name.toLowerCase()}/
 ---
 """
 
@@ -164,8 +158,8 @@ index = generator.generateIndex(functions)
 help  = generator.generateAppHelp(functions)
 
 _.each files, (file) ->
-  fs.writeFileSync("./docs/output/help/#{file.name.toLowerCase()}.md", file.fullMarkdown)
+  fs.writeFileSync("./docs/output/help/reference/#{file.name.toLowerCase()}.md", file.fullMarkdown)
 
-# fs.writeFileSync("./docs/output/help/index.md", index)
+fs.writeFileSync("./docs/output/help/reference.md", index)
 
 fs.writeFileSync("./docs/output/functions.coffee", help)
