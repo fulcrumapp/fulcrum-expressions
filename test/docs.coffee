@@ -8,7 +8,7 @@ spawnSync = require('child_process').spawnSync or require('spawn-sync')
 
 spawnSync('make', ['docs'])
 
-global.Intl = require 'intl'
+# global.Intl = require 'intl'
 
 DIST = process.env.DIST or false
 
