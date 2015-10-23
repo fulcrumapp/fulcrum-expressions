@@ -1938,6 +1938,49 @@ function T() {}
  * @example
  * // returns 23
  * TIMEDIFF('02:00', '01:00')
+ * @example
+ * // returns 47 minutes
+ * // This returns the time elapsed in the format '__ hours __ minutes'
+ * // (or '__ hours', '1 hour __ minutes', etc.)
+ * // Other tests:
+ * // start_time => '03:30', stop_stop => '04:30', returns '1 hour'
+ * // start_time => '02:15', stop_stop => '03:16', returns '1 hour 1 minute'
+ * // start_time => '01:00', stop_stop => '01:00', returns '24 hours'
+ *
+ * var time = TIMEDIFF('09:22', '10:09', 'minutes');
+ * var hours = FLOOR((time / 60), 1);
+ * var minutes = time % 60;
+ *
+ * if ( hours < 1 && minutes < 1 ) {
+ *     SETRESULT('N/A');
+ * }
+ * else if ( hours == 1 && minutes < 1 ) {
+ *     SETRESULT('1 hour');
+ * }
+ * else if ( hours > 1 && minutes < 1 ) {
+ *     SETRESULT(hours + ' hours');
+ * }
+ * else if ( hours < 1 && minutes == 1 ) {
+ *     SETRESULT('1 minute');
+ * }
+ * else if ( hours == 1 && minutes == 1 ) {
+ *     SETRESULT('1 hour 1 minute');
+ * }
+ * else if ( hours > 1 && minutes == 1 ) {
+ *     SETRESULT(hours + ' hours 1 minute');
+ * }
+ * else if ( hours < 1 && minutes > 1 ) {
+ *     SETRESULT(minutes + ' minutes');
+ * }
+ * else if ( hours == 1 && minutes > 1 ) {
+ *     SETRESULT('1 hour ' + minutes + ' minutes');
+ * }
+ * else if ( hours > 1 && minutes > 1 ) {
+ *     SETRESULT(hours + ' hours ' + minutes + ' minutes');
+ * }
+ * else {
+ *     SETRESULT('');
+ * }
  */
 function TIMEDIFF() {}
 

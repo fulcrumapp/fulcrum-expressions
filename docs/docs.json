@@ -135,7 +135,7 @@
                     "name": "factor",
                     "type": "Number",
                     "description": "The number to whose multiples value will be rounded.",
-                    "default": "1",
+                    "default": 1,
                     "optional": true,
                     "nullable": ""
                 }
@@ -669,7 +669,7 @@
                     "name": "decimals",
                     "type": "Number",
                     "description": "the number of decimal places (default is 2)",
-                    "default": "2",
+                    "default": 2,
                     "optional": true,
                     "nullable": ""
                 },
@@ -1550,7 +1550,7 @@
                     "name": "number_of_characters",
                     "type": "Number",
                     "description": "The number of characters to return from the left side of the string.",
-                    "default": "1",
+                    "default": 1,
                     "optional": true,
                     "nullable": ""
                 }
@@ -1643,7 +1643,7 @@
                     "name": "base",
                     "type": "Number",
                     "description": "The base to use for the logarithm calculation.",
-                    "default": "10",
+                    "default": 10,
                     "optional": true,
                     "nullable": ""
                 }
@@ -2506,7 +2506,7 @@
                     "name": "number_of_characters",
                     "type": "Number",
                     "description": "The number of characters to return from the right side of the string.",
-                    "default": "1",
+                    "default": 1,
                     "optional": true,
                     "nullable": ""
                 }
@@ -2702,7 +2702,7 @@
                     "name": "show",
                     "type": "Boolean",
                     "description": "Show full error messages. This can help diagnose problems in expressions on the mobile device.",
-                    "default": "true",
+                    "default": true,
                     "optional": true,
                     "nullable": ""
                 }
@@ -3013,7 +3013,8 @@
             "examples": [
                 "// returns 8\nTIMEDIFF('09:00', '17:00')",
                 "// returns 120\nTIMEDIFF('09:00', '11:00', 'minutes')",
-                "// returns 23\nTIMEDIFF('02:00', '01:00')"
+                "// returns 23\nTIMEDIFF('02:00', '01:00')",
+                "// returns 47 minutes\n// This returns the time elapsed in the format '__ hours __ minutes'\n// (or '__ hours', '1 hour __ minutes', etc.)\n// Other tests:\n// start_time => '03:30', stop_stop => '04:30', returns '1 hour'\n// start_time => '02:15', stop_stop => '03:16', returns '1 hour 1 minute'\n// start_time => '01:00', stop_stop => '01:00', returns '24 hours'\n\nvar time = TIMEDIFF('09:22', '10:09', 'minutes');\nvar hours = FLOOR((time / 60), 1);\nvar minutes = time % 60;\n\nif ( hours < 1 && minutes < 1 ) {\n    SETRESULT('N/A');\n}\nelse if ( hours == 1 && minutes < 1 ) {\n    SETRESULT('1 hour');\n}\nelse if ( hours > 1 && minutes < 1 ) {\n    SETRESULT(hours + ' hours');\n}\nelse if ( hours < 1 && minutes == 1 ) {\n    SETRESULT('1 minute');\n}\nelse if ( hours == 1 && minutes == 1 ) {\n    SETRESULT('1 hour 1 minute');\n}\nelse if ( hours > 1 && minutes == 1 ) {\n    SETRESULT(hours + ' hours 1 minute');\n}\nelse if ( hours < 1 && minutes > 1 ) {\n    SETRESULT(minutes + ' minutes');\n}\nelse if ( hours == 1 && minutes > 1 ) {\n    SETRESULT('1 hour ' + minutes + ' minutes');\n}\nelse if ( hours > 1 && minutes > 1 ) {\n    SETRESULT(hours + ' hours ' + minutes + ' minutes');\n}\nelse {\n    SETRESULT('');\n}"
             ],
             "returns": {
                 "type": "Number",
