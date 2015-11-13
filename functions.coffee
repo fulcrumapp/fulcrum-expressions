@@ -6,6 +6,8 @@ _.mixin(_.str.exports())
 
 inspect = require('object-inspect')
 
+qs = require('query-string')
+
 Utils = require('./utils')
 
 toArray = Utils.toArray
@@ -38,6 +40,21 @@ exports.ACOSH = (number) ->
   number = NUM(number)
 
   Math.log(number + Math.sqrt(number * number - 1))
+
+exports.ALERT = ->
+  title = null
+  message = arguments[0]
+
+  if arguments.length > 1
+    title = arguments[0]
+    message = arguments[1]
+
+  result =
+    type: 'message'
+    title: if title? then title.toString() else null
+    message: if message? then message.toString() else null
+
+  $$runtime.results.push(result)
 
 exports.AND = ->
   _.find(toArray(arguments), (item) -> not item) is undefined
@@ -282,6 +299,13 @@ exports.EXACT = (value1, value2) ->
 
 exports.EXP = MATH_FUNC(Math.exp)
 
+exports.FIELD = (dataName) ->
+  element = $$runtime.elementsByDataName[dataName]
+
+  return NO_VALUE unless element
+
+  element
+
 exports.MEMOIZED_FACT = []
 
 exports.FACT = (value) ->
@@ -486,6 +510,43 @@ exports.GCD = ->
 exports.GETRESULT = ->
   $$runtime.$$result
 
+exports.GETURL = (options, callback) ->
+  REQUEST(options, callback)
+
+exports.REQUEST = (options, callback) ->
+  unless _.isFunction(callback)
+    return callback(new Error('callback must be provided'))
+
+  if _.isString(options)
+    options = { url: options }
+
+  options.method  ?= 'GET'
+  options.headers ?= {}
+  options.followRedirect ?= true
+
+  return NO_VALUE unless _.isString(options.url)
+
+  if _.isObject(options.qs)
+    queryString = qs.stringify(options.qs)
+
+    if options.url.indexOf('?') < 0
+      queryString = '?' + queryString
+
+    options.url += queryString
+
+  if options.json?
+    options.headers['Content-Type'] = 'application/json'
+
+    unless _.isString(options.json)
+      options.body = JSON.stringify(options.json)
+
+  options.method  = 'GET' unless _.isString(options.method)
+  options.headers = {}    unless _.isObject(options.headers)
+  options.body    = null  unless _.isString(options.body)
+  options.followRedirect = !!options.followRedirect
+
+  HostFunctions.httpRequest(JSON.stringify(options), callback)
+
 exports.GROUPINGSEPARATOR = ->
   Config.groupingSeparator or Defaults.groupingSeparator
 
@@ -508,6 +569,26 @@ exports.INSPECT = (value) ->
   inspect(value)
 
 exports.INT = exports.FLOOR
+
+exports.INVALID = ->
+  key = null
+  message = null
+
+  if arguments.length > 1
+    element = FIELD(arguments[0])
+
+    key = element?.key or arguments[0].toString()
+
+    message = arguments[1].toString()
+  else if arguments.length is 1
+    message = arguments[0].toString()
+
+  result =
+    type: 'validation'
+    key: key
+    message: message
+
+  $$runtime.results.push(result)
 
 exports.ISBLANK = (value) ->
   return true unless value?
@@ -782,6 +863,11 @@ exports.ODD = (value) ->
 exports.ONCE = (value) ->
   $$runtime.$$currentValue ? value
 
+exports.OPENURL = (value) ->
+  return NO_VALUE unless _.isString(value)
+
+  $$runtime.results.push(type: 'open', value: JSON.stringify(value))
+
 exports.OR = ->
   _.find(toArray(arguments), (item) -> item) isnt undefined
 
@@ -968,8 +1054,126 @@ exports.SEARCH = (needle, haystack, startPosition) ->
 
   index + 1
 
+exports.SETCHOICEFILTER = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, choice_filter: if value? then value else null)
+
+exports.SETCHOICES = (dataName, value) ->
+  # TODO(zhm) throw some kind of error here if the param is wrong
+  return NO_VALUE unless value is null or _.isArray(value)
+
+  choices = null
+
+  if value
+    choices = []
+
+    for choice in value
+      switch true
+        when _.isString(choice)
+          choices.push(label: choice, value: choice)
+
+        when _.isNumber(choice)
+          choices.push(label: choice.toString(), value: choice.toString())
+
+        when _.isArray(choice)
+          if choice.length > 1
+            choices.push(label: choice[0], value: choice[1])
+          else if choice.length is 1
+            choices.push(label: choice[0], value: choice[0])
+
+        when _.isObject(choice)
+          choices.push(label: choice.label, value: choice.value or choice.label)
+
+  SETFORMATTRIBUTES(dataName, choices: choices)
+
+CONFIGURATION_ATTRIBUTES = [
+  'auto_populate_location'
+  'auto_populate_minimum_accuracy'
+  'photo_quality'
+  'video_quality'
+  'allow_photo_gallery'
+  'allow_video_gallery'
+  'allow_draft_records'
+  'allow_manual_location'
+  'warn_on_location_accuracy'
+  'title'
+]
+
+exports.SETCONFIGURATION = (settings) ->
+  for attributeName, value of settings
+    continue unless _.contains(CONFIGURATION_ATTRIBUTES, attributeName)
+
+    value = if value? then JSON.stringify(value) else null
+
+    result =
+      type: 'configure'
+      attribute: attributeName.toString()
+      value: value
+
+    $$runtime.results.push(result)
+
+exports.SETDESCRIPTION = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, description: if value? then value.toString() else null)
+
+exports.SETDISABLED = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, disabled: if value? then !!value else null)
+
+exports.SETHIDDEN = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, hidden: if value? then !!value else null)
+
+exports.SETLABEL = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, label: if value? then value.toString() else null)
+
+exports.SETMAXLENGTH = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, max_length: if value? then +value else null)
+
+exports.SETMINLENGTH = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, min_length: if value? then +value else null)
+
+exports.SETREQUIRED = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, required: if value? then !!value else null)
+
 exports.SETRESULT = (result) ->
   $$runtime.$$result = result
+
+exports.SETVALUE = (dataName, value) ->
+  element = FIELD(dataName)
+
+  result =
+    type: 'set-value'
+    key: element?.key or dataName
+    value: JSON.stringify(value)
+
+  $$runtime.results.push(result)
+
+FORM_ATTRIBUTES = [
+  'label'
+  'description'
+  'required'
+  'hidden'
+  'disabled'
+  'min_length'
+  'max_length'
+  'choices'
+  'choice_filter'
+]
+
+exports.SETFORMATTRIBUTES = (dataName, attributes) ->
+  element = FIELD(dataName)
+
+  return NO_VALUE unless element
+
+  for attributeName, value of attributes
+    continue unless _.contains(FORM_ATTRIBUTES, attributeName)
+
+    value = if value? then JSON.stringify(value) else null
+
+    result =
+      type: 'update-element'
+      key: element.key
+      attribute: attributeName.toString()
+      value: value
+
+    $$runtime.results.push(result)
 
 exports.SHOWERRORS = (showErrors=true) ->
   $$runtime.showErrors = showErrors
@@ -1179,13 +1383,14 @@ exports.X_ISNEW = ->
 exports.X_ISUPDATE = ->
   not X_ISNEW()
 
-
-
 hostFunctionExists = (name) ->
   _.isFunction($$runtime["$$#{name}"])
 
 hostFunctionCall = (name, args) ->
   $$runtime["$$#{name}"].apply($$runtime, args)
+
+hostAsyncFunctionCall = (name, args, callback) ->
+  $$runtime.invokeAsync $$runtime["$$#{name}"], args, callback
 
 HostFunctions = host = {}
 
@@ -1197,5 +1402,13 @@ host.formatNumber = (number, language, options) ->
     nf.format(number)
   else
     '' + number
+
+host.httpRequest = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('httpRequest')
+    hostAsyncFunctionCall('httpRequest', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
 
 module.exports = exports

@@ -25,6 +25,16 @@ class Runtime
 
   values: {}
 
+  hooks: {}
+
+  event: {}
+
+  events:
+    onChange: {}
+    onClick: {}
+
+  script: null
+
   customVariables: {}
 
   locale: @defaultLocale
@@ -50,6 +60,10 @@ class Runtime
   featureIsNew: true
 
   showErrors: false
+
+  asyncCallbacks: {}
+
+  asyncCount: 0
 
   extraVariableNames: [
     'locale',
@@ -86,8 +100,16 @@ class Runtime
     'featureGeometry'
   ]
 
+  clearValues: ->
+    # Clear the values so that the references from the `with` statements remain
+    # on the same root object. If we create a new @variables it won't stay the same
+    # across executions. This is so the $field variables work in the form-level scripts.
+    delete @variables[prop] for prop of @variables
+
   setupValues: ->
-    state = @variables = {}
+    @clearValues()
+
+    state = @variables
     names = @dataNames
 
     for key of names
@@ -121,10 +143,68 @@ class Runtime
       @elementsByDataName[element.data_name] = element
       @dataNames[element.key] = element.data_name
 
+    @initializeScript()
+
+  invokeAsync: (func, args, callback) ->
+    id = ++@asyncCount
+
+    @asyncCallbacks[id] = callback
+
+    func.apply(@, args.concat([id]))
+
+  finishAsync: ->
+    id = +@callbackID
+
+    callback = @asyncCallbacks[id]
+
+    delete @asyncCallbacks[id]
+
+    $$runtime.results = []
+
+    callback.apply(@, @callbackArguments)
+
+    $$runtime.results
+
+  initializeScript: ->
+    return unless _.isString(@script)
+
+    # setup the @variables object with empty variables
+    @setupValues()
+
+    `with (this.variables) { eval(this.script) }`
+
+    return
+
+  hook: (name, field) ->
+    if name is 'onChange'
+      @events.onChange[field]
+    else if name is 'onClick'
+      @events.onClick[field]
+    else
+      @events[name]
+
+  trigger: ->
+    hook = @hook(@event.event, @event.field)
+
+    return [] unless _.isFunction(hook)
+
+    @setupValues()
+
+    $$runtime.results = []
+
+    result = hook.call(@, @event)
+
+    $$runtime.results
+
   evaluate: ->
     @setupValues()
 
-    @results = _.map @expressions, (context) => @evaluateExpression(context)
+    $$runtime.results = []
+
+    for context in @expressions
+      $$runtime.results.push(@evaluateExpression(context))
+
+    $$runtime.results
 
   evaluateExpression: (context) ->
     variables = @variables
@@ -179,7 +259,7 @@ class Runtime
     else
       err = null
 
-    { key: key, value: stringValue, error: err }
+    { type: 'calculation', key: key, value: stringValue, error: err }
 
   formatValue: (value) ->
     if _.isUndefined(value)
@@ -210,9 +290,11 @@ class Runtime
       @global = window
 
     # global exports
-    @global.$$runtime = @
-    @global.$$prepare = @prepare.bind(@)
+    @global.$$runtime  = @
+    @global.$$prepare  = @prepare.bind(@)
     @global.$$evaluate = @evaluate.bind(@)
+    @global.$$trigger  = @trigger.bind(@)
+    @global.$$finishAsync = @finishAsync.bind(@)
 
   setupFunctions: ->
     @functions ||= {}

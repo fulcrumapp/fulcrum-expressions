@@ -17,6 +17,7 @@
   "license": "BSD",
   "dependencies": {
     "object-inspect": "^1.0.0",
+    "query-string": "^3.0.0",
     "underscore": "^1.7.0",
     "underscore.string": "^2.4.0"
   },
