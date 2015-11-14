@@ -1135,6 +1135,18 @@ exports.SETREQUIRED = (dataName, value) ->
 exports.SETRESULT = (result) ->
   $$runtime.$$result = result
 
+exports.SETTIMEOUT = (callback, timeout) ->
+  HostFunctions.setTimeout(callback, timeout)
+
+exports.CLEARTIMEOUT = (id) ->
+  HostFunctions.clearTimeout(id)
+
+exports.SETINTERVAL = (callback, interval) ->
+  HostFunctions.setInterval(callback, interval)
+
+exports.CLEARINTERVAL = (id) ->
+  HostFunctions.clearInterval(id)
+
 exports.SETVALUE = (dataName, value) ->
   element = FIELD(dataName)
 
@@ -1410,5 +1422,51 @@ host.httpRequest = (options, callback) ->
     hostAsyncFunctionCall('httpRequest', args, callback)
   else
     callback(new Error('Not Supported'), null, null)
+
+host.timeouts = {}
+host.intervals = {}
+
+host.nextTimeoutID = 0
+host.nextIntervalID = 0
+
+host.clearTimeout = (id) ->
+  delete host.timeouts[id]
+
+host.setTimeout = (callback, timeout) ->
+  args = [timeout]
+
+  if setTimeout?
+    return setTimeout(callback, timeout)
+  else if hostFunctionExists('setTimeout')
+    id = ++host.nextTimeoutID
+
+    wrapper = host.timeouts[id] = ->
+      if host.timeouts[id]?
+        delete host.timeouts[id]
+        callback()
+
+    hostAsyncFunctionCall('setTimeout', args, host.timeouts[id])
+
+    return id
+
+host.clearInterval = (id) ->
+  if host.intervals[id]?
+    host.clearTimeout(host.intervals[id])
+    delete host.intervals[id]
+
+host.setInterval = (callback, interval) ->
+  if setInterval?
+    return setInterval(callback, interval)
+  else if hostFunctionExists('setTimeout')
+    id = ++host.nextIntervalID
+
+    wrapper = ->
+      if host.intervals[id]?
+        host.intervals[id] = host.setTimeout(wrapper, interval)
+        callback()
+
+    host.intervals[id] = host.setTimeout(wrapper, interval)
+
+    return id
 
 module.exports = exports
