@@ -30,8 +30,9 @@ class Runtime
   event: {}
 
   events:
-    onChange: {}
-    onClick: {}
+    on: {}
+    change: {}
+    click: {}
 
   script: null
 
@@ -175,24 +176,46 @@ class Runtime
 
     return
 
-  hook: (name, field) ->
-    if name is 'onChange'
-      @events.onChange[field]
-    else if name is 'onClick'
-      @events.onClick[field]
+  hook: (name, param) ->
+    if name is 'change'
+      @events.change[field]
+    else if name is 'click'
+      @events.click[field]
     else
       @events[name]
 
-  trigger: ->
-    hook = @hook(@event.event, @event.field)
+  hooksByName: (name) ->
+    @events[name] ?= []
 
-    return [] unless _.isFunction(hook)
+  hooksByParams: (name, param) ->
+    @hooksByName(name)[param] ?= []
+
+  removeHook: (name, param, callback) ->
+    if param? and callback?
+      @hooksByName(name)[param] = _.without(@hooksByName(name)[param], callback)
+    else if param?
+      delete @hooksByName(name)[param]
+    else
+      @events[name] = []
+
+  addHook: (name, param, callback) ->
+    @hooksByParams(name, param).push(callback)
+
+  trigger: ->
+    if @event.field?
+      [name, param] = [@event.event, @event.field]
+    else
+      [name, param] = ['on', @event.event]
+
+    hooks = @hooksByParams(name, param)
+
+    return [] unless hooks.length
 
     @setupValues()
 
     $$runtime.results = []
 
-    result = hook.call(@, @event)
+    hook.call(@, @event) for hook in hooks
 
     $$runtime.results
 

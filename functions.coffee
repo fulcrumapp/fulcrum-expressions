@@ -29,6 +29,9 @@ exports = {}
 
 exports.NO_VALUE = undefined
 
+exports.ERROR = (message) ->
+  throw new Error(message)
+
 exports.MATH_FUNC = MATH_FUNC = (mathFunction) ->
   -> mathFunction.apply(Math, toArray(arguments).map(NUM))
 
@@ -859,6 +862,38 @@ exports.ODD = (value) ->
   temp = if temp & 1 then temp else temp + 1
 
   if value >= 0 then temp else -temp
+
+exports.OFF = ->
+  args = arguments
+
+  if arguments.length is 3
+    [name, param, callback] = arguments
+  if arguments.length is 2
+    [param, callback] = arguments
+
+  name ?= 'on'
+
+  ERROR('name must be a string') unless _.isString(name)
+  ERROR('param must be a string') unless _.isString(param)
+  ERROR('callback must be a function') if callback? and not _.isFunction(callback)
+
+  $$runtime.removeHook(name, param, callback)
+
+exports.ON = ->
+  args = arguments
+
+  if arguments.length is 3
+    [name, param, callback] = arguments
+  if arguments.length is 2
+    [param, callback] = arguments
+
+  name ?= 'on'
+
+  ERROR('name must be a string') unless _.isString(name)
+  ERROR('param must be a string') unless _.isString(param)
+  ERROR('callback must be a function') unless _.isFunction(callback)
+
+  $$runtime.addHook(name, param, callback)
 
 exports.ONCE = (value) ->
   $$runtime.$$currentValue ? value
