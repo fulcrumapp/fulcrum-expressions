@@ -1262,6 +1262,37 @@ exports.STATUSLABEL = ->
   else
     NO_VALUE
 
+hostStorage = {}
+hostStorageScope = 'default'
+
+Object.defineProperty hostStorage, 'length',
+  get: ->
+    host.storageLength(hostStorageScope)
+  configurable: false
+  enumerable: false
+
+hostStorage.key = (index) ->
+  return null unless _.isNumber(+index)
+  host.storageKey(hostStorageScope, +index)
+
+hostStorage.getItem = (key) ->
+  return null unless key?
+  host.storageGetItem(hostStorageScope, key.toString())
+
+hostStorage.setItem = (key, value) ->
+  return null unless key?
+  host.storageSetItem(hostStorageScope, key.toString(), if value? then value.toString() else null)
+
+hostStorage.removeItem = (key) ->
+  return null unless key?
+  host.storageRemoveItem(hostStorageScope, key.toString())
+
+hostStorage.clear = ->
+  host.storageClear(hostStorageScope)
+
+exports.STORAGE = (scope) ->
+  localStorage ? hostStorage
+
 exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
   occurrence = FLOOR(occurrence)
 
@@ -1503,5 +1534,38 @@ host.setInterval = (callback, interval) ->
     host.intervals[id] = host.setTimeout(wrapper, interval)
 
     return id
+
+# interface Storage {
+#   readonly attribute unsigned long length;
+#   DOMString? key(unsigned long index);
+#   getter DOMString? getItem(DOMString key);
+#   setter void setItem(DOMString key, DOMString value);
+#   deleter void removeItem(DOMString key);
+#   void clear();
+# };
+
+host.storageLength = (storage) ->
+  return storage.length if 'length' in storage
+  return hostFunctionCall('storageLength', arguments) if hostFunctionExists('storageLength')
+
+host.storageKey = (storage, index) ->
+  return storage.key(index) if 'key' in storage
+  return hostFunctionCall('storageKey', arguments) if hostFunctionExists('storageKey')
+
+host.storageGetItem = (storage, key) ->
+  return storage.getItem(key) if 'getItem' in storage
+  return hostFunctionCall('storageGetItem', arguments) if hostFunctionExists('storageGetItem')
+
+host.storageSetItem = (storage, key, value) ->
+  return storage.setItem(key, value) if 'setItem' in storage
+  return hostFunctionCall('storageSetItem', arguments) if hostFunctionExists('storageSetItem')
+
+host.storageRemoveItem = (storage, key) ->
+  return storage.removeItem(key) if 'removeItem' in storage
+  return hostFunctionCall('storageRemoveItem', arguments) if hostFunctionExists('storageRemoveItem')
+
+host.storageClear = (storage) ->
+  return storage.clear() if 'clear' in storage
+  return hostFunctionCall('storageClear', arguments) if hostFunctionExists('storageClear')
 
 module.exports = exports
