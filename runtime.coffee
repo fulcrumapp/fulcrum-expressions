@@ -176,14 +176,6 @@ class Runtime
 
     return
 
-  hook: (name, param) ->
-    if name is 'change'
-      @events.change[field]
-    else if name is 'click'
-      @events.click[field]
-    else
-      @events[name]
-
   hooksByName: (name) ->
     @events[name] ?= []
 
