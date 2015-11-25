@@ -341,6 +341,8 @@ describe 'EXISTS', ->
     EXISTS({test:1}).should.be.true
     EXISTS(1, 2).should.be.true
     EXISTS(1, 2, 'test').should.be.true
+    EXISTS(new Date).should.be.true
+    EXISTS(/test/).should.be.true
 
     # falsey things
     EXISTS([]).should.be.false

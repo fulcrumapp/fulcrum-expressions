@@ -605,6 +605,7 @@ exports.ISBLANK = (value) ->
   return false if _.isBoolean(value)
   return false if _.isNumber(value)
   return false if _.isDate(value)
+  return false if _.isRegExp(value)
   return _.isBlank(value) if _.isString(value)
   return value.length is 0 if _.isArray(value)
 
