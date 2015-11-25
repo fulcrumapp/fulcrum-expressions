@@ -1262,6 +1262,12 @@ exports.SETVALUE = (dataName, value) ->
 
     value = Utils.makeValue(element, value)
 
+  # TODO(zhm) guard well-known supported values in the else case
+  # @project, @status, @geometry, etc
+  # Force the types to be correct so we don't pass back an array for
+  # the project or a number for the status, etc. The native apps
+  # should never be handed back data with the wrong JS types.
+
   result =
     type: 'set-value'
     key: element?.key or dataName
