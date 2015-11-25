@@ -1698,4 +1698,4 @@ describe 'Values', ->
     ]
 
     for field in fields
-      shouldBeUndefined(Utils.converters[field])
+      shouldBeNull(Utils.makeValue(type: field, 'test'))
