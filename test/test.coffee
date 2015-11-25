@@ -1666,6 +1666,15 @@ describe 'Values', ->
       _.extend(address, parts)
 
     makeValue(admin_area: 'FL').should.eql(addressWith(admin_area: 'FL'))
+    makeValue(suite: 200).should.eql(addressWith(suite: '200'))
+    makeValue(suite: true).should.eql(addressWith(suite: 'true'))
+    makeValue(suite: undefined).should.eql(addressWith(suite: null))
+    makeValue(suite: NaN).should.eql(addressWith(suite: 'NaN'))
+    makeValue(suite: {}).should.eql(addressWith(suite: '[object Object]'))
+    makeValue(suite: []).should.eql(addressWith(suite: ''))
+    makeValue(suite: [1]).should.eql(addressWith(suite: '1'))
+    makeValue(suite: ['1']).should.eql(addressWith(suite: '1'))
+
     makeValue(bogus: 'something').should.eql(addressWith())
     makeValue({}).should.eql(addressWith())
 
