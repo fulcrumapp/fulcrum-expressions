@@ -1519,6 +1519,22 @@ describe 'TIMEDIFF', ->
     shouldHaveNoValue(TIMEDIFF(new Date, null))
     shouldHaveNoValue(TIMEDIFF('2:00', undefined))
 
+describe 'TIMEADD', ->
+  it 'adds a given amount of time to a time', ->
+    TIMEADD('00:00', 1).should.be.exactly('01:00')
+    TIMEADD('00:00', 23).should.be.exactly('23:00')
+    TIMEADD('00:00', -1).should.be.exactly('23:00')
+    TIMEADD('00:00', -48).should.be.exactly('00:00')
+    TIMEADD('00:00', 48).should.be.exactly('00:00')
+    TIMEADD('00:00', 24).should.be.exactly('00:00')
+    TIMEADD('16:00', 4).should.be.exactly('20:00')
+    TIMEADD('16:00', 1.5).should.be.exactly('17:30')
+    TIMEADD('16:00', -1.5).should.be.exactly('14:30')
+    TIMEADD('16:00', 30, 'minutes').should.be.exactly('16:30')
+    TIMEADD('16:00', 100, 'minutes').should.be.exactly('17:40')
+    TIMEADD('16:00', -30, 'minutes').should.be.exactly('15:30')
+    TIMEADD('16:00', -100, 'minutes').should.be.exactly('14:20')
+
 describe 'USERFULLNAME', ->
   it 'returns the user full name', ->
     USERFULLNAME().should.eql 'John Smith'

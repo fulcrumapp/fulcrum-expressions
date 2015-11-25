@@ -2031,6 +2031,35 @@ function SUMSQ() {}
 function T() {}
 
 
+////TIMEADD
+
+/**
+ * TIMEADD
+ * Adds an amount of time to a given time
+ * @param {String} startTimeField The time field containing the start time
+ * @param {Number} amount The amount of time to add to the given time (number of minutes or hours)
+ * @param {String} [format='hours'] The format of the amount. Either `hours` (default) or `minutes`.
+ * @example
+ * // returns 17:00
+ * TIMEADD('09:00', 8)
+ * @example
+ * // returns 09:00
+ * TIMEADD('17:00', -8)
+ * @example
+ * // returns 09:00
+ * TIMEADD('09:00', 48)
+ * @example
+ * // returns 17:30
+ * TIMEADD('16:00', 1.5)
+ * @example
+ * // returns 17:30
+ * TIMEADD('16:00', 90, 'minutes')
+ * @example
+ * // returns 14:30
+ * TIMEADD('16:00', -90, 'minutes')
+ */
+function TIMEADD() {}
+
 
 ////TIMEDIFF
 

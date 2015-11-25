@@ -1406,6 +1406,45 @@ exports.T = (value) ->
   return '' unless value?
   return value.toString()
 
+exports.TIMEADD = (startTime, amount, format='hours') ->
+  return NO_VALUE unless _.isString(startTime)
+
+  return NO_VALUE unless _.contains(['hours', 'minutes'], format)
+
+  return NO_VALUE if startTime.length isnt 5
+  return NO_VALUE if startTime[2] isnt ':'
+
+  time1 = startTime.split(':')
+
+  beginHour = NUM(time1[0])
+  beginMinute = NUM(time1[1])
+
+  amount = NUM(amount)
+
+  return NO_VALUE if beginHour > 23 or beginHour < 0
+  return NO_VALUE if beginMinute > 59 or beginMinute < 0
+
+  return NO_VALUE unless _.isNumber(amount)
+
+  minutesToAdd =
+    if format is 'hours'
+      amount * 60
+    else
+      amount
+
+  date = new Date(0)
+  date.setHours(beginHour)
+  date.setMinutes(beginMinute)
+
+  time = date.getTime()
+  time += (minutesToAdd * 60.0 * 1000.0)
+
+  date = new Date(time)
+
+  FORMAT('%s:%s',
+    RIGHT('0' + date.getHours(), 2),
+    RIGHT('0' + date.getMinutes(), 2))
+
 exports.TIMEDIFF = (startTime, endTime, format='hours') ->
   return NO_VALUE unless _.isString(startTime) and _.isString(endTime)
 
