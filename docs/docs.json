@@ -3143,6 +3143,20 @@
             }
         },
         {
+            "name": "TIMESTAMP",
+            "access": "",
+            "virtual": false,
+            "description": "TIMESTAMP\nReturns a formatted timestamp",
+            "parameters": [],
+            "examples": [
+                "// returns 1982-12-16 03:24:00\nTIMESTAMP(new Date('December 16, 1982 03:24:00'))"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "TIMEZONE",
             "access": "",
             "virtual": false,

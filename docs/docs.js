@@ -2079,6 +2079,19 @@ function T() {}
 function TIMEDIFF() {}
 
 
+////TIMESTAMP
+
+/**
+ * TIMESTAMP
+ * Returns a formatted timestamp
+ * @returns {String}
+ * @example
+ * // returns 1982-12-16 03:24:00
+ * TIMESTAMP(new Date('December 16, 1982 03:24:00'))
+ */
+function TIMESTAMP() {}
+
+
 ////TIMEZONE
 
 /**

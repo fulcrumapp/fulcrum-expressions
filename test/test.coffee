@@ -1120,6 +1120,11 @@ describe 'T', ->
     T(undefined).should.eql('')
     T(null).should.eql('')
 
+describe 'TIMESTAMP', ->
+  it 'returns a timestamp value', ->
+    TIMESTAMP().length.should.eql(19)
+    TIMESTAMP(new Date('December 16, 1982 03:24:00')).should.be.exactly('1982-12-16 03:24:00')
+
 describe 'TRIM', ->
   it 'trim whitespace from a string', ->
     TRIM('test').should.eql('test')

@@ -10,6 +10,8 @@ qs = require('query-string')
 
 Utils = require('./utils')
 
+{format} = require('util')
+
 toArray = Utils.toArray
 
 Defaults =
@@ -441,6 +443,9 @@ exports.FLOOR = (number, significance) ->
     ROUND(Math.floor(number / significance) * significance, precision)
   else
     -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
+
+exports.FORMAT = ->
+  format.apply(null, arguments)
 
 exports.FORMATNUMBER = (number, language, options) ->
   number ?= NUM(number)
@@ -1444,6 +1449,17 @@ exports.TIMEDIFF = (startTime, endTime, format='hours') ->
     totalMinutes / 60
   else
     totalMinutes
+
+exports.TIMESTAMP = (date) ->
+  date ?= new Date
+
+  FORMAT('%s-%s-%s %s:%s:%s',
+    date.getFullYear(),
+    RIGHT('0' + (date.getMonth() + 1), 2),
+    RIGHT('0' + date.getDate(), 2),
+    RIGHT('0' + date.getHours(), 2),
+    RIGHT('0' + date.getMinutes(), 2),
+    RIGHT('0' + date.getSeconds(), 2))
 
 exports.TIMEZONE = ->
   Config.timeZone or Defaults.timeZone
