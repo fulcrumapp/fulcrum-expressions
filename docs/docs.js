@@ -1453,6 +1453,32 @@ function PRECISION() {}
 function PRODUCT() {}
 
 
+////PROJECTID
+
+/**
+ * PROJECTID
+ * Returns the project ID of the record
+ * @returns {String}
+ * @example
+ * // returns 88eb3511-13d8-4666-b188-8108019d0984
+ * PROJECTID()
+ */
+function PROJECTID() {}
+
+
+////PROJECTNAME
+
+/**
+ * PROJECTNAME
+ * Returns the project name of the record
+ * @returns {String}
+ * @example
+ * // returns Project X
+ * PROJECTNAME()
+ */
+function PROJECTNAME() {}
+
+
 ////PROPER
 
 /**

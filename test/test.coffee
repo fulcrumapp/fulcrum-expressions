@@ -783,6 +783,14 @@ describe 'PRODUCT', ->
     PRODUCT(new Date).should.be.NaN
     PRODUCT().should.be.NaN
 
+describe 'PROJECTID', ->
+  it 'returns the project ID', ->
+    PROJECTID().should.be.exactly('88eb3511-13d8-4666-b188-8108019d0984')
+
+describe 'PROJECTNAME', ->
+  it 'returns the project name', ->
+    PROJECTNAME().should.be.exactly('Project X')
+
 describe 'PROPER', ->
   it 'capitalizes the first letter in a text string', ->
     PROPER('ABC').should.eql('Abc')

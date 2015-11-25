@@ -2214,6 +2214,34 @@
             }
         },
         {
+            "name": "PROJECTID",
+            "access": "",
+            "virtual": false,
+            "description": "PROJECTID\nReturns the project ID of the record",
+            "parameters": [],
+            "examples": [
+                "// returns 88eb3511-13d8-4666-b188-8108019d0984\nPROJECTID()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "PROJECTNAME",
+            "access": "",
+            "virtual": false,
+            "description": "PROJECTNAME\nReturns the project name of the record",
+            "parameters": [],
+            "examples": [
+                "// returns Project Y\nPROJECTNAME()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "PROPER",
             "access": "",
             "virtual": false,

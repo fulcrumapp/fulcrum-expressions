@@ -968,6 +968,12 @@ exports.PROGRESS = ->
 
   $$runtime.results.push(result)
 
+exports.PROJECTID = ->
+  CONFIG().recordProject ? NO_VALUE
+
+exports.PROJECTNAME = ->
+  CONFIG().recordProjectName ? NO_VALUE
+
 exports.PROPER = (value) ->
   return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)
