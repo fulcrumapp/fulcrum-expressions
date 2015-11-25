@@ -726,10 +726,25 @@ exports.LEFT = (value, numberOfCharacters = 1) ->
   value.substring(0, numberOfCharacters)
 
 exports.LEN = (value) ->
-  return NO_VALUE unless value?
-  return NO_VALUE if _.isObject(value)
+  return 0 unless value?
+  return 0 if _.isNaN(value)
 
-  value.toString().length
+  result =
+    switch true
+      when _.isArray(value)
+        value.length
+      when _.isDate(value)
+        value.toString().length
+      when _.isString(value)
+        value.length
+      when _.isRegExp(value)
+        value.toString().length
+      when _.isObject(value)
+        Object.keys(value).length
+      else
+        value.toString().length
+
+  result ? 0
 
 exports.LN = MATH_FUNC(Math.log)
 
