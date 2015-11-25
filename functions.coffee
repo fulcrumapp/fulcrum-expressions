@@ -778,6 +778,16 @@ exports.LOWER = (value) ->
 
   value.toString().toLowerCase()
 
+exports.LPAD = (value, count, padding=' ') ->
+  count  = FLOOR(count)
+  value ?= ''
+  value  = value.toString()
+
+  return NO_VALUE unless _.isNumber(count)
+  return NO_VALUE unless _.isString(padding)
+
+  RIGHT(Array(count).join(padding) + value, count)
+
 exports.MAX = ->
   numbers = _.flatten(toArray(arguments))
   numbers = _.map(numbers, NUM)
@@ -1121,6 +1131,16 @@ exports.ROUNDUP = (number, digits = 0) ->
 
   sign * (Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
 
+exports.RPAD = (value, count, padding=' ') ->
+  count  = FLOOR(count)
+  value ?= ''
+  value  = value.toString()
+
+  return NO_VALUE unless _.isNumber(count)
+  return NO_VALUE unless _.isString(padding)
+
+  LEFT(value + Array(count).join(padding), count)
+
 exports.SEARCH = (needle, haystack, startPosition) ->
   startPosition ?= 1
   startPosition = NUM(startPosition)
@@ -1442,8 +1462,8 @@ exports.TIMEADD = (startTime, amount, format='hours') ->
   date = new Date(time)
 
   FORMAT('%s:%s',
-    RIGHT('0' + date.getHours(), 2),
-    RIGHT('0' + date.getMinutes(), 2))
+    LPAD(date.getHours(), 2, '0'),
+    LPAD(date.getMinutes(), 2, '0'))
 
 exports.TIMEDIFF = (startTime, endTime, format='hours') ->
   return NO_VALUE unless _.isString(startTime) and _.isString(endTime)
@@ -1494,11 +1514,11 @@ exports.TIMESTAMP = (date) ->
 
   FORMAT('%s-%s-%s %s:%s:%s',
     date.getFullYear(),
-    RIGHT('0' + (date.getMonth() + 1), 2),
-    RIGHT('0' + date.getDate(), 2),
-    RIGHT('0' + date.getHours(), 2),
-    RIGHT('0' + date.getMinutes(), 2),
-    RIGHT('0' + date.getSeconds(), 2))
+    LPAD(date.getMonth() + 1, 2, '0'),
+    LPAD(date.getDate(), 2, '0'),
+    LPAD(date.getHours(), 2, '0'),
+    LPAD(date.getMinutes(), 2, '0'),
+    LPAD(date.getSeconds(), 2, '0'))
 
 exports.TIMEZONE = ->
   Config.timeZone or Defaults.timeZone

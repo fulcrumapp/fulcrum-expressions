@@ -1220,6 +1220,25 @@ function LONGITUDE() {}
 function LOWER() {}
 
 
+////LPAD
+
+/**
+ * LPAD
+ * Pads a string on the left side
+ * @param {String} value The string to pad
+ * @param {Number} count The number of characters to pad
+ * @param {String} [character=' '] The character to use for padding
+ * @returns {String}
+ * @example
+ * // returns 0002
+ * LPAD('2', 4, '0')
+ * @example
+ * // returns 000002
+ * LPAD('2', 6, '0')
+ */
+function LPAD() {}
+
+
 ////MAX
 
 /**
@@ -1812,6 +1831,25 @@ function ROUNDDOWN() {}
  * ROUNDUP(156.826, 0)
  */
 function ROUNDUP() {}
+
+
+////RPAD
+
+/**
+ * RPAD
+ * Pads a string on the right side
+ * @param {String} value The string to pad
+ * @param {Number} count The number of characters to pad
+ * @param {String} [character=' '] The character to use for padding
+ * @returns {String}
+ * @example
+ * // returns 2000
+ * RPAD('2', 4, '0')
+ * @example
+ * // returns 200000
+ * RPAD('2', 6, '0')
+ */
+function RPAD() {}
 
 
 ////SEARCH

@@ -1844,6 +1844,46 @@
             }
         },
         {
+            "name": "LPAD",
+            "access": "",
+            "virtual": false,
+            "description": "LPAD\nPads a string on the left side",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The string to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of characters to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "character",
+                    "type": "String",
+                    "description": "The character to use for padding",
+                    "default": "' '",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 0002\nLPAD('2', 4, '0')",
+                "// returns 000002\nLPAD('2', 6, '0')"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "MAX",
             "access": "",
             "virtual": false,
@@ -2780,6 +2820,46 @@
             ],
             "returns": {
                 "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "RPAD",
+            "access": "",
+            "virtual": false,
+            "description": "RPAD\nPads a string on the right side",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The string to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of characters to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "character",
+                    "type": "String",
+                    "description": "The character to use for padding",
+                    "default": "' '",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 2000\nRPAD('2', 4, '0')",
+                "// returns 200000\nRPAD('2', 6, '0')"
+            ],
+            "returns": {
+                "type": "String",
                 "description": ""
             }
         },

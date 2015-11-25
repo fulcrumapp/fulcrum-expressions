@@ -1321,6 +1321,14 @@ describe 'LONGITUDE', ->
 
     LONGITUDE().should.be.NaN
 
+describe 'LPAD', ->
+  it 'pads a string on the left', ->
+    LPAD('test', 5).should.be.exactly(' test')
+    LPAD('t', 5).should.be.exactly('    t')
+    LPAD('test', 10).should.be.exactly('      test')
+    LPAD('1', 2, '0').should.be.exactly('01')
+    LPAD('1', 4, '0').should.be.exactly('0001')
+
 describe 'STATUS', ->
   it 'returns the status of the current record', ->
     STATUS().should.eql('approved')
@@ -1496,6 +1504,14 @@ describe 'REPEATABLENUMBER', ->
 describe 'ROLE', ->
   it 'returns the role name', ->
     ROLE().should.eql 'Owner'
+
+describe 'RPAD', ->
+  it 'pads a string on the right', ->
+    RPAD('test', 5).should.be.exactly('test ')
+    RPAD('t', 5).should.be.exactly('t    ')
+    RPAD('test', 10).should.be.exactly('test      ')
+    RPAD('1', 2, '0').should.be.exactly('10')
+    RPAD('1', 4, '0').should.be.exactly('1000')
 
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
