@@ -953,6 +953,21 @@ exports.PRODUCT = ->
 
   _.inject(numbers, ((memo, number) -> memo *= number), 1)
 
+exports.PROGRESS = ->
+  title = null
+  message = arguments[0]
+
+  if arguments.length > 1
+    title = arguments[0]
+    message = arguments[1]
+
+  result =
+    type: 'progress'
+    title: if title? then title.toString() else null
+    message: if message? then message.toString() else null
+
+  $$runtime.results.push(result)
+
 exports.PROPER = (value) ->
   return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)

@@ -201,7 +201,7 @@ class Runtime
 
     hooks = @hooksByParams(name, param)
 
-    return [] unless hooks.length
+    return [] unless hooks?.length
 
     @setupValues()
 
