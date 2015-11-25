@@ -593,6 +593,30 @@ function FALSE() {}
 function FIND() {}
 
 
+////FIRST
+
+/**
+ * FIRST
+ * Returns the first N items from an array or string
+ * @param {Array} array an array object
+ * @param {Number} [count=1] The number of items to return
+ * @returns {Object}
+ * @example
+ * // returns 1
+ * FIRST([1, 2, 3])
+ * @example
+ * // returns [a,b]
+ * FIRST(['a', 'b', 'c'], 2)
+ * @example
+ * // returns a
+ * FIRST('abc')
+ * @example
+ * // returns [a,b]
+ * FIRST('abc', 2)
+ */
+function FIRST() {}
+
+
 ////FIXED
 
 /**
@@ -998,6 +1022,30 @@ function ISTEXT() {}
  * LANGUAGE()
  */
 function LANGUAGE() {}
+
+
+////LAST
+
+/**
+ * LAST
+ * Returns the last N items from an array or string
+ * @param {Array} array an array object
+ * @param {Number} [count=1] The number of items to return
+ * @returns {Object}
+ * @example
+ * // returns 3
+ * LAST([1, 2, 3])
+ * @example
+ * // returns [b,c]
+ * LAST(['a', 'b', 'c'], 2)
+ * @example
+ * // returns c
+ * LAST('abc')
+ * @example
+ * // returns [b,c]
+ * LAST('abc', 2)
+ */
+function LAST() {}
 
 
 ////LATITUDE

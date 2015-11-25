@@ -312,6 +312,9 @@ exports.FIELD = (dataName) ->
 
   element
 
+exports.FIRST = (array, count) ->
+  _.first(array, count)
+
 exports.MEMOIZED_FACT = []
 
 exports.FACT = (value) ->
@@ -678,6 +681,9 @@ exports.ISTEXT = (value) ->
 
 exports.LANGUAGE = ->
   Config.language or Defaults.language
+
+exports.LAST = (array, count) ->
+  _.last(array, count)
 
 exports.LATITUDE = ->
   NUM(CONFIG().featureGeometry?.coordinates[1])

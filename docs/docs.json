@@ -919,6 +919,40 @@
             }
         },
         {
+            "name": "FIRST",
+            "access": "",
+            "virtual": false,
+            "description": "FIRST\nReturns the first N items from an array or string",
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": "Array",
+                    "description": "an array object",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of items to return",
+                    "default": "1",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFIRST([1, 2, 3])",
+                "// returns [a,b]\nFIRST(['a', 'b', 'c'], 2)",
+                "// returns a\nFIRST('abc')",
+                "// returns [a,b]\nFIRST('abc', 2)"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
+            }
+        },
+        {
             "name": "FIXED",
             "access": "",
             "virtual": false,
@@ -1517,6 +1551,40 @@
             "returns": {
                 "type": "String",
                 "description": "the BCP 47 language code"
+            }
+        },
+        {
+            "name": "LAST",
+            "access": "",
+            "virtual": false,
+            "description": "LAST\nReturns the last N items from an array or string",
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": "Array",
+                    "description": "an array object",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of items to return",
+                    "default": "1",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 3\nLAST([1, 2, 3])",
+                "// returns [b,c]\nLAST(['a', 'b', 'c'], 2)",
+                "// returns c\nLAST('abc')",
+                "// returns [b,c]\nLAST('abc', 2)"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
             }
         },
         {

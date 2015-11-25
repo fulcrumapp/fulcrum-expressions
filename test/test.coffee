@@ -393,6 +393,22 @@ describe 'FIND', ->
     shouldHaveNoValue(FIND({}, 'abc'))
     shouldHaveNoValue(FIND('t', 'test', 1000))
 
+describe 'FIRST', ->
+  it 'returns the first N items of an array', ->
+    FIRST([1]).should.be.exactly(1)
+    FIRST([1, 2, 3]).should.be.exactly(1)
+    FIRST('1234').should.be.exactly('1')
+    shouldBeUndefined(FIRST(''))
+    shouldBeUndefined(FIRST([]))
+    shouldBeUndefined(FIRST(1))
+    shouldBeUndefined(FIRST(1.337))
+    shouldBeUndefined(FIRST(new Date))
+    shouldBeUndefined(FIRST(true))
+    shouldBeUndefined(FIRST(NaN))
+    shouldBeUndefined(FIRST({}))
+    shouldBeUndefined(FIRST(null))
+    shouldBeUndefined(FIRST(undefined))
+
 describe 'GCD', ->
   it 'returns the greatest common divisor of two or more integers', ->
     GCD(1, 2, 3).should.be.exactly(1)
@@ -500,6 +516,22 @@ describe 'ISTEXT', ->
     ISTEXT(true).should.be.false
     ISTEXT(false).should.be.false
     ISTEXT('').should.be.true
+
+describe 'LAST', ->
+  it 'returns the last N items of an array', ->
+    LAST([1]).should.be.exactly(1)
+    LAST([1, 2, 3]).should.be.exactly(3)
+    LAST('1234').should.be.exactly('4')
+    shouldBeUndefined(LAST(''))
+    shouldBeUndefined(LAST([]))
+    shouldBeUndefined(LAST(1))
+    shouldBeUndefined(LAST(1.337))
+    shouldBeUndefined(LAST(new Date))
+    shouldBeUndefined(LAST(true))
+    shouldBeUndefined(LAST(NaN))
+    shouldBeUndefined(LAST({}))
+    shouldBeUndefined(LAST(null))
+    shouldBeUndefined(LAST(undefined))
 
 describe 'LCM', ->
   it 'returns the least common multiple', ->
