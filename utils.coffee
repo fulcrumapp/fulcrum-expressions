@@ -113,6 +113,9 @@ class Utils
   @makeChoiceValue: (choices, others) ->
     { choice_values: choices ? [], other_values: others ? [] }
 
+  @isSetValueSupported: (type) ->
+    Utils.converters[type]?
+
   @converters:
     TextField: (value) ->
       return null unless value?

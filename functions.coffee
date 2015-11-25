@@ -1257,6 +1257,9 @@ exports.SETVALUE = (dataName, value) ->
   element = FIELD(dataName)
 
   if element? and value?
+    # don't let the user accidentally blow out data in unsupported fields
+    return unless Utils.isSetValueSupported(element.type)
+
     value = Utils.makeValue(element, value)
 
   result =
