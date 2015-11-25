@@ -772,6 +772,31 @@
             }
         },
         {
+            "name": "EXISTS",
+            "access": "",
+            "virtual": false,
+            "description": "EXISTS\nTests whether a value exists",
+            "parameters": [
+                {
+                    "name": "var_args_values",
+                    "type": "Object",
+                    "description": "The value(s) to check for existence",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nEXISTS(1)",
+                "// returns false\nEXISTS(null)",
+                "// returns false\nEXISTS([])"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
             "name": "EXP",
             "access": "",
             "virtual": false,
@@ -2234,7 +2259,7 @@
             "description": "PROJECTNAME\nReturns the project name of the record",
             "parameters": [],
             "examples": [
-                "// returns Project Y\nPROJECTNAME()"
+                "// returns Project X\nPROJECTNAME()"
             ],
             "returns": {
                 "type": "String",

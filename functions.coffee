@@ -300,6 +300,9 @@ exports.EVEN = (value) ->
 exports.EXACT = (value1, value2) ->
   _.isEqual(value1, value2)
 
+exports.EXISTS = (value) ->
+  _.select(toArray(arguments).map(ISBLANK)).length is 0
+
 exports.EXP = MATH_FUNC(Math.exp)
 
 exports.FIELD = (dataName) ->

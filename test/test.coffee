@@ -329,6 +329,29 @@ describe 'EXACT', ->
     EXACT(NaN, NaN).should.be.true
     EXACT(1, NaN).should.be.false
 
+describe 'EXISTS', ->
+  it 'checks whether a value exists', ->
+    # truthy things
+    EXISTS(0).should.be.true
+    EXISTS(-1).should.be.true
+    EXISTS(true).should.be.true
+    EXISTS(false).should.be.true
+    EXISTS('test').should.be.true
+    EXISTS([1]).should.be.true
+    EXISTS({test:1}).should.be.true
+    EXISTS(1, 2).should.be.true
+    EXISTS(1, 2, 'test').should.be.true
+
+    # falsey things
+    EXISTS([]).should.be.false
+    EXISTS({}).should.be.false
+    EXISTS('').should.be.false
+    EXISTS(NaN).should.be.false
+    EXISTS(null).should.be.false
+    EXISTS(undefined).should.be.false
+    EXISTS(undefined, null).should.be.false
+    EXISTS(1, null).should.be.false
+
 describe 'FACTDOUBLE', ->
   it 'returns the double factorial of a number.', ->
     FACTDOUBLE(0).should.be.exactly(1)

@@ -502,6 +502,26 @@ function EVEN() {}
 function EXACT() {}
 
 
+////EXISTS
+
+/**
+ * EXISTS
+ * Tests whether a value exists
+ * @param {...Object} var_args_values The value(s) to check for existence
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * EXISTS(1)
+ * @example
+ * // returns false
+ * EXISTS(null)
+ * @example
+ * // returns false
+ * EXISTS([])
+ */
+function EXISTS() {}
+
+
 ////EXP
 
 /**
