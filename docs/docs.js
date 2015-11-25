@@ -654,6 +654,24 @@ function FIXED() {}
 function FLOOR() {}
 
 
+////FORMAT
+
+/**
+ * FORMAT
+ * Formats a string
+ * @param {String} value string format. Use %s for strings and %d for numbers.
+ * @param {...*} var_args_values Value(s) to substitute into the format string
+ * @returns {String} formatted string
+ * @example
+ * // returns The pole height is 20 meters and has 3 issues detected.
+ * FORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)
+ * @example
+ * // returns 11/11/2015 12:30:30
+ * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
+ */
+function FORMAT() {}
+
+
 ////FORMATNUMBER
 
 /**

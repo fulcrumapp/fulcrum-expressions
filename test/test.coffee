@@ -1230,6 +1230,22 @@ describe 'LOCALE', ->
     LOCALE().should.eql('en_US')
     CONFIGURE(locale: 'pt_BR').locale.should.eql('pt_BR')
 
+describe 'FORMAT', ->
+  it 'formats strings', ->
+    FORMAT('%s-%s-%s-%s', 1, 2, 3, 4).should.be.exactly('1-2-3-4')
+    FORMAT('%s|%s|%s|%s', 1, 2, 3, 4).should.be.exactly('1|2|3|4')
+    FORMAT('%s%%', 1).should.be.exactly('1%')
+    FORMAT('%d + %d == %d', 2, 3, 5).should.be.exactly('2 + 3 == 5')
+    FORMAT('%d + %d == %d', '2', 3, 5).should.be.exactly('2 + 3 == 5')
+    FORMAT('%d', 'a').should.be.exactly('NaN')
+    FORMAT('%d', 1.337).should.be.exactly('1.337')
+    FORMAT('%d', null).should.be.exactly('0')
+    FORMAT('%d', undefined).should.be.exactly('NaN')
+    FORMAT('%s', null).should.be.exactly('null')
+    FORMAT('%s', undefined).should.be.exactly('undefined')
+    FORMAT('%s', true).should.be.exactly('true')
+    FORMAT('%j', {x:1}).should.be.exactly('{"x":1}')
+
 describe 'FORMATNUMBER', ->
   it 'formats a number in a given locale', ->
     FORMATNUMBER(1 / 3).should.eql('0.333')
