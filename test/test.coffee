@@ -1,5 +1,7 @@
 global.Intl = require 'intl'
 
+_ = require 'underscore'
+
 path = require 'path'
 CSON = require 'season'
 
@@ -12,6 +14,7 @@ if DIST
 else
   console.log 'Running debug'
   runtime = require '../runtime'
+  Utils = require '../utils'
 
 variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
@@ -1583,3 +1586,92 @@ describe 'X_ISNEW', ->
 
     X_ISNEW().should.be.false
     X_ISUPDATE().should.be.true
+
+describe 'Values', ->
+  it 'should create choice values', ->
+    makeValue = Utils.converters.ChoiceField
+
+    makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
+    makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
+    makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
+    makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
+
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(new Date))
+    shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
+
+  it 'should create classification values', ->
+    makeValue = Utils.converters.ClassificationField
+
+    makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
+    makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
+    makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
+    makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
+
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(new Date))
+    shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
+
+  it 'should create date values', ->
+    makeValue = Utils.converters.DateTimeField
+
+    makeValue('2015-01-01').should.eql('2015-01-01')
+    makeValue('2015-12-31').should.eql('2015-12-31')
+    makeValue('2015/12/31').should.eql('2015-12-31')
+    makeValue(new Date('01/01/2015')).should.eql('2015-01-01')
+
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(''))
+
+  it 'should create time values', ->
+    makeValue = Utils.converters.TimeField
+
+    makeValue('12:30').should.eql('12:30')
+    makeValue('23:00').should.eql('23:00')
+    makeValue('00:00').should.eql('00:00')
+    makeValue('01:01').should.eql('01:01')
+
+    shouldBeNull(makeValue('25:61'))
+    shouldBeNull(makeValue('2:30'))
+    shouldBeNull(makeValue('a'))
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(''))
+
+  it 'should create address values', ->
+    makeValue = Utils.converters.AddressField
+
+    addressWith = (parts) ->
+      address =
+        sub_thoroughfare: null
+        thoroughfare: null
+        suite: null
+        locality: null
+        sub_admin_area: null
+        admin_area: null
+        postal_code: null
+        country: null
+
+      _.extend(address, parts)
+
+    makeValue(admin_area: 'FL').should.eql(addressWith(admin_area: 'FL'))
+    makeValue(bogus: 'something').should.eql(addressWith())
+    makeValue({}).should.eql(addressWith())
+
+    shouldBeNull(makeValue('25:61'))
+    shouldBeNull(makeValue('2:30'))
+    shouldBeNull(makeValue('a'))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(''))

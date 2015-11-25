@@ -1256,6 +1256,9 @@ exports.CLEARINTERVAL = (id) ->
 exports.SETVALUE = (dataName, value) ->
   element = FIELD(dataName)
 
+  if element? and value?
+    value = Utils.makeValue(element, value)
+
   result =
     type: 'set-value'
     key: element?.key or dataName
