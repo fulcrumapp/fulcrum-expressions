@@ -1684,3 +1684,18 @@ describe 'Values', ->
     shouldBeNull(makeValue(null))
     shouldBeNull(makeValue(undefined))
     shouldBeNull(makeValue(''))
+
+  it 'should not create values for unsupported field types', ->
+    fields = [
+      'PhotoField'
+      'VideoField'
+      'AudioField'
+      'SignatureField'
+      'RecordLinkField'
+      'Repeatable'
+      'Section'
+      'Label'
+    ]
+
+    for field in fields
+      shouldBeUndefined(Utils.converters[field])
