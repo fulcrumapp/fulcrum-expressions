@@ -219,6 +219,26 @@ function COMPACT() {}
 function CONCATENATE() {}
 
 
+////CONCAT
+
+/**
+ * CONCAT
+ * Returns the concatenation of multiple values. Alias for CONCATENATE()
+ * @param {...String} var_args_values Strings to append in sequence.
+ * @returns {String}
+ * @example
+ * // returns This is a sentence.
+ * CONCAT("This ", "is ", "a ", "sentence.")
+ * @example
+ * // returns 42311
+ * CONCAT(42, 31, 1)
+ * @example
+ * // returns Age is 42
+ * CONCAT("Age ", "is ", 42)
+ */
+function CONCAT() {}
+
+
 ////COS
 
 /**
