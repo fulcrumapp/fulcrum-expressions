@@ -2077,6 +2077,7 @@ function T() {}
  * @param {String} startTimeField The time field containing the start time
  * @param {Number} amount The amount of time to add to the given time (number of minutes or hours)
  * @param {String} [format='hours'] The format of the amount. Either `hours` (default) or `minutes`.
+ * @returns {String} the new time value
  * @example
  * // returns 17:00
  * TIMEADD('09:00', 8)

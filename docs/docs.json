@@ -3250,7 +3250,11 @@
                 "// returns 17:30\nTIMEADD('16:00', 1.5)",
                 "// returns 17:30\nTIMEADD('16:00', 90, 'minutes')",
                 "// returns 14:30\nTIMEADD('16:00', -90, 'minutes')"
-            ]
+            ],
+            "returns": {
+                "type": "String",
+                "description": "the new time value"
+            }
         },
         {
             "name": "TIMEDIFF",
