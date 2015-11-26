@@ -154,6 +154,8 @@ exports.CONCATENATE = ->
 
   strings.join('')
 
+exports.CONCAT = exports.CONCATENATE
+
 exports.CONFIG = ->
   Config
 
