@@ -32,7 +32,7 @@ class DocumentationGenerator
       description = @getDescription(func)
 
       parameters = @generateParameters(func.parameters)
-      returns    = @generateReturns(func.returns) if func.returns
+      returns    = @generateReturns(func.returns)
       examples   = @generateExamples(func.examples)
 
       schema.markdown = """
