@@ -20,10 +20,10 @@ docs:
 help:
 	mkdir -p docs/output/help
 	mkdir -p docs/output/help/reference
-	./script/generate-help
+	./node_modules/coffee-script/bin/coffee script/generate-help.coffee
 
 copy:
-	./script/copy-files
+	./node_modules/coffee-script/bin/coffee script/copy-files.coffee
 
 dist: clean build help test
 

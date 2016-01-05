@@ -1,5 +1,3 @@
-#!/usr/bin/env coffee
-
 fs = require 'fs-sync'
 _ = require 'underscore'
 path = require 'path'
