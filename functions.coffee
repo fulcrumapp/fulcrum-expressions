@@ -526,9 +526,6 @@ exports.GCD = ->
 exports.GETRESULT = ->
   $$runtime.$$result
 
-exports.GETURL = (options, callback) ->
-  REQUEST(options, callback)
-
 exports.REQUEST = (options, callback) ->
   unless _.isFunction(callback)
     return callback(new Error('callback must be provided'))
