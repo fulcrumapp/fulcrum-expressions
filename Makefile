@@ -5,13 +5,13 @@ all: build
 
 build:
 	mkdir -p dist
-	browserify -t coffeeify --extension=".coffee" runtime.coffee | \
+	./node_modules/browserify/bin/cmd.js -t coffeeify --extension=".coffee" runtime.coffee | \
 		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --mangle
 	./script/build-docs
 
 debug:
 	mkdir -p dist
-	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
+	./node_modules/browserify/bin/cmd.js -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
 	./script/build-docs
 
 docs:

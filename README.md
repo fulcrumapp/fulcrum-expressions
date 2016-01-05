@@ -3,11 +3,10 @@
 This implements the runtime for javascript expressions in Fulcrum.
 
 ### Setup
-```sh
-# install browserify and coffee-script globally
-npm install -g browserify coffee-script
 
-# cd to the fulcrum-expressions repo. install anything else
+Install npm dependencies
+
+```sh
 npm install
 ```
 
