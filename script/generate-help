@@ -104,9 +104,16 @@ order: 2
 title: "Function Reference"
 description: "Function reference for calculation fields"
 category: section
+search: true
 ---
 
-# Calculation Expressions
+## Calculation Expressions
+
+<div class="row">
+  <div class="col-xs-12 col-md-4">
+    <input type="search" class="form-control search" placeholder="Search expressions" />
+  </div>
+</div>
 
 #{titles.join("\n\n")}
 """
