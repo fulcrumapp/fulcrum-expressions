@@ -9,7 +9,7 @@
                 {
                     "name": "title",
                     "type": "String",
-                    "description": "A short title for the alert.",
+                    "description": "A short title for the alert",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -17,7 +17,7 @@
                 {
                     "name": "message",
                     "type": "String",
-                    "description": "The message content for the alert.",
+                    "description": "The message content for the alert",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -57,7 +57,7 @@
                 {
                     "name": "title",
                     "type": "String",
-                    "description": "A short title for the progress message.",
+                    "description": "A short title for the progress message",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -65,7 +65,7 @@
                 {
                     "name": "message",
                     "type": "String",
-                    "description": "The message content for the progress alert.",
+                    "description": "The message content for the progress alert",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -157,6 +157,33 @@
             ],
             "examples": [
                 "options = {\n  url: 'https://api.forecast.io/forecast/your_api_key/40,-100\n}\n\nfunction callback(error, response, body) {\n  if (error) {\n    ALERT('Error with request: ' + error)\n  } else {\n    weather = JSON.parse(body)\n    SETVALUE('weather_summary', weather.currently.summary)\n  }\n}\n\nREQUEST(options, callback);\n\n// Performs a request with options and execute callback on completion"
+            ]
+        },
+        {
+            "name": "SETVALUE",
+            "access": "",
+            "virtual": false,
+            "description": "SETVALUE\nSet the value of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field to set",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The value to set for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETVALUE('weather_summary', 'Just beautiful')\n\n// Sets the value of a weather summary field"
             ]
         }
     ]

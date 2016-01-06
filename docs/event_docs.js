@@ -3,8 +3,8 @@
 /**
  * ALERT
  * Display a message as an alert in the mobile app.
- * @param {String} title A short title for the alert.
- * @param {String} message The message content for the alert.
+ * @param {String} title A short title for the alert
+ * @param {String} message The message content for the alert
  * @example
  * ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')
  *
@@ -47,8 +47,8 @@ function OPENURL() {}
 /**
  * PROGRESS
  * Display a non-dismissible progress message in the mobile app.
- * @param {String} title A short title for the progress message.
- * @param {String} message The message content for the progress alert.
+ * @param {String} title A short title for the progress message
+ * @param {String} message The message content for the progress alert
  * @example
  * PROGRESS('Just a sec!', 'Searching for nearby facilities ...')
  *
@@ -101,3 +101,18 @@ function PROGRESS() {}
  * // Performs a request with options and execute callback on completion
  */
 function REQUEST() {}
+
+
+////SETVALUE
+
+/**
+ * SETVALUE
+ * Set the value of a field.
+ * @param {String} field The data name for the field to set
+ * @param {String} value The value to set for the field
+ * @example
+ * SETVALUE('weather_summary', 'Just beautiful')
+ *
+ * // Sets the value of a weather summary field
+ */
+function SETVALUE() {}
