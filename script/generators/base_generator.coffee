@@ -16,19 +16,6 @@ class BaseGenerator
     else
       parameters.join("\n\n").trim()
 
-  generateExamples: (examples) ->
-    examples = _.map examples, (example) ->
-      parts = example.split("\n")
-      returns = parts[0]
-      rest = parts.slice(1)
-      final = rest.concat(["\n#{returns}"]).join("\n")
-      "\n~~~\n#{final}\n~~~\n{: .language-js}"
-
-    if examples.length is 0
-      'No examples'
-    else
-      examples.join("\n\n").trim()
-
   getDescription: (func) ->
     func.description.replace(new RegExp("^#{func.name}\n"), '').trim()
 

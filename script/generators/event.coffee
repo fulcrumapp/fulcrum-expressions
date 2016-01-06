@@ -2,6 +2,15 @@ _ = require('underscore')
 BaseGenerator = require('./base_generator')
 
 class EventGenerator extends BaseGenerator
+  generateExamples: (examples) ->
+    examples = _.map examples, (example) ->
+      "\n~~~\n#{example}\n~~~\n{: .language-js}"
+
+    if examples.length is 0
+      'No examples'
+    else
+      examples.join("\n\n").trim()
+
   helpFrontMatter: (func) ->
     """
 ---

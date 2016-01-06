@@ -2,6 +2,19 @@ _ = require('underscore')
 BaseGenerator = require('./base_generator')
 
 class ExpressionGenerator extends BaseGenerator
+  generateExamples: (examples) ->
+    examples = _.map examples, (example) ->
+      parts = example.split("\n")
+      returns = parts[0]
+      rest = parts.slice(1)
+      final = rest.concat(["\n#{returns}"]).join("\n")
+      "\n~~~\n#{final}\n~~~\n{: .language-js}"
+
+    if examples.length is 0
+      'No examples'
+    else
+      examples.join("\n\n").trim()
+
   generateReturns: (returns) ->
     description = if returns.description.length is 0 then '' else " - #{returns.description} "
     markdown = 'No return value'
