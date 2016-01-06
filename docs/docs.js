@@ -43,21 +43,6 @@ function ACOS() {}
 function ACOSH() {}
 
 
-////ALERT
-
-/**
- * ALERT
- * Display a message as an alert in the mobile app.
- * @param {String} title A short title for the alert.
- * @param {String} message The message content for the alert.
- * @returns {null}
- * @example
- * // Displays an alert with a title and message
- * ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')
- */
-function ALERT() {}
-
-
 ////AND
 
 /**

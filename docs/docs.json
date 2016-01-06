@@ -71,37 +71,6 @@
             }
         },
         {
-            "name": "ALERT",
-            "access": "",
-            "virtual": false,
-            "description": "ALERT\nDisplay a message as an alert in the mobile app.",
-            "parameters": [
-                {
-                    "name": "title",
-                    "type": "String",
-                    "description": "A short title for the alert.",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                },
-                {
-                    "name": "message",
-                    "type": "String",
-                    "description": "The message content for the alert.",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "// Displays an alert with a title and message\nALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')"
-            ],
-            "returns": {
-                "type": "null",
-                "description": ""
-            }
-        },
-        {
             "name": "AND",
             "access": "",
             "virtual": false,
