@@ -33,11 +33,11 @@ includeExport = (name) ->
 
 expressionFunctions = _.select expressionDocs.functions, (func) -> includeExport(func.name)
 
-expressionGenerator = new ExpressionDocumentationGenerator
+expressionGenerator = new ExpressionDocumentationGenerator(expressionFunctions)
 
-expressionFiles = expressionGenerator.generateDocs(expressionFunctions)
-expressionIndex = expressionGenerator.generateIndex(expressionFunctions)
-expressionHelp  = expressionGenerator.generateAppHelp(expressionFunctions)
+expressionFiles = expressionGenerator.generateDocs()
+expressionIndex = expressionGenerator.generateIndex()
+expressionHelp  = expressionGenerator.generateAppHelp()
 
 _.each expressionFiles, (file) ->
   fs.writeFileSync("./docs/output/help/expressions/reference/#{file.name.toLowerCase()}.md", file.fullMarkdown)
@@ -50,11 +50,11 @@ fs.writeFileSync("./docs/output/functions.coffee", expressionHelp)
 eventDocs = require('../docs/event_docs.json')
 eventFunctions = eventDocs.functions
 
-eventGenerator = new EventDocumentationGenerator
+eventGenerator = new EventDocumentationGenerator(eventFunctions)
 
-eventFiles = eventGenerator.generateDocs(eventFunctions)
-eventIndex = eventGenerator.generateIndex(eventFunctions)
-eventHelp  = eventGenerator.generateAppHelp(eventFunctions)
+eventFiles = eventGenerator.generateDocs()
+eventIndex = eventGenerator.generateIndex()
+eventHelp  = eventGenerator.generateAppHelp()
 
 _.each eventFiles, (file) ->
   fs.writeFileSync("./docs/output/help/events/reference/#{file.name.toLowerCase()}.md", file.fullMarkdown)

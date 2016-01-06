@@ -3,6 +3,8 @@ marked = require('marked')
 entities = new (require('html-entities').AllHtmlEntities)
 
 class BaseGenerator
+  constructor: (@functions) ->
+
   generateParameters: (parameters) ->
     parameters = _.map parameters, (param) ->
       optionality = if param.optional is true then ' (optional) ' else ' (__required__) '
@@ -30,8 +32,8 @@ class BaseGenerator
   getDescription: (func) ->
     func.description.replace(new RegExp("^#{func.name}\n"), '').trim()
 
-  generateAppHelp: (functions) ->
-    functions = _.map functions, (func) =>
+  generateAppHelp: ->
+    functions = _.map @functions, (func) =>
       desc = @getDescription(func)
       desc = @escapeLiteral(marked(desc.replace(/\n/g, "\\n")).replace(/^<p>/, '').replace(/<\/p>\n$/, ''))
       tip = entities.decode(desc.replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim())

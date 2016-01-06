@@ -20,8 +20,8 @@ permalink: /expressions/reference/#{func.name.toLowerCase()}/
 ---
 """
 
-  generateIndex: (functions) ->
-    titles = _.map functions, (func) =>
+  generateIndex: ->
+    titles = _.map @functions, (func) =>
       "### [#{func.name}](/expressions/reference/#{func.name.toLowerCase()}/)\n\n#{@getDescription(func)}"
 
     """
@@ -46,8 +46,8 @@ search: true
 #{titles.join("\n\n")}
 """
 
-  generateDocs: (functions) ->
-    _.map functions, (func) =>
+  generateDocs: ->
+    _.map @functions, (func) =>
       schema =
         name: func.name
 
@@ -57,10 +57,6 @@ search: true
       examples    = @generateExamples(func.examples)
 
       schema.markdown = """
-    ## #{func.name}
-
-    #{description}
-
     ### Parameters
 
     #{parameters}
