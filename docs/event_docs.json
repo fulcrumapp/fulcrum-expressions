@@ -24,12 +24,8 @@
                 }
             ],
             "examples": [
-                "ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')\n// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+"
-            ],
-            "returns": {
-                "type": "null",
-                "description": ""
-            }
+                "ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')\n\n// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+"
+            ]
         },
         {
             "name": "PROGRESS",
@@ -55,13 +51,92 @@
                 }
             ],
             "examples": [
-                "PROGRESS('Just a sec!', 'Searching for nearby facilities ...')\n// Displays an progress message that looks like\n// +-------------------------------------------+\n// | Just a sec!                               |\n// +-------------------------------------------|\n// |                                           |\n// | Searching for nearby facilities ...       |\n// |                                           |\n// +-------------------------------------------+",
-                "// Call with no parameters to dismiss the progress message.\nPROGRESS()"
+                "PROGRESS('Just a sec!', 'Searching for nearby facilities ...')\n\n// Displays an progress message that looks like\n// +-------------------------------------------+\n// | Just a sec!                               |\n// +-------------------------------------------|\n// |                                           |\n// | Searching for nearby facilities ...       |\n// |                                           |\n// +-------------------------------------------+",
+                "PROGRESS()\n\n// Call with no parameters to dismiss the progress message."
+            ]
+        },
+        {
+            "name": "REQUEST",
+            "access": "",
+            "virtual": false,
+            "description": "REQUEST\nPerforms an HTTP request and executes the callback on completion.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "The options to pass for the request",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.url",
+                    "type": "string",
+                    "description": "The url for the request",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.method",
+                    "type": "string",
+                    "description": "The HTTP method for the request (POST, PUT, DELETE, etc.)",
+                    "default": "GET",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.followRedirect",
+                    "type": "boolean",
+                    "description": "Should the request follow any redirects",
+                    "default": true,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.headers",
+                    "type": "Object",
+                    "description": "An object containing keys and values for additional header items",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.qs",
+                    "type": "Object",
+                    "description": "An object containing query string parameters (url parameters)",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.json",
+                    "type": "Object",
+                    "description": "An object to be passed in the request body, must be `JSON.stringify`able",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.body",
+                    "type": "string",
+                    "description": "The request body to send with a POST or PUT request",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "The function to call when the request is complete - The function is passed `error`, `response`, and `body` parameters",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
             ],
-            "returns": {
-                "type": "null",
-                "description": ""
-            }
+            "examples": [
+                "options = {\n  url: 'https://api.forecast.io/forecast/your_api_key/40,-100\n}\n\nfunction callback(error, response, body) {\n  if (error) {\n    ALERT('Error with request: ' + error)\n  } else {\n    weather = JSON.parse(body)\n    SETVALUE('weather_summary', weather.currently.summary)\n  }\n}\n\nREQUEST(options, callback);\n\n// Performs a request with options and execute callback on completion"
+            ]
         }
     ]
 }

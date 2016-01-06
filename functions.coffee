@@ -536,7 +536,7 @@ exports.REQUEST = (options, callback) ->
   options.headers ?= {}
   options.followRedirect ?= true
 
-  return NO_VALUE unless _.isString(options.url)
+  return ERROR('A url must be provided to REQUEST') unless _.isString(options.url)
 
   if _.isObject(options.qs)
     queryString = qs.stringify(options.qs)

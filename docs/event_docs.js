@@ -5,9 +5,9 @@
  * Display a message as an alert in the mobile app.
  * @param {String} title A short title for the alert.
  * @param {String} message The message content for the alert.
- * @returns {null}
  * @example
  * ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')
+ *
  * // Displays an alert that looks like
  * // +-------------------------------------------+
  * // | Warning!                                  |
@@ -27,9 +27,9 @@ function ALERT() {}
  * Display a non-dismissible progress message in the mobile app.
  * @param {String} title A short title for the progress message.
  * @param {String} message The message content for the progress alert.
- * @returns {null}
  * @example
  * PROGRESS('Just a sec!', 'Searching for nearby facilities ...')
+ *
  * // Displays an progress message that looks like
  * // +-------------------------------------------+
  * // | Just a sec!                               |
@@ -39,7 +39,43 @@ function ALERT() {}
  * // |                                           |
  * // +-------------------------------------------+
  * @example
- * // Call with no parameters to dismiss the progress message.
  * PROGRESS()
+ *
+ * // Call with no parameters to dismiss the progress message.
  */
 function PROGRESS() {}
+
+
+////REQUEST
+
+/**
+ * REQUEST
+ * Performs an HTTP request and executes the callback on completion.
+ * @param {Object} options The options to pass for the request
+ * @param {string} options.url The url for the request
+ * @param {string} [options.method=GET] The HTTP method for the request (POST, PUT, DELETE, etc.)
+ * @param {boolean} [options.followRedirect=true] Should the request follow any redirects
+ * @param {Object} [options.headers={}] An object containing keys and values for additional header items
+ * @param {Object} [options.qs] An object containing query string parameters (url parameters)
+ * @param {Object} [options.json] An object to be passed in the request body, must be `JSON.stringify`able
+ * @param {string} [options.body] The request body to send with a POST or PUT request
+ * @param {function} callback The function to call when the request is complete - The function is passed `error`, `response`, and `body` parameters
+ * @example
+ * options = {
+ *   url: 'https://api.forecast.io/forecast/your_api_key/40,-100
+ * }
+ *
+ * function callback(error, response, body) {
+ *   if (error) {
+ *     ALERT('Error with request: ' + error)
+ *   } else {
+ *     weather = JSON.parse(body)
+ *     SETVALUE('weather_summary', weather.currently.summary)
+ *   }
+ * }
+ *
+ * REQUEST(options, callback);
+ *
+ * // Performs a request with options and execute callback on completion
+ */
+function REQUEST() {}
