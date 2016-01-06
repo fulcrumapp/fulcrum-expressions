@@ -24,7 +24,39 @@
                 }
             ],
             "examples": [
-                "// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+\nALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')"
+                "ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')\n// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+"
+            ],
+            "returns": {
+                "type": "null",
+                "description": ""
+            }
+        },
+        {
+            "name": "PROGRESS",
+            "access": "",
+            "virtual": false,
+            "description": "PROGRESS\nDisplay a non-dismissible progress message in the mobile app.",
+            "parameters": [
+                {
+                    "name": "title",
+                    "type": "String",
+                    "description": "A short title for the progress message.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The message content for the progress alert.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "PROGRESS('Just a sec!', 'Searching for nearby facilities ...')\n// Displays an progress message that looks like\n// +-------------------------------------------+\n// | Just a sec!                               |\n// +-------------------------------------------|\n// |                                           |\n// | Searching for nearby facilities ...       |\n// |                                           |\n// +-------------------------------------------+",
+                "// Call with no parameters to dismiss the progress message.\nPROGRESS()"
             ],
             "returns": {
                 "type": "null",
