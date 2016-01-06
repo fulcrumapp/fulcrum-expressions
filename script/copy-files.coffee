@@ -33,8 +33,13 @@ if ios
 if web
   copyFile(expressionjs, path.join(web, 'public', 'resources', 'expressions.js'))
   copyFile('./docs/output/functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'expression_functions.js.coffee'))
+  copyFile('./docs/output/event_functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'event_functions.js.coffee'))
 
 if site
   fs.remove(path.join(site, '_expressions', 'reference'))
   fs.mkdir(path.join(site, '_expressions', 'reference'))
-  copyFile('./docs/output/help', path.join(site, '_expressions'))
+  copyFile('./docs/output/help/expressions', path.join(site, '_expressions'))
+
+  fs.remove(path.join(site, '_events', 'reference'))
+  fs.mkdir(path.join(site, '_events', 'reference'))
+  copyFile('./docs/output/help/events', path.join(site, '_events'))

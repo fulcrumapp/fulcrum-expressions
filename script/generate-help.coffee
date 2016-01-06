@@ -1,7 +1,8 @@
 fs = require('fs')
 _ = require('underscore')
-marked = require('marked')
-entities = new (require('html-entities').AllHtmlEntities)
+
+ExpressionDocumentationGenerator = require('./generators/expression')
+EventDocumentationGenerator = require('./generators/event')
 
 SKIP_EXPORTS = [
   'COUNTRY',
@@ -22,149 +23,40 @@ SKIP_EXPORTS = [
   'X_ISUPDATE'
 ]
 
-class DocumentationGenerator
-  generateDocs: (functions) ->
-    _.map functions, (func) =>
-      schema =
-        name: func.name
-
-      # strip out the function name if it starts with it
-      description = @getDescription(func)
-
-      parameters = @generateParameters(func.parameters)
-      returns    = @generateReturns(func.returns)
-      examples   = @generateExamples(func.examples)
-
-      schema.markdown = """
-    ## #{func.name}
-
-    #{description}
-
-    ### Parameters
-
-    #{parameters}
-
-    ### Returns
-
-    #{returns}
-
-    ### Examples
-
-    #{examples}
-    """
-
-      schema.fullMarkdown = @helpFrontMatter(func) + "\n\n" + schema.markdown
-
-      schema
-
-  generateParameters: (parameters) ->
-    parameters = _.map parameters, (param) ->
-      optionality = if param.optional is true then ' (optional) ' else ' (__required__) '
-      defaultValue = if param.default.length is 0 then '' else " [default = #{param.default}] "
-      "`#{param.name}` #{param.type}#{optionality}#{defaultValue}- #{param.description}"
-
-    if parameters.length is 0
-      'No parameters'
-    else
-      parameters.join("\n\n").trim()
-
-  generateReturns: (returns) ->
-    description = if returns.description.length is 0 then '' else " - #{returns.description} "
-    markdown = 'No return value'
-    markdown = "#{returns.type}#{description}" if returns.type
-    markdown.trim()
-
-  generateExamples: (examples) ->
-    examples = _.map examples, (example) ->
-      parts = example.split("\n")
-      returns = parts[0]
-      rest = parts.slice(1)
-      final = rest.concat(["\n#{returns}"]).join("\n")
-      "\n~~~\n#{final}\n~~~\n{: .language-js}"
-
-    if examples.length is 0
-      'No examples'
-    else
-      examples.join("\n\n").trim()
-
-  getDescription: (func) ->
-    func.description.replace(new RegExp("^#{func.name}\n"), '').trim()
-
-  generateIndex: (functions) ->
-    titles = _.map functions, (func) =>
-      "### [#{func.name}](/expressions/reference/#{func.name.toLowerCase()}/)\n\n#{@getDescription(func)}"
-
-    """
----
-layout: default
-section: expressions
-order: 2
-title: "Function Reference"
-description: "Function reference for calculation fields"
-category: section
-search: true
----
-
-## Calculation Expressions
-
-<div class="row">
-  <div class="col-xs-12 col-md-4">
-    <input type="search" class="form-control search" placeholder="Search expressions" />
-  </div>
-</div>
-
-#{titles.join("\n\n")}
-"""
-
-  cleanDescription: (func) ->
-    marked(@getDescription(func)).replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim()
-
-  helpFrontMatter: (func) ->
-    """
----
-layout: default
-section: expressions
-title: "#{func.name}"
-description: "#{@cleanDescription(func)}"
-category: section
-permalink: /expressions/reference/#{func.name.toLowerCase()}/
----
-"""
-
-  escapeLiteral: (literal) ->
-    literal.replace(/"/, "\\\"")
-
-  generateAppHelp: (functions) ->
-    functions = _.map functions, (func) =>
-      desc = @getDescription(func)
-      desc = @escapeLiteral(marked(desc.replace(/\n/g, "\\n")).replace(/^<p>/, '').replace(/<\/p>\n$/, ''))
-      tip = entities.decode(desc.replace(/(<([^>]+)>)/ig, '').replace(/\n/g, ' ').trim())
-
-      "    { identifier: \"#{func.name}\", description: \"#{desc}\", tip: \"#{tip}\" }"
-
-    """
-    class window.ExpressionFunctions
-      @FUNCTIONS: [
-#{functions.join("\n")}
-      ]
-    """
-
-docs = JSON.parse(fs.readFileSync('./docs/docs.json'))
+#
+# Generate Expression Docs
+#
+expressionDocs = require('../docs/docs.json')
 
 includeExport = (name) ->
   _.indexOf(SKIP_EXPORTS, name) is -1
 
-functions = _.select docs.functions, (func) -> includeExport(func.name)
+expressionFunctions = _.select expressionDocs.functions, (func) -> includeExport(func.name)
 
-generator = new DocumentationGenerator
+expressionGenerator = new ExpressionDocumentationGenerator
 
-files = generator.generateDocs(functions)
-index = generator.generateIndex(functions)
-help  = generator.generateAppHelp(functions)
+expressionFiles = expressionGenerator.generateDocs(expressionFunctions)
+expressionIndex = expressionGenerator.generateIndex(expressionFunctions)
+expressionHelp  = expressionGenerator.generateAppHelp(expressionFunctions)
 
-_.each files, (file) ->
-  fs.writeFileSync("./docs/output/help/reference/#{file.name.toLowerCase()}.md", file.fullMarkdown)
+_.each expressionFiles, (file) ->
+  fs.writeFileSync("./docs/output/help/expressions/reference/#{file.name.toLowerCase()}.md", file.fullMarkdown)
+fs.writeFileSync("./docs/output/help/expressions/reference.md", expressionIndex)
+fs.writeFileSync("./docs/output/functions.coffee", expressionHelp)
 
-fs.writeFileSync("./docs/output/help/reference.md", index)
+#
+# Generate Data Event Docs
+#
+eventDocs = require('../docs/event_docs.json')
+eventFunctions = eventDocs.functions
 
-fs.writeFileSync("./docs/output/functions.coffee", help)
+eventGenerator = new EventDocumentationGenerator
+
+eventFiles = eventGenerator.generateDocs(eventFunctions)
+eventIndex = eventGenerator.generateIndex(eventFunctions)
+eventHelp  = eventGenerator.generateAppHelp(eventFunctions)
+
+_.each eventFiles, (file) ->
+  fs.writeFileSync("./docs/output/help/events/reference/#{file.name.toLowerCase()}.md", file.fullMarkdown)
+fs.writeFileSync("./docs/output/help/events/reference.md", eventIndex)
+fs.writeFileSync("./docs/output/event_functions.coffee", eventHelp)

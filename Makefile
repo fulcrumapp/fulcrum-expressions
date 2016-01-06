@@ -19,7 +19,8 @@ docs:
 
 help:
 	mkdir -p docs/output/help
-	mkdir -p docs/output/help/reference
+	mkdir -p docs/output/help/expressions/reference
+	mkdir -p docs/output/help/events/reference
 	./node_modules/coffee-script/bin/coffee script/generate-help.coffee
 
 copy:
