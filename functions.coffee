@@ -527,8 +527,7 @@ exports.GETRESULT = ->
   $$runtime.$$result
 
 exports.REQUEST = (options, callback) ->
-  unless _.isFunction(callback)
-    return callback(new Error('callback must be provided'))
+  return unless _.isFunction(callback)
 
   if _.isString(options)
     options = { url: options }
