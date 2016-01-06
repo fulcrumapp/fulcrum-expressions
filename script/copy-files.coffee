@@ -42,4 +42,4 @@ if site
 
   fs.remove(path.join(site, '_events', 'reference'))
   fs.mkdir(path.join(site, '_events', 'reference'))
-  copyFile('./docs/output/help/events', path.join(site, '_events'))
+  copyFile('./docs/output/help/events', path.join(site, '_data-events'))
