@@ -20,6 +20,28 @@
 function ALERT() {}
 
 
+////OPENURL
+
+/**
+ * OPENURL
+ * Open a URL for a website or mobile app.
+ * @param {String} url The URL to open
+ * @example
+ * OPENURL('https://www.google.com/search?q=Fulcrum+Mobile+Solutions')
+ *
+ * // Opens a web browser to the specified address
+ * @example
+ * OPENURL('comgooglemaps://?q=Pizza&center=37.759748,-122.427135')
+ *
+ * // Opens google maps and searches for Pizza near a location
+ * @example
+ * OPENURL('mailto:clark.griswold@gmail.com?subject=turn+those+lights+off!&body=jk,+i+love+them.')
+ *
+ * // Opens an email client with a predefined subject and body
+ */
+function OPENURL() {}
+
+
 ////PROGRESS
 
 /**

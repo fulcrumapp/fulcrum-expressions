@@ -28,6 +28,27 @@
             ]
         },
         {
+            "name": "OPENURL",
+            "access": "",
+            "virtual": false,
+            "description": "OPENURL\nOpen a URL for a website or mobile app.",
+            "parameters": [
+                {
+                    "name": "url",
+                    "type": "String",
+                    "description": "The URL to open",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "OPENURL('https://www.google.com/search?q=Fulcrum+Mobile+Solutions')\n\n// Opens a web browser to the specified address",
+                "OPENURL('comgooglemaps://?q=Pizza&center=37.759748,-122.427135')\n\n// Opens google maps and searches for Pizza near a location",
+                "OPENURL('mailto:clark.griswold@gmail.com?subject=turn+those+lights+off!&body=jk,+i+love+them.')\n\n// Opens an email client with a predefined subject and body"
+            ]
+        },
+        {
             "name": "PROGRESS",
             "access": "",
             "virtual": false,
