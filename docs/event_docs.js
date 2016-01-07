@@ -146,3 +146,26 @@ function REQUEST() {}
  * // Sets the value of a weather summary field
  */
 function SETVALUE() {}
+
+
+////SETREADONLY
+
+/**
+ * SETREADONLY
+ * Sets a field to be read-only or editable.
+ * @param {String} field The data name
+ * @param {boolean|null} readOnly Boolean value representing whether the field should be read-only
+ * @example
+ * SETREADONLY('weather_summary', true)
+ *
+ * // Sets the field to read only, not editable by the user
+ * @example
+ * SETREADONLY('weather_summary', false)
+ *
+ * // Sets the field to be active, editable by the user
+ * @example
+ * SETREADONLY('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETREADONLY and uses the original setting from form schema
+ */
+function SETREADONLY() {}

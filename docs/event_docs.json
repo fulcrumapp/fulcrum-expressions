@@ -206,6 +206,38 @@
             "examples": [
                 "SETVALUE('weather_summary', 'Just beautiful')\n\n// Sets the value of a weather summary field"
             ]
+        },
+        {
+            "name": "SETREADONLY",
+            "access": "",
+            "virtual": false,
+            "description": "SETREADONLY\nSets a field to be read-only or editable.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "readOnly",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be read-only",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETREADONLY('weather_summary', true)\n\n// Sets the field to read only, not editable by the user",
+                "SETREADONLY('weather_summary', false)\n\n// Sets the field to be active, editable by the user",
+                "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from form schema"
+            ]
         }
     ]
 }
