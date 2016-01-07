@@ -4,7 +4,7 @@ BaseGenerator = require('./base_generator')
 class EventGenerator extends BaseGenerator
   generateExamples: (examples) ->
     examples = _.map examples, (example) ->
-      "\n~~~\n#{example}\n~~~\n{: .language-js}"
+      "\n{% highlight js %}\n#{example}\n{% endhighlight %}"
 
     if examples.length is 0
       'No examples'
