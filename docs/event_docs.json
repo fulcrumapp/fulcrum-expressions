@@ -28,6 +28,27 @@
             ]
         },
         {
+            "name": "INVALID",
+            "access": "",
+            "virtual": false,
+            "description": "INVALID\nDisplay a validation error message and stop the record, or repeatable item, from being saved.",
+            "parameters": [
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The validation error message content for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "INVALID('Depth must be less than 20.')\n\n// Displays an alert and stops the record from being saved",
+                "ON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.')\n   }\n});\n\n// Use with the 'validate-record' event to stop a record from being saved",
+                "ON('validate-repeatable', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!')\n   }\n});\n\n// Use with the 'validate-repeatable' event to stop a repeatable from being saved"
+            ]
+        },
+        {
             "name": "OPENURL",
             "access": "",
             "virtual": false,

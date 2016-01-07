@@ -20,6 +20,36 @@
 function ALERT() {}
 
 
+////INVALID
+
+/**
+ * INVALID
+ * Display a validation error message and stop the record, or repeatable item, from being saved.
+ * @param {String} message The validation error message content for the alert
+ * @example
+ * INVALID('Depth must be less than 20.')
+ *
+ * // Displays an alert and stops the record from being saved
+ * @example
+ * ON('validate-record', function (event) {
+ *    if (NUM($depth) >= 20) {
+ *      INVALID('Depth must be less than 20.')
+ *    }
+ * });
+ *
+ * // Use with the 'validate-record' event to stop a record from being saved
+ * @example
+ * ON('validate-repeatable', function (event) {
+ *    if (!ISSELECTED($choice_field, 'Purple')) {
+ *      INVALID('You gotta pick purple!')
+ *    }
+ * });
+ *
+ * // Use with the 'validate-repeatable' event to stop a repeatable from being saved
+ */
+function INVALID() {}
+
+
 ////OPENURL
 
 /**
