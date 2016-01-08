@@ -1159,7 +1159,12 @@ exports.SEARCH = (needle, haystack, startPosition) ->
   index + 1
 
 exports.SETCHOICEFILTER = (dataName, value) ->
-  SETFORMATTRIBUTES(dataName, choice_filter: if value? then value else null)
+  filterValue = if value?
+    if not _.isArray(value) then [value] else value
+  else
+    null
+
+  SETFORMATTRIBUTES(dataName, choice_filter: filterValue)
 
 exports.SETCHOICES = (dataName, value) ->
   # TODO(zhm) throw some kind of error here if the param is wrong
