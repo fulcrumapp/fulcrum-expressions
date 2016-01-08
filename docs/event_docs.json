@@ -181,6 +181,39 @@
             ]
         },
         {
+            "name": "SETCHOICES",
+            "access": "",
+            "virtual": false,
+            "description": "SETCHOICES\nSet the available choices for a choice field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": [
+                        "Array",
+                        "null"
+                    ],
+                    "description": "The minimum length of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "choices = ['Rain', 'Hail', 'Snow', 'Graupel']\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of values",
+                "choices = [\n  ['Light Rain', 'light_rain'],\n  ['Heavy Rain', 'heavy_rain']\n]\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order",
+                "choices = [\n  { label: 'Light Rain', value: 'light_rain' },\n  { label: 'Heavy Rain', value: 'heavy_rain' }\n]\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of labels and values in an object containing \"label\" and \"value\" keys",
+                "SETCHOICES('weather_summary', null)\n\n// Unsets any override previously set by SETCHOICES and uses the original setting from the form schema"
+            ]
+        },
+        {
             "name": "SETDESCRIPTION",
             "access": "",
             "virtual": false,

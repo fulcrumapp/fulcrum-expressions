@@ -133,6 +133,42 @@ function PROGRESS() {}
 function REQUEST() {}
 
 
+////SETCHOICES
+
+/**
+ * SETCHOICES
+ * Set the available choices for a choice field.
+ * @param {String} field The data name for the field
+ * @param {Array|null} length The minimum length of the field
+ * @example
+ * choices = ['Rain', 'Hail', 'Snow', 'Graupel']
+ * SETCHOICES('weather_summary', choices)
+ *
+ * // Sets the available choices of the weather summary field to an array of values
+ * @example
+ * choices = [
+ *   ['Light Rain', 'light_rain'],
+ *   ['Heavy Rain', 'heavy_rain']
+ * ]
+ * SETCHOICES('weather_summary', choices)
+ *
+ * // Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order
+ * @example
+ * choices = [
+ *   { label: 'Light Rain', value: 'light_rain' },
+ *   { label: 'Heavy Rain', value: 'heavy_rain' }
+ * ]
+ * SETCHOICES('weather_summary', choices)
+ *
+ * // Sets the available choices of the weather summary field to an array of labels and values in an object containing "label" and "value" keys
+ * @example
+ * SETCHOICES('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETCHOICES and uses the original setting from the form schema
+ */
+function SETCHOICES() {}
+
+
 ////SETDESCRIPTION
 
 /**
