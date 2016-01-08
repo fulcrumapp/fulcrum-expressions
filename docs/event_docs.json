@@ -240,6 +240,37 @@
             ]
         },
         {
+            "name": "SETLABEL",
+            "access": "",
+            "virtual": false,
+            "description": "SETLABEL\nSet the label of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "hidden",
+                    "type": [
+                        "String",
+                        "null"
+                    ],
+                    "description": "The text for the field label",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETLABEL('weather_summary', 'Weather Report')\n\n// Sets the field's label to 'Weather Report'",
+                "SETLABEL('weather_summary', null)\n\n// Unsets any override previously set by SETLABEL and uses the original setting from the form schema"
+            ]
+        },
+        {
             "name": "SETVALUE",
             "access": "",
             "virtual": false,

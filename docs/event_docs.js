@@ -171,6 +171,25 @@ function SETDESCRIPTION() {}
 function SETHIDDEN() {}
 
 
+////SETLABEL
+
+/**
+ * SETLABEL
+ * Set the label of a field.
+ * @param {String} field The data name for the field
+ * @param {String|null} hidden The text for the field label
+ * @example
+ * SETLABEL('weather_summary', 'Weather Report')
+ *
+ * // Sets the field's label to 'Weather Report'
+ * @example
+ * SETLABEL('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETLABEL and uses the original setting from the form schema
+ */
+function SETLABEL() {}
+
+
 ////SETVALUE
 
 /**
