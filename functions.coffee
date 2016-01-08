@@ -1310,6 +1310,9 @@ exports.SETFORMATTRIBUTES = (dataName, attributes) ->
 exports.SHOWERRORS = (showErrors=true) ->
   $$runtime.showErrors = showErrors
 
+exports.SHUFFLE = (values) ->
+  _.shuffle(toArray(values))
+
 exports.SIGN = (number) ->
   number = NUM(number)
 
