@@ -181,6 +181,39 @@
             ]
         },
         {
+            "name": "SETCHOICEFILTER",
+            "access": "",
+            "virtual": false,
+            "description": "SETCHOICEFILTER\nFilter the choices in a choice field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "filter",
+                    "type": [
+                        "String",
+                        "Array",
+                        "null"
+                    ],
+                    "description": "The string or strings to filter choices by",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETCHOICEFILTER('weather_summary', 'cat')\n\n// Filters the choices in the weather summary field to those that contain 'cat'",
+                "SETCHOICEFILTER('weather_summary', ['cat', 'dog'])\n\n// Filters the choices in the weather summary field to those that contain 'cat' or 'dog'",
+                "SETCHOICEFILTER('weather_summary', null)\n\n// Unsets any filter previously set by SETCHOICEFILTER and applies no filter"
+            ]
+        },
+        {
             "name": "SETCHOICES",
             "access": "",
             "virtual": false,
@@ -195,12 +228,12 @@
                     "nullable": ""
                 },
                 {
-                    "name": "length",
+                    "name": "choices",
                     "type": [
                         "Array",
                         "null"
                     ],
-                    "description": "The minimum length of the field",
+                    "description": "The choices for the choice field",
                     "default": "",
                     "optional": "",
                     "nullable": ""

@@ -133,13 +133,36 @@ function PROGRESS() {}
 function REQUEST() {}
 
 
+////SETCHOICEFILTER
+
+/**
+ * SETCHOICEFILTER
+ * Filter the choices in a choice field.
+ * @param {String} field The data name for the field
+ * @param {String|Array|null} filter The string or strings to filter choices by
+ * @example
+ * SETCHOICEFILTER('weather_summary', 'cat')
+ *
+ * // Filters the choices in the weather summary field to those that contain 'cat'
+ * @example
+ * SETCHOICEFILTER('weather_summary', ['cat', 'dog'])
+ *
+ * // Filters the choices in the weather summary field to those that contain 'cat' or 'dog'
+ * @example
+ * SETCHOICEFILTER('weather_summary', null)
+ *
+ * // Unsets any filter previously set by SETCHOICEFILTER and applies no filter
+ */
+function SETCHOICEFILTER() {}
+
+
 ////SETCHOICES
 
 /**
  * SETCHOICES
  * Set the available choices for a choice field.
  * @param {String} field The data name for the field
- * @param {Array|null} length The minimum length of the field
+ * @param {Array|null} choices The choices for the choice field
  * @example
  * choices = ['Rain', 'Hail', 'Snow', 'Graupel']
  * SETCHOICES('weather_summary', choices)
