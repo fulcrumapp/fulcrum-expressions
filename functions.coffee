@@ -138,7 +138,7 @@ exports.CODE = (string) ->
 
 # _.compact removes '' and 0 from the array, which is somewhat unexpected
 exports.COMPACT = (value) ->
-  return undefined unless _.isArray(value)
+  return NO_VALUE unless _.isArray(value)
 
   _.filter value, (item) -> item?
 
