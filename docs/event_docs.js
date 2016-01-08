@@ -190,6 +190,29 @@ function SETHIDDEN() {}
 function SETLABEL() {}
 
 
+////SETREQUIRED
+
+/**
+ * SETREQUIRED
+ * Set whether or not a field is required.
+ * @param {String} field The data name for the field
+ * @param {boolean|null} hidden Boolean value representing whether the field should be required
+ * @example
+ * SETREQUIRED('weather_summary', true)
+ *
+ * // Sets the weather summary field as required
+ * @example
+ * SETREQUIRED('weather_summary', false)
+ *
+ * // Sets the weather summary field as not required
+ * @example
+ * SETREQUIRED('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema
+ */
+function SETREQUIRED() {}
+
+
 ////SETVALUE
 
 /**

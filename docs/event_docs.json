@@ -271,6 +271,38 @@
             ]
         },
         {
+            "name": "SETREQUIRED",
+            "access": "",
+            "virtual": false,
+            "description": "SETREQUIRED\nSet whether or not a field is required.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "hidden",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be required",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETREQUIRED('weather_summary', true)\n\n// Sets the weather summary field as required",
+                "SETREQUIRED('weather_summary', false)\n\n// Sets the weather summary field as not required",
+                "SETREQUIRED('weather_summary', null)\n\n// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema"
+            ]
+        },
+        {
             "name": "SETVALUE",
             "access": "",
             "virtual": false,
