@@ -1916,6 +1916,21 @@ function SETRESULT() {}
 function SHOWERRORS() {}
 
 
+////SHUFFLE
+
+/**
+ * SHUFFLE
+ * Randomizes an array of items
+ * @param {Array} value an array of items to randomize
+ * @returns {Array}
+ * @example
+ * // returns true
+ * var items = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+ * SHUFFLE(items)[0] != items[0]
+ */
+function SHUFFLE() {}
+
+
 ////SIGN
 
 /**

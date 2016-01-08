@@ -2974,6 +2974,29 @@
             }
         },
         {
+            "name": "SHUFFLE",
+            "access": "",
+            "virtual": false,
+            "description": "SHUFFLE\nRandomizes an array of items",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Array",
+                    "description": "an array of items to randomize",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nvar items = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];\nSHUFFLE(items)[0] != items[0]"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "SIGN",
             "access": "",
             "virtual": false,
