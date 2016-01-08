@@ -1,0 +1,460 @@
+{
+    "functions": [
+        {
+            "name": "ALERT",
+            "access": "",
+            "virtual": false,
+            "description": "ALERT\nDisplay a message as an alert in the mobile app.",
+            "parameters": [
+                {
+                    "name": "title",
+                    "type": "String",
+                    "description": "A short title for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The message content for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')\n\n// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+"
+            ]
+        },
+        {
+            "name": "INVALID",
+            "access": "",
+            "virtual": false,
+            "description": "INVALID\nDisplay a validation error message and stop the record, or repeatable item, from being saved.",
+            "parameters": [
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The validation error message content for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "INVALID('Depth must be less than 20.')\n\n// Displays an alert and stops the record from being saved",
+                "ON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.')\n   }\n});\n\n// Use with the 'validate-record' event to stop a record from being saved",
+                "ON('validate-repeatable', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!')\n   }\n});\n\n// Use with the 'validate-repeatable' event to stop a repeatable from being saved"
+            ]
+        },
+        {
+            "name": "OPENURL",
+            "access": "",
+            "virtual": false,
+            "description": "OPENURL\nOpen a URL for a website or mobile app.",
+            "parameters": [
+                {
+                    "name": "url",
+                    "type": "String",
+                    "description": "The URL to open",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "OPENURL('https://www.google.com/search?q=Fulcrum+Mobile+Solutions')\n\n// Opens a web browser to the specified address",
+                "OPENURL('comgooglemaps://?q=Pizza&center=37.759748,-122.427135')\n\n// Opens google maps and searches for Pizza near a location",
+                "OPENURL('mailto:clark.griswold@gmail.com?subject=turn+those+lights+off!&body=jk,+i+love+them.')\n\n// Opens an email client with a predefined subject and body"
+            ]
+        },
+        {
+            "name": "PROGRESS",
+            "access": "",
+            "virtual": false,
+            "description": "PROGRESS\nDisplay a non-dismissible progress message in the mobile app.",
+            "parameters": [
+                {
+                    "name": "title",
+                    "type": "String",
+                    "description": "A short title for the progress message",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The message content for the progress alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "PROGRESS('Just a sec!', 'Searching for nearby facilities ...')\n\n// Displays an progress message that looks like\n// +-------------------------------------------+\n// | Just a sec!                               |\n// +-------------------------------------------|\n// |                                           |\n// | Searching for nearby facilities ...       |\n// |                                           |\n// +-------------------------------------------+",
+                "PROGRESS()\n\n// Call with no parameters to dismiss the progress message."
+            ]
+        },
+        {
+            "name": "REQUEST",
+            "access": "",
+            "virtual": false,
+            "description": "REQUEST\nPerforms an HTTP request and executes the callback on completion.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "The options to pass for the request",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.url",
+                    "type": "string",
+                    "description": "The url for the request",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.method",
+                    "type": "string",
+                    "description": "The HTTP method for the request (POST, PUT, DELETE, etc.)",
+                    "default": "GET",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.followRedirect",
+                    "type": "boolean",
+                    "description": "Should the request follow any redirects",
+                    "default": true,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.headers",
+                    "type": "Object",
+                    "description": "An object containing keys and values for additional header items",
+                    "default": "{}",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.qs",
+                    "type": "Object",
+                    "description": "An object containing query string parameters (url parameters)",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.json",
+                    "type": "Object",
+                    "description": "An object to be passed in the request body, must be `JSON.stringify`able",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.body",
+                    "type": "string",
+                    "description": "The request body to send with a POST or PUT request",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "The function to call when the request is complete - The function is passed `error`, `response`, and `body` parameters",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "options = {\n  url: 'https://api.forecast.io/forecast/your_api_key/40,-100\n}\n\nfunction callback(error, response, body) {\n  if (error) {\n    ALERT('Error with request: ' + error)\n  } else {\n    weather = JSON.parse(body)\n    SETVALUE('weather_summary', weather.currently.summary)\n  }\n}\n\nREQUEST(options, callback);\n\n// Performs a request with options and execute callback on completion"
+            ]
+        },
+        {
+            "name": "SETCHOICES",
+            "access": "",
+            "virtual": false,
+            "description": "SETCHOICES\nSet the available choices for a choice field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": [
+                        "Array",
+                        "null"
+                    ],
+                    "description": "The minimum length of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "choices = ['Rain', 'Hail', 'Snow', 'Graupel']\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of values",
+                "choices = [\n  ['Light Rain', 'light_rain'],\n  ['Heavy Rain', 'heavy_rain']\n]\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order",
+                "choices = [\n  { label: 'Light Rain', value: 'light_rain' },\n  { label: 'Heavy Rain', value: 'heavy_rain' }\n]\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of labels and values in an object containing \"label\" and \"value\" keys",
+                "SETCHOICES('weather_summary', null)\n\n// Unsets any override previously set by SETCHOICES and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETDESCRIPTION",
+            "access": "",
+            "virtual": false,
+            "description": "SETDESCRIPTION\nSet the description of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The value to set for the field's description",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETDESCRIPTION('weather_summary', 'Could not automatically fetch weather data. Briefly describe the current weather.')\n\n// Sets the description of a weather summary field"
+            ]
+        },
+        {
+            "name": "SETHIDDEN",
+            "access": "",
+            "virtual": false,
+            "description": "SETHIDDEN\nSet the visibility of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "hidden",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be hidden",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETHIDDEN('weather_summary', true)\n\n// Hides the weather summary field",
+                "SETHIDDEN('weather_summary', false)\n\n// Shows the weather summary field",
+                "SETHIDDEN('weather_summary', null)\n\n// Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETLABEL",
+            "access": "",
+            "virtual": false,
+            "description": "SETLABEL\nSet the label of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "hidden",
+                    "type": [
+                        "String",
+                        "null"
+                    ],
+                    "description": "The text for the field label",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETLABEL('weather_summary', 'Weather Report')\n\n// Sets the field's label to 'Weather Report'",
+                "SETLABEL('weather_summary', null)\n\n// Unsets any override previously set by SETLABEL and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETMAXLENGTH",
+            "access": "",
+            "virtual": false,
+            "description": "SETMAXLENGTH\nSet the maximum length for a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "description": "The maximum length of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETMAXLENGTH('weather_summary', 25)\n\n// Sets the maximum length of the weather summary field to 25",
+                "SETMAXLENGTH('weather_summary', null)\n\n// Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETMINLENGTH",
+            "access": "",
+            "virtual": false,
+            "description": "SETMINLENGTH\nSet the minimum length for a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "description": "The minimum length of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETMINLENGTH('weather_summary', 25)\n\n// Sets the minimum length of the weather summary field to 25",
+                "SETMINLENGTH('weather_summary', null)\n\n// Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETREQUIRED",
+            "access": "",
+            "virtual": false,
+            "description": "SETREQUIRED\nSet whether or not a field is required.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "hidden",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be required",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETREQUIRED('weather_summary', true)\n\n// Sets the weather summary field as required",
+                "SETREQUIRED('weather_summary', false)\n\n// Sets the weather summary field as not required",
+                "SETREQUIRED('weather_summary', null)\n\n// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETVALUE",
+            "access": "",
+            "virtual": false,
+            "description": "SETVALUE\nSet the value of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field to set",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The value to set for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETVALUE('weather_summary', 'Just beautiful')\n\n// Sets the value of a weather summary field"
+            ]
+        },
+        {
+            "name": "SETREADONLY",
+            "access": "",
+            "virtual": false,
+            "description": "SETREADONLY\nSets a field to be read-only or editable.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "readOnly",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be read-only",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETREADONLY('weather_summary', true)\n\n// Sets the field to read only, not editable by the user",
+                "SETREADONLY('weather_summary', false)\n\n// Sets the field to be active, editable by the user",
+                "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from the form schema"
+            ]
+        }
+    ]
+}

@@ -526,12 +526,8 @@ exports.GCD = ->
 exports.GETRESULT = ->
   $$runtime.$$result
 
-exports.GETURL = (options, callback) ->
-  REQUEST(options, callback)
-
 exports.REQUEST = (options, callback) ->
-  unless _.isFunction(callback)
-    return callback(new Error('callback must be provided'))
+  return ERROR('A callback must be provided to REQUEST') unless _.isFunction(callback)
 
   if _.isString(options)
     options = { url: options }
@@ -540,7 +536,7 @@ exports.REQUEST = (options, callback) ->
   options.headers ?= {}
   options.followRedirect ?= true
 
-  return NO_VALUE unless _.isString(options.url)
+  return ERROR('A url must be provided to REQUEST') unless _.isString(options.url)
 
   if _.isObject(options.qs)
     queryString = qs.stringify(options.qs)
@@ -1163,7 +1159,12 @@ exports.SEARCH = (needle, haystack, startPosition) ->
   index + 1
 
 exports.SETCHOICEFILTER = (dataName, value) ->
-  SETFORMATTRIBUTES(dataName, choice_filter: if value? then value else null)
+  filterValue = if value?
+    if not _.isArray(value) then [value] else value
+  else
+    null
+
+  SETFORMATTRIBUTES(dataName, choice_filter: filterValue)
 
 exports.SETCHOICES = (dataName, value) ->
   # TODO(zhm) throw some kind of error here if the param is wrong

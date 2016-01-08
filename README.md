@@ -3,11 +3,10 @@
 This implements the runtime for javascript expressions in Fulcrum.
 
 ### Setup
-```sh
-# install browserify and coffee-script globally
-npm install -g browserify coffee-script
 
-# cd to the fulcrum-expressions repo. install anything else
+Install npm dependencies
+
+```sh
 npm install
 ```
 
@@ -35,7 +34,7 @@ You can define the paths to the Fulcrum repos using environment variables in you
 export FULCRUM_ANDROID=/path/to/android/app
 export FULCRUM_IOS=/path/to/ios/app
 export FULCRUM_WEB=/path/to/web/app
-export FULCRUM_SITE=/path/to/website
+export FULCRUM_DEV_SITE=/path/to/website
 ```
 
 Or you can assign them in the make command:
