@@ -271,6 +271,68 @@
             ]
         },
         {
+            "name": "SETMAXLENGTH",
+            "access": "",
+            "virtual": false,
+            "description": "SETMAXLENGTH\nSet the maximum length for a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "description": "The maximum length of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETMAXLENGTH('weather_summary', 25)\n\n// Sets the maximum length of the weather summary field to 25",
+                "SETMAXLENGTH('weather_summary', null)\n\n// Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETMINLENGTH",
+            "access": "",
+            "virtual": false,
+            "description": "SETMINLENGTH\nSet the minimum length for a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "length",
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "description": "The minimum length of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETMINLENGTH('weather_summary', 25)\n\n// Sets the minimum length of the weather summary field to 25",
+                "SETMINLENGTH('weather_summary', null)\n\n// Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema"
+            ]
+        },
+        {
             "name": "SETREQUIRED",
             "access": "",
             "virtual": false,

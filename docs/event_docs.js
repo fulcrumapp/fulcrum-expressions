@@ -190,6 +190,44 @@ function SETHIDDEN() {}
 function SETLABEL() {}
 
 
+////SETMAXLENGTH
+
+/**
+ * SETMAXLENGTH
+ * Set the maximum length for a field.
+ * @param {String} field The data name for the field
+ * @param {number|null} length The maximum length of the field
+ * @example
+ * SETMAXLENGTH('weather_summary', 25)
+ *
+ * // Sets the maximum length of the weather summary field to 25
+ * @example
+ * SETMAXLENGTH('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema
+ */
+function SETMAXLENGTH() {}
+
+
+////SETMINLENGTH
+
+/**
+ * SETMINLENGTH
+ * Set the minimum length for a field.
+ * @param {String} field The data name for the field
+ * @param {number|null} length The minimum length of the field
+ * @example
+ * SETMINLENGTH('weather_summary', 25)
+ *
+ * // Sets the minimum length of the weather summary field to 25
+ * @example
+ * SETMINLENGTH('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema
+ */
+function SETMINLENGTH() {}
+
+
 ////SETREQUIRED
 
 /**
