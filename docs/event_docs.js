@@ -133,6 +133,21 @@ function PROGRESS() {}
 function REQUEST() {}
 
 
+////SETDESCRIPTION
+
+/**
+ * SETDESCRIPTION
+ * Set the description of a field.
+ * @param {String} field The data name for the field
+ * @param {String} value The value to set for the field's description
+ * @example
+ * SETDESCRIPTION('weather_summary', 'Could not automatically fetch weather data. Briefly describe the current weather.')
+ *
+ * // Sets the description of a weather summary field
+ */
+function SETDESCRIPTION() {}
+
+
 ////SETVALUE
 
 /**

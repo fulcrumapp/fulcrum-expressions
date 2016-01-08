@@ -181,6 +181,33 @@
             ]
         },
         {
+            "name": "SETDESCRIPTION",
+            "access": "",
+            "virtual": false,
+            "description": "SETDESCRIPTION\nSet the description of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The value to set for the field's description",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETDESCRIPTION('weather_summary', 'Could not automatically fetch weather data. Briefly describe the current weather.')\n\n// Sets the description of a weather summary field"
+            ]
+        },
+        {
             "name": "SETVALUE",
             "access": "",
             "virtual": false,
