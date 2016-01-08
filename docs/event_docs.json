@@ -208,6 +208,38 @@
             ]
         },
         {
+            "name": "SETHIDDEN",
+            "access": "",
+            "virtual": false,
+            "description": "SETHIDDEN\nSet the visibility of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "hidden",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be hidden",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETHIDDEN('weather_summary', true)\n\n// Hides the weather summary field",
+                "SETHIDDEN('weather_summary', false)\n\n// Shows the weather summary field",
+                "SETHIDDEN('weather_summary', null)\n\n// Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema"
+            ]
+        },
+        {
             "name": "SETVALUE",
             "access": "",
             "virtual": false,
@@ -263,7 +295,7 @@
             "examples": [
                 "SETREADONLY('weather_summary', true)\n\n// Sets the field to read only, not editable by the user",
                 "SETREADONLY('weather_summary', false)\n\n// Sets the field to be active, editable by the user",
-                "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from form schema"
+                "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from the form schema"
             ]
         }
     ]

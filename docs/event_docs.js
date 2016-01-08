@@ -148,6 +148,29 @@ function REQUEST() {}
 function SETDESCRIPTION() {}
 
 
+////SETHIDDEN
+
+/**
+ * SETHIDDEN
+ * Set the visibility of a field.
+ * @param {String} field The data name for the field
+ * @param {boolean|null} hidden Boolean value representing whether the field should be hidden
+ * @example
+ * SETHIDDEN('weather_summary', true)
+ *
+ * // Hides the weather summary field
+ * @example
+ * SETHIDDEN('weather_summary', false)
+ *
+ * // Shows the weather summary field
+ * @example
+ * SETHIDDEN('weather_summary', null)
+ *
+ * // Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema
+ */
+function SETHIDDEN() {}
+
+
 ////SETVALUE
 
 /**
@@ -181,6 +204,6 @@ function SETVALUE() {}
  * @example
  * SETREADONLY('weather_summary', null)
  *
- * // Unsets any override previously set by SETREADONLY and uses the original setting from form schema
+ * // Unsets any override previously set by SETREADONLY and uses the original setting from the form schema
  */
 function SETREADONLY() {}
