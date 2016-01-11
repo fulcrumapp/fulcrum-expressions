@@ -28,7 +28,7 @@ class BaseGenerator
       "    { identifier: \"#{func.name}\", description: \"#{desc}\", tip: \"#{tip}\" }"
 
     """
-    class window.ExpressionFunctions
+    class window.#{@globalName}
       @FUNCTIONS: [
 #{functions.join("\n")}
       ]

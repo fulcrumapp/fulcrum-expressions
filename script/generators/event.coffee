@@ -2,6 +2,8 @@ _ = require('underscore')
 BaseGenerator = require('./base_generator')
 
 class EventGenerator extends BaseGenerator
+  globalName: 'EventFunctions'
+
   generateExamples: (examples) ->
     examples = _.map examples, (example) ->
       "\n{% highlight js %}\n#{example}\n{% endhighlight %}"

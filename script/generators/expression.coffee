@@ -2,6 +2,8 @@ _ = require('underscore')
 BaseGenerator = require('./base_generator')
 
 class ExpressionGenerator extends BaseGenerator
+  globalName: 'ExpressionFunctions'
+
   generateExamples: (examples) ->
     examples = _.map examples, (example) ->
       parts = example.split("\n")
