@@ -72,7 +72,7 @@
                 }
             ],
             "examples": [
-                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\nON('save-record', callback);\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range"
+                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\nON('validate-record', callback);\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range"
             ]
         },
         {

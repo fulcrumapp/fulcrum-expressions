@@ -65,7 +65,7 @@ function INVALID() {}
  *   }
  * }
  *
- * ON('save-record', callback);
+ * ON('validate-record', callback);
  *
  * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
  */
