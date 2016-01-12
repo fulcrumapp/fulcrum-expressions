@@ -50,6 +50,28 @@ function ALERT() {}
 function INVALID() {}
 
 
+////ON
+
+/**
+ * ON
+ * Executes a callback when record, repeatable, or field events are triggered.
+ * @param {string} event The event name
+ * @param {function} callback The function to call when the specified event is triggered
+ * @example
+ *
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.')
+ *   }
+ * }
+ *
+ * ON('save-record', callback);
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ */
+function ON() {}
+
+
 ////OPENURL
 
 /**

@@ -49,6 +49,33 @@
             ]
         },
         {
+            "name": "ON",
+            "access": "",
+            "virtual": false,
+            "description": "ON\nExecutes a callback when record, repeatable, or field events are triggered.",
+            "parameters": [
+                {
+                    "name": "event",
+                    "type": "string",
+                    "description": "The event name",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "The function to call when the specified event is triggered",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\nON('save-record', callback);\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range"
+            ]
+        },
+        {
             "name": "OPENURL",
             "access": "",
             "virtual": false,
