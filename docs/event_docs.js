@@ -178,7 +178,7 @@ function PROGRESS() {}
  * @param {function} callback The function to call when the request is complete - The function is passed `error`, `response`, and `body` parameters
  * @example
  * options = {
- *   url: 'https://api.forecast.io/forecast/your_api_key/40,-100
+ *   url: 'https://api.forecast.io/forecast/your_api_key/40,-100'
  * }
  *
  * function callback(error, response, body) {

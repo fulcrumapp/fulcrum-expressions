@@ -235,7 +235,7 @@
                 }
             ],
             "examples": [
-                "options = {\n  url: 'https://api.forecast.io/forecast/your_api_key/40,-100\n}\n\nfunction callback(error, response, body) {\n  if (error) {\n    ALERT('Error with request: ' + error)\n  } else {\n    weather = JSON.parse(body)\n    SETVALUE('weather_summary', weather.currently.summary)\n  }\n}\n\nREQUEST(options, callback);\n\n// Performs a request with options and execute callback on completion"
+                "options = {\n  url: 'https://api.forecast.io/forecast/your_api_key/40,-100'\n}\n\nfunction callback(error, response, body) {\n  if (error) {\n    ALERT('Error with request: ' + error)\n  } else {\n    weather = JSON.parse(body)\n    SETVALUE('weather_summary', weather.currently.summary)\n  }\n}\n\nREQUEST(options, callback);\n\n// Performs a request with options and execute callback on completion"
             ]
         },
         {
