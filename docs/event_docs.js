@@ -58,7 +58,6 @@ function INVALID() {}
  * @param {string} event The event name
  * @param {function} callback The function to call when the specified event is triggered
  * @example
- *
  * var callback = function () {
  *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
  *     INVALID('Latitude must be between 40 and 41.')
@@ -68,6 +67,30 @@ function INVALID() {}
  * ON('validate-record', callback);
  *
  * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * }
+ *
+ * ON('change', 'weather_summary', callback);
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * }
+ *
+ * ON('change-geometry', callback);
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * }
+ *
+ * ON('change-geometry', 'repeatable_item', callback);
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
  */
 function ON() {}
 
