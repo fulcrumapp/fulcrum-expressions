@@ -49,10 +49,38 @@
             ]
         },
         {
+            "name": "OFF",
+            "access": "",
+            "virtual": false,
+            "description": "OFF\nDetaches an event handler set by ON.",
+            "parameters": [
+                {
+                    "name": "event",
+                    "type": "string",
+                    "description": "The event name",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "The function to detach",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "OFF('validate-record', callback)\n\n// Detaches an event handler from the validate-record event",
+                "OFF('validate-record')\n\n// Detaches all event handlers listening to the 'validate-record' event"
+            ]
+        },
+        {
             "name": "ON",
             "access": "",
             "virtual": false,
-            "description": "ON\nExecutes a callback when record, repeatable, or field events are triggered.",
+            "description": "ON\nAttaches an event handler that listens for record, repeatable, or field events.",
             "parameters": [
                 {
                     "name": "event",
@@ -72,10 +100,10 @@
                 }
             ],
             "examples": [
-                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\nON('validate-record', callback);\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range",
-                "var callback = function () {\n  // Do something with the new $weather_summary values\n}\n\nON('change', 'weather_summary', callback);\n\n// Listens for changes to the weather summary field and executes callback",
-                "var callback = function () {\n  // Do something with the location via LATITUDE() AND LONGITUDE() values\n}\n\nON('change-geometry', callback);\n\n// Listens for changes to a record's geometry (location) and executes callback",
-                "var callback = function () {\n  // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values\n}\n\nON('change-geometry', 'repeatable_item', callback);\n\n// Listens for changes to a repeatable item's geometry and executes callback"
+                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\nON('validate-record', callback)\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range",
+                "var callback = function () {\n  // Do something with the new $weather_summary values\n}\n\nON('change', 'weather_summary', callback)\n\n// Listens for changes to the weather summary field and executes callback",
+                "var callback = function () {\n  // Do something with the location via LATITUDE() AND LONGITUDE() values\n}\n\nON('change-geometry', callback)\n\n// Listens for changes to a record's geometry (location) and executes callback",
+                "var callback = function () {\n  // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values\n}\n\nON('change-geometry', 'repeatable_item', callback)\n\n// Listens for changes to a repeatable item's geometry and executes callback"
             ]
         },
         {

@@ -50,11 +50,30 @@ function ALERT() {}
 function INVALID() {}
 
 
+////OFF
+
+/**
+ * OFF
+ * Detaches an event handler set by ON.
+ * @param {string} event The event name
+ * @param {function} callback The function to detach
+ * @example
+ * OFF('validate-record', callback)
+ *
+ * // Detaches an event handler from the validate-record event
+ * @example
+ * OFF('validate-record')
+ *
+ * // Detaches all event handlers listening to the 'validate-record' event
+ */
+function OFF() {}
+
+
 ////ON
 
 /**
  * ON
- * Executes a callback when record, repeatable, or field events are triggered.
+ * Attaches an event handler that listens for record, repeatable, or field events.
  * @param {string} event The event name
  * @param {function} callback The function to call when the specified event is triggered
  * @example
@@ -64,7 +83,7 @@ function INVALID() {}
  *   }
  * }
  *
- * ON('validate-record', callback);
+ * ON('validate-record', callback)
  *
  * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
  * @example
@@ -72,7 +91,7 @@ function INVALID() {}
  *   // Do something with the new $weather_summary values
  * }
  *
- * ON('change', 'weather_summary', callback);
+ * ON('change', 'weather_summary', callback)
  *
  * // Listens for changes to the weather summary field and executes callback
  * @example
@@ -80,7 +99,7 @@ function INVALID() {}
  *   // Do something with the location via LATITUDE() AND LONGITUDE() values
  * }
  *
- * ON('change-geometry', callback);
+ * ON('change-geometry', callback)
  *
  * // Listens for changes to a record's geometry (location) and executes callback
  * @example
@@ -88,7 +107,7 @@ function INVALID() {}
  *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
  * }
  *
- * ON('change-geometry', 'repeatable_item', callback);
+ * ON('change-geometry', 'repeatable_item', callback)
  *
  * // Listens for changes to a repeatable item's geometry and executes callback
  */
