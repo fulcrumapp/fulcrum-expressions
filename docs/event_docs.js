@@ -271,6 +271,20 @@ function SETCHOICES() {}
 function SETDESCRIPTION() {}
 
 
+////SETGEOMETRY
+
+/**
+ * SETGEOMETRY
+ * Set the geometry of a record.
+ * @param {Object} geojson The GeoJSON representation of the geometry - currently only 'Point' is supported
+ * @example
+ * SETGEOMETRY({ type: 'Point', coordinates: [-100, 40] })
+ *
+ * // Sets the geometry of a record
+ */
+function SETGEOMETRY() {}
+
+
 ////SETHIDDEN
 
 /**
@@ -351,6 +365,20 @@ function SETMAXLENGTH() {}
 function SETMINLENGTH() {}
 
 
+////SETPROJECT
+
+/**
+ * SETPROJECT
+ * Set the project of a record.
+ * @param {String} project The project for the record
+ * @example
+ * SETPROJECT('Bells Crossing Phase 3')
+ *
+ * // Sets the project of a record
+ */
+function SETPROJECT() {}
+
+
 ////SETREQUIRED
 
 /**
@@ -372,6 +400,20 @@ function SETMINLENGTH() {}
  * // Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema
  */
 function SETREQUIRED() {}
+
+
+////SETSTATUS
+
+/**
+ * SETSTATUS
+ * Set the status of a record.
+ * @param {String} status The status value for the record
+ * @example
+ * SETSTATUS('inspection_pending')
+ *
+ * // Sets the status of a record
+ */
+function SETSTATUS() {}
 
 
 ////SETVALUE

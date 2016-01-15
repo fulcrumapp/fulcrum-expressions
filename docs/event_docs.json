@@ -332,6 +332,25 @@
             ]
         },
         {
+            "name": "SETGEOMETRY",
+            "access": "",
+            "virtual": false,
+            "description": "SETGEOMETRY\nSet the geometry of a record.",
+            "parameters": [
+                {
+                    "name": "geojson",
+                    "type": "Object",
+                    "description": "The GeoJSON representation of the geometry - currently only 'Point' is supported",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETGEOMETRY({ type: 'Point', coordinates: [-100, 40] })\n\n// Sets the geometry of a record"
+            ]
+        },
+        {
             "name": "SETHIDDEN",
             "access": "",
             "virtual": false,
@@ -457,6 +476,25 @@
             ]
         },
         {
+            "name": "SETPROJECT",
+            "access": "",
+            "virtual": false,
+            "description": "SETPROJECT\nSet the project of a record.",
+            "parameters": [
+                {
+                    "name": "project",
+                    "type": "String",
+                    "description": "The project for the record",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETPROJECT('Bells Crossing Phase 3')\n\n// Sets the project of a record"
+            ]
+        },
+        {
             "name": "SETREQUIRED",
             "access": "",
             "virtual": false,
@@ -486,6 +524,25 @@
                 "SETREQUIRED('weather_summary', true)\n\n// Sets the weather summary field as required",
                 "SETREQUIRED('weather_summary', false)\n\n// Sets the weather summary field as not required",
                 "SETREQUIRED('weather_summary', null)\n\n// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETSTATUS",
+            "access": "",
+            "virtual": false,
+            "description": "SETSTATUS\nSet the status of a record.",
+            "parameters": [
+                {
+                    "name": "status",
+                    "type": "String",
+                    "description": "The status value for the record",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETSTATUS('inspection_pending')\n\n// Sets the status of a record"
             ]
         },
         {
