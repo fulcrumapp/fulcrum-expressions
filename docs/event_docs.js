@@ -50,24 +50,66 @@ function ALERT() {}
 function INVALID() {}
 
 
+////OFF
+
+/**
+ * OFF
+ * Detaches an event handler set by ON.
+ * @param {string} event The event name
+ * @param {function} callback The function to detach
+ * @example
+ * OFF('validate-record', callback)
+ *
+ * // Detaches an event handler from the validate-record event
+ * @example
+ * OFF('validate-record')
+ *
+ * // Detaches all event handlers listening to the 'validate-record' event
+ */
+function OFF() {}
+
+
 ////ON
 
 /**
  * ON
- * Executes a callback when record, repeatable, or field events are triggered.
+ * Attaches an event handler that listens for record, repeatable, or field events.
  * @param {string} event The event name
  * @param {function} callback The function to call when the specified event is triggered
  * @example
- *
  * var callback = function () {
  *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
  *     INVALID('Latitude must be between 40 and 41.')
  *   }
  * }
  *
- * ON('validate-record', callback);
+ * ON('validate-record', callback)
  *
  * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * }
+ *
+ * ON('change', 'weather_summary', callback)
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * }
+ *
+ * ON('change-geometry', callback)
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * }
+ *
+ * ON('change-geometry', 'repeatable_item', callback)
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
  */
 function ON() {}
 
@@ -136,7 +178,7 @@ function PROGRESS() {}
  * @param {function} callback The function to call when the request is complete - The function is passed `error`, `response`, and `body` parameters
  * @example
  * options = {
- *   url: 'https://api.forecast.io/forecast/your_api_key/40,-100
+ *   url: 'https://api.forecast.io/forecast/your_api_key/40,-100'
  * }
  *
  * function callback(error, response, body) {
@@ -229,6 +271,20 @@ function SETCHOICES() {}
 function SETDESCRIPTION() {}
 
 
+////SETGEOMETRY
+
+/**
+ * SETGEOMETRY
+ * Set the geometry of a record.
+ * @param {Object} geojson The GeoJSON representation of the geometry - currently only 'Point' is supported
+ * @example
+ * SETGEOMETRY({ type: 'Point', coordinates: [-100, 40] })
+ *
+ * // Sets the geometry of a record
+ */
+function SETGEOMETRY() {}
+
+
 ////SETHIDDEN
 
 /**
@@ -309,6 +365,20 @@ function SETMAXLENGTH() {}
 function SETMINLENGTH() {}
 
 
+////SETPROJECT
+
+/**
+ * SETPROJECT
+ * Set the project of a record.
+ * @param {String} project The project for the record
+ * @example
+ * SETPROJECT('Bells Crossing Phase 3')
+ *
+ * // Sets the project of a record
+ */
+function SETPROJECT() {}
+
+
 ////SETREQUIRED
 
 /**
@@ -330,6 +400,20 @@ function SETMINLENGTH() {}
  * // Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema
  */
 function SETREQUIRED() {}
+
+
+////SETSTATUS
+
+/**
+ * SETSTATUS
+ * Set the status of a record.
+ * @param {String} status The status value for the record
+ * @example
+ * SETSTATUS('inspection_pending')
+ *
+ * // Sets the status of a record
+ */
+function SETSTATUS() {}
 
 
 ////SETVALUE

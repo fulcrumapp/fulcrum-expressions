@@ -37,7 +37,14 @@ order: 2
 title: "Data Events Reference"
 description: "Function reference for data events"
 category: section
+search: true
 ---
+
+<div class="row">
+  <div class="col-xs-12 col-md-4">
+    <input type="search" class="form-control search" placeholder="Search data event functions" />
+  </div>
+</div>
 
 #{titles.join("\n\n")}
 """
