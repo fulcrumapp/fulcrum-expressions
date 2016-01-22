@@ -1601,7 +1601,7 @@ exports.X_ISUPDATE = ->
   not X_ISNEW()
 
 hostFunctionExists = (name) ->
-  _.isFunction($$runtime["$$#{name}"])
+  typeof $$runtime["$$#{name}"] is 'function'
 
 hostFunctionCall = (name, args) ->
   $$runtime["$$#{name}"].apply($$runtime, args)
