@@ -1288,7 +1288,6 @@ exports.SETVALUE = (dataName, value) ->
       else
         $$runtime.form.elements
 
-
     supported = Utils.isSetValueSupported(containerElements, element, element.type)
 
     if not supported
