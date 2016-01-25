@@ -1220,6 +1220,25 @@ exports.SETCONFIGURATION = (settings) ->
 
     $$runtime.results.push(result)
 
+isValidGeometry = (geometry) ->
+  return true if not geometry?
+  return false unless geometry.type is 'Point'
+  return false unless _.isArray(geometry.coordinates) and geometry.coordinates.length is 2
+  return false if _.find geometry.coordinates, (coord) -> not _.isNumber(coord) || _.isNaN(coord)
+  true
+
+exports.SETGEOMETRY = (geometry) ->
+  ERROR('geometry must be a valid GeoJSON value') unless isValidGeometry(geometry)
+  SETVALUE('@geometry', geometry)
+
+exports.SETSTATUS = (status) ->
+  ERROR('status must be a string') if status? and not _.isString(status)
+  SETVALUE('@status', status)
+
+exports.SETPROJECT = (project) ->
+  ERROR('project must be a string') if status? and not _.isString(status)
+  SETVALUE('@project', project)
+
 exports.SETDESCRIPTION = (dataName, value) ->
   SETFORMATTRIBUTES(dataName, description: if value? then value.toString() else null)
 
