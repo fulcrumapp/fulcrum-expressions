@@ -1231,6 +1231,19 @@ exports.SETGEOMETRY = (geometry) ->
   ERROR('geometry must be a valid GeoJSON value') unless isValidGeometry(geometry)
   SETVALUE('@geometry', geometry)
 
+exports.SETLOCATION = (latitude, longitude) ->
+  if not latitude? or not longitude?
+    latitude = null
+    longitude = null
+
+  geometry =
+    if latitude? and longitude?
+      { type: 'Point', coordinates: [ +longitude, +latitude ] }
+    else
+      null
+
+  SETGEOMETRY(geometry)
+
 exports.SETSTATUS = (status) ->
   ERROR('status must be a string') if status? and not _.isString(status)
   SETVALUE('@status', status)
