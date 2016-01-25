@@ -197,9 +197,9 @@ class Runtime
 
   trigger: ->
     if @event.field?
-      [name, param] = [@event.event, @event.field]
+      [name, param] = [@event.name, @event.field]
     else
-      [name, param] = ['on', @event.event]
+      [name, param] = ['on', @event.name]
 
     hooks = @hooksByParams(name, param)
 
