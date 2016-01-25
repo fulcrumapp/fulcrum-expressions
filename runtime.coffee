@@ -25,6 +25,8 @@ class Runtime
 
   values: {}
 
+  repeatable: null
+
   hooks: {}
 
   event: {}

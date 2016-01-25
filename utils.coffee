@@ -113,8 +113,17 @@ class Utils
   @makeChoiceValue: (choices, others) ->
     { choice_values: choices ? [], other_values: others ? [] }
 
-  @isSetValueSupported: (type) ->
-    Utils.converters[type]?
+  @isSetValueSupported: (containerElements, dataElement, type) ->
+    return false unless Utils.converters[type]?
+
+    # Make sure the element is contained within the current editing scope. We need to make sure
+    # that the element is within the repeatable being edited and not further nested as a child or
+    # part of an ancestor.
+    validElements = Utils.flattenElements(containerElements, false)
+
+    foundElement = _.find validElements, (e) -> e.key is dataElement.key
+
+    !!foundElement
 
   @converters:
     TextField: (value) ->

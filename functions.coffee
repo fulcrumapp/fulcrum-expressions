@@ -1278,11 +1278,28 @@ exports.CLEARINTERVAL = (id) ->
 exports.SETVALUE = (dataName, value) ->
   element = FIELD(dataName)
 
-  if element? and value?
+  if element?
     # don't let the user accidentally blow out data in unsupported fields
-    return unless Utils.isSetValueSupported(element.type)
+    repeatableElement = $$runtime.elementsByKey[$$runtime.repeatable]
 
-    value = Utils.makeValue(element, value)
+    containerElements =
+      if $$runtime.repeatable
+        $$runtime.elementsByKey[$$runtime.repeatable]?.elements
+      else
+        console.log('using the form elements')
+        $$runtime.form.elements
+
+
+    supported = Utils.isSetValueSupported(containerElements, element, element.type)
+
+    if not supported
+      ERROR(format("Setting the value of '%s' is not supported.", dataName))
+
+    value =
+      if value?
+        Utils.makeValue(element, value)
+      else
+        null
 
   # TODO(zhm) guard well-known supported values in the else case
   # @project, @status, @geometry, etc
