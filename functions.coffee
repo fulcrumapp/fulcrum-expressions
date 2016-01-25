@@ -1286,7 +1286,6 @@ exports.SETVALUE = (dataName, value) ->
       if $$runtime.repeatable
         $$runtime.elementsByKey[$$runtime.repeatable]?.elements
       else
-        console.log('using the form elements')
         $$runtime.form.elements
 
 
