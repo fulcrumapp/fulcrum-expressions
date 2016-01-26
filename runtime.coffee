@@ -68,6 +68,8 @@ class Runtime
 
   asyncCount: 0
 
+  scriptInitialized: false
+
   extraVariableNames: [
     'locale',
     'language',
@@ -134,6 +136,8 @@ class Runtime
 
     functions.CONFIGURE(@, false)
 
+    @initializeScriptIfNecessary()
+
   prepare: ->
     @elements = Utils.flattenElements(@form.elements, true, true)
 
@@ -145,8 +149,6 @@ class Runtime
       @elementsByKey[element.key] = element
       @elementsByDataName[element.data_name] = element
       @dataNames[element.key] = element.data_name
-
-    @initializeScript()
 
   invokeAsync: (func, args, callback) ->
     id = ++@asyncCount
@@ -168,11 +170,12 @@ class Runtime
 
     $$runtime.results
 
-  initializeScript: ->
-    return unless _.isString(@script)
+  initializeScriptIfNecessary: ->
+    return if @scriptInitialized
 
-    # setup the @variables object with empty variables
-    @setupValues()
+    @scriptInitialized = true
+
+    return unless _.isString(@script)
 
     `with (this.variables) { eval(this.script) }`
 
@@ -196,6 +199,10 @@ class Runtime
     @hooksByParams(name, param).push(callback)
 
   trigger: ->
+    $$runtime.results = []
+
+    @setupValues()
+
     if @event.field?
       [name, param] = [@event.name, @event.field]
     else
@@ -205,18 +212,14 @@ class Runtime
 
     return [] unless hooks?.length
 
-    @setupValues()
-
-    $$runtime.results = []
-
     hook.call(@, @event) for hook in hooks
 
     $$runtime.results
 
   evaluate: ->
-    @setupValues()
-
     $$runtime.results = []
+
+    @setupValues()
 
     for context in @expressions
       $$runtime.results.push(@evaluateExpression(context))
