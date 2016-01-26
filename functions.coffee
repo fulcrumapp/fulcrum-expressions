@@ -1224,7 +1224,7 @@ isValidGeometry = (geometry) ->
   return true if not geometry?
   return false unless geometry.type is 'Point'
   return false unless _.isArray(geometry.coordinates) and geometry.coordinates.length is 2
-  return false if _.find geometry.coordinates, (coord) -> not _.isNumber(coord) || _.isNaN(coord)
+  return false if _.some geometry.coordinates, (coord) -> not _.isNumber(coord) || _.isNaN(coord)
   true
 
 exports.SETGEOMETRY = (geometry) ->
