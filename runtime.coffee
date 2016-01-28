@@ -62,7 +62,7 @@ class Runtime
 
   featureIsNew: true
 
-  showErrors: false
+  showErrors: true
 
   asyncCallbacks: {}
 
@@ -240,7 +240,7 @@ class Runtime
     thisVariableName = "$#{context.dataName}"
 
     try
-      $$runtime.showErrors = false
+      $$runtime.showErrors = true
 
       variables.$$current = $$runtime.$$currentValue = variables[thisVariableName]
 
