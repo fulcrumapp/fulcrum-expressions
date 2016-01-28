@@ -20,6 +20,29 @@
 function ALERT() {}
 
 
+////CURRENTLOCATION
+
+/**
+ * CURRENTLOCATION
+ * Returns a location object containing metadata about the user's current location, not the record's location.
+ * @example
+ * location = CURRENTLOCATION()
+ *
+ * if (!location) {
+ *   // location could not be determined.
+ * } else {
+ *   location.latitude  // 35.6443171
+ *   location.longitude // -80.8984504
+ *   location.altitude  // 213 - meters
+ *   location.accuracy  // 5 - meters
+ *   location.speed     // 3.4 - meters per second
+ *   location.course    // 213
+ *   location.timestamp // 1454015950.013456 - ephoch time, seconds
+ * }
+ */
+function CURRENTLOCATION() {}
+
+
 ////INVALID
 
 /**
@@ -458,7 +481,7 @@ function SETREADONLY() {}
 
 /**
  * STORAGE
- * Instantiates a storage object for setting and getting local storage items.
+ * Returns a storage object for setting and getting local storage items.
  * @example
  * storage = STORAGE()
  * KEY = 'item_key'
