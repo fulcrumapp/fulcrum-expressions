@@ -213,6 +213,9 @@ exports.CURRENCYCODE = ->
 exports.CURRENCYSYMBOL = ->
   Config.currencySymbol or Defaults.currencySymbol
 
+exports.CURRENTLOCATION = ->
+  $$runtime.currentLocation ? null
+
 exports.DATE = (year, month, day) ->
   year = INT(year)
   month = INT(month)
@@ -1251,6 +1254,9 @@ exports.SETSTATUS = (status) ->
   ERROR('status must be a string') if status? and not _.isString(status)
   SETVALUE('@status', status)
 
+exports.SETSTATUSFILTER = (value) ->
+  SETCHOICEFILTER('@status', value)
+
 exports.SETPROJECT = (project) ->
   ERROR('project must be a string') if status? and not _.isString(status)
   SETVALUE('@project', project)
@@ -1343,7 +1349,7 @@ FORM_ATTRIBUTES = [
 exports.SETFORMATTRIBUTES = (dataName, attributes) ->
   element = FIELD(dataName)
 
-  return NO_VALUE unless element
+  return NO_VALUE unless (element or dataName is '@status')
 
   for attributeName, value of attributes
     continue unless _.contains(FORM_ATTRIBUTES, attributeName)
@@ -1352,7 +1358,7 @@ exports.SETFORMATTRIBUTES = (dataName, attributes) ->
 
     result =
       type: 'update-element'
-      key: element.key
+      key: element?.key or dataName
       attribute: attributeName.toString()
       value: value
 
