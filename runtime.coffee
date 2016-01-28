@@ -70,6 +70,8 @@ class Runtime
 
   scriptInitialized: false
 
+  isCalculation: false
+
   extraVariableNames: [
     'locale',
     'language',
@@ -166,6 +168,8 @@ class Runtime
 
     $$runtime.results = []
 
+    @isCalculation = false
+
     callback.apply(@, @callbackArguments)
 
     $$runtime.results
@@ -212,6 +216,8 @@ class Runtime
 
     return [] unless hooks?.length
 
+    @isCalculation = false
+
     hook.call(@, @event) for hook in hooks
 
     $$runtime.results
@@ -220,6 +226,8 @@ class Runtime
     $$runtime.results = []
 
     @setupValues()
+
+    @isCalculation = true
 
     for context in @expressions
       $$runtime.results.push(@evaluateExpression(context))
@@ -319,7 +327,49 @@ class Runtime
   setupFunctions: ->
     @functions ||= {}
 
+    specialFunctions =
+      ALERT: true
+      CURRENTLOCATION: true
+      INVALID: true
+      OFF: true
+      ON: true
+      OPENURL: true
+      PROGRESS: true
+      REQUEST: true
+      SETCHOICEFILTER: true
+      SETCHOICES: true
+      SETCONFIGURATION: true
+      SETGEOMETRY: true
+      SETLOCATION: true
+      SETSTATUS: true
+      SETSTATUSFILTER: true
+      SETPROJECT: true
+      SETDESCRIPTION: true
+      SETDISABLED: true
+      SETHIDDEN: true
+      SETLABEL: true
+      SETMAXLENGTH: true
+      SETMINLENGTH: true
+      SETREQUIRED: true
+      SETTIMEOUT: true
+      CLEARTIMEOUT: true
+      SETINTERVAL: true
+      CLEARINTERVAL: true
+      SETVALUE: true
+      SETFORMATTRIBUTES: true
+      STORAGE: true
+
+    checkCall = (name, func, args) =>
+      if @isCalculation and specialFunctions[name]
+        ERROR(name + ' cannot be used in a calculation')
+
+    exportFunction = (exportName) =>
+      @global[exportName] = @functions[exportName] = ->
+        checkCall(exportName, functions[exportName], arguments)
+        functions[exportName].apply(null, arguments)
+
     for exportName of functions
-      @global[exportName] = @functions[exportName] = functions[exportName]
+      exportFunction(exportName)
+
 
 module.exports = new Runtime
