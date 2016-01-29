@@ -374,10 +374,10 @@ class Runtime
         else
           object
 
+      @functions[exportName] = object
       @global[exportName] = wrapper
 
     for name of functions
       exportObject(name)
-
 
 module.exports = new Runtime
