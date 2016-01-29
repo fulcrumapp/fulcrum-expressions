@@ -294,20 +294,6 @@ function SETCHOICES() {}
 function SETDESCRIPTION() {}
 
 
-////SETGEOMETRY
-
-/**
- * SETGEOMETRY
- * Set the geometry of a record.
- * @param {Object} geojson The GeoJSON representation of the geometry - currently only 'Point' is supported
- * @example
- * SETGEOMETRY({ type: 'Point', coordinates: [-100, 40] })
- *
- * // Sets the geometry of a record
- */
-function SETGEOMETRY() {}
-
-
 ////SETHIDDEN
 
 /**
@@ -348,6 +334,21 @@ function SETHIDDEN() {}
  * // Unsets any override previously set by SETLABEL and uses the original setting from the form schema
  */
 function SETLABEL() {}
+
+
+////SETLOCATION
+
+/**
+ * SETLOCATION
+ * Set the location of a record.
+ * @param {number} latitude The new latitude of the record
+ * @param {number} longitude The new longitude of the record
+ * @example
+ * SETLOCATION(35.5946167, -80.8638915)
+ *
+ * // Sets the location of a record
+ */
+function SETLOCATION() {}
 
 
 ////SETMAXLENGTH

@@ -342,25 +342,6 @@
             ]
         },
         {
-            "name": "SETGEOMETRY",
-            "access": "",
-            "virtual": false,
-            "description": "SETGEOMETRY\nSet the geometry of a record.",
-            "parameters": [
-                {
-                    "name": "geojson",
-                    "type": "Object",
-                    "description": "The GeoJSON representation of the geometry - currently only 'Point' is supported",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "SETGEOMETRY({ type: 'Point', coordinates: [-100, 40] })\n\n// Sets the geometry of a record"
-            ]
-        },
-        {
             "name": "SETHIDDEN",
             "access": "",
             "virtual": false,
@@ -421,6 +402,33 @@
             "examples": [
                 "SETLABEL('weather_summary', 'Weather Report')\n\n// Sets the field's label to 'Weather Report'",
                 "SETLABEL('weather_summary', null)\n\n// Unsets any override previously set by SETLABEL and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETLOCATION",
+            "access": "",
+            "virtual": false,
+            "description": "SETLOCATION\nSet the location of a record.",
+            "parameters": [
+                {
+                    "name": "latitude",
+                    "type": "number",
+                    "description": "The new latitude of the record",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "longitude",
+                    "type": "number",
+                    "description": "The new longitude of the record",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETLOCATION(35.5946167, -80.8638915)\n\n// Sets the location of a record"
             ]
         },
         {
