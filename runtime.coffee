@@ -363,13 +363,21 @@ class Runtime
       if @isCalculation and specialFunctions[name]
         ERROR(name + ' cannot be used in a calculation')
 
-    exportFunction = (exportName) =>
-      @global[exportName] = @functions[exportName] = ->
-        checkCall(exportName, functions[exportName], arguments)
-        functions[exportName].apply(null, arguments)
+    exportObject = (exportName) =>
+      object = functions[exportName]
 
-    for exportName of functions
-      exportFunction(exportName)
+      wrapper =
+        if _.isFunction(functions[exportName])
+           ->
+            checkCall(exportName, object, arguments)
+            object.apply(functions, arguments)
+        else
+          object
+
+      @global[exportName] = object
+
+    for name of functions
+      exportObject(name)
 
 
 module.exports = new Runtime
