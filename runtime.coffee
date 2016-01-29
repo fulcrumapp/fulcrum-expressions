@@ -374,7 +374,7 @@ class Runtime
         else
           object
 
-      @global[exportName] = object
+      @global[exportName] = wrapper
 
     for name of functions
       exportObject(name)
