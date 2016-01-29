@@ -28,6 +28,16 @@
             ]
         },
         {
+            "name": "CURRENTLOCATION",
+            "access": "",
+            "virtual": false,
+            "description": "CURRENTLOCATION\nReturns a location object containing metadata about the user's current location, not the record's location.",
+            "parameters": [],
+            "examples": [
+                "location = CURRENTLOCATION()\n\nif (!location) {\n  // location could not be determined.\n} else {\n  location.latitude  // 35.6443171\n  location.longitude // -80.8984504\n  location.altitude  // 213 - meters\n  location.accuracy  // 5 - meters\n  location.speed     // 3.4 - meters per second\n  location.course    // 213\n  location.timestamp // 1454015950.013456 - ephoch time, seconds\n}"
+            ]
+        },
+        {
             "name": "INVALID",
             "access": "",
             "virtual": false,
@@ -602,6 +612,20 @@
                 "SETREADONLY('weather_summary', true)\n\n// Sets the field to read only, not editable by the user",
                 "SETREADONLY('weather_summary', false)\n\n// Sets the field to be active, editable by the user",
                 "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "STORAGE",
+            "access": "",
+            "virtual": false,
+            "description": "STORAGE\nReturns a storage object for setting and getting local storage items.",
+            "parameters": [],
+            "examples": [
+                "storage = STORAGE()\nKEY = 'item_key'\nstorage.setItem(KEY, 'hello world')\n\n// Sets an item in local storage, must be a string",
+                "item = storage.getItem(KEY)\n\n// Gets an item from storage if it exists, otherwise returns null",
+                "geom = { type: 'Point', coordinates: [-100, 40] }\nstorage.setItem('geometry', JSON.stringify(geom))\n\nanotherGeom = JSON.parse(storage.getItem('geometry'))\n\n// Use JSON.stringify and JSON.parse to serialize and deserialize objects in local storage",
+                "storage.removeItem(KEY)\n\n// Removes an item from storage",
+                "storage.clear()\n\n// Removes all items from storage"
             ]
         }
     ]
