@@ -439,6 +439,24 @@ function SETREQUIRED() {}
 function SETSTATUS() {}
 
 
+////SETSTATUSFILTER
+
+/**
+ * SETSTATUSFILTER
+ * Set the allowable status values for a record.
+ * @param {Array|null} statuses The allowable status values for the record
+ * @example
+ * SETSTATUSFILTER(['inspection_pending', 'in_inspection'])
+ *
+ * // Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection'
+ * @example
+ * SETSTATUSFILTER(null)
+ *
+ * // Unsets any previous status filters and allows any status to be selected for the record
+ */
+function SETSTATUSFILTER() {}
+
+
 ////SETVALUE
 
 /**
