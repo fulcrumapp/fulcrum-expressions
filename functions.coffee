@@ -914,10 +914,12 @@ exports.OFF = ->
 
   if arguments.length is 3
     [name, param, callback] = arguments
-  if arguments.length is 2
-    [param, callback] = arguments
+  else if arguments.length is 2 and _.isString(arguments[1])
+    [name, param] = arguments
+  else if arguments.length is 2 and _.isFunction(arguments[1])
+    [name, callback] = arguments
 
-  name ?= 'on'
+  param ?= null
 
   ERROR('name must be a string') unless _.isString(name)
   ERROR('param must be a string') unless _.isString(param)
@@ -925,18 +927,20 @@ exports.OFF = ->
 
   $$runtime.removeHook(name, param, callback)
 
+validateEvent = (name, param) ->
+
 exports.ON = ->
   args = arguments
 
   if arguments.length is 3
     [name, param, callback] = arguments
   if arguments.length is 2
-    [param, callback] = arguments
+    [name, callback] = arguments
 
-  name ?= 'on'
+  param ?= null
 
   ERROR('name must be a string') unless _.isString(name)
-  ERROR('param must be a string') unless _.isString(param)
+  ERROR('param must be a string') if param? and not _.isString(param)
   ERROR('callback must be a function') unless _.isFunction(callback)
 
   $$runtime.addHook(name, param, callback)

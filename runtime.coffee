@@ -210,7 +210,7 @@ class Runtime
     if @event.field?
       [name, param] = [@event.name, @event.field]
     else
-      [name, param] = ['on', @event.name]
+      [name, param] = [@event.name, null]
 
     hooks = @hooksByParams(name, param)
 
