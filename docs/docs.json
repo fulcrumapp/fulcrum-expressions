@@ -1018,6 +1018,30 @@
             }
         },
         {
+            "name": "FLATTEN",
+            "access": "",
+            "virtual": false,
+            "description": "FLATTEN\nFlatten nested arrays into a flat array",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Array",
+                    "description": "Array to flatten",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nFLATTEN([[1, 2, 3]])",
+                "// returns [1,2,3,4,5,6]\nFLATTEN([[1, 2, 3], [4, 5, 6]])"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "FLOOR",
             "access": "",
             "virtual": false,

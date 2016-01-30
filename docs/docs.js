@@ -656,6 +656,23 @@ function FIRST() {}
 function FIXED() {}
 
 
+////FLATTEN
+
+/**
+ * FLATTEN
+ * Flatten nested arrays into a flat array
+ * @param {Array} value Array to flatten
+ * @returns {Array}
+ * @example
+ * // returns [1,2,3]
+ * FLATTEN([[1, 2, 3]])
+ * @example
+ * // returns [1,2,3,4,5,6]
+ * FLATTEN([[1, 2, 3], [4, 5, 6]])
+ */
+function FLATTEN() {}
+
+
 ////FLOOR
 
 /**

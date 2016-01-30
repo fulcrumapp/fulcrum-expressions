@@ -432,6 +432,11 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
   else
     integerString + DECIMALSEPARATOR() + fractionPart.toString()
 
+exports.FLATTEN = (value) ->
+  return NO_VALUE unless _.isArray(value)
+
+  _.flatten value
+
 exports.FLOOR = (number, significance) ->
   significance ?= 1
   significance = ABS(significance)
