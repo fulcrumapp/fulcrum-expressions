@@ -315,7 +315,7 @@ exports.EXP = MATH_FUNC(Math.exp)
 exports.FIELD = (dataName) ->
   element = $$runtime.elementsByDataName[dataName]
 
-  return NO_VALUE unless element
+  return NO_VALUE unless element?
 
   element
 
@@ -927,7 +927,50 @@ exports.OFF = ->
 
   $$runtime.removeHook(name, param, callback)
 
-validateEvent = (name, param) ->
+isMagicDataName = (name) ->
+  return _.include(['@status', '@project', '@geometry'], name)
+
+validateEventParams = (event, param) ->
+  invariant = (v) ->
+    if not v?
+      ERROR(format('Invalid usage of ON(): "%s" is not a valid field for the "%s" event', param, event))
+
+  switch event
+    when 'change'
+      return if isMagicDataName(param)
+
+      invariant(FIELD(param))
+
+    when 'click'
+      field = FIELD(param)
+
+      invariant(field?.type is 'HyperlinkField')
+
+    when 'load-repeatable', 'new-repeatable', 'edit-repeatable', 'save-repeatable', 'validate-repeatable'
+      field = FIELD(param)
+
+      invariant(field?.type is 'Repeatable')
+
+    when 'change-geometry'
+      if param?
+        field = FIELD(param)
+
+        invariant(field?.type is 'Repeatable')
+
+    when 'add-photo', 'remove-photo'
+      field = FIELD(param)
+
+      invariant(field?.type is 'PhotoField')
+
+    when 'add-video', 'remove-video'
+      field = FIELD(param)
+
+      invariant(field?.type is 'VideoField')
+
+    when 'add-audio', 'remove-audio'
+      field = FIELD(param)
+
+      invariant(field?.type is 'AudioField')
 
 exports.ON = ->
   args = arguments
@@ -942,6 +985,8 @@ exports.ON = ->
   ERROR('name must be a string') unless _.isString(name)
   ERROR('param must be a string') if param? and not _.isString(param)
   ERROR('callback must be a function') unless _.isFunction(callback)
+
+  validateEventParams(name, param)
 
   $$runtime.addHook(name, param, callback)
 
