@@ -24,7 +24,8 @@ function ALERT() {}
 
 /**
  * CURRENTLOCATION
- * Returns a location object containing metadata about the user's current location, not the record's location.
+ * Returns a location object containing metadata about the user's current location. This location may be different
+ * than the record location.
  * @example
  * location = CURRENTLOCATION()
  *
@@ -33,11 +34,11 @@ function ALERT() {}
  * } else {
  *   location.latitude  // 35.6443171
  *   location.longitude // -80.8984504
- *   location.altitude  // 213 - meters
- *   location.accuracy  // 5 - meters
+ *   location.altitude  // 213 - meters above sea level. Negative values indicate below sea level.
+ *   location.accuracy  // 5 - meters, the accuracy of the latitude and longitude values
  *   location.speed     // 3.4 - meters per second
- *   location.course    // 213
- *   location.timestamp // 1454015950.013456 - ephoch time, seconds
+ *   location.course    // 213 - degrees from due north. 0-359, negative values or `null` indicate invalid values.
+ *   location.timestamp // 1454015950.013456 - epoch time, seconds
  * }
  */
 function CURRENTLOCATION() {}
@@ -47,7 +48,7 @@ function CURRENTLOCATION() {}
 
 /**
  * INVALID
- * Display a validation error message and stop the record, or repeatable item, from being saved.
+ * Display a validation error message and prevent the record or repeatable item from being saved.
  * @param {String} message The validation error message content for the alert
  * @example
  * INVALID('Depth must be less than 20.')
@@ -62,7 +63,7 @@ function CURRENTLOCATION() {}
  *
  * // Use with the 'validate-record' event to stop a record from being saved
  * @example
- * ON('validate-repeatable', function (event) {
+ * ON('validate-repeatable', 'repeatable_field_name', function (event) {
  *    if (!ISSELECTED($choice_field, 'Purple')) {
  *      INVALID('You gotta pick purple!')
  *    }
