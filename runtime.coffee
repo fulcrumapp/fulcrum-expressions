@@ -62,7 +62,7 @@ class Runtime
 
   featureIsNew: true
 
-  showErrors: true
+  showErrors: false
 
   asyncCallbacks: {}
 
@@ -240,7 +240,7 @@ class Runtime
     thisVariableName = "$#{context.dataName}"
 
     try
-      $$runtime.showErrors = true
+      $$runtime.showErrors = false
 
       variables.$$current = $$runtime.$$currentValue = variables[thisVariableName]
 
@@ -263,7 +263,7 @@ class Runtime
 
       variables[thisVariableName] = undefined
 
-      return @createResult(context.key, null, null, ex.toString(), $$runtime.showErrors)
+      return @createResult(context.key, null, null, ex.toString(), true)
 
   coalesce: ->
     _.find Utils.toArray(arguments), (argument) -> not _.isUndefined(argument)
