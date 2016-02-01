@@ -1540,6 +1540,24 @@ function OTHER() {}
 function PI() {}
 
 
+////PLUCK
+
+/**
+ * PLUCK
+ * Extract property values from an object
+ * @param {Array} array An array of objects to extract properties from
+ * @param {String} property The property name to extract
+ * @returns {Object}
+ * @example
+ * // returns [1,2,3]
+ * var objects = [{name: 'one',   value: 1},
+ *                {name: 'two',   value: 2},
+ *                {name: 'three', value: 3}];
+ * PLUCK(objects, 'value')
+ */
+function PLUCK() {}
+
+
 ////POWER
 
 /**

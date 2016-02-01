@@ -2347,6 +2347,37 @@
             }
         },
         {
+            "name": "PLUCK",
+            "access": "",
+            "virtual": false,
+            "description": "PLUCK\nExtract property values from an object",
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": "Array",
+                    "description": "An array of objects to extract properties from",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "property",
+                    "type": "String",
+                    "description": "The property name to extract",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nvar objects = [{name: 'one',   value: 1},\n               {name: 'two',   value: 2},\n               {name: 'three', value: 3}];\nPLUCK(objects, 'value')"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
+            }
+        },
+        {
             "name": "POWER",
             "access": "",
             "virtual": false,

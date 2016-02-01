@@ -1018,6 +1018,9 @@ exports.PLATFORMINFO = (separator=', ') ->
 exports.PLATFORMVERSION = ->
   Config.platformVersion ? ''
 
+exports.PLUCK = (object, property) ->
+  _.pluck(object, property)
+
 exports.POWER = (number, power) ->
   number = NUM(number)
   power = NUM(power)
