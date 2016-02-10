@@ -10,7 +10,7 @@ class ExpressionGenerator extends BaseGenerator
       returns = parts[0]
       rest = parts.slice(1)
       final = rest.concat(["\n#{returns}"]).join("\n")
-      "\n{% highlight js %}\n#{final}\n{% endhighlight %}"
+      "\n```js\n#{final}\n```"
 
     if examples.length is 0
       'No examples'

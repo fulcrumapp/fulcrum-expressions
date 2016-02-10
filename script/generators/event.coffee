@@ -6,7 +6,7 @@ class EventGenerator extends BaseGenerator
 
   generateExamples: (examples) ->
     examples = _.map examples, (example) ->
-      "\n{% highlight js %}\n#{example}\n{% endhighlight %}"
+      "\n```js\n#{example}\n```"
 
     if examples.length is 0
       'No examples'
