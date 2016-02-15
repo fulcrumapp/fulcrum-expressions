@@ -1321,8 +1321,10 @@ exports.SETPROJECT = (project) ->
 exports.SETDESCRIPTION = (dataName, value) ->
   SETFORMATTRIBUTES(dataName, description: if value? then value.toString() else null)
 
-exports.SETDISABLED = (dataName, value) ->
+exports.SETREADONLY = (dataName, value) ->
   SETFORMATTRIBUTES(dataName, disabled: if value? then !!value else null)
+
+exports.SETDISABLED = exports.SETREADONLY
 
 exports.SETHIDDEN = (dataName, value) ->
   SETFORMATTRIBUTES(dataName, hidden: if value? then !!value else null)
