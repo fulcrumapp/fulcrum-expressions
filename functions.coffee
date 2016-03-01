@@ -1755,9 +1755,7 @@ host.clearTimeout = (id) ->
 host.setTimeout = (callback, timeout) ->
   args = [timeout]
 
-  if setTimeout?
-    return setTimeout(callback, timeout)
-  else if hostFunctionExists('setTimeout')
+  if hostFunctionExists('setTimeout')
     id = ++host.nextTimeoutID
 
     wrapper = host.timeouts[id] = ->
@@ -1775,9 +1773,7 @@ host.clearInterval = (id) ->
     delete host.intervals[id]
 
 host.setInterval = (callback, interval) ->
-  if setInterval?
-    return setInterval(callback, interval)
-  else if hostFunctionExists('setTimeout')
+  if hostFunctionExists('setTimeout')
     id = ++host.nextIntervalID
 
     wrapper = ->
