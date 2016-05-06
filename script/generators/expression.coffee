@@ -71,8 +71,16 @@ search: true
       returns     = @generateReturns(func.returns)
       examples    = @generateExamples(func.examples)
 
+      longDescription = @getLongDescription(func)
+
+      longDescriptionMarkdown =
+        if longDescription
+          "### Description\n\n#{longDescription}\n\n"
+        else
+          ''
+
       schema.markdown = """
-    ### Parameters
+    #{longDescriptionMarkdown}### Parameters
 
     #{parameters}
 

@@ -204,6 +204,8 @@ function COMPACT() {}
 /**
  * CONCATENATE
  * Returns the concatenation of multiple values.
+ *
+ * **NOTE:** This can only be used on fields that store the values as a string. Fields like choice fields and classification sets store the values in an array. Please refer [this example](/expressions/examples/combine-arrays/) for combining arrays.
  * @param {...String} var_args_values Strings to append in sequence.
  * @returns {String}
  * @example
@@ -224,6 +226,8 @@ function CONCATENATE() {}
 /**
  * CONCAT
  * Returns the concatenation of multiple values. Alias for CONCATENATE()
+ *
+ * **NOTE:** This can only be used on fields that store the values as a string. Fields like choice fields and classification sets store the values in an array.
  * @param {...String} var_args_values Strings to append in sequence.
  * @returns {String}
  * @example

@@ -17,7 +17,11 @@ class BaseGenerator
       parameters.join("\n\n").trim()
 
   getDescription: (func) ->
-    func.description.replace(new RegExp("^#{func.name}\n"), '').trim()
+    func.description.replace(new RegExp("^#{func.name}\n"), '').trim().split("\n")[0]
+
+  getLongDescription: (func) ->
+    lines = func.description.replace(new RegExp("^#{func.name}\n"), '').trim().split("\n")
+    lines.slice(1).join('\n')
 
   generateAppHelp: ->
     functions = _.map @functions, (func) =>

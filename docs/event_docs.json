@@ -4,7 +4,7 @@
             "name": "ALERT",
             "access": "",
             "virtual": false,
-            "description": "ALERT\nDisplay a message as an alert in the mobile app.",
+            "description": "ALERT\nDisplay a message as an alert.\nALERT displays a message to the user. You can provide both the title and message of the alert box.",
             "parameters": [
                 {
                     "name": "title",
@@ -28,10 +28,48 @@
             ]
         },
         {
+            "name": "CLEARINTERVAL",
+            "access": "",
+            "virtual": false,
+            "description": "CLEARINTERVAL\nClears an interval that was previously started with SETINTERVAL\nThe CLEARINTERVAL function clears an interval that was previously started with [SETINTERVAL](/data-events/reference/setinterval/).",
+            "parameters": [
+                {
+                    "name": "intervalID",
+                    "type": "Number",
+                    "description": "The interval ID to clear",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Starts an interval to update the GPS accuracy every 5 seconds and stops updating after 2 minutes.\nON('load-record', function(event) {\n  var fiveSeconds = 1000 * 5;\n  var twoMinutes = 1000 * 60 * 2;\n\n  var interval = SETINTERVAL(function() {\n    if (CURRENTLOCATION()) {\n      SETLABEL('accuracy', CURRENTLOCATION().accuracy);\n    }\n  }, fiveSeconds);\n\n  SETTIMEOUT(function() {\n    CLEARINTERVAL(interval);\n  }, twoMinutes);\n});"
+            ]
+        },
+        {
+            "name": "CLEARTIMEOUT",
+            "access": "",
+            "virtual": false,
+            "description": "CLEARTIMEOUT\nClears a timeout that was previously started with SETTIMEOUT\nThe CLEARTIMEOUT function clears a timeout that was previously started with [SETTIMEOUT](/data-events/reference/settimeout/).",
+            "parameters": [
+                {
+                    "name": "timerID",
+                    "type": "Number",
+                    "description": "The timer ID to clear",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Starts a timer to alert after five minutes, and another timeout that clears the first one after four minutes.\n// No alert is ever displayed.\nON('load-record', function(event) {\n  var fiveMinutes = 1000 * 60 * 5;\n  var fourMinutes = 1000 * 60 * 4;\n\n  var timer = SETTIMEOUT(function() {\n    ALERT(\"You've been editing this record for 5 minutes.\");\n  }, fiveMinutes);\n\n  SETTIMEOUT(function() {\n    CLEARTIMEOUT(timer);\n  }, fourMinutes);\n});"
+            ]
+        },
+        {
             "name": "CURRENTLOCATION",
             "access": "",
             "virtual": false,
-            "description": "CURRENTLOCATION\nReturns a location object containing metadata about the user's current location. This location may be different\nthan the record location.",
+            "description": "CURRENTLOCATION\nReturns a location object containing metadata about the user's current location. This location may be different than the record location.\nReturns the current device location as an object. This can be used for Q/A purposes or other custom processing logic. This is *not* always the same as the record location. For example, if editing an imported record or previously created record, the current location will be different.\n\nReturns data in the following format:\n\n```json\n{\n  \"latitude\": 27.822209699105304,\n  \"longitude\": -82.69114932984364,\n  \"altitude\": 15.030448913574219,\n  \"accuracy\": 10,\n  \"course\": 213,\n  \"speed\": 3.4,\n  \"timestamp\": 1462414931.9999695\n}\n```",
             "parameters": [],
             "examples": [
                 "location = CURRENTLOCATION()\n\nif (!location) {\n  // location could not be determined.\n} else {\n  location.latitude  // 35.6443171\n  location.longitude // -80.8984504\n  location.altitude  // 213 - meters above sea level. Negative values indicate below sea level.\n  location.accuracy  // 5 - meters, the accuracy of the latitude and longitude values\n  location.speed     // 3.4 - meters per second\n  location.course    // 213 - degrees from due north. 0-359, negative values or `null` indicate invalid values.\n  location.timestamp // 1454015950.013456 - epoch time, seconds\n}"
@@ -41,7 +79,7 @@
             "name": "INVALID",
             "access": "",
             "virtual": false,
-            "description": "INVALID\nDisplay a validation error message and prevent the record or repeatable item from being saved.",
+            "description": "INVALID\nDisplay a validation error message and prevent the record or repeatable item from being saved.\nThe INVALID function is designed for the sole purpose of doing custom validations when saving records. It's a special purpose function that's intended to only be used within the `validate-record` and `validate-repeatable` events. It's different from `ALERT` in a couple of ways. First, it instructs the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints. This allows custom validation logic to be displayed in a natural way to the end user as if it were a built-in validation.",
             "parameters": [
                 {
                     "name": "message",
@@ -53,9 +91,9 @@
                 }
             ],
             "examples": [
-                "INVALID('Depth must be less than 20.')\n\n// Displays an alert and stops the record from being saved",
-                "ON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.')\n   }\n});\n\n// Use with the 'validate-record' event to stop a record from being saved",
-                "ON('validate-repeatable', 'repeatable_field_name', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!')\n   }\n});\n\n// Use with the 'validate-repeatable' event to stop a repeatable from being saved"
+                "// Displays an alert and stops the record from being saved\nINVALID('Depth must be less than 20.')",
+                "// Use with the 'validate-record' event to stop a record from being saved\nON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.')\n   }\n});",
+                "// Use with the 'validate-repeatable' event to stop a repeatable from being saved\nON('validate-repeatable', 'repeatable_field_name', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!')\n   }\n});"
             ]
         },
         {
@@ -90,7 +128,7 @@
             "name": "ON",
             "access": "",
             "virtual": false,
-            "description": "ON\nAttaches an event handler that listens for record, repeatable, or field events.",
+            "description": "ON\nAttaches an event handler that listens for record, repeatable, or field events.\nThe ON function is the starting point for most data event scripts. It wires up an event to a function that gets called when that event happens. Events are things like a record being opened, edited, saved, validated, a field changing, or the record location changing. Using the `ON` function you can add custom logic to be performed when the events happen. The `ON` function by itself is not useful unless it's combined with the other data event functions to manipulate the record data and perform other actions like custom alerts and validations.",
             "parameters": [
                 {
                     "name": "event",
@@ -110,17 +148,17 @@
                 }
             ],
             "examples": [
-                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\nON('validate-record', callback)\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range",
-                "var callback = function () {\n  // Do something with the new $weather_summary values\n}\n\nON('change', 'weather_summary', callback)\n\n// Listens for changes to the weather summary field and executes callback",
-                "var callback = function () {\n  // Do something with the location via LATITUDE() AND LONGITUDE() values\n}\n\nON('change-geometry', callback)\n\n// Listens for changes to a record's geometry (location) and executes callback",
-                "var callback = function () {\n  // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values\n}\n\nON('change-geometry', 'repeatable_item', callback)\n\n// Listens for changes to a repeatable item's geometry and executes callback"
+                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range\nON('validate-record', callback)",
+                "var callback = function () {\n  // Do something with the new $weather_summary values\n}\n\n// Listens for changes to the weather summary field and executes callback\nON('change', 'weather_summary', callback)",
+                "var callback = function () {\n  // Do something with the location via LATITUDE() AND LONGITUDE() values\n}\n\n// Listens for changes to a record's geometry (location) and executes callback\nON('change-geometry', callback)",
+                "var callback = function () {\n  // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values\n}\n\n// Listens for changes to a repeatable item's geometry and executes callback\nON('change-geometry', 'repeatable_item', callback)"
             ]
         },
         {
             "name": "OPENURL",
             "access": "",
             "virtual": false,
-            "description": "OPENURL\nOpen a URL for a website or mobile app.",
+            "description": "OPENURL\nOpen a URL for a website or mobile app.\nOPENURL is for opening links from within a form. It can be used to open other mobile apps or websites within an event handler. You can use form fields to build the URL to open so the links can be derived from data already entered on the record.",
             "parameters": [
                 {
                     "name": "url",
@@ -141,7 +179,7 @@
             "name": "PROGRESS",
             "access": "",
             "virtual": false,
-            "description": "PROGRESS\nDisplay a non-dismissible progress message in the mobile app.",
+            "description": "PROGRESS\nDisplay a non-dismissible progress message in the mobile app.\nPROGRESS displays a non-dismissible message that can be used to provide feedback when performing an asynchronous function. For example, while fetching data from an API using [REQUEST](/data-events/reference/request/) it might be desirable to let the user know that the request is in progress. This is an advanced function that requires thorough testing and error checking in your logic since the message is not dismissible by the user.",
             "parameters": [
                 {
                     "name": "title",
@@ -161,15 +199,14 @@
                 }
             ],
             "examples": [
-                "PROGRESS('Just a sec!', 'Searching for nearby facilities ...')\n\n// Displays an progress message that looks like\n// +-------------------------------------------+\n// | Just a sec!                               |\n// +-------------------------------------------|\n// |                                           |\n// | Searching for nearby facilities ...       |\n// |                                           |\n// +-------------------------------------------+",
-                "PROGRESS()\n\n// Call with no parameters to dismiss the progress message."
+                "var url = 'https://example.com';\n\n// show progress message while request is happening\nPROGRESS('Searching for nearby facilities ...');\n\nREQUEST(url, function(error, response, body) {\n  PROGRESS();\n\n  if (error) {\n    ALERT(INSPECT(error));\n  } else {\n    // do something with the API response\n  }\n});\n\n// Displays an progress message that looks like this while the request is in progress\n// +-------------------------------------------+\n// | Searching for nearby facilities ...       |\n// +-------------------------------------------+"
             ]
         },
         {
             "name": "REQUEST",
             "access": "",
             "virtual": false,
-            "description": "REQUEST\nPerforms an HTTP request and executes the callback on completion.",
+            "description": "REQUEST\nPerforms an HTTP request and executes the callback on completion.\nThe REQUEST function is for making external HTTP requests. It's one of the most powerful data event functions and enables you to retrieve external data while filling out a form. It can be combined with the other functions to create very dynamic forms that populate information on-demand from external sources. It contains the necessary options to perform any HTTP request, including support for PUT, POST, etc and custom headers.\n\n### CORS and Web Browser Support\n\nTo work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.",
             "parameters": [
                 {
                     "name": "options",
@@ -245,14 +282,14 @@
                 }
             ],
             "examples": [
-                "options = {\n  url: 'https://api.forecast.io/forecast/your_api_key/40,-100'\n}\n\nfunction callback(error, response, body) {\n  if (error) {\n    ALERT('Error with request: ' + error)\n  } else {\n    weather = JSON.parse(body)\n    SETVALUE('weather_summary', weather.currently.summary)\n  }\n}\n\nREQUEST(options, callback);\n\n// Performs a request with options and execute callback on completion"
+                "// This example looks up the place name from OpenStreetMap when the location changes and fills in a text\n// field with the place name. Replace 'place_name' below with a text field on your form.\n\nON('change-geometry', function(event) {\n  var options = {\n    url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' + LONGITUDE() + '?format=json&polygon=1&addressdetails=1'\n  }\n\n  REQUEST(options, function(error, response, body) {\n    if (error) {\n      ALERT('Error with request: ' + error)\n    } else {\n      var data = JSON.parse(body)\n\n      if (data.length) {\n        SETVALUE('place_name', data[0].display_name)\n      }\n    }\n  })\n});"
             ]
         },
         {
             "name": "SETCHOICEFILTER",
             "access": "",
             "virtual": false,
-            "description": "SETCHOICEFILTER\nFilter the choices in a choice field.",
+            "description": "SETCHOICEFILTER\nFilter the choices in a choice field or classification field\nThe SETCHOICEFILTER function allows for dynamic filtering of the choice options on choice fields or classification fields. This function differs from [SETCHOICES](/data-events/reference/setchoices/) in that only filters the existing choices. That distinction is important because it allows you to maintain your choice options as choice lists and classification sets with label+value pairs and control the available options from data events without having to completely redefine the options with labels *and* values. Using `SETCHOICEFILTER` you can supply the filter to apply and it will keep the label and values already defined on the choice options. The filtering is applied to the value portion of the choices and uses case-insensitive \"contains\" comparison.",
             "parameters": [
                 {
                     "name": "field",
@@ -276,16 +313,16 @@
                 }
             ],
             "examples": [
-                "SETCHOICEFILTER('weather_summary', 'cat')\n\n// Filters the choices in the weather summary field to those that contain 'cat'",
-                "SETCHOICEFILTER('weather_summary', ['cat', 'dog'])\n\n// Filters the choices in the weather summary field to those that contain 'cat' or 'dog'",
-                "SETCHOICEFILTER('weather_summary', null)\n\n// Unsets any filter previously set by SETCHOICEFILTER and applies no filter"
+                "// Filters the choices in the weather summary field to those that contain 'cat'\nSETCHOICEFILTER('weather_summary', 'cat')",
+                "// Filters the choices in the weather summary field to those that contain 'cat' or 'dog'\nSETCHOICEFILTER('weather_summary', ['cat', 'dog'])",
+                "// Unsets any filter previously set by SETCHOICEFILTER and applies no filter\nSETCHOICEFILTER('weather_summary', null)"
             ]
         },
         {
             "name": "SETCHOICES",
             "access": "",
             "virtual": false,
-            "description": "SETCHOICES\nSet the available choices for a choice field.",
+            "description": "SETCHOICES\nSet the available choices for a choice field\nThe SETCHOICES function allows for dynamic modification of the choice options on choice fields. For example, if you want to limit or completely replace the pick list options depending on other data scenarios on the form, you can use SETCHOICES to modify the options. Depending on what's required, it might be easier to use [SETCHOICEFILTER](/data-events/reference/setchoicefilter/), which is a similar function except it doesn't completely redefine the choices, it only applies a filter to them.\n\nThe `choices` parameter can be in 3 possible formats. The first format is provided for simplicity, and the last 2 formats are for more sophisticated scenarios where you want control over the label and value properties of the choices. The examples below demonstrate all 3 formats.\n\n* Array of strings - simplest format, the label and value are the same\n* Array of arrays - each choice item is an array in `[label, value]` order\n* Array of objects - each object has a `label` and `value` attribute",
             "parameters": [
                 {
                     "name": "field",
@@ -301,17 +338,17 @@
                         "Array",
                         "null"
                     ],
-                    "description": "The choices for the choice field",
+                    "description": "The choices for the choice field, or `null` to restore the original choices.",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "choices = ['Rain', 'Hail', 'Snow', 'Graupel']\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of values",
-                "choices = [\n  ['Light Rain', 'light_rain'],\n  ['Heavy Rain', 'heavy_rain']\n]\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order",
-                "choices = [\n  { label: 'Light Rain', value: 'light_rain' },\n  { label: 'Heavy Rain', value: 'heavy_rain' }\n]\nSETCHOICES('weather_summary', choices)\n\n// Sets the available choices of the weather summary field to an array of labels and values in an object containing \"label\" and \"value\" keys",
-                "SETCHOICES('weather_summary', null)\n\n// Unsets any override previously set by SETCHOICES and uses the original setting from the form schema"
+                "choices = ['Rain', 'Hail', 'Snow', 'Graupel']\n\n// Sets the available choices of the weather summary field to an array of values\nSETCHOICES('weather_summary', choices)",
+                "choices = [\n  ['Light Rain', 'light_rain'],\n  ['Heavy Rain', 'heavy_rain']\n]\n\n// Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order\nSETCHOICES('weather_summary', choices)",
+                "choices = [\n  { label: 'Light Rain', value: 'light_rain' },\n  { label: 'Heavy Rain', value: 'heavy_rain' }\n]\n\n// Sets the available choices of the weather summary field to an array of labels and values in an object containing \"label\" and \"value\" keys\nSETCHOICES('weather_summary', choices)",
+                "// Unsets any override previously set by SETCHOICES and uses the original setting from the form schema\nSETCHOICES('weather_summary', null)"
             ]
         },
         {
@@ -331,7 +368,7 @@
                 {
                     "name": "value",
                     "type": "String",
-                    "description": "The value to set for the field's description",
+                    "description": "The value to set for the field's description, or `null` to restore the original description",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -345,7 +382,7 @@
             "name": "SETHIDDEN",
             "access": "",
             "virtual": false,
-            "description": "SETHIDDEN\nSet the visibility of a field.",
+            "description": "SETHIDDEN\nSet the visibility of a field.\nThe SETHIDDEN function hides a form field. It can be used to add custom conditional logic above and beyond what can be configured in the Fulcrum builder. It has the same behavior as the 'Hidden' checkbox in the builder, which means that data is not automatically cleared out when hiding a field.",
             "parameters": [
                 {
                     "name": "field",
@@ -361,17 +398,48 @@
                         "boolean",
                         "null"
                     ],
-                    "description": "Boolean value representing whether the field should be hidden",
+                    "description": "Boolean value representing whether the field should be hidden, or `null` to restore the original value",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "SETHIDDEN('weather_summary', true)\n\n// Hides the weather summary field",
-                "SETHIDDEN('weather_summary', false)\n\n// Shows the weather summary field",
-                "SETHIDDEN('weather_summary', null)\n\n// Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema"
+                "// Hides the weather summary field\nSETHIDDEN('weather_summary', true)",
+                "// Shows the weather summary field\nSETHIDDEN('weather_summary', false)",
+                "// Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema\nSETHIDDEN('weather_summary', null)"
             ]
+        },
+        {
+            "name": "SETINTERVAL",
+            "access": "",
+            "virtual": false,
+            "description": "SETINTERVAL\nRepeatedly calls a function with a fixed time delay between each call\nThe SETINTERVAL function can be used to repeatedly call a function at a specified interval. It's nearly identical to the web platform standard [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval).",
+            "parameters": [
+                {
+                    "name": "function",
+                    "type": "function",
+                    "description": "The function to execute at the interval",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "interval",
+                    "type": "Number",
+                    "description": "The number of milliseconds to delay between each call (e.g. 1000 is 1 second)",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "ON('load-record', function(event) {\n  var fiveSeconds = 1000 * 5;\n\n  SETINTERVAL(function() {\n    if (CURRENTLOCATION()) {\n      SETLABEL('accuracy', CURRENTLOCATION().accuracy);\n    }\n  }, fiveSeconds);\n});\n\n// Set a field label to the current GPS accuracy every 5 seconds"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": "interval ID that can be used to clear the interval with [CLEARINTERVAL](/data-events/reference/clearinterval/)."
+            }
         },
         {
             "name": "SETLABEL",
@@ -393,15 +461,15 @@
                         "String",
                         "null"
                     ],
-                    "description": "The text for the field label",
+                    "description": "The text for the field label, or `null` to restore the original label",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "SETLABEL('weather_summary', 'Weather Report')\n\n// Sets the field's label to 'Weather Report'",
-                "SETLABEL('weather_summary', null)\n\n// Unsets any override previously set by SETLABEL and uses the original setting from the form schema"
+                "// Sets the field's label to 'Weather Report'\nSETLABEL('weather_summary', 'Weather Report')",
+                "// Unsets any override previously set by SETLABEL and uses the original setting from the form schema\nSETLABEL('weather_summary', null)"
             ]
         },
         {
@@ -428,7 +496,7 @@
                 }
             ],
             "examples": [
-                "SETLOCATION(35.5946167, -80.8638915)\n\n// Sets the location of a record"
+                "// Sets the location of a record\nSETLOCATION(35.5946167, -80.8638915)"
             ]
         },
         {
@@ -459,7 +527,7 @@
             ],
             "examples": [
                 "SETMAXLENGTH('weather_summary', 25)\n\n// Sets the maximum length of the weather summary field to 25",
-                "SETMAXLENGTH('weather_summary', null)\n\n// Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema"
+                "// Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema\nSETMAXLENGTH('weather_summary', null)"
             ]
         },
         {
@@ -490,7 +558,7 @@
             ],
             "examples": [
                 "SETMINLENGTH('weather_summary', 25)\n\n// Sets the minimum length of the weather summary field to 25",
-                "SETMINLENGTH('weather_summary', null)\n\n// Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema"
+                "// Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema\nSETMINLENGTH('weather_summary', null)"
             ]
         },
         {
@@ -502,115 +570,14 @@
                 {
                     "name": "project",
                     "type": "String",
-                    "description": "The project for the record",
+                    "description": "The project name, or `null` to clear the project",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "SETPROJECT('Bells Crossing Phase 3')\n\n// Sets the project of a record"
-            ]
-        },
-        {
-            "name": "SETREQUIRED",
-            "access": "",
-            "virtual": false,
-            "description": "SETREQUIRED\nSet whether or not a field is required.",
-            "parameters": [
-                {
-                    "name": "field",
-                    "type": "String",
-                    "description": "The data name for the field",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                },
-                {
-                    "name": "hidden",
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "description": "Boolean value representing whether the field should be required",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "SETREQUIRED('weather_summary', true)\n\n// Sets the weather summary field as required",
-                "SETREQUIRED('weather_summary', false)\n\n// Sets the weather summary field as not required",
-                "SETREQUIRED('weather_summary', null)\n\n// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema"
-            ]
-        },
-        {
-            "name": "SETSTATUS",
-            "access": "",
-            "virtual": false,
-            "description": "SETSTATUS\nSet the status of a record.",
-            "parameters": [
-                {
-                    "name": "status",
-                    "type": "String",
-                    "description": "The status value for the record",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "SETSTATUS('inspection_pending')\n\n// Sets the status of a record"
-            ]
-        },
-        {
-            "name": "SETSTATUSFILTER",
-            "access": "",
-            "virtual": false,
-            "description": "SETSTATUSFILTER\nSet the allowable status values for a record.",
-            "parameters": [
-                {
-                    "name": "statuses",
-                    "type": [
-                        "Array",
-                        "null"
-                    ],
-                    "description": "The allowable status values for the record",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "SETSTATUSFILTER(['inspection_pending', 'in_inspection'])\n\n// Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection'",
-                "SETSTATUSFILTER(null)\n\n// Unsets any previous status filters and allows any status to be selected for the record"
-            ]
-        },
-        {
-            "name": "SETVALUE",
-            "access": "",
-            "virtual": false,
-            "description": "SETVALUE\nSet the value of a field.",
-            "parameters": [
-                {
-                    "name": "field",
-                    "type": "String",
-                    "description": "The data name for the field to set",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                },
-                {
-                    "name": "value",
-                    "type": "String",
-                    "description": "The value to set for the field",
-                    "default": "",
-                    "optional": "",
-                    "nullable": ""
-                }
-            ],
-            "examples": [
-                "SETVALUE('weather_summary', 'Just beautiful')\n\n// Sets the value of a weather summary field"
+                "// Sets the project of a record\nSETPROJECT('Bells Crossing Phase 3')"
             ]
         },
         {
@@ -633,7 +600,7 @@
                         "boolean",
                         "null"
                     ],
-                    "description": "Boolean value representing whether the field should be read-only",
+                    "description": "Boolean value representing whether the field should be read-only, or `null` to restore the original state",
                     "default": "",
                     "optional": "",
                     "nullable": ""
@@ -643,6 +610,146 @@
                 "SETREADONLY('weather_summary', true)\n\n// Sets the field to read only, not editable by the user",
                 "SETREADONLY('weather_summary', false)\n\n// Sets the field to be active, editable by the user",
                 "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from the form schema"
+            ]
+        },
+        {
+            "name": "SETREQUIRED",
+            "access": "",
+            "virtual": false,
+            "description": "SETREQUIRED\nSet whether or not a field is required.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "required",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be required, or `null` to restore the original state",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Sets the weather summary field as required\nSETREQUIRED('weather_summary', true)",
+                "// Sets the weather summary field as not required\nSETREQUIRED('weather_summary', false)",
+                "// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema\nSETREQUIRED('weather_summary', null)"
+            ]
+        },
+        {
+            "name": "SETSTATUS",
+            "access": "",
+            "virtual": false,
+            "description": "SETSTATUS\nSet the status of a record.",
+            "parameters": [
+                {
+                    "name": "status",
+                    "type": "String",
+                    "description": "The status value for the record",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Sets the status of a record\nSETSTATUS('inspection_pending')"
+            ]
+        },
+        {
+            "name": "SETSTATUSFILTER",
+            "access": "",
+            "virtual": false,
+            "description": "SETSTATUSFILTER\nSet the allowable status values for a record.\nThe SETSTATUSFILTER function allows for dynamic filtering of the available status options. This is similar to [SETCHOICEFILTER](/data-events/reference/setchoicefilter/) except it operates on the status field. Using this function it's possible to change the available status options by user role or any other data conditions on record.",
+            "parameters": [
+                {
+                    "name": "statuses",
+                    "type": [
+                        "Array",
+                        "null"
+                    ],
+                    "description": "The allowable status values for the record, or `null` to restore the original options",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection'\nSETSTATUSFILTER(['inspection_pending', 'in_inspection'])",
+                "// Unsets any previous status filters and allows any status to be selected for the record\nSETSTATUSFILTER(null)",
+                "// Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection' for Standard Users\nON('load-record', function(event) {\n  if (ROLE() === 'Standard User') {\n    SETSTATUSFILTER(['inspection_pending', 'in_inspection']);\n  }\n});"
+            ]
+        },
+        {
+            "name": "SETTIMEOUT",
+            "access": "",
+            "virtual": false,
+            "description": "SETTIMEOUT\nCalls a function after a specified delay\nThe SETTIMEOUT function can be used to delay execution of a function for a specified amount of time. It's nearly identical to the web platform standard [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setTimeout).",
+            "parameters": [
+                {
+                    "name": "function",
+                    "type": "function",
+                    "description": "The function to execute after the delay",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "delay",
+                    "type": "Number",
+                    "description": "The number of milliseconds to delay (e.g. 1000 is 1 second)",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "ON('load-record', function(event) {\n  var fiveMinutes = 1000 * 60 * 5;\n\n  SETTIMEOUT(function() {\n    ALERT(\"You've been editing this record for 5 minutes.\");\n  }, fiveMinutes);\n});"
+            ],
+            "returns": {
+                "type": "Number",
+                "description": "timer ID that can be used to clear the timeout with [CLEARTIMEOUT](/data-events/reference/cleartimeout/)"
+            }
+        },
+        {
+            "name": "SETVALUE",
+            "access": "",
+            "virtual": false,
+            "description": "SETVALUE\nSet the value of a field.",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "The data name for the field to set",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The value to set for the field, or `null` to clear the value",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Sets the value of a weather summary field\nSETVALUE('text_field', 'A Text Value')",
+                "// Sets the value of a time field\nSETVALUE('time_field', '16:00')",
+                "// Sets the value of a date field\nSETVALUE('date_field', '2016-04-28')",
+                "// Sets the value of a single choice field\nSETVALUE('choice_field', 'red')",
+                "// Sets the value of a multiple choice field\nSETVALUE('multiple_choice_field', ['red', 'green', 'blue'])",
+                "// Sets the value of a classification field to level1 > level2 > level3\nSETVALUE('classification_field', ['level1', 'level2', 'level3'])",
+                "// Sets the value of a yes/no field\nSETVALUE('yes_no_field', 'yes')",
+                "// Sets the value of an address field\nvar address = {\n  sub_thoroughfare: '360',\n  thoroughfare: 'Central Avenue',\n  suite: '200',\n  locality: 'St. Petersburg',\n  sub_admin_area: 'Pinellas',\n  admin_area: 'FL',\n  postal_code: '33701',\n  country: 'US'\n};\n\nSETVALUE('address_field', address)"
             ]
         },
         {
