@@ -2401,6 +2401,22 @@ function UPPER() {}
 function USERFULLNAME() {}
 
 
+////VALUE
+
+/**
+ * VALUE
+ * Returns the current value of a field given the field's data name
+ * @param {String} field the Data Name of the field
+ * @returns {*} the current field value
+ * @example
+ * // returns Test Record
+ * VALUE('name')
+ *
+ * // identical to using $name
+ */
+function VALUE() {}
+
+
 ////VERSIONINFO
 
 /**

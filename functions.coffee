@@ -1723,6 +1723,11 @@ exports.UPPER = (value) ->
 exports.USERFULLNAME = ->
   CONFIG().userFullName ? NO_VALUE
 
+exports.VALUE = (dataName) ->
+  return NO_VALUE unless dataName?
+
+  $$runtime.variables['$' + dataName]
+
 exports.VERSIONINFO = (separator=', ') ->
   _.compact([ DEVICEINFO(' '), PLATFORMINFO(' '), APPLICATIONINFO(' ') ]).join(separator)
 

@@ -1584,6 +1584,12 @@ describe 'USERFULLNAME', ->
   it 'returns the user full name', ->
     USERFULLNAME().should.eql 'John Smith'
 
+describe 'VALUE', ->
+  it 'returns a data value by a string', ->
+    VALUE('name').should.be.exactly('Test Record')
+    shouldHaveNoValue(VALUE(null))
+    shouldHaveNoValue(VALUE('invalid_field'))
+
 describe 'YEAR', ->
   it 'returns a year given a date', ->
     YEAR('2015/01/01').should.be.exactly(2015)

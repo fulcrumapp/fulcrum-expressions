@@ -3623,6 +3623,29 @@
             }
         },
         {
+            "name": "VALUE",
+            "access": "",
+            "virtual": false,
+            "description": "VALUE\nReturns the current value of a field given the field's data name",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "the Data Name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Test Record\nVALUE('name')\n\n// identical to using $name"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the current field value"
+            }
+        },
+        {
             "name": "VERSIONINFO",
             "access": "",
             "virtual": false,
