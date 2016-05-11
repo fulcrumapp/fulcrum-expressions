@@ -286,6 +286,25 @@
             ]
         },
         {
+            "name": "SETASSIGNMENT",
+            "access": "",
+            "virtual": false,
+            "description": "SETASSIGNMENT\nSet the user assignment of a record\n\n*NOTE* This function only works within the web record editor",
+            "parameters": [
+                {
+                    "name": "userEmail",
+                    "type": "String",
+                    "description": "The email address of the user, or `null` to unset it",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Sets the user assignment\nSETASSIGNMENT('test@example.com')"
+            ]
+        },
+        {
             "name": "SETCHOICEFILTER",
             "access": "",
             "virtual": false,

@@ -305,6 +305,21 @@ function PROGRESS() {}
 function REQUEST() {}
 
 
+////SETASSIGNMENT
+
+/**
+ * SETASSIGNMENT
+ * Set the user assignment of a record
+ *
+ * *NOTE* This function only works within the web record editor
+ * @param {String} userEmail The email address of the user, or `null` to unset it
+ * @example
+ * // Sets the user assignment
+ * SETASSIGNMENT('test@example.com')
+ */
+function SETASSIGNMENT() {}
+
+
 ////SETCHOICEFILTER
 
 /**

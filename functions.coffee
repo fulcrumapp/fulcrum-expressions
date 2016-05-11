@@ -1242,6 +1242,10 @@ exports.SEARCH = (needle, haystack, startPosition) ->
 
   index + 1
 
+exports.SETASSIGNMENT = (user) ->
+  ERROR('user must be a string') if user? and not _.isString(user)
+  SETVALUE('@assignment', user)
+
 exports.SETCHOICEFILTER = (dataName, value) ->
   filterValue = if value?
     if not _.isArray(value) then [value] else value
