@@ -275,6 +275,13 @@ exports.DEGREES = (value) ->
   return NaN unless _.isNumber(value)
   180.0 * value / Math.PI
 
+exports.DESCRIPTION = (dataName) ->
+  field = FIELD(dataName)
+
+  return unless field?
+
+  field.description
+
 exports.DEVICEINFO = (separator=', ') ->
   _.compact([ DEVICEMANUFACTURER(), DEVICEMODEL() ]).join(separator)
 

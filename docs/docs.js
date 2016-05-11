@@ -472,6 +472,20 @@ function DECIMALSEPARATOR() {}
 function DEGREES() {}
 
 
+////DESCRIPTION
+
+/**
+ * DESCRIPTION
+ * Returns the description of a given field
+ * @param {String} field the Data Name of the field
+ * @returns {*} the field description
+ * @example
+ * // returns Enter the name
+ * DESCRIPTION('name')
+ */
+function DESCRIPTION() {}
+
+
 ////DOLLAR
 
 /**

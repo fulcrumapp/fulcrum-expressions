@@ -142,6 +142,11 @@ describe 'CONTAINS', ->
     CONTAINS([null, undefined], undefined).should.be.true
     CONTAINS(null, null).should.be.false
 
+describe 'DESCRIPTION', ->
+  it 'returns the description of a field', ->
+    DESCRIPTION('name').should.be.exactly('Enter the name')
+    shouldBeUndefined(DESCRIPTION('invalid_field'))
+
 describe 'FLOOR', ->
   it 'returns number rounded down, towards zero, to the nearest multiple', ->
     FLOOR(1).should.be.exactly(1)

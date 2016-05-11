@@ -721,6 +721,29 @@
             }
         },
         {
+            "name": "DESCRIPTION",
+            "access": "",
+            "virtual": false,
+            "description": "DESCRIPTION\nReturns the description of a given field",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "the Data Name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Enter the name\nDESCRIPTION('name')"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the field description"
+            }
+        },
+        {
             "name": "DOLLAR",
             "access": "",
             "virtual": false,

@@ -49,7 +49,7 @@ form:
     {
       data_name: "name"
       default_value: null
-      description: null
+      description: 'Enter the name',
       disabled: false
       hidden: false
       key: "97ab"
