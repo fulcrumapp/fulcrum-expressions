@@ -543,6 +543,11 @@ describe 'ISTEXT', ->
     ISTEXT(false).should.be.false
     ISTEXT('').should.be.true
 
+describe 'LABEL', ->
+  it 'returns the label of a field', ->
+    LABEL('name').should.be.exactly('Name')
+    shouldBeUndefined(LABEL('invalid_field'))
+
 describe 'LAST', ->
   it 'returns the last N items of an array', ->
     LAST([1]).should.be.exactly(1)

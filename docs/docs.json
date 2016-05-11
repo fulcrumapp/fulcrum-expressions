@@ -1688,6 +1688,29 @@
             }
         },
         {
+            "name": "LABEL",
+            "access": "",
+            "virtual": false,
+            "description": "LABEL\nReturns the label of a given field",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "the Data Name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Name\nLABEL('name')"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the label of the field"
+            }
+        },
+        {
             "name": "LANGUAGE",
             "access": "",
             "virtual": false,

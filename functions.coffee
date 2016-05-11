@@ -708,6 +708,13 @@ exports.ISSELECTED = (value, choice) ->
 exports.ISTEXT = (value) ->
   _.isString(value)
 
+exports.LABEL = (dataName) ->
+  field = FIELD(dataName)
+
+  return unless field?
+
+  field.label
+
 exports.LANGUAGE = ->
   Config.language or Defaults.language
 

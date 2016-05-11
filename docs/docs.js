@@ -1106,6 +1106,20 @@ function ISSELECTED() {}
 function ISTEXT() {}
 
 
+////LABEL
+
+/**
+ * LABEL
+ * Returns the label of a given field
+ * @param {String} field the Data Name of the field
+ * @returns {*} the label of the field
+ * @example
+ * // returns Name
+ * LABEL('name')
+ */
+function LABEL() {}
+
+
 ////LANGUAGE
 
 /**
