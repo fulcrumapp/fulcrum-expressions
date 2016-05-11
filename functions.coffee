@@ -167,6 +167,16 @@ exports.CONFIGURE = (config, merge=true) ->
 
   Config
 
+exports.CONTAINS = (haystack, needle, fromIndex=0) ->
+  fromIndex = 0 unless _.isNumber(fromIndex)
+
+  return false unless _.isString(haystack) or _.isArray(haystack)
+
+  if _.isString(haystack)
+    haystack.indexOf(needle.toString(), fromIndex) isnt -1
+  else
+    _.contains(haystack, needle, fromIndex)
+
 exports.COS = MATH_FUNC(Math.cos)
 
 exports.COSH = (number) ->

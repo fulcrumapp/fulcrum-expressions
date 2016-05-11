@@ -126,6 +126,22 @@ describe 'CEILING', ->
     CEILING(-0.13, 0.25).should.be.exactly(0)
     CEILING(-0.31, 0.25).should.be.exactly(-0.25)
 
+describe 'CONTAINS', ->
+  it 'returns whether an array or string contains a string', ->
+    CONTAINS(['1', '2', '3'], '1').should.be.true
+    CONTAINS(['1', '2', '3'], '3').should.be.true
+    CONTAINS(['1', '2', '3'], '4').should.be.false
+    CONTAINS([1, 2, 3], 3).should.be.true
+    CONTAINS('123', '1').should.be.true
+    CONTAINS('123', '3').should.be.true
+    CONTAINS('123', '123').should.be.true
+    CONTAINS('123', 1).should.be.true
+    CONTAINS([null, 1], null).should.be.true
+    CONTAINS([null, 1], '').should.be.false
+    CONTAINS([null, 1], undefined).should.be.false
+    CONTAINS([null, undefined], undefined).should.be.true
+    CONTAINS(null, null).should.be.false
+
 describe 'FLOOR', ->
   it 'returns number rounded down, towards zero, to the nearest multiple', ->
     FLOOR(1).should.be.exactly(1)

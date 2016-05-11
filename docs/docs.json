@@ -364,6 +364,50 @@
             }
         },
         {
+            "name": "CONTAINS",
+            "access": "",
+            "virtual": false,
+            "description": "CONTAINS\nDetermines whether an array or string contains a given value",
+            "parameters": [
+                {
+                    "name": "haystack",
+                    "type": [
+                        "Array",
+                        "String"
+                    ],
+                    "description": "The array of values or string to check",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "needle",
+                    "type": "String",
+                    "description": "The value to look for",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "fromIndex",
+                    "type": "Number",
+                    "description": "The starting index to use",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nCONTAINS(\"abcd\", \"a\")",
+                "// returns true\nCONTAINS(['a', 'b', 'c', 'd'], 'b')",
+                "// returns false\nCONTAINS(\"abcd\", \"e\")"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": "true if the value is found"
+            }
+        },
+        {
             "name": "COS",
             "access": "",
             "virtual": false,

@@ -243,6 +243,28 @@ function CONCATENATE() {}
 function CONCAT() {}
 
 
+////CONTAINS
+
+/**
+ * CONTAINS
+ * Determines whether an array or string contains a given value
+ * @param {Array|String} haystack The array of values or string to check
+ * @param {String} needle The value to look for
+ * @param {Number} fromIndex The starting index to use
+ * @returns {Boolean} true if the value is found
+ * @example
+ * // returns true
+ * CONTAINS("abcd", "a")
+ * @example
+ * // returns true
+ * CONTAINS(['a', 'b', 'c', 'd'], 'b')
+ * @example
+ * // returns false
+ * CONTAINS("abcd", "e")
+ */
+function CONTAINS() {}
+
+
 ////COS
 
 /**
