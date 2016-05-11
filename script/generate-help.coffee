@@ -56,7 +56,7 @@ fs.writeFileSync("./docs/output/functions.coffee", expressionHelp)
 # Generate Data Event Docs
 #
 eventDocs = require('../docs/event_docs.json')
-eventFunctions = eventDocs.functions
+eventFunctions = _.select eventDocs.functions, (func) -> includeExport(func.name)
 
 eventGenerator = new EventDocumentationGenerator(eventFunctions)
 
