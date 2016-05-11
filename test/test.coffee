@@ -22,10 +22,12 @@ CONFIGURE(variables)
 
 resetConfig = ->
   RESETCONFIG()
+  runtime.values = variables.values.form_values
+  runtime.setupValues()
   CONFIGURE(variables)
 
 runtime.form = variables.form
-runtime.values = variables.values
+runtime.values = variables.values.form_values
 runtime.prepare()
 
 shouldBeNull = (value) ->
