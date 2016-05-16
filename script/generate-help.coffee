@@ -20,6 +20,7 @@ SKIP_EXPORTS = [
 
   # TODO(zhm) remove these lines when the mobile apps get the new expression engine version
   'CONTAINS',
+  'DATANAMES',
   'DESCRIPTION',
   'LABEL',
   'SETASSIGNMENT',

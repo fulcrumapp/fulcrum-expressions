@@ -567,6 +567,20 @@
             }
         },
         {
+            "name": "DATANAMES",
+            "access": "",
+            "virtual": false,
+            "description": "DATANAMES\nReturns the data names of the form fields",
+            "parameters": [],
+            "examples": [
+                "// returns [name,items,cost]\nDATANAMES()"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "DATE",
             "access": "",
             "virtual": false,

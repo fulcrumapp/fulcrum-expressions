@@ -1451,6 +1451,11 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.be.NaN
 
+describe 'DATANAMES', ->
+  it 'returns the data names of the form fields', ->
+    names = DATANAMES()
+    names.should.eql([ 'name', 'items', 'cost' ])
+
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->
     date = DATE(2015, 1, 14)

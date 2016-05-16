@@ -383,6 +383,19 @@ function CURRENCYCODE() {}
 function CURRENCYSYMBOL() {}
 
 
+////DATANAMES
+
+/**
+ * DATANAMES
+ * Returns the data names of the form fields
+ * @returns {Array}
+ * @example
+ * // returns [name,items,cost]
+ * DATANAMES()
+ */
+function DATANAMES() {}
+
+
 ////DATE
 
 /**

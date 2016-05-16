@@ -226,6 +226,9 @@ exports.CURRENCYSYMBOL = ->
 exports.CURRENTLOCATION = ->
   $$runtime.currentLocation ? null
 
+exports.DATANAMES = () ->
+  $$runtime.elements.map (e) -> e.data_name
+
 exports.DATE = (year, month, day) ->
   year = INT(year)
   month = INT(month)
