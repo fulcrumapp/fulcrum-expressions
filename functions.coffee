@@ -955,7 +955,7 @@ exports.OFF = ->
   $$runtime.removeHook(name, param, callback)
 
 isMagicDataName = (name) ->
-  return _.include(['@status', '@project', '@geometry'], name)
+  return _.include(['@status', '@project', '@geometry', '@assignment'], name)
 
 validateEventParams = (event, param) ->
   invariant = (v) ->
