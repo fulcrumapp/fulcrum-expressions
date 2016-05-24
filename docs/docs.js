@@ -654,6 +654,23 @@ function FACTDOUBLE() {}
 function FALSE() {}
 
 
+////FIELDTYPE
+
+/**
+ * FIELDTYPE
+ * Returns the field type of a field by its data name
+ * @param {String} dataName The data name of the field
+ * @returns {String}
+ * @example
+ * // returns Repeatable
+ * FIELDTYPE('items')
+ * @example
+ * // returns TextField
+ * FIELDTYPE('name')
+ */
+function FIELDTYPE() {}
+
+
 ////FIND
 
 /**

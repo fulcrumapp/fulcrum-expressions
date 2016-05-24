@@ -996,6 +996,30 @@
             }
         },
         {
+            "name": "FIELDTYPE",
+            "access": "",
+            "virtual": false,
+            "description": "FIELDTYPE\nReturns the field type of a field by its data name",
+            "parameters": [
+                {
+                    "name": "dataName",
+                    "type": "String",
+                    "description": "The data name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Repeatable\nFIELDTYPE('items')",
+                "// returns TextField\nFIELDTYPE('name')"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "FIND",
             "access": "",
             "virtual": false,

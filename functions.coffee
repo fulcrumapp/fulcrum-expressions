@@ -345,6 +345,13 @@ exports.FIELD = (dataName) ->
 
   element
 
+exports.FIELDTYPE = (dataName) ->
+  field = FIELD(dataName)
+
+  return NO_VALUE unless field?
+
+  field.type
+
 exports.FIRST = (array, count) ->
   _.first(array, count)
 
