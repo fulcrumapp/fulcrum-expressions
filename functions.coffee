@@ -6,7 +6,11 @@ _.mixin(_.str.exports())
 
 inspect = require('object-inspect')
 
+qs = require('query-string')
+
 Utils = require('./utils')
+
+{format} = require('util')
 
 toArray = Utils.toArray
 
@@ -27,6 +31,9 @@ exports = {}
 
 exports.NO_VALUE = undefined
 
+exports.ERROR = (message) ->
+  throw new Error(message)
+
 exports.MATH_FUNC = MATH_FUNC = (mathFunction) ->
   -> mathFunction.apply(Math, toArray(arguments).map(NUM))
 
@@ -38,6 +45,21 @@ exports.ACOSH = (number) ->
   number = NUM(number)
 
   Math.log(number + Math.sqrt(number * number - 1))
+
+exports.ALERT = ->
+  title = null
+  message = arguments[0]
+
+  if arguments.length > 1
+    title = arguments[0]
+    message = arguments[1]
+
+  result =
+    type: 'message'
+    title: if title? then title.toString() else null
+    message: if message? then message.toString() else null
+
+  $$runtime.results.push(result)
 
 exports.AND = ->
   _.find(toArray(arguments), (item) -> not item) is undefined
@@ -116,7 +138,7 @@ exports.CODE = (string) ->
 
 # _.compact removes '' and 0 from the array, which is somewhat unexpected
 exports.COMPACT = (value) ->
-  return undefined unless _.isArray(value)
+  return NO_VALUE unless _.isArray(value)
 
   _.filter value, (item) -> item?
 
@@ -132,6 +154,8 @@ exports.CONCATENATE = ->
 
   strings.join('')
 
+exports.CONCAT = exports.CONCATENATE
+
 exports.CONFIG = ->
   Config
 
@@ -142,6 +166,16 @@ exports.CONFIGURE = (config, merge=true) ->
     Config = config
 
   Config
+
+exports.CONTAINS = (haystack, needle, fromIndex=0) ->
+  fromIndex = 0 unless _.isNumber(fromIndex)
+
+  return false unless _.isString(haystack) or _.isArray(haystack)
+
+  if _.isString(haystack)
+    haystack.indexOf(needle.toString(), fromIndex) isnt -1
+  else
+    _.contains(haystack, needle, fromIndex)
 
 exports.COS = MATH_FUNC(Math.cos)
 
@@ -188,6 +222,12 @@ exports.CURRENCYCODE = ->
 
 exports.CURRENCYSYMBOL = ->
   Config.currencySymbol or Defaults.currencySymbol
+
+exports.CURRENTLOCATION = ->
+  $$runtime.currentLocation ? null
+
+exports.DATANAMES = () ->
+  $$runtime.elements.map (e) -> e.data_name
 
 exports.DATE = (year, month, day) ->
   year = INT(year)
@@ -238,6 +278,13 @@ exports.DEGREES = (value) ->
   return NaN unless _.isNumber(value)
   180.0 * value / Math.PI
 
+exports.DESCRIPTION = (dataName) ->
+  field = FIELD(dataName)
+
+  return unless field?
+
+  field.description
+
 exports.DEVICEINFO = (separator=', ') ->
   _.compact([ DEVICEMANUFACTURER(), DEVICEMODEL() ]).join(separator)
 
@@ -280,7 +327,20 @@ exports.EVEN = (value) ->
 exports.EXACT = (value1, value2) ->
   _.isEqual(value1, value2)
 
+exports.EXISTS = (value) ->
+  _.select(toArray(arguments).map(ISBLANK)).length is 0
+
 exports.EXP = MATH_FUNC(Math.exp)
+
+exports.FIELD = (dataName) ->
+  element = $$runtime.elementsByDataName[dataName]
+
+  return NO_VALUE unless element?
+
+  element
+
+exports.FIRST = (array, count) ->
+  _.first(array, count)
 
 exports.MEMOIZED_FACT = []
 
@@ -392,6 +452,11 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
   else
     integerString + DECIMALSEPARATOR() + fractionPart.toString()
 
+exports.FLATTEN = (value) ->
+  return NO_VALUE unless _.isArray(value)
+
+  _.flatten value
+
 exports.FLOOR = (number, significance) ->
   significance ?= 1
   significance = ABS(significance)
@@ -408,6 +473,9 @@ exports.FLOOR = (number, significance) ->
     ROUND(Math.floor(number / significance) * significance, precision)
   else
     -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
+
+exports.FORMAT = ->
+  format.apply(null, arguments)
 
 exports.FORMATNUMBER = (number, language, options) ->
   number ?= NUM(number)
@@ -486,6 +554,39 @@ exports.GCD = ->
 exports.GETRESULT = ->
   $$runtime.$$result
 
+exports.REQUEST = (options, callback) ->
+  return ERROR('A callback must be provided to REQUEST') unless _.isFunction(callback)
+
+  if _.isString(options)
+    options = { url: options }
+
+  options.method  ?= 'GET'
+  options.headers ?= {}
+  options.followRedirect ?= true
+
+  return ERROR('A url must be provided to REQUEST') unless _.isString(options.url)
+
+  if _.isObject(options.qs)
+    queryString = qs.stringify(options.qs)
+
+    if options.url.indexOf('?') < 0
+      queryString = '?' + queryString
+
+    options.url += queryString
+
+  if options.json?
+    options.headers['Content-Type'] = 'application/json'
+
+    unless _.isString(options.json)
+      options.body = JSON.stringify(options.json)
+
+  options.method  = 'GET' unless _.isString(options.method)
+  options.headers = {}    unless _.isObject(options.headers)
+  options.body    = null  unless _.isString(options.body)
+  options.followRedirect = !!options.followRedirect
+
+  HostFunctions.httpRequest(JSON.stringify(options), callback)
+
 exports.GROUPINGSEPARATOR = ->
   Config.groupingSeparator or Defaults.groupingSeparator
 
@@ -509,12 +610,33 @@ exports.INSPECT = (value) ->
 
 exports.INT = exports.FLOOR
 
+exports.INVALID = ->
+  key = null
+  message = null
+
+  if arguments.length > 1
+    element = FIELD(arguments[0])
+
+    key = element?.key or arguments[0].toString()
+
+    message = arguments[1].toString()
+  else if arguments.length is 1
+    message = arguments[0].toString()
+
+  result =
+    type: 'validation'
+    key: key
+    message: message
+
+  $$runtime.results.push(result)
+
 exports.ISBLANK = (value) ->
   return true unless value?
   return true if _.isNaN(value)
   return false if _.isBoolean(value)
   return false if _.isNumber(value)
   return false if _.isDate(value)
+  return false if _.isRegExp(value)
   return _.isBlank(value) if _.isString(value)
   return value.length is 0 if _.isArray(value)
 
@@ -589,8 +711,18 @@ exports.ISSELECTED = (value, choice) ->
 exports.ISTEXT = (value) ->
   _.isString(value)
 
+exports.LABEL = (dataName) ->
+  field = FIELD(dataName)
+
+  return unless field?
+
+  field.label
+
 exports.LANGUAGE = ->
   Config.language or Defaults.language
+
+exports.LAST = (array, count) ->
+  _.last(array, count)
 
 exports.LATITUDE = ->
   NUM(CONFIG().featureGeometry?.coordinates[1])
@@ -632,10 +764,25 @@ exports.LEFT = (value, numberOfCharacters = 1) ->
   value.substring(0, numberOfCharacters)
 
 exports.LEN = (value) ->
-  return NO_VALUE unless value?
-  return NO_VALUE if _.isObject(value)
+  return 0 unless value?
+  return 0 if _.isNaN(value)
 
-  value.toString().length
+  result =
+    switch true
+      when _.isArray(value)
+        value.length
+      when _.isDate(value)
+        value.toString().length
+      when _.isString(value)
+        value.length
+      when _.isRegExp(value)
+        value.toString().length
+      when _.isObject(value)
+        Object.keys(value).length
+      else
+        value.toString().length
+
+  result ? 0
 
 exports.LN = MATH_FUNC(Math.log)
 
@@ -663,6 +810,16 @@ exports.LOWER = (value) ->
   return NO_VALUE if _.isObject(value)
 
   value.toString().toLowerCase()
+
+exports.LPAD = (value, count, padding=' ') ->
+  count  = FLOOR(count)
+  value ?= ''
+  value  = value.toString()
+
+  return NO_VALUE unless _.isNumber(count)
+  return NO_VALUE unless _.isString(padding)
+
+  RIGHT(Array(count).join(padding) + value, count)
 
 exports.MAX = ->
   numbers = _.flatten(toArray(arguments))
@@ -779,8 +936,94 @@ exports.ODD = (value) ->
 
   if value >= 0 then temp else -temp
 
+exports.OFF = ->
+  args = arguments
+
+  if arguments.length is 3
+    [name, param, callback] = arguments
+  else if arguments.length is 2 and _.isString(arguments[1])
+    [name, param] = arguments
+  else if arguments.length is 2 and _.isFunction(arguments[1])
+    [name, callback] = arguments
+
+  param ?= null
+
+  ERROR('name must be a string') unless _.isString(name)
+  ERROR('param must be a string') unless _.isString(param)
+  ERROR('callback must be a function') if callback? and not _.isFunction(callback)
+
+  $$runtime.removeHook(name, param, callback)
+
+isMagicDataName = (name) ->
+  return _.include(['@status', '@project', '@geometry'], name)
+
+validateEventParams = (event, param) ->
+  invariant = (v) ->
+    if not v?
+      ERROR(format('Invalid usage of ON(): "%s" is not a valid field for the "%s" event', param, event))
+
+  switch event
+    when 'change'
+      return if isMagicDataName(param)
+
+      invariant(FIELD(param))
+
+    when 'click'
+      field = FIELD(param)
+
+      invariant(field?.type is 'HyperlinkField')
+
+    when 'load-repeatable', 'new-repeatable', 'edit-repeatable', 'save-repeatable', 'validate-repeatable'
+      field = FIELD(param)
+
+      invariant(field?.type is 'Repeatable')
+
+    when 'change-geometry'
+      if param?
+        field = FIELD(param)
+
+        invariant(field?.type is 'Repeatable')
+
+    when 'add-photo', 'remove-photo'
+      field = FIELD(param)
+
+      invariant(field?.type is 'PhotoField')
+
+    when 'add-video', 'remove-video'
+      field = FIELD(param)
+
+      invariant(field?.type is 'VideoField')
+
+    when 'add-audio', 'remove-audio'
+      field = FIELD(param)
+
+      invariant(field?.type is 'AudioField')
+
+exports.ON = ->
+  args = arguments
+
+  if arguments.length is 3
+    [name, param, callback] = arguments
+  if arguments.length is 2
+    [name, callback] = arguments
+
+  param ?= null
+
+  ERROR('name must be a string') unless _.isString(name)
+  ERROR('param must be a string') if param? and not _.isString(param)
+  ERROR('callback must be a function') unless _.isFunction(callback)
+
+  validateEventParams(name, param)
+
+  $$runtime.addHook(name, param, callback)
+
 exports.ONCE = (value) ->
   $$runtime.$$currentValue ? value
+
+exports.OPENURL = (value) ->
+  return NO_VALUE unless _.isString(value)
+
+  $$runtime.results.push(type: 'open', value: JSON.stringify(value))
 
 exports.OR = ->
   _.find(toArray(arguments), (item) -> item) isnt undefined
@@ -801,6 +1044,9 @@ exports.PLATFORMINFO = (separator=', ') ->
 
 exports.PLATFORMVERSION = ->
   Config.platformVersion ? ''
+
+exports.PLUCK = (object, property) ->
+  _.pluck(object, property)
 
 exports.POWER = (number, power) ->
   number = NUM(number)
@@ -831,6 +1077,27 @@ exports.PRODUCT = ->
   return NaN if hasNaN
 
   _.inject(numbers, ((memo, number) -> memo *= number), 1)
+
+exports.PROGRESS = ->
+  title = null
+  message = arguments[0]
+
+  if arguments.length > 1
+    title = arguments[0]
+    message = arguments[1]
+
+  result =
+    type: 'progress'
+    title: if title? then title.toString() else null
+    message: if message? then message.toString() else null
+
+  $$runtime.results.push(result)
+
+exports.PROJECTID = ->
+  CONFIG().recordProject ? NO_VALUE
+
+exports.PROJECTNAME = ->
+  CONFIG().recordProjectName ? NO_VALUE
 
 exports.PROPER = (value) ->
   return NO_VALUE unless value?
@@ -949,6 +1216,16 @@ exports.ROUNDUP = (number, digits = 0) ->
 
   sign * (Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
 
+exports.RPAD = (value, count, padding=' ') ->
+  count  = FLOOR(count)
+  value ?= ''
+  value  = value.toString()
+
+  return NO_VALUE unless _.isNumber(count)
+  return NO_VALUE unless _.isString(padding)
+
+  LEFT(value + Array(count).join(padding), count)
+
 exports.SEARCH = (needle, haystack, startPosition) ->
   startPosition ?= 1
   startPosition = NUM(startPosition)
@@ -968,11 +1245,220 @@ exports.SEARCH = (needle, haystack, startPosition) ->
 
   index + 1
 
+exports.SETASSIGNMENT = (user) ->
+  ERROR('user must be a string') if user? and not _.isString(user)
+  SETVALUE('@assignment', user)
+
+exports.SETCHOICEFILTER = (dataName, value) ->
+  filterValue = if value?
+    if not _.isArray(value) then [value] else value
+  else
+    null
+
+  SETFORMATTRIBUTES(dataName, choice_filter: filterValue)
+
+exports.SETCHOICES = (dataName, value) ->
+  # TODO(zhm) throw some kind of error here if the param is wrong
+  return NO_VALUE unless value is null or _.isArray(value)
+
+  choices = null
+
+  if value
+    choices = []
+
+    for choice in value
+      switch true
+        when _.isString(choice)
+          choices.push(label: choice, value: choice)
+
+        when _.isNumber(choice)
+          choices.push(label: choice.toString(), value: choice.toString())
+
+        when _.isArray(choice)
+          if choice.length > 1
+            choices.push(label: choice[0], value: choice[1])
+          else if choice.length is 1
+            choices.push(label: choice[0], value: choice[0])
+
+        when _.isObject(choice)
+          choices.push(label: choice.label, value: choice.value or choice.label)
+
+  SETFORMATTRIBUTES(dataName, choices: choices)
+
+CONFIGURATION_ATTRIBUTES = [
+  'auto_populate_location'
+  'auto_populate_minimum_accuracy'
+  'photo_quality'
+  'video_quality'
+  'allow_photo_gallery'
+  'allow_video_gallery'
+  'allow_draft_records'
+  'allow_manual_location'
+  'warn_on_location_accuracy'
+  'title'
+]
+
+exports.SETCONFIGURATION = (settings) ->
+  for attributeName, value of settings
+    continue unless _.contains(CONFIGURATION_ATTRIBUTES, attributeName)
+
+    value = if value? then JSON.stringify(value) else null
+
+    result =
+      type: 'configure'
+      attribute: attributeName.toString()
+      value: value
+
+    $$runtime.results.push(result)
+
+isValidGeometry = (geometry) ->
+  return true if not geometry?
+  return false unless geometry.type is 'Point'
+  return false unless _.isArray(geometry.coordinates) and geometry.coordinates.length is 2
+  return false if _.some geometry.coordinates, (coord) -> not _.isNumber(coord) || _.isNaN(coord)
+  true
+
+exports.SETGEOMETRY = (geometry) ->
+  ERROR('Geometry must be a valid GeoJSON value.') unless isValidGeometry(geometry)
+  SETVALUE('@geometry', geometry)
+
+exports.SETLOCATION = (latitude, longitude) ->
+  if not latitude? or not longitude?
+    latitude = null
+    longitude = null
+
+  geometry =
+    if latitude? and longitude?
+      { type: 'Point', coordinates: [ +longitude, +latitude ] }
+    else
+      null
+
+  if not isValidGeometry(geometry)
+    ERROR(format('Invalid latitude/longitude. SETLOCATION(%s, %s).', latitude, longitude))
+
+  SETVALUE('@geometry', geometry)
+
+exports.SETSTATUS = (status) ->
+  ERROR('status must be a string') if status? and not _.isString(status)
+  SETVALUE('@status', status)
+
+exports.SETSTATUSFILTER = (value) ->
+  SETCHOICEFILTER('@status', value)
+
+exports.SETPROJECT = (project) ->
+  ERROR('project must be a string') if status? and not _.isString(status)
+  SETVALUE('@project', project)
+
+exports.SETDESCRIPTION = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, description: if value? then value.toString() else null)
+
+exports.SETREADONLY = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, disabled: if value? then !!value else null)
+
+exports.SETDISABLED = exports.SETREADONLY
+
+exports.SETHIDDEN = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, hidden: if value? then !!value else null)
+
+exports.SETLABEL = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, label: if value? then value.toString() else null)
+
+exports.SETMAXLENGTH = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, max_length: if value? then +value else null)
+
+exports.SETMINLENGTH = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, min_length: if value? then +value else null)
+
+exports.SETREQUIRED = (dataName, value) ->
+  SETFORMATTRIBUTES(dataName, required: if value? then !!value else null)
+
 exports.SETRESULT = (result) ->
   $$runtime.$$result = result
 
+exports.SETTIMEOUT = (callback, timeout) ->
+  HostFunctions.setTimeout(callback, timeout)
+
+exports.CLEARTIMEOUT = (id) ->
+  HostFunctions.clearTimeout(id)
+
+exports.SETINTERVAL = (callback, interval) ->
+  HostFunctions.setInterval(callback, interval)
+
+exports.CLEARINTERVAL = (id) ->
+  HostFunctions.clearInterval(id)
+
+exports.SETVALUE = (dataName, value) ->
+  element = FIELD(dataName)
+
+  if element?
+    # don't let the user accidentally blow out data in unsupported fields
+    repeatableElement = $$runtime.elementsByKey[$$runtime.repeatable]
+
+    containerElements =
+      if $$runtime.repeatable
+        $$runtime.elementsByKey[$$runtime.repeatable]?.elements
+      else
+        $$runtime.form.elements
+
+    supported = Utils.isSetValueSupported(containerElements, element, element.type)
+
+    if not supported
+      ERROR(format("Setting the value of '%s' is not supported.", dataName))
+
+    value =
+      if value?
+        Utils.makeValue(element, value)
+      else
+        null
+
+  # TODO(zhm) guard well-known supported values in the else case
+  # @project, @status, @geometry, etc
+  # Force the types to be correct so we don't pass back an array for
+  # the project or a number for the status, etc. The native apps
+  # should never be handed back data with the wrong JS types.
+
+  result =
+    type: 'set-value'
+    key: element?.key or dataName
+    value: JSON.stringify(value)
+
+  $$runtime.results.push(result)
+
+FORM_ATTRIBUTES = [
+  'label'
+  'description'
+  'required'
+  'hidden'
+  'disabled'
+  'min_length'
+  'max_length'
+  'choices'
+  'choice_filter'
+]
+
+exports.SETFORMATTRIBUTES = (dataName, attributes) ->
+  element = FIELD(dataName)
+
+  return NO_VALUE unless (element or dataName is '@status')
+
+  for attributeName, value of attributes
+    continue unless _.contains(FORM_ATTRIBUTES, attributeName)
+
+    value = if value? then JSON.stringify(value) else null
+
+    result =
+      type: 'update-element'
+      key: element?.key or dataName
+      attribute: attributeName.toString()
+      value: value
+
+    $$runtime.results.push(result)
+
 exports.SHOWERRORS = (showErrors=true) ->
   $$runtime.showErrors = showErrors
+
+exports.SHUFFLE = (values) ->
+  _.shuffle(toArray(values))
 
 exports.SIGN = (number) ->
   number = NUM(number)
@@ -1010,6 +1496,37 @@ exports.STATUSLABEL = ->
     $$runtime.statusesByValue[status] ? NO_VALUE
   else
     NO_VALUE
+
+hostStorage = {}
+hostStorageScope = 'default'
+
+Object.defineProperty hostStorage, 'length',
+  get: ->
+    host.storageLength(hostStorageScope)
+  configurable: false
+  enumerable: false
+
+hostStorage.key = (index) ->
+  return null unless _.isNumber(+index)
+  host.storageKey(hostStorageScope, +index)
+
+hostStorage.getItem = (key) ->
+  return null unless key?
+  host.storageGetItem(hostStorageScope, key.toString())
+
+hostStorage.setItem = (key, value) ->
+  return null unless key?
+  host.storageSetItem(hostStorageScope, key.toString(), if value? then value.toString() else null)
+
+hostStorage.removeItem = (key) ->
+  return null unless key?
+  host.storageRemoveItem(hostStorageScope, key.toString())
+
+hostStorage.clear = ->
+  host.storageClear(hostStorageScope)
+
+exports.STORAGE = (scope) ->
+  localStorage ? hostStorage
 
 exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
   occurrence = FLOOR(occurrence)
@@ -1073,6 +1590,45 @@ exports.T = (value) ->
   return '' unless value?
   return value.toString()
 
+exports.TIMEADD = (startTime, amount, format='hours') ->
+  return NO_VALUE unless _.isString(startTime)
+
+  return NO_VALUE unless _.contains(['hours', 'minutes'], format)
+
+  return NO_VALUE if startTime.length isnt 5
+  return NO_VALUE if startTime[2] isnt ':'
+
+  time1 = startTime.split(':')
+
+  beginHour = NUM(time1[0])
+  beginMinute = NUM(time1[1])
+
+  amount = NUM(amount)
+
+  return NO_VALUE if beginHour > 23 or beginHour < 0
+  return NO_VALUE if beginMinute > 59 or beginMinute < 0
+
+  return NO_VALUE unless _.isNumber(amount)
+
+  minutesToAdd =
+    if format is 'hours'
+      amount * 60
+    else
+      amount
+
+  date = new Date(0)
+  date.setHours(beginHour)
+  date.setMinutes(beginMinute)
+
+  time = date.getTime()
+  time += (minutesToAdd * 60.0 * 1000.0)
+
+  date = new Date(time)
+
+  FORMAT('%s:%s',
+    LPAD(date.getHours(), 2, '0'),
+    LPAD(date.getMinutes(), 2, '0'))
+
 exports.TIMEDIFF = (startTime, endTime, format='hours') ->
   return NO_VALUE unless _.isString(startTime) and _.isString(endTime)
 
@@ -1116,6 +1672,17 @@ exports.TIMEDIFF = (startTime, endTime, format='hours') ->
     totalMinutes / 60
   else
     totalMinutes
+
+exports.TIMESTAMP = (date) ->
+  date ?= new Date
+
+  FORMAT('%s-%s-%s %s:%s:%s',
+    date.getFullYear(),
+    LPAD(date.getMonth() + 1, 2, '0'),
+    LPAD(date.getDate(), 2, '0'),
+    LPAD(date.getHours(), 2, '0'),
+    LPAD(date.getMinutes(), 2, '0'),
+    LPAD(date.getSeconds(), 2, '0'))
 
 exports.TIMEZONE = ->
   Config.timeZone or Defaults.timeZone
@@ -1163,6 +1730,11 @@ exports.UPPER = (value) ->
 exports.USERFULLNAME = ->
   CONFIG().userFullName ? NO_VALUE
 
+exports.VALUE = (dataName) ->
+  return NO_VALUE unless dataName?
+
+  $$runtime.variables['$' + dataName]
+
 exports.VERSIONINFO = (separator=', ') ->
   _.compact([ DEVICEINFO(' '), PLATFORMINFO(' '), APPLICATIONINFO(' ') ]).join(separator)
 
@@ -1179,13 +1751,14 @@ exports.X_ISNEW = ->
 exports.X_ISUPDATE = ->
   not X_ISNEW()
 
-
-
 hostFunctionExists = (name) ->
-  _.isFunction($$runtime["$$#{name}"])
+  typeof $$runtime["$$#{name}"] is 'function'
 
 hostFunctionCall = (name, args) ->
   $$runtime["$$#{name}"].apply($$runtime, args)
+
+hostAsyncFunctionCall = (name, args, callback) ->
+  $$runtime.invokeAsync $$runtime["$$#{name}"], args, callback
 
 HostFunctions = host = {}
 
@@ -1197,5 +1770,88 @@ host.formatNumber = (number, language, options) ->
     nf.format(number)
   else
     '' + number
+
+host.httpRequest = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('httpRequest')
+    hostAsyncFunctionCall('httpRequest', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.timeouts = {}
+host.intervals = {}
+
+host.nextTimeoutID = 0
+host.nextIntervalID = 0
+
+host.clearTimeout = (id) ->
+  delete host.timeouts[id]
+
+host.setTimeout = (callback, timeout) ->
+  args = [timeout]
+
+  if hostFunctionExists('setTimeout')
+    id = ++host.nextTimeoutID
+
+    wrapper = host.timeouts[id] = ->
+      if host.timeouts[id]?
+        delete host.timeouts[id]
+        callback()
+
+    hostAsyncFunctionCall('setTimeout', args, host.timeouts[id])
+
+    return id
+
+host.clearInterval = (id) ->
+  if host.intervals[id]?
+    host.clearTimeout(host.intervals[id])
+    delete host.intervals[id]
+
+host.setInterval = (callback, interval) ->
+  if hostFunctionExists('setTimeout')
+    id = ++host.nextIntervalID
+
+    wrapper = ->
+      if host.intervals[id]?
+        host.intervals[id] = host.setTimeout(wrapper, interval)
+        callback()
+
+    host.intervals[id] = host.setTimeout(wrapper, interval)
+
+    return id
+
+# interface Storage {
+#   readonly attribute unsigned long length;
+#   DOMString? key(unsigned long index);
+#   getter DOMString? getItem(DOMString key);
+#   setter void setItem(DOMString key, DOMString value);
+#   deleter void removeItem(DOMString key);
+#   void clear();
+# };
+
+host.storageLength = (storage) ->
+  return storage.length if 'length' in storage
+  return hostFunctionCall('storageLength', arguments) if hostFunctionExists('storageLength')
+
+host.storageKey = (storage, index) ->
+  return storage.key(index) if 'key' in storage
+  return hostFunctionCall('storageKey', arguments) if hostFunctionExists('storageKey')
+
+host.storageGetItem = (storage, key) ->
+  return storage.getItem(key) if 'getItem' in storage
+  return hostFunctionCall('storageGetItem', arguments) if hostFunctionExists('storageGetItem')
+
+host.storageSetItem = (storage, key, value) ->
+  return storage.setItem(key, value) if 'setItem' in storage
+  return hostFunctionCall('storageSetItem', arguments) if hostFunctionExists('storageSetItem')
+
+host.storageRemoveItem = (storage, key) ->
+  return storage.removeItem(key) if 'removeItem' in storage
+  return hostFunctionCall('storageRemoveItem', arguments) if hostFunctionExists('storageRemoveItem')
+
+host.storageClear = (storage) ->
+  return storage.clear() if 'clear' in storage
+  return hostFunctionCall('storageClear', arguments) if hostFunctionExists('storageClear')
 
 module.exports = exports

@@ -7,6 +7,8 @@ applicationVersion: '2.7.0'
 applicationBuild: '2162'
 recordID: '96eb35f5-13d8-4666-b188-8108019d0984'
 recordStatus: 'approved'
+recordProject: '88eb3511-13d8-4666-b188-8108019d0984'
+recordProjectName: 'Project X'
 timeZone: 'America/New_York'
 userEmail: 'test@example.com'
 userFullName: 'John Smith'
@@ -47,7 +49,7 @@ form:
     {
       data_name: "name"
       default_value: null
-      description: null
+      description: 'Enter the name',
       disabled: false
       hidden: false
       key: "97ab"

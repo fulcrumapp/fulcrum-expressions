@@ -17,10 +17,12 @@
   "license": "BSD",
   "dependencies": {
     "object-inspect": "^1.0.0",
+    "query-string": "^3.0.0",
     "underscore": "^1.7.0",
     "underscore.string": "^2.4.0"
   },
   "devDependencies": {
+    "browserify": "12.0.1",
     "coffee-script": "^1.8.0",
     "coffeeify": "^1.0.0",
     "fs-sync": "^0.2.5",

@@ -317,7 +317,7 @@
             "name": "CONCATENATE",
             "access": "",
             "virtual": false,
-            "description": "CONCATENATE\nReturns the concatenation of multiple values.",
+            "description": "CONCATENATE\nReturns the concatenation of multiple values.\n\n**NOTE:** This can only be used on fields that store the values as a string. Fields like choice fields and classification sets store the values in an array. Please refer [this example](/expressions/examples/combine-arrays/) for combining arrays.",
             "parameters": [
                 {
                     "name": "var_args_values",
@@ -336,6 +336,75 @@
             "returns": {
                 "type": "String",
                 "description": ""
+            }
+        },
+        {
+            "name": "CONCAT",
+            "access": "",
+            "virtual": false,
+            "description": "CONCAT\nReturns the concatenation of multiple values. Alias for CONCATENATE()\n\n**NOTE:** This can only be used on fields that store the values as a string. Fields like choice fields and classification sets store the values in an array.",
+            "parameters": [
+                {
+                    "name": "var_args_values",
+                    "type": "String",
+                    "description": "Strings to append in sequence.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns This is a sentence.\nCONCAT(\"This \", \"is \", \"a \", \"sentence.\")",
+                "// returns 42311\nCONCAT(42, 31, 1)",
+                "// returns Age is 42\nCONCAT(\"Age \", \"is \", 42)"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "CONTAINS",
+            "access": "",
+            "virtual": false,
+            "description": "CONTAINS\nDetermines whether an array or string contains a given value",
+            "parameters": [
+                {
+                    "name": "haystack",
+                    "type": [
+                        "Array",
+                        "String"
+                    ],
+                    "description": "The array of values or string to check",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "needle",
+                    "type": "String",
+                    "description": "The value to look for",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "fromIndex",
+                    "type": "Number",
+                    "description": "The starting index to use",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nCONTAINS(\"abcd\", \"a\")",
+                "// returns true\nCONTAINS(['a', 'b', 'c', 'd'], 'b')",
+                "// returns false\nCONTAINS(\"abcd\", \"e\")"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": "true if the value is found"
             }
         },
         {
@@ -498,6 +567,20 @@
             }
         },
         {
+            "name": "DATANAMES",
+            "access": "",
+            "virtual": false,
+            "description": "DATANAMES\nReturns the data names of the form fields",
+            "parameters": [],
+            "examples": [
+                "// returns [name,items,cost]\nDATANAMES()"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "DATE",
             "access": "",
             "virtual": false,
@@ -652,6 +735,29 @@
             }
         },
         {
+            "name": "DESCRIPTION",
+            "access": "",
+            "virtual": false,
+            "description": "DESCRIPTION\nReturns the description of a given field",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "the Data Name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Enter the name\nDESCRIPTION('name')"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the field description"
+            }
+        },
+        {
             "name": "DOLLAR",
             "access": "",
             "virtual": false,
@@ -765,6 +871,31 @@
                 "// returns true\nEXACT(\"String 1\", \"String 1\")",
                 "// returns false\nEXACT(\"String 1\", \"Another String\")",
                 "// returns true\nEXACT(4,4)"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
+            "name": "EXISTS",
+            "access": "",
+            "virtual": false,
+            "description": "EXISTS\nTests whether a value exists",
+            "parameters": [
+                {
+                    "name": "var_args_values",
+                    "type": "Object",
+                    "description": "The value(s) to check for existence",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nEXISTS(1)",
+                "// returns false\nEXISTS(null)",
+                "// returns false\nEXISTS([])"
             ],
             "returns": {
                 "type": "Boolean",
@@ -894,6 +1025,40 @@
             }
         },
         {
+            "name": "FIRST",
+            "access": "",
+            "virtual": false,
+            "description": "FIRST\nReturns the first N items from an array or string",
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": "Array",
+                    "description": "an array object",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of items to return",
+                    "default": 1,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFIRST([1, 2, 3])",
+                "// returns [a,b]\nFIRST(['a', 'b', 'c'], 2)",
+                "// returns a\nFIRST('abc')",
+                "// returns [a,b]\nFIRST('abc', 2)"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
+            }
+        },
+        {
             "name": "FIXED",
             "access": "",
             "virtual": false,
@@ -934,6 +1099,30 @@
             }
         },
         {
+            "name": "FLATTEN",
+            "access": "",
+            "virtual": false,
+            "description": "FLATTEN\nFlatten nested arrays into a flat array",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Array",
+                    "description": "Array to flatten",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nFLATTEN([[1, 2, 3]])",
+                "// returns [1,2,3,4,5,6]\nFLATTEN([[1, 2, 3], [4, 5, 6]])"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "FLOOR",
             "access": "",
             "virtual": false,
@@ -963,6 +1152,38 @@
             "returns": {
                 "type": "Number",
                 "description": ""
+            }
+        },
+        {
+            "name": "FORMAT",
+            "access": "",
+            "virtual": false,
+            "description": "FORMAT\nFormats a string",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "string format. Use %s for strings and %d for numbers.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "var_args_values",
+                    "type": "*",
+                    "description": "Value(s) to substitute into the format string",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns The pole height is 20 meters and has 3 issues detected.\nFORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)",
+                "// returns 11/11/2015 12:30:30\nFORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)"
+            ],
+            "returns": {
+                "type": "String",
+                "description": "formatted string"
             }
         },
         {
@@ -1481,6 +1702,29 @@
             }
         },
         {
+            "name": "LABEL",
+            "access": "",
+            "virtual": false,
+            "description": "LABEL\nReturns the label of a given field",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "the Data Name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Name\nLABEL('name')"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the label of the field"
+            }
+        },
+        {
             "name": "LANGUAGE",
             "access": "",
             "virtual": false,
@@ -1492,6 +1736,40 @@
             "returns": {
                 "type": "String",
                 "description": "the BCP 47 language code"
+            }
+        },
+        {
+            "name": "LAST",
+            "access": "",
+            "virtual": false,
+            "description": "LAST\nReturns the last N items from an array or string",
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": "Array",
+                    "description": "an array object",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of items to return",
+                    "default": 1,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 3\nLAST([1, 2, 3])",
+                "// returns [b,c]\nLAST(['a', 'b', 'c'], 2)",
+                "// returns c\nLAST('abc')",
+                "// returns [b,c]\nLAST('abc', 2)"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
             }
         },
         {
@@ -1712,6 +1990,46 @@
             ],
             "examples": [
                 "// returns empire state building\nLOWER(\"Empire State Building\")"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "LPAD",
+            "access": "",
+            "virtual": false,
+            "description": "LPAD\nPads a string on the left side",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The string to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of characters to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "character",
+                    "type": "String",
+                    "description": "The character to use for padding",
+                    "default": "' '",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 0002\nLPAD('2', 4, '0')",
+                "// returns 000002\nLPAD('2', 6, '0')"
             ],
             "returns": {
                 "type": "String",
@@ -2133,6 +2451,37 @@
             }
         },
         {
+            "name": "PLUCK",
+            "access": "",
+            "virtual": false,
+            "description": "PLUCK\nExtract property values from an object",
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": "Array",
+                    "description": "An array of objects to extract properties from",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "property",
+                    "type": "String",
+                    "description": "The property name to extract",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nvar objects = [{name: 'one',   value: 1},\n               {name: 'two',   value: 2},\n               {name: 'three', value: 3}];\nPLUCK(objects, 'value')"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
+            }
+        },
+        {
             "name": "POWER",
             "access": "",
             "virtual": false,
@@ -2210,6 +2559,34 @@
             ],
             "returns": {
                 "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "PROJECTID",
+            "access": "",
+            "virtual": false,
+            "description": "PROJECTID\nReturns the project ID of the record",
+            "parameters": [],
+            "examples": [
+                "// returns 88eb3511-13d8-4666-b188-8108019d0984\nPROJECTID()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
+            "name": "PROJECTNAME",
+            "access": "",
+            "virtual": false,
+            "description": "PROJECTNAME\nReturns the project name of the record",
+            "parameters": [],
+            "examples": [
+                "// returns Project X\nPROJECTNAME()"
+            ],
+            "returns": {
+                "type": "String",
                 "description": ""
             }
         },
@@ -2631,6 +3008,46 @@
             }
         },
         {
+            "name": "RPAD",
+            "access": "",
+            "virtual": false,
+            "description": "RPAD\nPads a string on the right side",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "String",
+                    "description": "The string to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "count",
+                    "type": "Number",
+                    "description": "The number of characters to pad",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "character",
+                    "type": "String",
+                    "description": "The character to use for padding",
+                    "default": "' '",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 2000\nRPAD('2', 4, '0')",
+                "// returns 200000\nRPAD('2', 6, '0')"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "SEARCH",
             "access": "",
             "virtual": false,
@@ -2712,6 +3129,29 @@
             ],
             "returns": {
                 "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
+            "name": "SHUFFLE",
+            "access": "",
+            "virtual": false,
+            "description": "SHUFFLE\nRandomizes an array of items",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "Array",
+                    "description": "an array of items to randomize",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nvar items = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];\nINSPECT(SHUFFLE(items)) != INSPECT(items[0])"
+            ],
+            "returns": {
+                "type": "Array",
                 "description": ""
             }
         },
@@ -2980,6 +3420,50 @@
             }
         },
         {
+            "name": "TIMEADD",
+            "access": "",
+            "virtual": false,
+            "description": "TIMEADD\nAdds an amount of time to a given time",
+            "parameters": [
+                {
+                    "name": "startTimeField",
+                    "type": "String",
+                    "description": "The time field containing the start time",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "amount",
+                    "type": "Number",
+                    "description": "The amount of time to add to the given time (number of minutes or hours)",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "format",
+                    "type": "String",
+                    "description": "The format of the amount. Either `hours` (default) or `minutes`.",
+                    "default": "'hours'",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 17:00\nTIMEADD('09:00', 8)",
+                "// returns 09:00\nTIMEADD('17:00', -8)",
+                "// returns 09:00\nTIMEADD('09:00', 48)",
+                "// returns 17:30\nTIMEADD('16:00', 1.5)",
+                "// returns 17:30\nTIMEADD('16:00', 90, 'minutes')",
+                "// returns 14:30\nTIMEADD('16:00', -90, 'minutes')"
+            ],
+            "returns": {
+                "type": "String",
+                "description": "the new time value"
+            }
+        },
+        {
             "name": "TIMEDIFF",
             "access": "",
             "virtual": false,
@@ -3019,6 +3503,20 @@
             "returns": {
                 "type": "Number",
                 "description": "The number of hours (default) or the number of minutes between the 2 specified times"
+            }
+        },
+        {
+            "name": "TIMESTAMP",
+            "access": "",
+            "virtual": false,
+            "description": "TIMESTAMP\nReturns a formatted timestamp",
+            "parameters": [],
+            "examples": [
+                "// returns 1982-12-16 03:24:00\nTIMESTAMP(new Date('December 16, 1982 03:24:00'))"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
             }
         },
         {
@@ -3136,6 +3634,29 @@
             "returns": {
                 "type": "String",
                 "description": ""
+            }
+        },
+        {
+            "name": "VALUE",
+            "access": "",
+            "virtual": false,
+            "description": "VALUE\nReturns the current value of a field given the field's data name",
+            "parameters": [
+                {
+                    "name": "field",
+                    "type": "String",
+                    "description": "the Data Name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns Test Record\nVALUE('name')\n\n// identical to using $name"
+            ],
+            "returns": {
+                "type": "*",
+                "description": "the current field value"
             }
         },
         {

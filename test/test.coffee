@@ -1,5 +1,7 @@
 global.Intl = require 'intl'
 
+_ = require 'underscore'
+
 path = require 'path'
 CSON = require 'season'
 
@@ -12,6 +14,7 @@ if DIST
 else
   console.log 'Running debug'
   runtime = require '../runtime'
+  Utils = require '../utils'
 
 variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
 
@@ -19,10 +22,12 @@ CONFIGURE(variables)
 
 resetConfig = ->
   RESETCONFIG()
+  runtime.values = variables.values.form_values
+  runtime.setupValues()
   CONFIGURE(variables)
 
 runtime.form = variables.form
-runtime.values = variables.values
+runtime.values = variables.values.form_values
 runtime.prepare()
 
 shouldBeNull = (value) ->
@@ -122,6 +127,27 @@ describe 'CEILING', ->
     CEILING(0.31, 0.25).should.be.exactly(0.5)
     CEILING(-0.13, 0.25).should.be.exactly(0)
     CEILING(-0.31, 0.25).should.be.exactly(-0.25)
+
+describe 'CONTAINS', ->
+  it 'returns whether an array or string contains a string', ->
+    CONTAINS(['1', '2', '3'], '1').should.be.true
+    CONTAINS(['1', '2', '3'], '3').should.be.true
+    CONTAINS(['1', '2', '3'], '4').should.be.false
+    CONTAINS([1, 2, 3], 3).should.be.true
+    CONTAINS('123', '1').should.be.true
+    CONTAINS('123', '3').should.be.true
+    CONTAINS('123', '123').should.be.true
+    CONTAINS('123', 1).should.be.true
+    CONTAINS([null, 1], null).should.be.true
+    CONTAINS([null, 1], '').should.be.false
+    CONTAINS([null, 1], undefined).should.be.false
+    CONTAINS([null, undefined], undefined).should.be.true
+    CONTAINS(null, null).should.be.false
+
+describe 'DESCRIPTION', ->
+  it 'returns the description of a field', ->
+    DESCRIPTION('name').should.be.exactly('Enter the name')
+    shouldBeUndefined(DESCRIPTION('invalid_field'))
 
 describe 'FLOOR', ->
   it 'returns number rounded down, towards zero, to the nearest multiple', ->
@@ -329,6 +355,31 @@ describe 'EXACT', ->
     EXACT(NaN, NaN).should.be.true
     EXACT(1, NaN).should.be.false
 
+describe 'EXISTS', ->
+  it 'checks whether a value exists', ->
+    # truthy things
+    EXISTS(0).should.be.true
+    EXISTS(-1).should.be.true
+    EXISTS(true).should.be.true
+    EXISTS(false).should.be.true
+    EXISTS('test').should.be.true
+    EXISTS([1]).should.be.true
+    EXISTS({test:1}).should.be.true
+    EXISTS(1, 2).should.be.true
+    EXISTS(1, 2, 'test').should.be.true
+    EXISTS(new Date).should.be.true
+    EXISTS(/test/).should.be.true
+
+    # falsey things
+    EXISTS([]).should.be.false
+    EXISTS({}).should.be.false
+    EXISTS('').should.be.false
+    EXISTS(NaN).should.be.false
+    EXISTS(null).should.be.false
+    EXISTS(undefined).should.be.false
+    EXISTS(undefined, null).should.be.false
+    EXISTS(1, null).should.be.false
+
 describe 'FACTDOUBLE', ->
   it 'returns the double factorial of a number.', ->
     FACTDOUBLE(0).should.be.exactly(1)
@@ -369,6 +420,22 @@ describe 'FIND', ->
     shouldHaveNoValue(FIND([], 'abc'))
     shouldHaveNoValue(FIND({}, 'abc'))
     shouldHaveNoValue(FIND('t', 'test', 1000))
+
+describe 'FIRST', ->
+  it 'returns the first N items of an array', ->
+    FIRST([1]).should.be.exactly(1)
+    FIRST([1, 2, 3]).should.be.exactly(1)
+    FIRST('1234').should.be.exactly('1')
+    shouldBeUndefined(FIRST(''))
+    shouldBeUndefined(FIRST([]))
+    shouldBeUndefined(FIRST(1))
+    shouldBeUndefined(FIRST(1.337))
+    shouldBeUndefined(FIRST(new Date))
+    shouldBeUndefined(FIRST(true))
+    shouldBeUndefined(FIRST(NaN))
+    shouldBeUndefined(FIRST({}))
+    shouldBeUndefined(FIRST(null))
+    shouldBeUndefined(FIRST(undefined))
 
 describe 'GCD', ->
   it 'returns the greatest common divisor of two or more integers', ->
@@ -478,6 +545,27 @@ describe 'ISTEXT', ->
     ISTEXT(false).should.be.false
     ISTEXT('').should.be.true
 
+describe 'LABEL', ->
+  it 'returns the label of a field', ->
+    LABEL('name').should.be.exactly('Name')
+    shouldBeUndefined(LABEL('invalid_field'))
+
+describe 'LAST', ->
+  it 'returns the last N items of an array', ->
+    LAST([1]).should.be.exactly(1)
+    LAST([1, 2, 3]).should.be.exactly(3)
+    LAST('1234').should.be.exactly('4')
+    shouldBeUndefined(LAST(''))
+    shouldBeUndefined(LAST([]))
+    shouldBeUndefined(LAST(1))
+    shouldBeUndefined(LAST(1.337))
+    shouldBeUndefined(LAST(new Date))
+    shouldBeUndefined(LAST(true))
+    shouldBeUndefined(LAST(NaN))
+    shouldBeUndefined(LAST({}))
+    shouldBeUndefined(LAST(null))
+    shouldBeUndefined(LAST(undefined))
+
 describe 'LCM', ->
   it 'returns the least common multiple', ->
     LCM(-50, 25, -45, -18, 90, 447).should.be.exactly(67050)
@@ -516,14 +604,22 @@ describe 'LEN', ->
     LEN('abc').should.be.exactly(3)
     LEN('').should.be.exactly(0)
     LEN(true).should.be.exactly(4)
+    LEN(false).should.be.exactly(5)
     LEN(800).should.be.exactly(3)
     LEN(-800).should.be.exactly(4)
     LEN(-1 / 3).should.be.exactly(19)
-    shouldHaveNoValue(LEN({}, 4))
-    shouldHaveNoValue(LEN({}))
-    shouldHaveNoValue(LEN(undefined))
-    shouldHaveNoValue(LEN(null))
-    shouldHaveNoValue(LEN(new Date))
+    LEN(undefined).should.be.exactly(0)
+    LEN(null).should.be.exactly(0)
+    LEN(NaN).should.be.exactly(0)
+    LEN([]).should.be.exactly(0)
+    LEN([1]).should.be.exactly(1)
+    LEN([1, 2, 3]).should.be.exactly(3)
+    LEN([1, 2, 3, null]).should.be.exactly(4)
+    LEN({}).should.be.exactly(0)
+    LEN({key1: 1}).should.be.exactly(1)
+    LEN({key1: 1, key2: 2}).should.be.exactly(2)
+    LEN(new Date).should.be.exactly(39)
+    LEN(/test/).should.be.exactly(6)
 
 describe 'LN', ->
   it 'returns the natural logarithm of a number', ->
@@ -782,6 +878,14 @@ describe 'PRODUCT', ->
     PRODUCT(true).should.be.NaN
     PRODUCT(new Date).should.be.NaN
     PRODUCT().should.be.NaN
+
+describe 'PROJECTID', ->
+  it 'returns the project ID', ->
+    PROJECTID().should.be.exactly('88eb3511-13d8-4666-b188-8108019d0984')
+
+describe 'PROJECTNAME', ->
+  it 'returns the project name', ->
+    PROJECTNAME().should.be.exactly('Project X')
 
 describe 'PROPER', ->
   it 'capitalizes the first letter in a text string', ->
@@ -1047,6 +1151,11 @@ describe 'T', ->
     T(undefined).should.eql('')
     T(null).should.eql('')
 
+describe 'TIMESTAMP', ->
+  it 'returns a timestamp value', ->
+    TIMESTAMP().length.should.eql(19)
+    TIMESTAMP(new Date('December 16, 1982 03:24:00')).should.be.exactly('1982-12-16 03:24:00')
+
 describe 'TRIM', ->
   it 'trim whitespace from a string', ->
     TRIM('test').should.eql('test')
@@ -1152,6 +1261,22 @@ describe 'LOCALE', ->
     LOCALE().should.eql('en_US')
     CONFIGURE(locale: 'pt_BR').locale.should.eql('pt_BR')
 
+describe 'FORMAT', ->
+  it 'formats strings', ->
+    FORMAT('%s-%s-%s-%s', 1, 2, 3, 4).should.be.exactly('1-2-3-4')
+    FORMAT('%s|%s|%s|%s', 1, 2, 3, 4).should.be.exactly('1|2|3|4')
+    FORMAT('%s%%', 1).should.be.exactly('1%')
+    FORMAT('%d + %d == %d', 2, 3, 5).should.be.exactly('2 + 3 == 5')
+    FORMAT('%d + %d == %d', '2', 3, 5).should.be.exactly('2 + 3 == 5')
+    FORMAT('%d', 'a').should.be.exactly('NaN')
+    FORMAT('%d', 1.337).should.be.exactly('1.337')
+    FORMAT('%d', null).should.be.exactly('0')
+    FORMAT('%d', undefined).should.be.exactly('NaN')
+    FORMAT('%s', null).should.be.exactly('null')
+    FORMAT('%s', undefined).should.be.exactly('undefined')
+    FORMAT('%s', true).should.be.exactly('true')
+    FORMAT('%j', {x:1}).should.be.exactly('{"x":1}')
+
 describe 'FORMATNUMBER', ->
   it 'formats a number in a given locale', ->
     FORMATNUMBER(1 / 3).should.eql('0.333')
@@ -1226,6 +1351,14 @@ describe 'LONGITUDE', ->
     CONFIGURE(featureGeometry: null)
 
     LONGITUDE().should.be.NaN
+
+describe 'LPAD', ->
+  it 'pads a string on the left', ->
+    LPAD('test', 5).should.be.exactly(' test')
+    LPAD('t', 5).should.be.exactly('    t')
+    LPAD('test', 10).should.be.exactly('      test')
+    LPAD('1', 2, '0').should.be.exactly('01')
+    LPAD('1', 4, '0').should.be.exactly('0001')
 
 describe 'STATUS', ->
   it 'returns the status of the current record', ->
@@ -1318,6 +1451,11 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.be.NaN
 
+describe 'DATANAMES', ->
+  it 'returns the data names of the form fields', ->
+    names = DATANAMES()
+    names.should.eql([ 'name', 'items', 'cost' ])
+
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->
     date = DATE(2015, 1, 14)
@@ -1403,6 +1541,14 @@ describe 'ROLE', ->
   it 'returns the role name', ->
     ROLE().should.eql 'Owner'
 
+describe 'RPAD', ->
+  it 'pads a string on the right', ->
+    RPAD('test', 5).should.be.exactly('test ')
+    RPAD('t', 5).should.be.exactly('t    ')
+    RPAD('test', 10).should.be.exactly('test      ')
+    RPAD('1', 2, '0').should.be.exactly('10')
+    RPAD('1', 4, '0').should.be.exactly('1000')
+
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
     TIMEDIFF('00:00', '00:01').should.be.exactly(1 / 60)
@@ -1425,9 +1571,31 @@ describe 'TIMEDIFF', ->
     shouldHaveNoValue(TIMEDIFF(new Date, null))
     shouldHaveNoValue(TIMEDIFF('2:00', undefined))
 
+describe 'TIMEADD', ->
+  it 'adds a given amount of time to a time', ->
+    TIMEADD('00:00', 1).should.be.exactly('01:00')
+    TIMEADD('00:00', 23).should.be.exactly('23:00')
+    TIMEADD('00:00', -1).should.be.exactly('23:00')
+    TIMEADD('00:00', -48).should.be.exactly('00:00')
+    TIMEADD('00:00', 48).should.be.exactly('00:00')
+    TIMEADD('00:00', 24).should.be.exactly('00:00')
+    TIMEADD('16:00', 4).should.be.exactly('20:00')
+    TIMEADD('16:00', 1.5).should.be.exactly('17:30')
+    TIMEADD('16:00', -1.5).should.be.exactly('14:30')
+    TIMEADD('16:00', 30, 'minutes').should.be.exactly('16:30')
+    TIMEADD('16:00', 100, 'minutes').should.be.exactly('17:40')
+    TIMEADD('16:00', -30, 'minutes').should.be.exactly('15:30')
+    TIMEADD('16:00', -100, 'minutes').should.be.exactly('14:20')
+
 describe 'USERFULLNAME', ->
   it 'returns the user full name', ->
     USERFULLNAME().should.eql 'John Smith'
+
+describe 'VALUE', ->
+  it 'returns a data value by a string', ->
+    VALUE('name').should.be.exactly('Test Record')
+    shouldHaveNoValue(VALUE(null))
+    shouldHaveNoValue(VALUE('invalid_field'))
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->
@@ -1457,3 +1625,116 @@ describe 'X_ISNEW', ->
 
     X_ISNEW().should.be.false
     X_ISUPDATE().should.be.true
+
+describe 'Values', ->
+  it 'should create choice values', ->
+    makeValue = Utils.converters.ChoiceField
+
+    makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
+    makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
+    makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
+    makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
+
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(new Date))
+    shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
+
+  it 'should create classification values', ->
+    makeValue = Utils.converters.ClassificationField
+
+    makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
+    makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
+    makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
+    makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
+
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(new Date))
+    shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
+
+  it 'should create date values', ->
+    makeValue = Utils.converters.DateTimeField
+
+    makeValue('2015-01-01').should.eql('2015-01-01')
+    makeValue('2015-12-31').should.eql('2015-12-31')
+    makeValue('2015/12/31').should.eql('2015-12-31')
+    makeValue(new Date('01/01/2015')).should.eql('2015-01-01')
+
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(''))
+
+  it 'should create time values', ->
+    makeValue = Utils.converters.TimeField
+
+    makeValue('12:30').should.eql('12:30')
+    makeValue('23:00').should.eql('23:00')
+    makeValue('00:00').should.eql('00:00')
+    makeValue('01:01').should.eql('01:01')
+
+    shouldBeNull(makeValue('25:61'))
+    shouldBeNull(makeValue('2:30'))
+    shouldBeNull(makeValue('a'))
+    shouldBeNull(makeValue({bogus: ['a']}))
+    shouldBeNull(makeValue({}))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(''))
+
+  it 'should create address values', ->
+    makeValue = Utils.converters.AddressField
+
+    addressWith = (parts) ->
+      address =
+        sub_thoroughfare: null
+        thoroughfare: null
+        suite: null
+        locality: null
+        sub_admin_area: null
+        admin_area: null
+        postal_code: null
+        country: null
+
+      _.extend(address, parts)
+
+    makeValue(admin_area: 'FL').should.eql(addressWith(admin_area: 'FL'))
+    makeValue(suite: 200).should.eql(addressWith(suite: '200'))
+    makeValue(suite: true).should.eql(addressWith(suite: 'true'))
+    makeValue(suite: undefined).should.eql(addressWith(suite: null))
+    makeValue(suite: NaN).should.eql(addressWith(suite: 'NaN'))
+    makeValue(suite: {}).should.eql(addressWith(suite: '[object Object]'))
+    makeValue(suite: []).should.eql(addressWith(suite: ''))
+    makeValue(suite: [1]).should.eql(addressWith(suite: '1'))
+    makeValue(suite: ['1']).should.eql(addressWith(suite: '1'))
+
+    makeValue(bogus: 'something').should.eql(addressWith())
+    makeValue({}).should.eql(addressWith())
+
+    shouldBeNull(makeValue('25:61'))
+    shouldBeNull(makeValue('2:30'))
+    shouldBeNull(makeValue('a'))
+    shouldBeNull(makeValue(null))
+    shouldBeNull(makeValue(undefined))
+    shouldBeNull(makeValue(''))
+
+  it 'should not create values for unsupported field types', ->
+    fields = [
+      'PhotoField'
+      'VideoField'
+      'AudioField'
+      'SignatureField'
+      'RecordLinkField'
+      'Repeatable'
+      'Section'
+      'Label'
+    ]
+
+    for field in fields
+      shouldBeNull(Utils.makeValue(type: field, 'test'))

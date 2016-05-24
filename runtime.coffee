@@ -25,6 +25,19 @@ class Runtime
 
   values: {}
 
+  repeatable: null
+
+  hooks: {}
+
+  event: {}
+
+  events:
+    on: {}
+    change: {}
+    click: {}
+
+  script: null
+
   customVariables: {}
 
   locale: @defaultLocale
@@ -50,6 +63,14 @@ class Runtime
   featureIsNew: true
 
   showErrors: false
+
+  asyncCallbacks: {}
+
+  asyncCount: 0
+
+  scriptInitialized: false
+
+  isCalculation: false
 
   extraVariableNames: [
     'locale',
@@ -86,8 +107,16 @@ class Runtime
     'featureGeometry'
   ]
 
+  clearValues: ->
+    # Clear the values so that the references from the `with` statements remain
+    # on the same root object. If we create a new @variables it won't stay the same
+    # across executions. This is so the $field variables work in the form-level scripts.
+    delete @variables[prop] for prop of @variables
+
   setupValues: ->
-    state = @variables = {}
+    @clearValues()
+
+    state = @variables
     names = @dataNames
 
     for key of names
@@ -109,6 +138,8 @@ class Runtime
 
     functions.CONFIGURE(@, false)
 
+    @initializeScriptIfNecessary()
+
   prepare: ->
     @elements = Utils.flattenElements(@form.elements, true, true)
 
@@ -121,10 +152,87 @@ class Runtime
       @elementsByDataName[element.data_name] = element
       @dataNames[element.key] = element.data_name
 
-  evaluate: ->
+  invokeAsync: (func, args, callback) ->
+    id = ++@asyncCount
+
+    @asyncCallbacks[id] = callback
+
+    func.apply(@, args.concat([id]))
+
+  finishAsync: ->
+    id = +@callbackID
+
+    callback = @asyncCallbacks[id]
+
+    delete @asyncCallbacks[id]
+
+    $$runtime.results = []
+
+    @isCalculation = false
+
+    callback.apply(@, @callbackArguments)
+
+    $$runtime.results
+
+  initializeScriptIfNecessary: ->
+    return if @scriptInitialized
+
+    @scriptInitialized = true
+
+    return unless _.isString(@script)
+
+    `with (this.variables) { eval(this.script) }`
+
+    return
+
+  hooksByName: (name) ->
+    @events[name] ?= []
+
+  hooksByParams: (name, param) ->
+    @hooksByName(name)[param] ?= []
+
+  removeHook: (name, param, callback) ->
+    if param? and callback?
+      @hooksByName(name)[param] = _.without(@hooksByName(name)[param], callback)
+    else if param?
+      delete @hooksByName(name)[param]
+    else
+      @events[name] = []
+
+  addHook: (name, param, callback) ->
+    @hooksByParams(name, param).push(callback)
+
+  trigger: ->
+    $$runtime.results = []
+
     @setupValues()
 
-    @results = _.map @expressions, (context) => @evaluateExpression(context)
+    if @event.field?
+      [name, param] = [@event.name, @event.field]
+    else
+      [name, param] = [@event.name, null]
+
+    hooks = @hooksByParams(name, param)
+
+    return [] unless hooks?.length
+
+    @isCalculation = false
+
+    hook.call(@, @event) for hook in hooks
+
+    $$runtime.results
+
+  evaluate: ->
+    $$runtime.results = []
+
+    @setupValues()
+
+    @isCalculation = true
+
+    for context in @expressions
+      $$runtime.results.push(@evaluateExpression(context))
+
+    $$runtime.results
 
   evaluateExpression: (context) ->
     variables = @variables
@@ -155,7 +263,7 @@ class Runtime
 
       variables[thisVariableName] = undefined
 
-      return @createResult(context.key, null, null, ex.toString(), $$runtime.showErrors)
+      return @createResult(context.key, null, null, ex.toString(), true)
 
   coalesce: ->
     _.find Utils.toArray(arguments), (argument) -> not _.isUndefined(argument)
@@ -179,7 +287,7 @@ class Runtime
     else
       err = null
 
-    { key: key, value: stringValue, error: err }
+    { type: 'calculation', key: key, value: stringValue, error: err }
 
   formatValue: (value) ->
     if _.isUndefined(value)
@@ -210,14 +318,66 @@ class Runtime
       @global = window
 
     # global exports
-    @global.$$runtime = @
-    @global.$$prepare = @prepare.bind(@)
+    @global.$$runtime  = @
+    @global.$$prepare  = @prepare.bind(@)
     @global.$$evaluate = @evaluate.bind(@)
+    @global.$$trigger  = @trigger.bind(@)
+    @global.$$finishAsync = @finishAsync.bind(@)
 
   setupFunctions: ->
     @functions ||= {}
 
-    for exportName of functions
-      @global[exportName] = @functions[exportName] = functions[exportName]
+    specialFunctions =
+      ALERT: true
+      CURRENTLOCATION: true
+      INVALID: true
+      OFF: true
+      ON: true
+      OPENURL: true
+      PROGRESS: true
+      REQUEST: true
+      SETCHOICEFILTER: true
+      SETCHOICES: true
+      SETCONFIGURATION: true
+      SETGEOMETRY: true
+      SETLOCATION: true
+      SETSTATUS: true
+      SETSTATUSFILTER: true
+      SETPROJECT: true
+      SETDESCRIPTION: true
+      SETDISABLED: true
+      SETHIDDEN: true
+      SETLABEL: true
+      SETMAXLENGTH: true
+      SETMINLENGTH: true
+      SETREQUIRED: true
+      SETTIMEOUT: true
+      CLEARTIMEOUT: true
+      SETINTERVAL: true
+      CLEARINTERVAL: true
+      SETVALUE: true
+      SETFORMATTRIBUTES: true
+      STORAGE: true
+
+    checkCall = (name, func, args) =>
+      if @isCalculation and specialFunctions[name]
+        ERROR(name + ' cannot be used in a calculation')
+
+    exportObject = (exportName) =>
+      object = functions[exportName]
+
+      wrapper =
+        if _.isFunction(functions[exportName])
+           ->
+            checkCall(exportName, object, arguments)
+            object.apply(functions, arguments)
+        else
+          object
+
+      @functions[exportName] = object
+      @global[exportName] = wrapper
+
+    for name of functions
+      exportObject(name)
 
 module.exports = new Runtime

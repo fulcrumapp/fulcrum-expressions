@@ -204,6 +204,8 @@ function COMPACT() {}
 /**
  * CONCATENATE
  * Returns the concatenation of multiple values.
+ *
+ * **NOTE:** This can only be used on fields that store the values as a string. Fields like choice fields and classification sets store the values in an array. Please refer [this example](/expressions/examples/combine-arrays/) for combining arrays.
  * @param {...String} var_args_values Strings to append in sequence.
  * @returns {String}
  * @example
@@ -217,6 +219,50 @@ function COMPACT() {}
  * CONCATENATE("Age ", "is ", 42)
  */
 function CONCATENATE() {}
+
+
+////CONCAT
+
+/**
+ * CONCAT
+ * Returns the concatenation of multiple values. Alias for CONCATENATE()
+ *
+ * **NOTE:** This can only be used on fields that store the values as a string. Fields like choice fields and classification sets store the values in an array.
+ * @param {...String} var_args_values Strings to append in sequence.
+ * @returns {String}
+ * @example
+ * // returns This is a sentence.
+ * CONCAT("This ", "is ", "a ", "sentence.")
+ * @example
+ * // returns 42311
+ * CONCAT(42, 31, 1)
+ * @example
+ * // returns Age is 42
+ * CONCAT("Age ", "is ", 42)
+ */
+function CONCAT() {}
+
+
+////CONTAINS
+
+/**
+ * CONTAINS
+ * Determines whether an array or string contains a given value
+ * @param {Array|String} haystack The array of values or string to check
+ * @param {String} needle The value to look for
+ * @param {Number} fromIndex The starting index to use
+ * @returns {Boolean} true if the value is found
+ * @example
+ * // returns true
+ * CONTAINS("abcd", "a")
+ * @example
+ * // returns true
+ * CONTAINS(['a', 'b', 'c', 'd'], 'b')
+ * @example
+ * // returns false
+ * CONTAINS("abcd", "e")
+ */
+function CONTAINS() {}
 
 
 ////COS
@@ -337,6 +383,19 @@ function CURRENCYCODE() {}
 function CURRENCYSYMBOL() {}
 
 
+////DATANAMES
+
+/**
+ * DATANAMES
+ * Returns the data names of the form fields
+ * @returns {Array}
+ * @example
+ * // returns [name,items,cost]
+ * DATANAMES()
+ */
+function DATANAMES() {}
+
+
 ////DATE
 
 /**
@@ -426,6 +485,20 @@ function DECIMALSEPARATOR() {}
 function DEGREES() {}
 
 
+////DESCRIPTION
+
+/**
+ * DESCRIPTION
+ * Returns the description of a given field
+ * @param {String} field the Data Name of the field
+ * @returns {*} the field description
+ * @example
+ * // returns Enter the name
+ * DESCRIPTION('name')
+ */
+function DESCRIPTION() {}
+
+
 ////DOLLAR
 
 /**
@@ -502,6 +575,26 @@ function EVEN() {}
 function EXACT() {}
 
 
+////EXISTS
+
+/**
+ * EXISTS
+ * Tests whether a value exists
+ * @param {...Object} var_args_values The value(s) to check for existence
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * EXISTS(1)
+ * @example
+ * // returns false
+ * EXISTS(null)
+ * @example
+ * // returns false
+ * EXISTS([])
+ */
+function EXISTS() {}
+
+
 ////EXP
 
 /**
@@ -573,6 +666,30 @@ function FALSE() {}
 function FIND() {}
 
 
+////FIRST
+
+/**
+ * FIRST
+ * Returns the first N items from an array or string
+ * @param {Array} array an array object
+ * @param {Number} [count=1] The number of items to return
+ * @returns {Object}
+ * @example
+ * // returns 1
+ * FIRST([1, 2, 3])
+ * @example
+ * // returns [a,b]
+ * FIRST(['a', 'b', 'c'], 2)
+ * @example
+ * // returns a
+ * FIRST('abc')
+ * @example
+ * // returns [a,b]
+ * FIRST('abc', 2)
+ */
+function FIRST() {}
+
+
 ////FIXED
 
 /**
@@ -592,6 +709,23 @@ function FIND() {}
 function FIXED() {}
 
 
+////FLATTEN
+
+/**
+ * FLATTEN
+ * Flatten nested arrays into a flat array
+ * @param {Array} value Array to flatten
+ * @returns {Array}
+ * @example
+ * // returns [1,2,3]
+ * FLATTEN([[1, 2, 3]])
+ * @example
+ * // returns [1,2,3,4,5,6]
+ * FLATTEN([[1, 2, 3], [4, 5, 6]])
+ */
+function FLATTEN() {}
+
+
 ////FLOOR
 
 /**
@@ -608,6 +742,24 @@ function FIXED() {}
  * FLOOR(126.25, 10)
  */
 function FLOOR() {}
+
+
+////FORMAT
+
+/**
+ * FORMAT
+ * Formats a string
+ * @param {String} value string format. Use %s for strings and %d for numbers.
+ * @param {...*} var_args_values Value(s) to substitute into the format string
+ * @returns {String} formatted string
+ * @example
+ * // returns The pole height is 20 meters and has 3 issues detected.
+ * FORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)
+ * @example
+ * // returns 11/11/2015 12:30:30
+ * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
+ */
+function FORMAT() {}
 
 
 ////FORMATNUMBER
@@ -967,6 +1119,20 @@ function ISSELECTED() {}
 function ISTEXT() {}
 
 
+////LABEL
+
+/**
+ * LABEL
+ * Returns the label of a given field
+ * @param {String} field the Data Name of the field
+ * @returns {*} the label of the field
+ * @example
+ * // returns Name
+ * LABEL('name')
+ */
+function LABEL() {}
+
+
 ////LANGUAGE
 
 /**
@@ -978,6 +1144,30 @@ function ISTEXT() {}
  * LANGUAGE()
  */
 function LANGUAGE() {}
+
+
+////LAST
+
+/**
+ * LAST
+ * Returns the last N items from an array or string
+ * @param {Array} array an array object
+ * @param {Number} [count=1] The number of items to return
+ * @returns {Object}
+ * @example
+ * // returns 3
+ * LAST([1, 2, 3])
+ * @example
+ * // returns [b,c]
+ * LAST(['a', 'b', 'c'], 2)
+ * @example
+ * // returns c
+ * LAST('abc')
+ * @example
+ * // returns [b,c]
+ * LAST('abc', 2)
+ */
+function LAST() {}
 
 
 ////LATITUDE
@@ -1132,6 +1322,25 @@ function LONGITUDE() {}
  * LOWER("Empire State Building")
  */
 function LOWER() {}
+
+
+////LPAD
+
+/**
+ * LPAD
+ * Pads a string on the left side
+ * @param {String} value The string to pad
+ * @param {Number} count The number of characters to pad
+ * @param {String} [character=' '] The character to use for padding
+ * @returns {String}
+ * @example
+ * // returns 0002
+ * LPAD('2', 4, '0')
+ * @example
+ * // returns 000002
+ * LPAD('2', 6, '0')
+ */
+function LPAD() {}
 
 
 ////MAX
@@ -1398,6 +1607,24 @@ function OTHER() {}
 function PI() {}
 
 
+////PLUCK
+
+/**
+ * PLUCK
+ * Extract property values from an object
+ * @param {Array} array An array of objects to extract properties from
+ * @param {String} property The property name to extract
+ * @returns {Object}
+ * @example
+ * // returns [1,2,3]
+ * var objects = [{name: 'one',   value: 1},
+ *                {name: 'two',   value: 2},
+ *                {name: 'three', value: 3}];
+ * PLUCK(objects, 'value')
+ */
+function PLUCK() {}
+
+
 ////POWER
 
 /**
@@ -1451,6 +1678,32 @@ function PRECISION() {}
  * PRODUCT(23, 5, 0)
  */
 function PRODUCT() {}
+
+
+////PROJECTID
+
+/**
+ * PROJECTID
+ * Returns the project ID of the record
+ * @returns {String}
+ * @example
+ * // returns 88eb3511-13d8-4666-b188-8108019d0984
+ * PROJECTID()
+ */
+function PROJECTID() {}
+
+
+////PROJECTNAME
+
+/**
+ * PROJECTNAME
+ * Returns the project name of the record
+ * @returns {String}
+ * @example
+ * // returns Project X
+ * PROJECTNAME()
+ */
+function PROJECTNAME() {}
 
 
 ////PROPER
@@ -1702,6 +1955,25 @@ function ROUNDDOWN() {}
 function ROUNDUP() {}
 
 
+////RPAD
+
+/**
+ * RPAD
+ * Pads a string on the right side
+ * @param {String} value The string to pad
+ * @param {Number} count The number of characters to pad
+ * @param {String} [character=' '] The character to use for padding
+ * @returns {String}
+ * @example
+ * // returns 2000
+ * RPAD('2', 4, '0')
+ * @example
+ * // returns 200000
+ * RPAD('2', 6, '0')
+ */
+function RPAD() {}
+
+
 ////SEARCH
 
 /**
@@ -1744,6 +2016,21 @@ function SETRESULT() {}
  * SHOWERRORS()
  */
 function SHOWERRORS() {}
+
+
+////SHUFFLE
+
+/**
+ * SHUFFLE
+ * Randomizes an array of items
+ * @param {Array} value an array of items to randomize
+ * @returns {Array}
+ * @example
+ * // returns true
+ * var items = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+ * INSPECT(SHUFFLE(items)) != INSPECT(items[0])
+ */
+function SHUFFLE() {}
 
 
 ////SIGN
@@ -1919,6 +2206,36 @@ function SUMSQ() {}
 function T() {}
 
 
+////TIMEADD
+
+/**
+ * TIMEADD
+ * Adds an amount of time to a given time
+ * @param {String} startTimeField The time field containing the start time
+ * @param {Number} amount The amount of time to add to the given time (number of minutes or hours)
+ * @param {String} [format='hours'] The format of the amount. Either `hours` (default) or `minutes`.
+ * @returns {String} the new time value
+ * @example
+ * // returns 17:00
+ * TIMEADD('09:00', 8)
+ * @example
+ * // returns 09:00
+ * TIMEADD('17:00', -8)
+ * @example
+ * // returns 09:00
+ * TIMEADD('09:00', 48)
+ * @example
+ * // returns 17:30
+ * TIMEADD('16:00', 1.5)
+ * @example
+ * // returns 17:30
+ * TIMEADD('16:00', 90, 'minutes')
+ * @example
+ * // returns 14:30
+ * TIMEADD('16:00', -90, 'minutes')
+ */
+function TIMEADD() {}
+
 
 ////TIMEDIFF
 
@@ -1983,6 +2300,19 @@ function T() {}
  * }
  */
 function TIMEDIFF() {}
+
+
+////TIMESTAMP
+
+/**
+ * TIMESTAMP
+ * Returns a formatted timestamp
+ * @returns {String}
+ * @example
+ * // returns 1982-12-16 03:24:00
+ * TIMESTAMP(new Date('December 16, 1982 03:24:00'))
+ */
+function TIMESTAMP() {}
 
 
 ////TIMEZONE
@@ -2082,6 +2412,22 @@ function UPPER() {}
  * USERFULLNAME()
  */
 function USERFULLNAME() {}
+
+
+////VALUE
+
+/**
+ * VALUE
+ * Returns the current value of a field given the field's data name
+ * @param {String} field the Data Name of the field
+ * @returns {*} the current field value
+ * @example
+ * // returns Test Record
+ * VALUE('name')
+ *
+ * // identical to using $name
+ */
+function VALUE() {}
 
 
 ////VERSIONINFO

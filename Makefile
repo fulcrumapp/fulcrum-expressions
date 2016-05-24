@@ -5,17 +5,13 @@ all: build
 
 build:
 	mkdir -p dist
-	# Note: DO NOT pass --compress to uglifyjs. The Rhino JS interpreter on Android
-	# does not work well with the transformations it applies to the code. It results
-	# in a more complex (or, different) AST which results in StackOverflowError's while
-	# parsing the source.
-	browserify -t coffeeify --extension=".coffee" runtime.coffee | \
+	./node_modules/browserify/bin/cmd.js -t coffeeify --extension=".coffee" runtime.coffee | \
 		./node_modules/uglify-js/bin/uglifyjs > dist/expressions.js --mangle
 	./script/build-docs
 
 debug:
 	mkdir -p dist
-	browserify -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
+	./node_modules/browserify/bin/cmd.js -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
 	./script/build-docs
 
 docs:
@@ -23,11 +19,12 @@ docs:
 
 help:
 	mkdir -p docs/output/help
-	mkdir -p docs/output/help/reference
-	./script/generate-help
+	mkdir -p docs/output/help/expressions/reference
+	mkdir -p docs/output/help/events/reference
+	./node_modules/coffee-script/bin/coffee script/generate-help.coffee
 
 copy:
-	./script/copy-files
+	./node_modules/coffee-script/bin/coffee script/copy-files.coffee
 
 dist: clean build help test
 

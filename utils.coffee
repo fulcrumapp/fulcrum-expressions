@@ -101,4 +101,116 @@ class Utils
     return null unless date? and not isNaN(date.getTime())
     "#{RIGHT('000' + date.getFullYear(), 4)}-#{RIGHT('0' + (date.getMonth() + 1), 2)}-#{RIGHT('0' + date.getDate(), 2)}"
 
+  @makeValue: (element, value) ->
+    return null unless value?
+    converter = Utils.converters[element.type]
+
+    if converter?
+      converter(value)
+    else
+      null
+
+  @makeChoiceValue: (choices, others) ->
+    { choice_values: choices ? [], other_values: others ? [] }
+
+  @isSetValueSupported: (containerElements, dataElement, type) ->
+    return false unless Utils.converters[type]?
+
+    # Make sure the element is contained within the current editing scope. We need to make sure
+    # that the element is within the repeatable being edited and not further nested as a child or
+    # part of an ancestor.
+    validElements = Utils.flattenElements(containerElements, false)
+
+    foundElement = _.find validElements, (e) -> e.key is dataElement.key
+
+    !!foundElement
+
+  @converters:
+    TextField: (value) ->
+      return null unless value?
+      value.toString()
+
+    CalculatedField: (value) ->
+      Utils.converters.TextField(value)
+
+    HyperlinkField: (value) ->
+      Utils.converters.TextField(value)
+
+    YesNoField: (value) ->
+      Utils.converters.TextField(value)
+
+    BarcodeField: (value) ->
+      Utils.converters.TextField(value)
+
+    DateTimeField: (value) ->
+      return null unless value?
+
+      date = DATEVALUE(value)
+
+      return null unless date?
+
+      FORMAT('%s-%s-%s',
+        date.getFullYear(),
+        LPAD(date.getMonth() + 1, 2, '0'),
+        LPAD(date.getDate(), 2, '0'))
+
+    DateField: (value) ->
+      Utils.converters.DateTimeField(value)
+
+    TimeField: (value) ->
+      return null unless _.isString(value)
+
+      return null if value.length isnt 5
+      return null if value[2] isnt ':'
+
+      parts = value.split(':')
+
+      hour = NUM(parts[0])
+      minute = NUM(parts[1])
+
+      return null if hour > 23 or hour < 0
+      return null if minute > 59 or minute < 0
+
+      FORMAT('%s:%s',
+        LPAD(hour, 2, '0'),
+        LPAD(minute, 2, '0'))
+
+    ChoiceField: (value) ->
+      choices = null
+
+      switch true
+        when _.isArray(value)
+          choices = _.map(_.compact(value), (v) -> v.toString())
+
+        when _.isString(value) and value.length isnt 0
+          choices = [ value ]
+
+        when _.isNumber(value)
+          choices = [ value.toString() ]
+
+        when _.isObject(value) and _.isArray(value.choice_values)
+          choices = _.map(_.compact(value.choice_values), (v) -> v.toString())
+
+      return null unless _.isArray(choices)
+
+      Utils.makeChoiceValue(choices, [])
+
+    ClassificationField: (value) ->
+      Utils.converters.ChoiceField(value)
+
+    AddressField: (value) ->
+      return null unless _.isObject(value)
+
+      address =
+        sub_thoroughfare: value.sub_thoroughfare?.toString() ? null
+        thoroughfare: value.thoroughfare?.toString() ? null
+        suite: value.suite?.toString() ? null
+        locality: value.locality?.toString() ? null
+        sub_admin_area: value.sub_admin_area?.toString() ? null
+        admin_area: value.admin_area?.toString() ? null
+        postal_code: value.postal_code?.toString() ? null
+        country: value.country?.toString() ? null
+
+      address
+
 module.exports = Utils
