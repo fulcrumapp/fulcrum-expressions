@@ -1342,6 +1342,12 @@ exports.SETSTATUS = (status) ->
   ERROR('status must be a string') if status? and not _.isString(status)
   SETVALUE('@status', status)
 
+exports.SETSTATUSHIDDEN = (value) ->
+  SETHIDDEN('@status', value)
+
+exports.SETSTATUSREADONLY = (value) ->
+  SETREADONLY('@status', value)
+
 exports.SETSTATUSFILTER = (value) ->
   SETCHOICEFILTER('@status', value)
 

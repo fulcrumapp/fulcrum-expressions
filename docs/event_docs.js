@@ -590,6 +590,34 @@ function SETREQUIRED() {}
 function SETSTATUS() {}
 
 
+////SETSTATUSHIDDEN
+
+/**
+ * SETSTATUSHIDDEN
+ * Set the visibility of the status field.
+ * @param {boolean|null} hidden Boolean value representing whether the field should be hidden, or `null` to restore the original value
+ * @example
+ * SETSTATUSHIDDEN(true)
+ *
+ * // Sets the status field to be hidden
+ */
+function SETSTATUSHIDDEN() {}
+
+
+////SETSTATUSREADONLY
+
+/**
+ * SETSTATUSREADONLY
+ * Sets the status field to be read-only or editable.
+ * @param {boolean|null} readOnly Boolean value representing whether the field should be read-only, or `null` to restore the original state
+ * @example
+ * SETSTATUSREADONLY(true)
+ *
+ * // Sets the status field to read only, not editable by the user
+ */
+function SETSTATUSREADONLY() {}
+
+
 ////SETSTATUSFILTER
 
 /**
