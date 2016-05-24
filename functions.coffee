@@ -1346,7 +1346,7 @@ exports.SETSTATUSFILTER = (value) ->
   SETCHOICEFILTER('@status', value)
 
 exports.SETPROJECT = (project) ->
-  ERROR('project must be a string') if status? and not _.isString(status)
+  ERROR('project must be a string') if project? and not _.isString(project)
   SETVALUE('@project', project)
 
 exports.SETDESCRIPTION = (dataName, value) ->
