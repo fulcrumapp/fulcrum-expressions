@@ -1456,6 +1456,9 @@ describe 'DATANAMES', ->
     names = DATANAMES()
     names.should.eql([ 'name', 'items', 'cost' ])
 
+    names = DATANAMES('Repeatable')
+    names.should.eql([ 'items' ])
+
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->
     date = DATE(2015, 1, 14)

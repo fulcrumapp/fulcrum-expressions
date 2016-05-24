@@ -571,9 +571,19 @@
             "access": "",
             "virtual": false,
             "description": "DATANAMES\nReturns the data names of the form fields",
-            "parameters": [],
+            "parameters": [
+                {
+                    "name": "type",
+                    "type": "String",
+                    "description": "Optional field type",
+                    "default": null,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
             "examples": [
-                "// returns [name,items,cost]\nDATANAMES()"
+                "// returns [name,items,cost]\nDATANAMES()",
+                "// returns [items]\nDATANAMES('Repeatable')"
             ],
             "returns": {
                 "type": "Array",

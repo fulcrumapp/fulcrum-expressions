@@ -388,10 +388,14 @@ function CURRENCYSYMBOL() {}
 /**
  * DATANAMES
  * Returns the data names of the form fields
+ * @param {String} [type=null] Optional field type
  * @returns {Array}
  * @example
  * // returns [name,items,cost]
  * DATANAMES()
+ * @example
+ * // returns [items]
+ * DATANAMES('Repeatable')
  */
 function DATANAMES() {}
 
