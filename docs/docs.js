@@ -60,6 +60,35 @@ function ACOSH() {}
 function AND() {}
 
 
+////ARRAY
+
+/**
+ * ARRAY
+ * Returns an array from its arguments, combining and flattening multiple arrays into a single array. It always returns an array regardless of the types and formats of the arguments.
+ * @param {...*} var_args_expressions Arrays or values to create an array from
+ * @returns {Array}
+ * @example
+ * // returns [1,2,3]
+ * ARRAY(1, 2, 3)
+ * @example
+ * // returns [1,2,3]
+ * ARRAY([1, 2, 3])
+ * @example
+ * // returns [1,2,3,4,5,6,7,8]
+ * ARRAY([1, 2, 3, [4, 5], [6, [7, 8]]])
+ * @example
+ * // returns []
+ * ARRAY()
+ * @example
+ * // returns []
+ * ARRAY([])
+ * @example
+ * // returns [1,2,3,4]
+ * ARRAY(ARRAY(ARRAY([1, 2, ARRAY(3, 4)])))
+ */
+function ARRAY() {}
+
+
 ////AVERAGE
 
 /**

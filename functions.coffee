@@ -76,6 +76,9 @@ exports.APPLICATIONINFO = (separator=', ') ->
 exports.APPLICATIONVERSION = ->
   Config.applicationVersion ? ''
 
+exports.ARRAY = ->
+  FLATTEN(toArray(arguments))
+
 exports.AVERAGE = ->
   args = toArray(arguments)
   return NaN if args.length is 0

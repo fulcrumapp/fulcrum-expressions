@@ -95,6 +95,34 @@
             }
         },
         {
+            "name": "ARRAY",
+            "access": "",
+            "virtual": false,
+            "description": "ARRAY\nReturns an array from its arguments, combining and flattening multiple arrays into a single array",
+            "parameters": [
+                {
+                    "name": "var_args_expressions",
+                    "type": "*",
+                    "description": "Arrays or values to create an array from",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nARRAY(1, 2, 3)",
+                "// returns [1,2,3]\nARRAY([1, 2, 3])",
+                "// returns [1,2,3,4,5,6,7,8]\nARRAY([1, 2, 3, [4, 5], [6, [7, 8]]])",
+                "// returns []\nARRAY()",
+                "// returns []\nARRAY([])",
+                "// returns [1,2,3,4]\nARRAY(ARRAY(ARRAY([1, 2, ARRAY(3, 4)])))"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "AVERAGE",
             "access": "",
             "virtual": false,

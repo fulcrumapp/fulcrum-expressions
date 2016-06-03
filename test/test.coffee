@@ -42,6 +42,24 @@ shouldBeUndefined = (value) ->
 beforeEach ->
   resetConfig()
 
+describe 'ARRAY', ->
+  it 'returns an array from the arguments', ->
+    ARRAY().should.eql([])
+    ARRAY(1, 2, 3, 4).should.eql([1, 2, 3, 4])
+    ARRAY([1, 2], [3, 4]).should.eql([1, 2, 3, 4])
+    ARRAY([1, 2], [3, 4], [5, 6]).should.eql([1, 2, 3, 4, 5, 6])
+    ARRAY([1, 2], [3, 4], [5, [6, [7, 8]]]).should.eql([1, 2, 3, 4, 5, 6, 7, 8])
+    ARRAY(undefined, null).should.eql([undefined, null])
+    ARRAY(NaN, NaN).should.eql([NaN, NaN])
+    ARRAY(1, 2, 3).should.eql([1, 2, 3])
+    ARRAY(1, '2', 3).should.eql([1, '2', 3])
+    ARRAY({}, '2', 'a7').should.eql([{}, '2', 'a7'])
+    ARRAY([], [], []).should.eql([])
+    ARRAY([]).should.eql([])
+    ARRAY(ARRAY([], [], [])).should.eql([])
+    ARRAY(ARRAY([], ARRAY([]), [], ARRAY())).should.eql([])
+    ARRAY(ARRAY(ARRAY(ARRAY([1, 2], [3, 4])))).should.eql([1, 2, 3, 4])
+
 describe 'NUMS', ->
   it 'returns an array of numbers from the arguments', ->
     NUMS(1, 2, 3).should.eql([1, 2, 3])
