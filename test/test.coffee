@@ -119,6 +119,9 @@ describe 'AVERAGE', ->
     AVERAGE(1, 2, 'a').should.be.NaN
     AVERAGE(1).should.be.exactly(1)
     AVERAGE(1, 1.5, 3.75).should.be.exactly(2.0833333333333335)
+    AVERAGE(1, [1.5, 3.75]).should.be.exactly(2.0833333333333335)
+    AVERAGE([1, 1.5, 3.75]).should.be.exactly(2.0833333333333335)
+    AVERAGE([[1], [1.5, 3.75]]).should.be.exactly(2.0833333333333335)
 
 describe 'ROUND', ->
   it 'round the given number to the specified number of digits', ->
@@ -288,6 +291,8 @@ describe 'CONCATENATE', ->
     CONCATENATE().should.eql('')
     CONCATENATE(null).should.eql('')
     CONCATENATE(undefined).should.eql('')
+    CONCATENATE('1', [2], '3').should.eql('123')
+    CONCATENATE('1', [2], '3', [4, 5]).should.eql('12345')
 
 describe 'COMPACT', ->
   it 'compacts an array', ->
@@ -709,6 +714,7 @@ describe 'MAX', ->
     MAX('1', '2', '3').should.be.exactly(3)
     MAX('1.11', '2.22', '3.33').should.be.exactly(3.33)
     MAX(-1, -2, -3).should.be.exactly(-1)
+    MAX(-1, [-2, 5], -3).should.be.exactly(5)
 
     shouldHaveNoValue(MAX([]))
     shouldHaveNoValue(MAX({}))
@@ -739,6 +745,7 @@ describe 'MEDIAN', ->
   it 'returns the median number in a list of numbers', ->
     MEDIAN(1, 2, 3).should.be.exactly(2)
     MEDIAN(2, 3, 3, 5, 7, 10).should.be.exactly(4)
+    MEDIAN(2, 3, [3, 5], 7, 10).should.be.exactly(4)
     MEDIAN(10, 3, 7, 5, 3, 2).should.be.exactly(4)
     MEDIAN(10, 3, 5, 3, 2).should.be.exactly(3)
     MEDIAN('1.11', '2.22', '3.33').should.be.exactly(2.22)
@@ -755,6 +762,7 @@ describe 'MEDIAN', ->
 describe 'MIN', ->
   it 'returns the minimum number in a list of numbers', ->
     MIN(1, 2, 3).should.be.exactly(1)
+    MIN([1], 2, 3).should.be.exactly(1)
     MIN('1', '2', '3').should.be.exactly(1)
     MIN('1.11', '2.22', '3.33').should.be.exactly(1.11)
     MIN(-1, -2, -3).should.be.exactly(-3)
@@ -1140,6 +1148,9 @@ describe 'SUM', ->
     SUM(2, 3, 4).should.be.exactly(9)
     SUM(-2, 3, 4).should.be.exactly(5)
     SUM(-2, 3.1, 1.7).should.be.exactly(2.8)
+    SUM(-2, [3.1], 1.7).should.be.exactly(2.8)
+    SUM([-2, 3.1, 1.7]).should.be.exactly(2.8)
+    SUM([-2, 3.1, [1.7]]).should.be.exactly(2.8)
     SUM('-2', '3').should.be.exactly(1)
     SUM(1, 0).should.be.exactly(1)
     SUM(1, NaN).should.be.NaN
@@ -1154,6 +1165,7 @@ describe 'SUMSQ', ->
     SUMSQ(2, 3, 4).should.be.exactly(29)
     SUMSQ(-2, 3, 4).should.be.exactly(29)
     SUMSQ(-2, 3.1, 1.7).should.be.exactly(16.5)
+    SUMSQ(-2, [3.1, [1.7]]).should.be.exactly(16.5)
     SUMSQ('-2', '3').should.be.exactly(13)
     SUMSQ(1, 0).should.be.exactly(1)
     SUMSQ(1, NaN).should.be.NaN

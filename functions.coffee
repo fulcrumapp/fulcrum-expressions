@@ -80,8 +80,9 @@ exports.ARRAY = ->
   FLATTEN(toArray(arguments))
 
 exports.AVERAGE = ->
-  args = toArray(arguments)
+  args = ARRAY(toArray(arguments))
   return NaN if args.length is 0
+
   _.inject(args, ((memo, arg) -> memo + +arg), 0) / args.length
 
 exports.CEILING = (number, significance = 1) ->
@@ -146,7 +147,7 @@ exports.COMPACT = (value) ->
   _.filter value, (item) -> item?
 
 exports.CONCATENATE = ->
-  strings = _.map toArray(arguments), (arg) ->
+  strings = _.map ARRAY(toArray(arguments)), (arg) ->
     switch true
       when _.isString(arg)
         arg
@@ -197,14 +198,10 @@ exports.COUNT = (value) ->
   numbers.length
 
 exports.COUNTA = (value) ->
-  return NO_VALUE unless _.isArray(value)
-
-  value.length
+  ARRAY(toArray(arguments)).length
 
 exports.COUNTBLANK = (value) ->
-  return NaN unless _.isArray(value)
-
-  results = _.filter value, (item) ->
+  results = _.filter ARRAY(toArray(arguments)), (item) ->
     switch true
       when not item?
         true
@@ -744,7 +741,7 @@ exports.LATITUDE = ->
   NUM(CONFIG().featureGeometry?.coordinates[1])
 
 exports.LCM = ->
-  numbers = toArray(arguments).map (num) -> INT(num)
+  numbers = ARRAY(toArray(arguments)).map (num) -> INT(num)
 
   count = numbers.length
 
@@ -838,7 +835,7 @@ exports.LPAD = (value, count, padding=' ') ->
   RIGHT(Array(count).join(padding) + value, count)
 
 exports.MAX = ->
-  numbers = _.flatten(toArray(arguments))
+  numbers = ARRAY(toArray(arguments))
   numbers = _.map(numbers, NUM)
 
   return NO_VALUE if numbers.length is 0
@@ -849,14 +846,10 @@ exports.MAX = ->
 
   Math.max.apply(Math, numbers)
 
-exports.MAXA = ->
-  return NO_VALUE if arguments.length < 1
-  return NO_VALUE unless _.isArray(arguments[0])
-
-  MAX.apply(null, arguments[0])
+exports.MAXA = exports.MAX
 
 exports.MEDIAN = ->
-  numbers = _.flatten(toArray(arguments))
+  numbers = ARRAY(toArray(arguments))
   numbers = _.map(numbers, NUM)
 
   return NO_VALUE unless _.isArray(numbers)
@@ -890,7 +883,7 @@ exports.MID = (value, startPosition, numberOfCharacters) ->
   value.substr(startPosition - 1, numberOfCharacters)
 
 exports.MIN = ->
-  numbers = _.flatten(toArray(arguments))
+  numbers = ARRAY(toArray(arguments))
   numbers = _.map(numbers, NUM)
 
   return NO_VALUE if numbers.length is 0
@@ -901,11 +894,7 @@ exports.MIN = ->
 
   Math.min.apply(Math, numbers)
 
-exports.MINA = ->
-  return NO_VALUE if arguments.length < 1
-  return NO_VALUE unless _.isArray(arguments[0])
-
-  MIN.apply(null, arguments[0])
+exports.MINA = exports.MIN
 
 exports.MOD = (number, divisor) ->
   number = NUM(number)
@@ -1587,7 +1576,7 @@ exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
     text
 
 exports.SUM = ->
-  numbers = toArray(arguments).map(NUM)
+  numbers = ARRAY(toArray(arguments)).map(NUM)
 
   return NaN if numbers.length is 0
 
@@ -1598,7 +1587,7 @@ exports.SUM = ->
   _.inject(numbers, ((memo, number) -> memo += number), 0)
 
 exports.SUMSQ = ->
-  numbers = toArray(arguments).map(NUM)
+  numbers = ARRAY(toArray(arguments)).map(NUM)
 
   return NaN if numbers.length is 0
 

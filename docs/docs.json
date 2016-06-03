@@ -98,7 +98,7 @@
             "name": "ARRAY",
             "access": "",
             "virtual": false,
-            "description": "ARRAY\nReturns an array from its arguments, combining and flattening multiple arrays into a single array",
+            "description": "ARRAY\nReturns an array from its arguments, combining and flattening multiple arrays into a single array. It always returns an array regardless of the types and formats of the arguments.",
             "parameters": [
                 {
                     "name": "var_args_expressions",
