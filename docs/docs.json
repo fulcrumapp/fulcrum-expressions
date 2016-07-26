@@ -193,8 +193,8 @@
                 }
             ],
             "examples": [
-                "// returns A\nCHAR(65)",
-                "// returns Թ\nCHAR(1337)"
+                "// returns \"A\"\nCHAR(65)",
+                "// returns \"Թ\"\nCHAR(1337)"
             ],
             "returns": {
                 "type": "String",
@@ -217,7 +217,7 @@
                 }
             ],
             "examples": [
-                "// returns Red\nCHOICEVALUE($choice_field)"
+                "// returns \"Red\"\nCHOICEVALUE($choice_field)"
             ],
             "returns": {
                 "type": "String",
@@ -240,7 +240,7 @@
                 }
             ],
             "examples": [
-                "// returns [Red,Green,Blue]\nCHOICEVALUES($choice_field)"
+                "// returns [\"Red\",\"Green\",\"Blue\"]\nCHOICEVALUES($choice_field)"
             ],
             "returns": {
                 "type": "String",
@@ -263,7 +263,7 @@
                 }
             ],
             "examples": [
-                "// returns Test\nCLEAN('Test' + CHAR(31))"
+                "// returns \"Test\"\nCLEAN('Test' + CHAR(31))"
             ],
             "returns": {
                 "type": "String",
@@ -286,7 +286,7 @@
                 }
             ],
             "examples": [
-                "// returns Test\nCOALESCE(null, null, 'Test', 1)",
+                "// returns \"Test\"\nCOALESCE(null, null, 'Test', 1)",
                 "// returns 1\nCOALESCE(1, null, null)",
                 "// returns undefined\nCOALESCE(null, null, null)"
             ],
@@ -357,9 +357,9 @@
                 }
             ],
             "examples": [
-                "// returns This is a sentence.\nCONCATENATE(\"This \", \"is \", \"a \", \"sentence.\")",
-                "// returns 42311\nCONCATENATE(42, 31, 1)",
-                "// returns Age is 42\nCONCATENATE(\"Age \", \"is \", 42)"
+                "// returns \"This is a sentence.\"\nCONCATENATE(\"This \", \"is \", \"a \", \"sentence.\")",
+                "// returns \"42311\"\nCONCATENATE(42, 31, 1)",
+                "// returns \"Age is 42\"\nCONCATENATE(\"Age \", \"is \", 42)"
             ],
             "returns": {
                 "type": "String",
@@ -382,9 +382,9 @@
                 }
             ],
             "examples": [
-                "// returns This is a sentence.\nCONCAT(\"This \", \"is \", \"a \", \"sentence.\")",
-                "// returns 42311\nCONCAT(42, 31, 1)",
-                "// returns Age is 42\nCONCAT(\"Age \", \"is \", 42)"
+                "// returns \"This is a sentence.\"\nCONCAT(\"This \", \"is \", \"a \", \"sentence.\")",
+                "// returns \"42311\"\nCONCAT(42, 31, 1)",
+                "// returns \"Age is 42\"\nCONCAT(\"Age \", \"is \", 42)"
             ],
             "returns": {
                 "type": "String",
@@ -559,7 +559,7 @@
             "description": "COUNTRY\nReturns the current country according to the device locale settings",
             "parameters": [],
             "examples": [
-                "// returns US\nCOUNTRY()"
+                "// returns \"US\"\nCOUNTRY()"
             ],
             "returns": {
                 "type": "String",
@@ -573,7 +573,7 @@
             "description": "CURRENCYCODE\nReturns the currency code for the current device locale",
             "parameters": [],
             "examples": [
-                "// returns USD\nCURRENCYCODE()"
+                "// returns \"USD\"\nCURRENCYCODE()"
             ],
             "returns": {
                 "type": "String",
@@ -587,7 +587,7 @@
             "description": "CURRENCYSYMBOL\nReturns the currency symbol for the current device locale",
             "parameters": [],
             "examples": [
-                "// returns $\nCURRENCYSYMBOL()"
+                "// returns \"$\"\nCURRENCYSYMBOL()"
             ],
             "returns": {
                 "type": "String",
@@ -610,8 +610,8 @@
                 }
             ],
             "examples": [
-                "// returns [name,items,cost]\nDATANAMES()",
-                "// returns [items]\nDATANAMES('Repeatable')"
+                "// returns [\"name\",\"items\",\"cost\"]\nDATANAMES()",
+                "// returns [\"items\"]\nDATANAMES('Repeatable')"
             ],
             "returns": {
                 "type": "Array",
@@ -742,7 +742,7 @@
             "description": "DECIMALSEPARATOR\nReturns the current decimal separator given the current device locale",
             "parameters": [],
             "examples": [
-                "// returns .\nDECIMALSEPARATOR()"
+                "// returns \".\"\nDECIMALSEPARATOR()"
             ],
             "returns": {
                 "type": "String",
@@ -788,7 +788,7 @@
                 }
             ],
             "examples": [
-                "// returns Enter the name\nDESCRIPTION('name')"
+                "// returns \"Enter the name\"\nDESCRIPTION('name')"
             ],
             "returns": {
                 "type": "*",
@@ -835,9 +835,9 @@
                 }
             ],
             "examples": [
-                "// returns $1,234.57\nDOLLAR(1234.567)",
-                "// returns 1 234,57 $US\n// USD formatted in French\nDOLLAR(1234.567, 2, 'USD', 'fr-FR')",
-                "// returns €1.234,57\n// Euro formatted in Portuguese\nDOLLAR(1234.567, 2, 'EUR', 'pt-BR')"
+                "// returns \"$1,234.57\"\nDOLLAR(1234.567)",
+                "// returns \"1 234,57 $US\"\n// USD formatted in French\nDOLLAR(1234.567, 2, 'USD', 'fr-FR')",
+                "// returns \"€1.234,57\"\n// Euro formatted in Portuguese\nDOLLAR(1234.567, 2, 'EUR', 'pt-BR')"
             ],
             "returns": {
                 "type": "String",
@@ -851,7 +851,7 @@
             "description": "EMAIL\nReturns the email address of the current user",
             "parameters": [],
             "examples": [
-                "// returns test@example.com\nEMAIL()"
+                "// returns \"test@example.com\"\nEMAIL()"
             ],
             "returns": {
                 "type": "String",
@@ -1039,8 +1039,8 @@
                 }
             ],
             "examples": [
-                "// returns Repeatable\nFIELDTYPE('items')",
-                "// returns TextField\nFIELDTYPE('name')"
+                "// returns \"Repeatable\"\nFIELDTYPE('items')",
+                "// returns \"TextField\"\nFIELDTYPE('name')"
             ],
             "returns": {
                 "type": "String",
@@ -1111,9 +1111,9 @@
             ],
             "examples": [
                 "// returns 1\nFIRST([1, 2, 3])",
-                "// returns [a,b]\nFIRST(['a', 'b', 'c'], 2)",
-                "// returns a\nFIRST('abc')",
-                "// returns [a,b]\nFIRST('abc', 2)"
+                "// returns [\"a\",\"b\"]\nFIRST(['a', 'b', 'c'], 2)",
+                "// returns \"a\"\nFIRST('abc')",
+                "// returns [\"a\",\"b\"]\nFIRST('abc', 2)"
             ],
             "returns": {
                 "type": "Object",
@@ -1152,8 +1152,8 @@
                 }
             ],
             "examples": [
-                "// returns 3000.14\nFIXED(3000.141592, 2, true)",
-                "// returns 6,276.222\nFIXED(6276.22241, 3, false)"
+                "// returns \"3000.14\"\nFIXED(3000.141592, 2, true)",
+                "// returns \"6,276.222\"\nFIXED(6276.22241, 3, false)"
             ],
             "returns": {
                 "type": "String",
@@ -1240,8 +1240,8 @@
                 }
             ],
             "examples": [
-                "// returns The pole height is 20 meters and has 3 issues detected.\nFORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)",
-                "// returns 11/11/2015 12:30:30\nFORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)"
+                "// returns \"The pole height is 20 meters and has 3 issues detected.\"\nFORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)",
+                "// returns \"11/11/2015 12:30:30\"\nFORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)"
             ],
             "returns": {
                 "type": "String",
@@ -1272,9 +1272,9 @@
                 }
             ],
             "examples": [
-                "// returns 1,234.568\nFORMATNUMBER(1234.56789999)",
-                "// returns 1 234,568\nFORMATNUMBER(1234.56789999, 'fr-FR')",
-                "// returns 1.234,568\nFORMATNUMBER(1234.56789999, 'pt-BR')"
+                "// returns \"1,234.568\"\nFORMATNUMBER(1234.56789999)",
+                "// returns \"1 234,568\"\nFORMATNUMBER(1234.56789999, 'fr-FR')",
+                "// returns \"1.234,568\"\nFORMATNUMBER(1234.56789999, 'pt-BR')"
             ],
             "returns": {
                 "type": "String",
@@ -1320,13 +1320,45 @@
             }
         },
         {
+            "name": "GROUP",
+            "access": "",
+            "virtual": false,
+            "description": "GROUP\nReturns the sorted values within an array",
+            "parameters": [
+                {
+                    "name": "values",
+                    "type": "Array",
+                    "description": "The values to sort",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "A transform function to use when sorting objects",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns {\"red\":[\"red\"],\"green\":[\"green\",\"green\"],\"blue\":[\"blue\"]}\nGROUP(['red', 'green', 'green', 'blue'])",
+                "// returns {\"1\":[1,1,1],\"2\":[2],\"3\":[3]}\nGROUP([1, 1, 1, 2, 3])"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "GROUPINGSEPARATOR",
             "access": "",
             "virtual": false,
             "description": "GROUPINGSEPARATOR\nReturns the currency thousands separator for the current device locale",
             "parameters": [],
             "examples": [
-                "// returns ,\nGROUPINGSEPARATOR()"
+                "// returns \",\"\nGROUPINGSEPARATOR()"
             ],
             "returns": {
                 "type": "String",
@@ -1402,8 +1434,8 @@
                 }
             ],
             "examples": [
-                "// returns 1 is less than 3\nIF(1 > 3, '1 is greater than 3', '1 is less than 3')",
-                "// returns Red is selected\nIF(ISSELECTED($choice_field, 'Red'), 'Red is selected', 'Red is not selected')"
+                "// returns \"1 is less than 3\"\nIF(1 > 3, '1 is greater than 3', '1 is less than 3')",
+                "// returns \"Red is selected\"\nIF(ISSELECTED($choice_field, 'Red'), 'Red is selected', 'Red is not selected')"
             ],
             "returns": {
                 "type": "*",
@@ -1457,7 +1489,7 @@
                 }
             ],
             "examples": [
-                "// returns [ 1, 2, 3 ]\nINSPECT([1, 2, 3])"
+                "// returns \"[ 1, 2, 3 ]\"\nINSPECT([1, 2, 3])"
             ],
             "returns": {
                 "type": "String",
@@ -1779,7 +1811,7 @@
                 }
             ],
             "examples": [
-                "// returns Name\nLABEL('name')"
+                "// returns \"Name\"\nLABEL('name')"
             ],
             "returns": {
                 "type": "*",
@@ -1793,7 +1825,7 @@
             "description": "LANGUAGE\nReturns the language code for the current device locale",
             "parameters": [],
             "examples": [
-                "// returns en-US\nLANGUAGE()"
+                "// returns \"en-US\"\nLANGUAGE()"
             ],
             "returns": {
                 "type": "String",
@@ -1825,9 +1857,9 @@
             ],
             "examples": [
                 "// returns 3\nLAST([1, 2, 3])",
-                "// returns [b,c]\nLAST(['a', 'b', 'c'], 2)",
-                "// returns c\nLAST('abc')",
-                "// returns [b,c]\nLAST('abc', 2)"
+                "// returns [\"b\",\"c\"]\nLAST(['a', 'b', 'c'], 2)",
+                "// returns \"c\"\nLAST('abc')",
+                "// returns [\"b\",\"c\"]\nLAST('abc', 2)"
             ],
             "returns": {
                 "type": "Object",
@@ -1896,8 +1928,8 @@
                 }
             ],
             "examples": [
-                "// returns Ful\nLEFT(\"Fulcrum\", 3)",
-                "// returns F\nLEFT(\"Fulcrum\")"
+                "// returns \"Ful\"\nLEFT(\"Fulcrum\", 3)",
+                "// returns \"F\"\nLEFT(\"Fulcrum\")"
             ],
             "returns": {
                 "type": "String",
@@ -1958,7 +1990,7 @@
             "description": "LOCALE\nReturns the current locale code",
             "parameters": [],
             "examples": [
-                "// returns en_US\nLOCALE()"
+                "// returns \"en_US\"\nLOCALE()"
             ],
             "returns": {
                 "type": "String",
@@ -2051,7 +2083,7 @@
                 }
             ],
             "examples": [
-                "// returns empire state building\nLOWER(\"Empire State Building\")"
+                "// returns \"empire state building\"\nLOWER(\"Empire State Building\")"
             ],
             "returns": {
                 "type": "String",
@@ -2090,8 +2122,8 @@
                 }
             ],
             "examples": [
-                "// returns 0002\nLPAD('2', 4, '0')",
-                "// returns 000002\nLPAD('2', 6, '0')"
+                "// returns \"0002\"\nLPAD('2', 4, '0')",
+                "// returns \"000002\"\nLPAD('2', 6, '0')"
             ],
             "returns": {
                 "type": "String",
@@ -2200,7 +2232,7 @@
                 }
             ],
             "examples": [
-                "// returns iOS\nMID(\"Fulcrum for iOS\", 13, 3)"
+                "// returns \"iOS\"\nMID(\"Fulcrum for iOS\", 13, 3)"
             ],
             "returns": {
                 "type": "String",
@@ -2398,7 +2430,7 @@
             ],
             "examples": [
                 "// returns [1,2,3]\nNUMS('1' ,'2', '3')",
-                "// returns [1,2,NaN]\nNUMS('1' ,'2', 'a')"
+                "// returns [1,2,null]\nNUMS('1' ,'2', 'a')"
             ],
             "returns": {
                 "type": "Number",
@@ -2444,7 +2476,7 @@
                 }
             ],
             "examples": [
-                "// returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162\nONCE(VERSIONINFO())"
+                "// returns \"Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162\"\nONCE(VERSIONINFO())"
             ],
             "returns": {
                 "type": "Number",
@@ -2631,7 +2663,7 @@
             "description": "PROJECTID\nReturns the project ID of the record",
             "parameters": [],
             "examples": [
-                "// returns 88eb3511-13d8-4666-b188-8108019d0984\nPROJECTID()"
+                "// returns \"88eb3511-13d8-4666-b188-8108019d0984\"\nPROJECTID()"
             ],
             "returns": {
                 "type": "String",
@@ -2645,7 +2677,7 @@
             "description": "PROJECTNAME\nReturns the project name of the record",
             "parameters": [],
             "examples": [
-                "// returns Project X\nPROJECTNAME()"
+                "// returns \"Project X\"\nPROJECTNAME()"
             ],
             "returns": {
                 "type": "String",
@@ -2668,7 +2700,7 @@
                 }
             ],
             "examples": [
-                "// returns Fulcrum Mobile Data Collection\nPROPER(\"fulcrum mobile data collection\")"
+                "// returns \"Fulcrum Mobile Data Collection\"\nPROPER(\"fulcrum mobile data collection\")"
             ],
             "returns": {
                 "type": "String",
@@ -2783,7 +2815,7 @@
             "description": "RECORDID\nReturns the ID of the current record. This function will always return the top level record ID even when used inside a repeatable. To get the repeatable item ID, use the `REPEATABLEID` function.",
             "parameters": [],
             "examples": [
-                "// returns 96eb35f5-13d8-4666-b188-8108019d0984\nRECORDID()"
+                "// returns \"96eb35f5-13d8-4666-b188-8108019d0984\"\nRECORDID()"
             ],
             "returns": {
                 "type": "String",
@@ -2797,7 +2829,7 @@
             "description": "REPEATABLEID\nReturns the ID of the current repeatable item.",
             "parameters": [],
             "examples": [
-                "// returns 859fdb06-4e7d-4bed-b1d2-af168db71522\nREPEATABLEID()"
+                "// returns \"859fdb06-4e7d-4bed-b1d2-af168db71522\"\nREPEATABLEID()"
             ],
             "returns": {
                 "type": "String",
@@ -2920,7 +2952,7 @@
                 }
             ],
             "examples": [
-                "// returns Data collection inspection\n// replaces 'survey' with 'inspection'\nREPLACE(\"Data collection survey\", 17, 6, \"inspection\")"
+                "// returns \"Data collection inspection\"\n// replaces 'survey' with 'inspection'\nREPLACE(\"Data collection survey\", 17, 6, \"inspection\")"
             ],
             "returns": {
                 "type": "String",
@@ -2951,8 +2983,8 @@
                 }
             ],
             "examples": [
-                "// returns DEFG\nRIGHT(\"ABCDEFG\", 4)",
-                "// returns 1\nRIGHT(\"000001\")"
+                "// returns \"DEFG\"\nRIGHT(\"ABCDEFG\", 4)",
+                "// returns \"1\"\nRIGHT(\"000001\")"
             ],
             "returns": {
                 "type": "String",
@@ -2966,7 +2998,7 @@
             "description": "ROLE\nReturns the role name of the current user",
             "parameters": [],
             "examples": [
-                "// returns Owner\nROLE()"
+                "// returns \"Owner\"\nROLE()"
             ],
             "returns": {
                 "type": "String",
@@ -3101,8 +3133,8 @@
                 }
             ],
             "examples": [
-                "// returns 2000\nRPAD('2', 4, '0')",
-                "// returns 200000\nRPAD('2', 6, '0')"
+                "// returns \"2000\"\nRPAD('2', 4, '0')",
+                "// returns \"200000\"\nRPAD('2', 6, '0')"
             ],
             "returns": {
                 "type": "String",
@@ -3305,14 +3337,14 @@
                     "name": "callback",
                     "type": "function",
                     "description": "A transform function to use when sorting objects",
-                    "default": null,
+                    "default": "",
                     "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
                 "// returns [1,1,2,3,3]\nSORT([1, 2, 3, 3, 1])",
-                "// returns [a,a,b,b,c]\nSORT(['a', 'c', 'b', 'a', 'b'])"
+                "// returns [\"a\",\"a\",\"b\",\"b\",\"c\"]\nSORT(['a', 'c', 'b', 'a', 'b'])"
             ],
             "returns": {
                 "type": "Array",
@@ -3373,7 +3405,7 @@
             "description": "STATUS\nReturns the current record status value.",
             "parameters": [],
             "examples": [
-                "// returns approved\nSTATUS()"
+                "// returns \"approved\"\nSTATUS()"
             ],
             "returns": {
                 "type": "String",
@@ -3387,7 +3419,7 @@
             "description": "STATUSLABEL\nReturns the current record status label.",
             "parameters": [],
             "examples": [
-                "// returns Approved\nSTATUSLABEL()"
+                "// returns \"Approved\"\nSTATUSLABEL()"
             ],
             "returns": {
                 "type": "String",
@@ -3434,10 +3466,10 @@
                 }
             ],
             "examples": [
-                "// returns The record data is stored in a record database\n// replaces all occurrences\nSUBSTITUTE('The data is stored in a database', 'data', 'record data')",
-                "// returns The record data is stored in a database\n// replaces the first occurrence\nSUBSTITUTE('The data is stored in a database', 'data', 'record data', 1)",
-                "// returns The data is stored in a record database\n// replaces the 2nd occurrence\nSUBSTITUTE('The data is stored in a database', 'data', 'record data', 2)",
-                "// returns The dAtA is stored in A dAtAbAse\nSUBSTITUTE('The data is stored in a database', 'a', 'A')"
+                "// returns \"The record data is stored in a record database\"\n// replaces all occurrences\nSUBSTITUTE('The data is stored in a database', 'data', 'record data')",
+                "// returns \"The record data is stored in a database\"\n// replaces the first occurrence\nSUBSTITUTE('The data is stored in a database', 'data', 'record data', 1)",
+                "// returns \"The data is stored in a record database\"\n// replaces the 2nd occurrence\nSUBSTITUTE('The data is stored in a database', 'data', 'record data', 2)",
+                "// returns \"The dAtA is stored in A dAtAbAse\"\nSUBSTITUTE('The data is stored in a database', 'a', 'A')"
             ],
             "returns": {
                 "type": "String",
@@ -3506,7 +3538,7 @@
                 }
             ],
             "examples": [
-                "// returns Fulcrum\nT(\"Fulcrum\")"
+                "// returns \"Fulcrum\"\nT(\"Fulcrum\")"
             ],
             "returns": {
                 "type": "String",
@@ -3545,12 +3577,12 @@
                 }
             ],
             "examples": [
-                "// returns 17:00\nTIMEADD('09:00', 8)",
-                "// returns 09:00\nTIMEADD('17:00', -8)",
-                "// returns 09:00\nTIMEADD('09:00', 48)",
-                "// returns 17:30\nTIMEADD('16:00', 1.5)",
-                "// returns 17:30\nTIMEADD('16:00', 90, 'minutes')",
-                "// returns 14:30\nTIMEADD('16:00', -90, 'minutes')"
+                "// returns \"17:00\"\nTIMEADD('09:00', 8)",
+                "// returns \"09:00\"\nTIMEADD('17:00', -8)",
+                "// returns \"09:00\"\nTIMEADD('09:00', 48)",
+                "// returns \"17:30\"\nTIMEADD('16:00', 1.5)",
+                "// returns \"17:30\"\nTIMEADD('16:00', 90, 'minutes')",
+                "// returns \"14:30\"\nTIMEADD('16:00', -90, 'minutes')"
             ],
             "returns": {
                 "type": "String",
@@ -3592,7 +3624,7 @@
                 "// returns 8\nTIMEDIFF('09:00', '17:00')",
                 "// returns 120\nTIMEDIFF('09:00', '11:00', 'minutes')",
                 "// returns 23\nTIMEDIFF('02:00', '01:00')",
-                "// returns 47 minutes\n// This returns the time elapsed in the format '__ hours __ minutes'\n// (or '__ hours', '1 hour __ minutes', etc.)\n// Other tests:\n// start_time => '03:30', stop_stop => '04:30', returns '1 hour'\n// start_time => '02:15', stop_stop => '03:16', returns '1 hour 1 minute'\n// start_time => '01:00', stop_stop => '01:00', returns '24 hours'\n\nvar time = TIMEDIFF('09:22', '10:09', 'minutes');\nvar hours = FLOOR((time / 60), 1);\nvar minutes = time % 60;\n\nif ( hours < 1 && minutes < 1 ) {\n    SETRESULT('N/A');\n}\nelse if ( hours == 1 && minutes < 1 ) {\n    SETRESULT('1 hour');\n}\nelse if ( hours > 1 && minutes < 1 ) {\n    SETRESULT(hours + ' hours');\n}\nelse if ( hours < 1 && minutes == 1 ) {\n    SETRESULT('1 minute');\n}\nelse if ( hours == 1 && minutes == 1 ) {\n    SETRESULT('1 hour 1 minute');\n}\nelse if ( hours > 1 && minutes == 1 ) {\n    SETRESULT(hours + ' hours 1 minute');\n}\nelse if ( hours < 1 && minutes > 1 ) {\n    SETRESULT(minutes + ' minutes');\n}\nelse if ( hours == 1 && minutes > 1 ) {\n    SETRESULT('1 hour ' + minutes + ' minutes');\n}\nelse if ( hours > 1 && minutes > 1 ) {\n    SETRESULT(hours + ' hours ' + minutes + ' minutes');\n}\nelse {\n    SETRESULT('');\n}"
+                "// returns \"47 minutes\"\n// This returns the time elapsed in the format '__ hours __ minutes'\n// (or '__ hours', '1 hour __ minutes', etc.)\n// Other tests:\n// start_time => '03:30', stop_stop => '04:30', returns '1 hour'\n// start_time => '02:15', stop_stop => '03:16', returns '1 hour 1 minute'\n// start_time => '01:00', stop_stop => '01:00', returns '24 hours'\n\nvar time = TIMEDIFF('09:22', '10:09', 'minutes');\nvar hours = FLOOR((time / 60), 1);\nvar minutes = time % 60;\n\nif ( hours < 1 && minutes < 1 ) {\n    SETRESULT('N/A');\n}\nelse if ( hours == 1 && minutes < 1 ) {\n    SETRESULT('1 hour');\n}\nelse if ( hours > 1 && minutes < 1 ) {\n    SETRESULT(hours + ' hours');\n}\nelse if ( hours < 1 && minutes == 1 ) {\n    SETRESULT('1 minute');\n}\nelse if ( hours == 1 && minutes == 1 ) {\n    SETRESULT('1 hour 1 minute');\n}\nelse if ( hours > 1 && minutes == 1 ) {\n    SETRESULT(hours + ' hours 1 minute');\n}\nelse if ( hours < 1 && minutes > 1 ) {\n    SETRESULT(minutes + ' minutes');\n}\nelse if ( hours == 1 && minutes > 1 ) {\n    SETRESULT('1 hour ' + minutes + ' minutes');\n}\nelse if ( hours > 1 && minutes > 1 ) {\n    SETRESULT(hours + ' hours ' + minutes + ' minutes');\n}\nelse {\n    SETRESULT('');\n}"
             ],
             "returns": {
                 "type": "Number",
@@ -3606,7 +3638,7 @@
             "description": "TIMESTAMP\nReturns a formatted timestamp",
             "parameters": [],
             "examples": [
-                "// returns 1982-12-16 03:24:00\nTIMESTAMP(new Date('December 16, 1982 03:24:00'))"
+                "// returns \"1982-12-16 03:24:00\"\nTIMESTAMP(new Date('December 16, 1982 03:24:00'))"
             ],
             "returns": {
                 "type": "String",
@@ -3620,7 +3652,7 @@
             "description": "TIMEZONE\nReturns the timezone according to the current device settings",
             "parameters": [],
             "examples": [
-                "// returns America/New_York\nTIMEZONE()"
+                "// returns \"America/New_York\"\nTIMEZONE()"
             ],
             "returns": {
                 "type": "String",
@@ -3643,7 +3675,7 @@
                 }
             ],
             "examples": [
-                "// returns Fulcrum is cross-platform\nTRIM(\"  Fulcrum is cross-platform \")"
+                "// returns \"Fulcrum is cross-platform\"\nTRIM(\"  Fulcrum is cross-platform \")"
             ],
             "returns": {
                 "type": "String",
@@ -3680,13 +3712,13 @@
                 }
             ],
             "examples": [
-                "// returns string\nTYPEOF('test')",
-                "// returns number\nTYPEOF(1)",
-                "// returns boolean\nTYPEOF(true)",
-                "// returns null\nTYPEOF(null)",
-                "// returns date\nTYPEOF(new Date)",
-                "// returns object\nTYPEOF({ name: 'Test' })",
-                "// returns array\nTYPEOF([1, 2, 3])"
+                "// returns \"string\"\nTYPEOF('test')",
+                "// returns \"number\"\nTYPEOF(1)",
+                "// returns \"boolean\"\nTYPEOF(true)",
+                "// returns \"null\"\nTYPEOF(null)",
+                "// returns \"date\"\nTYPEOF(new Date)",
+                "// returns \"object\"\nTYPEOF({ name: 'Test' })",
+                "// returns \"array\"\nTYPEOF([1, 2, 3])"
             ],
             "returns": {
                 "type": "String",
@@ -3711,14 +3743,14 @@
                     "name": "callback",
                     "type": "function",
                     "description": "A transform function to use when passing objects",
-                    "default": null,
+                    "default": "",
                     "optional": true,
                     "nullable": ""
                 }
             ],
             "examples": [
                 "// returns [1,2,3]\nUNIQUE([1, 2, 3, 3, 1])",
-                "// returns [blue,red,green]\nUNIQUE(['blue', 'red', 'red', 'green', 'blue'])"
+                "// returns [\"blue\",\"red\",\"green\"]\nUNIQUE(['blue', 'red', 'red', 'green', 'blue'])"
             ],
             "returns": {
                 "type": "Array",
@@ -3741,7 +3773,7 @@
                 }
             ],
             "examples": [
-                "// returns EMPIRE STATE BUILDING\nUPPER(\"Empire State Building\")"
+                "// returns \"EMPIRE STATE BUILDING\"\nUPPER(\"Empire State Building\")"
             ],
             "returns": {
                 "type": "String",
@@ -3755,7 +3787,7 @@
             "description": "USERFULLNAME\nReturns the full name of the current user",
             "parameters": [],
             "examples": [
-                "// returns John Smith\nUSERFULLNAME()"
+                "// returns \"John Smith\"\nUSERFULLNAME()"
             ],
             "returns": {
                 "type": "String",
@@ -3778,7 +3810,7 @@
                 }
             ],
             "examples": [
-                "// returns Test Record\nVALUE('name')\n\n// identical to using $name"
+                "// returns \"Test Record\"\nVALUE('name')\n\n// identical to using $name"
             ],
             "returns": {
                 "type": "*",
@@ -3792,7 +3824,7 @@
             "description": "VERSIONINFO\nReturns version information about the app.",
             "parameters": [],
             "examples": [
-                "// returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162\nVERSIONINFO()"
+                "// returns \"Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162\"\nVERSIONINFO()"
             ],
             "returns": {
                 "type": "String",

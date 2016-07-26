@@ -129,10 +129,10 @@ function CEILING() {}
  * @param {Number} number The number of the character to look up from the current Unicode table in decimal format.
  * @returns {String}
  * @example
- * // returns A
+ * // returns "A"
  * CHAR(65)
  * @example
- * // returns Թ
+ * // returns "Թ"
  * CHAR(1337)
  */
 function CHAR() {}
@@ -146,7 +146,7 @@ function CHAR() {}
  * @param {Object} field The choice field or classification field
  * @returns {String} the selected value
  * @example
- * // returns Red
+ * // returns "Red"
  * CHOICEVALUE($choice_field)
  */
 function CHOICEVALUE() {}
@@ -160,7 +160,7 @@ function CHOICEVALUE() {}
  * @param {Object} field The choice field or classification field
  * @returns {String} the selected value
  * @example
- * // returns [Red,Green,Blue]
+ * // returns ["Red","Green","Blue"]
  * CHOICEVALUES($choice_field)
  */
 function CHOICEVALUES() {}
@@ -174,7 +174,7 @@ function CHOICEVALUES() {}
  * @param {String} text The text whose non-printable characters are to be removed.
  * @returns {String}
  * @example
- * // returns Test
+ * // returns "Test"
  * CLEAN('Test' + CHAR(31))
  */
 function CLEAN() {}
@@ -188,7 +188,7 @@ function CLEAN() {}
  * @param {...*} parameters The value to return if it exists
  * @returns {*} The first parameter that exists
  * @example
- * // returns Test
+ * // returns "Test"
  * COALESCE(null, null, 'Test', 1)
  * @example
  * // returns 1
@@ -238,13 +238,13 @@ function COMPACT() {}
  * @param {...String} var_args_values Strings to append in sequence.
  * @returns {String}
  * @example
- * // returns This is a sentence.
+ * // returns "This is a sentence."
  * CONCATENATE("This ", "is ", "a ", "sentence.")
  * @example
- * // returns 42311
+ * // returns "42311"
  * CONCATENATE(42, 31, 1)
  * @example
- * // returns Age is 42
+ * // returns "Age is 42"
  * CONCATENATE("Age ", "is ", 42)
  */
 function CONCATENATE() {}
@@ -260,13 +260,13 @@ function CONCATENATE() {}
  * @param {...String} var_args_values Strings to append in sequence.
  * @returns {String}
  * @example
- * // returns This is a sentence.
+ * // returns "This is a sentence."
  * CONCAT("This ", "is ", "a ", "sentence.")
  * @example
- * // returns 42311
+ * // returns "42311"
  * CONCAT(42, 31, 1)
  * @example
- * // returns Age is 42
+ * // returns "Age is 42"
  * CONCAT("Age ", "is ", 42)
  */
 function CONCAT() {}
@@ -380,7 +380,7 @@ function COUNTBLANK() {}
  * Returns the current country according to the device locale settings
  * @returns {String} The country code of the current locale
  * @example
- * // returns US
+ * // returns "US"
  * COUNTRY()
  */
 function COUNTRY() {}
@@ -393,7 +393,7 @@ function COUNTRY() {}
  * Returns the currency code for the current device locale
  * @returns {String} the ISO 4217 currency code according to the current device settings
  * @example
- * // returns USD
+ * // returns "USD"
  * CURRENCYCODE()
  */
 function CURRENCYCODE() {}
@@ -406,7 +406,7 @@ function CURRENCYCODE() {}
  * Returns the currency symbol for the current device locale
  * @returns {String} the currency symbol
  * @example
- * // returns $
+ * // returns "$"
  * CURRENCYSYMBOL()
  */
 function CURRENCYSYMBOL() {}
@@ -420,10 +420,10 @@ function CURRENCYSYMBOL() {}
  * @param {String} [type=null] Optional field type
  * @returns {Array}
  * @example
- * // returns [name,items,cost]
+ * // returns ["name","items","cost"]
  * DATANAMES()
  * @example
- * // returns [items]
+ * // returns ["items"]
  * DATANAMES('Repeatable')
  */
 function DATANAMES() {}
@@ -498,7 +498,7 @@ function DAY() {}
  * Returns the current decimal separator given the current device locale
  * @returns {String} the current decimal separator
  * @example
- * // returns .
+ * // returns "."
  * DECIMALSEPARATOR()
  */
 function DECIMALSEPARATOR() {}
@@ -526,7 +526,7 @@ function DEGREES() {}
  * @param {String} field the Data Name of the field
  * @returns {*} the field description
  * @example
- * // returns Enter the name
+ * // returns "Enter the name"
  * DESCRIPTION('name')
  */
 function DESCRIPTION() {}
@@ -543,14 +543,14 @@ function DESCRIPTION() {}
  * @param {String} [language=locale default] the language locale used to format the currency. (e.g. en-US, pt-BR, or en-GB)
  * @returns {String} formatted currency
  * @example
- * // returns $1,234.57
+ * // returns "$1,234.57"
  * DOLLAR(1234.567)
  * @example
- * // returns 1 234,57 $US
+ * // returns "1 234,57 $US"
  * // USD formatted in French
  * DOLLAR(1234.567, 2, 'USD', 'fr-FR')
  * @example
- * // returns €1.234,57
+ * // returns "€1.234,57"
  * // Euro formatted in Portuguese
  * DOLLAR(1234.567, 2, 'EUR', 'pt-BR')
  */
@@ -564,7 +564,7 @@ function DOLLAR() {}
  * Returns the email address of the current user
  * @returns {String}
  * @example
- * // returns test@example.com
+ * // returns "test@example.com"
  * EMAIL()
  */
 function EMAIL() {}
@@ -691,10 +691,10 @@ function FALSE() {}
  * @param {String} dataName The data name of the field
  * @returns {String}
  * @example
- * // returns Repeatable
+ * // returns "Repeatable"
  * FIELDTYPE('items')
  * @example
- * // returns TextField
+ * // returns "TextField"
  * FIELDTYPE('name')
  */
 function FIELDTYPE() {}
@@ -728,13 +728,13 @@ function FIND() {}
  * // returns 1
  * FIRST([1, 2, 3])
  * @example
- * // returns [a,b]
+ * // returns ["a","b"]
  * FIRST(['a', 'b', 'c'], 2)
  * @example
- * // returns a
+ * // returns "a"
  * FIRST('abc')
  * @example
- * // returns [a,b]
+ * // returns ["a","b"]
  * FIRST('abc', 2)
  */
 function FIRST() {}
@@ -750,10 +750,10 @@ function FIRST() {}
  * @param {Boolean} value Whether or not to suppress the thousands separator.
  * @returns {String}
  * @example
- * // returns 3000.14
+ * // returns "3000.14"
  * FIXED(3000.141592, 2, true)
  * @example
- * // returns 6,276.222
+ * // returns "6,276.222"
  * FIXED(6276.22241, 3, false)
  */
 function FIXED() {}
@@ -803,10 +803,10 @@ function FLOOR() {}
  * @param {...*} var_args_values Value(s) to substitute into the format string
  * @returns {String} formatted string
  * @example
- * // returns The pole height is 20 meters and has 3 issues detected.
+ * // returns "The pole height is 20 meters and has 3 issues detected."
  * FORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)
  * @example
- * // returns 11/11/2015 12:30:30
+ * // returns "11/11/2015 12:30:30"
  * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
  */
 function FORMAT() {}
@@ -821,13 +821,13 @@ function FORMAT() {}
  * @param {String} [language=locale default] the BCP 47 language identifier to use when formatting the number. e.g. `en-US`, `fr-FR`, `en-AU` or `pt-BR`
  * @returns {String} formatted number as text
  * @example
- * // returns 1,234.568
+ * // returns "1,234.568"
  * FORMATNUMBER(1234.56789999)
  * @example
- * // returns 1 234,568
+ * // returns "1 234,568"
  * FORMATNUMBER(1234.56789999, 'fr-FR')
  * @example
- * // returns 1.234,568
+ * // returns "1.234,568"
  * FORMATNUMBER(1234.56789999, 'pt-BR')
  */
 function FORMATNUMBER() {}
@@ -889,7 +889,7 @@ function GROUP() {}
  * Returns the currency thousands separator for the current device locale
  * @returns {String}
  * @example
- * // returns ,
+ * // returns ","
  * GROUPINGSEPARATOR()
  */
 function GROUPINGSEPARATOR() {}
@@ -932,10 +932,10 @@ function HASOTHER() {}
  * @param {*} value_if_false The value to return if the expression is false
  * @returns {*}
  * @example
- * // returns 1 is less than 3
+ * // returns "1 is less than 3"
  * IF(1 > 3, '1 is greater than 3', '1 is less than 3')
  * @example
- * // returns Red is selected
+ * // returns "Red is selected"
  * IF(ISSELECTED($choice_field, 'Red'), 'Red is selected', 'Red is not selected')
  */
 function IF() {}
@@ -964,7 +964,7 @@ function IFERROR() {}
  * @param {Number} value The value to inspect
  * @returns {String}
  * @example
- * // returns [ 1, 2, 3 ]
+ * // returns "[ 1, 2, 3 ]"
  * INSPECT([1, 2, 3])
  */
 function INSPECT() {}
@@ -1195,7 +1195,7 @@ function ISTEXT() {}
  * @param {String} field the Data Name of the field
  * @returns {*} the label of the field
  * @example
- * // returns Name
+ * // returns "Name"
  * LABEL('name')
  */
 function LABEL() {}
@@ -1208,7 +1208,7 @@ function LABEL() {}
  * Returns the language code for the current device locale
  * @returns {String} the BCP 47 language code
  * @example
- * // returns en-US
+ * // returns "en-US"
  * LANGUAGE()
  */
 function LANGUAGE() {}
@@ -1226,13 +1226,13 @@ function LANGUAGE() {}
  * // returns 3
  * LAST([1, 2, 3])
  * @example
- * // returns [b,c]
+ * // returns ["b","c"]
  * LAST(['a', 'b', 'c'], 2)
  * @example
- * // returns c
+ * // returns "c"
  * LAST('abc')
  * @example
- * // returns [b,c]
+ * // returns ["b","c"]
  * LAST('abc', 2)
  */
 function LAST() {}
@@ -1277,10 +1277,10 @@ function LCM() {}
  * @param {Number} [number_of_characters=1] The number of characters to return from the left side of the string.
  * @returns {String}
  * @example
- * // returns Ful
+ * // returns "Ful"
  * LEFT("Fulcrum", 3)
  * @example
- * // returns F
+ * // returns "F"
  * LEFT("Fulcrum")
  */
 function LEFT() {}
@@ -1324,7 +1324,7 @@ function LN() {}
  * Returns the current locale code
  * @returns {String} the current locale
  * @example
- * // returns en_US
+ * // returns "en_US"
  * LOCALE()
  */
 function LOCALE() {}
@@ -1386,7 +1386,7 @@ function LONGITUDE() {}
  * @param {String} value The string to convert to lowercase.
  * @returns {String}
  * @example
- * // returns empire state building
+ * // returns "empire state building"
  * LOWER("Empire State Building")
  */
 function LOWER() {}
@@ -1402,10 +1402,10 @@ function LOWER() {}
  * @param {String} [character=' '] The character to use for padding
  * @returns {String}
  * @example
- * // returns 0002
+ * // returns "0002"
  * LPAD('2', 4, '0')
  * @example
- * // returns 000002
+ * // returns "000002"
  * LPAD('2', 6, '0')
  */
 function LPAD() {}
@@ -1466,7 +1466,7 @@ function MEDIAN() {}
  * @param {Number} number_of_characters Number of characters to extract.
  * @returns {String}
  * @example
- * // returns iOS
+ * // returns "iOS"
  * MID("Fulcrum for iOS", 13, 3)
  */
 function MID() {}
@@ -1597,7 +1597,7 @@ function NUM() {}
  * // returns [1,2,3]
  * NUMS('1' ,'2', '3')
  * @example
- * // returns [1,2,NaN]
+ * // returns [1,2,null]
  * NUMS('1' ,'2', 'a')
  */
 function NUMS() {}
@@ -1625,7 +1625,7 @@ function ODD() {}
  * @param {Number} value argument
  * @returns {Number}
  * @example
- * // returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162
+ * // returns "Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162"
  * ONCE(VERSIONINFO())
  */
 function ONCE() {}
@@ -1755,7 +1755,7 @@ function PRODUCT() {}
  * Returns the project ID of the record
  * @returns {String}
  * @example
- * // returns 88eb3511-13d8-4666-b188-8108019d0984
+ * // returns "88eb3511-13d8-4666-b188-8108019d0984"
  * PROJECTID()
  */
 function PROJECTID() {}
@@ -1768,7 +1768,7 @@ function PROJECTID() {}
  * Returns the project name of the record
  * @returns {String}
  * @example
- * // returns Project X
+ * // returns "Project X"
  * PROJECTNAME()
  */
 function PROJECTNAME() {}
@@ -1782,7 +1782,7 @@ function PROJECTNAME() {}
  * @param {String} value String to capitalize words within.
  * @returns {String}
  * @example
- * // returns Fulcrum Mobile Data Collection
+ * // returns "Fulcrum Mobile Data Collection"
  * PROPER("fulcrum mobile data collection")
  */
 function PROPER() {}
@@ -1858,7 +1858,7 @@ function RANDBETWEEN() {}
  * Returns the ID of the current record. This function will always return the top level record ID even when used inside a repeatable. To get the repeatable item ID, use the `REPEATABLEID` function.
  * @returns {String} The ID of the current record
  * @example
- * // returns 96eb35f5-13d8-4666-b188-8108019d0984
+ * // returns "96eb35f5-13d8-4666-b188-8108019d0984"
  * RECORDID()
  */
 function RECORDID() {}
@@ -1871,7 +1871,7 @@ function RECORDID() {}
  * Returns the ID of the current repeatable item.
  * @returns {String} The ID of the current repeatable item
  * @example
- * // returns 859fdb06-4e7d-4bed-b1d2-af168db71522
+ * // returns "859fdb06-4e7d-4bed-b1d2-af168db71522"
  * REPEATABLEID()
  */
 function REPEATABLEID() {}
@@ -1931,7 +1931,7 @@ function REPEATABLESUM() {}
  * @param {String} replacement String to replace `num_characters` with.
  * @returns {String}
  * @example
- * // returns Data collection inspection
+ * // returns "Data collection inspection"
  * // replaces 'survey' with 'inspection'
  * REPLACE("Data collection survey", 17, 6, "inspection")
  */
@@ -1947,10 +1947,10 @@ function REPLACE() {}
  * @param {Number} [number_of_characters=1] The number of characters to return from the right side of the string.
  * @returns {String}
  * @example
- * // returns DEFG
+ * // returns "DEFG"
  * RIGHT("ABCDEFG", 4)
  * @example
- * // returns 1
+ * // returns "1"
  * RIGHT("000001")
  */
 function RIGHT() {}
@@ -1963,7 +1963,7 @@ function RIGHT() {}
  * Returns the role name of the current user
  * @returns {String}
  * @example
- * // returns Owner
+ * // returns "Owner"
  * ROLE()
  */
 function ROLE() {}
@@ -2033,10 +2033,10 @@ function ROUNDUP() {}
  * @param {String} [character=' '] The character to use for padding
  * @returns {String}
  * @example
- * // returns 2000
+ * // returns "2000"
  * RPAD('2', 4, '0')
  * @example
- * // returns 200000
+ * // returns "200000"
  * RPAD('2', 6, '0')
  */
 function RPAD() {}
@@ -2152,13 +2152,13 @@ function SINH() {}
  * SORT
  * Returns the sorted values within an array
  * @param {Array} values The values to sort
- * @param {Function} [callback=null] A transform function to use when sorting objects
+ * @param {Function} [callback] A transform function to use when sorting objects
  * @returns {Array}
  * @example
  * // returns [1,1,2,3,3]
  * SORT([1, 2, 3, 3, 1])
  * @example
- * // returns [a,a,b,b,c]
+ * // returns ["a","a","b","b","c"]
  * SORT(['a', 'c', 'b', 'a', 'b'])
  */
 function SORT() {}
@@ -2202,7 +2202,7 @@ function SQRTPI() {}
  * Returns the current record status value.
  * @returns {String}
  * @example
- * // returns approved
+ * // returns "approved"
  * STATUS()
  */
 function STATUS() {}
@@ -2215,7 +2215,7 @@ function STATUS() {}
  * Returns the current record status label.
  * @returns {String}
  * @example
- * // returns Approved
+ * // returns "Approved"
  * STATUSLABEL()
  */
 function STATUSLABEL() {}
@@ -2232,19 +2232,19 @@ function STATUSLABEL() {}
  * @param {String} occurrence The instance of the search text to replace (e.g. 4 will only replace the 4th instance)
  * @returns {String} the new text string
  * @example
- * // returns The record data is stored in a record database
+ * // returns "The record data is stored in a record database"
  * // replaces all occurrences
  * SUBSTITUTE('The data is stored in a database', 'data', 'record data')
  * @example
- * // returns The record data is stored in a database
+ * // returns "The record data is stored in a database"
  * // replaces the first occurrence
  * SUBSTITUTE('The data is stored in a database', 'data', 'record data', 1)
  * @example
- * // returns The data is stored in a record database
+ * // returns "The data is stored in a record database"
  * // replaces the 2nd occurrence
  * SUBSTITUTE('The data is stored in a database', 'data', 'record data', 2)
  * @example
- * // returns The dAtA is stored in A dAtAbAse
+ * // returns "The dAtA is stored in A dAtAbAse"
  * SUBSTITUTE('The data is stored in a database', 'a', 'A')
  */
 function SUBSTITUTE() {}
@@ -2286,7 +2286,7 @@ function SUMSQ() {}
  * @param {String} value The string to convert to text.
  * @returns {String}
  * @example
- * // returns Fulcrum
+ * // returns "Fulcrum"
  * T("Fulcrum")
  */
 function T() {}
@@ -2302,22 +2302,22 @@ function T() {}
  * @param {String} [format='hours'] The format of the amount. Either `hours` (default) or `minutes`.
  * @returns {String} the new time value
  * @example
- * // returns 17:00
+ * // returns "17:00"
  * TIMEADD('09:00', 8)
  * @example
- * // returns 09:00
+ * // returns "09:00"
  * TIMEADD('17:00', -8)
  * @example
- * // returns 09:00
+ * // returns "09:00"
  * TIMEADD('09:00', 48)
  * @example
- * // returns 17:30
+ * // returns "17:30"
  * TIMEADD('16:00', 1.5)
  * @example
- * // returns 17:30
+ * // returns "17:30"
  * TIMEADD('16:00', 90, 'minutes')
  * @example
- * // returns 14:30
+ * // returns "14:30"
  * TIMEADD('16:00', -90, 'minutes')
  */
 function TIMEADD() {}
@@ -2342,7 +2342,7 @@ function TIMEADD() {}
  * // returns 23
  * TIMEDIFF('02:00', '01:00')
  * @example
- * // returns 47 minutes
+ * // returns "47 minutes"
  * // This returns the time elapsed in the format '__ hours __ minutes'
  * // (or '__ hours', '1 hour __ minutes', etc.)
  * // Other tests:
@@ -2395,7 +2395,7 @@ function TIMEDIFF() {}
  * Returns a formatted timestamp
  * @returns {String}
  * @example
- * // returns 1982-12-16 03:24:00
+ * // returns "1982-12-16 03:24:00"
  * TIMESTAMP(new Date('December 16, 1982 03:24:00'))
  */
 function TIMESTAMP() {}
@@ -2408,7 +2408,7 @@ function TIMESTAMP() {}
  * Returns the timezone according to the current device settings
  * @returns {String}
  * @example
- * // returns America/New_York
+ * // returns "America/New_York"
  * TIMEZONE()
  */
 function TIMEZONE() {}
@@ -2422,7 +2422,7 @@ function TIMEZONE() {}
  * @param {String} value argument
  * @returns {String}
  * @example
- * // returns Fulcrum is cross-platform
+ * // returns "Fulcrum is cross-platform"
  * TRIM("  Fulcrum is cross-platform ")
  */
 function TRIM() {}
@@ -2449,25 +2449,25 @@ function TRUE() {}
  * @param {*} value A value to get the type of
  * @returns {String} The type of the value
  * @example
- * // returns string
+ * // returns "string"
  * TYPEOF('test')
  * @example
- * // returns number
+ * // returns "number"
  * TYPEOF(1)
  * @example
- * // returns boolean
+ * // returns "boolean"
  * TYPEOF(true)
  * @example
- * // returns null
+ * // returns "null"
  * TYPEOF(null)
  * @example
- * // returns date
+ * // returns "date"
  * TYPEOF(new Date)
  * @example
- * // returns object
+ * // returns "object"
  * TYPEOF({ name: 'Test' })
  * @example
- * // returns array
+ * // returns "array"
  * TYPEOF([1, 2, 3])
  */
 function TYPEOF() {}
@@ -2479,13 +2479,13 @@ function TYPEOF() {}
  * UNIQUE
  * Returns the unique values within an array
  * @param {Array} values The values to unique
- * @param {Function} [callback=null] A transform function to use when passing objects
+ * @param {Function} [callback] A transform function to use when passing objects
  * @returns {Array}
  * @example
  * // returns [1,2,3]
  * UNIQUE([1, 2, 3, 3, 1])
  * @example
- * // returns [blue,red,green]
+ * // returns ["blue","red","green"]
  * UNIQUE(['blue', 'red', 'red', 'green', 'blue'])
  */
 function UNIQUE() {}
@@ -2499,7 +2499,7 @@ function UNIQUE() {}
  * @param {String} value The string to convert to uppercase.
  * @returns {String}
  * @example
- * // returns EMPIRE STATE BUILDING
+ * // returns "EMPIRE STATE BUILDING"
  * UPPER("Empire State Building")
  */
 function UPPER() {}
@@ -2512,7 +2512,7 @@ function UPPER() {}
  * Returns the full name of the current user
  * @returns {String}
  * @example
- * // returns John Smith
+ * // returns "John Smith"
  * USERFULLNAME()
  */
 function USERFULLNAME() {}
@@ -2526,7 +2526,7 @@ function USERFULLNAME() {}
  * @param {String} field the Data Name of the field
  * @returns {*} the current field value
  * @example
- * // returns Test Record
+ * // returns "Test Record"
  * VALUE('name')
  *
  * // identical to using $name
@@ -2541,7 +2541,7 @@ function VALUE() {}
  * Returns version information about the app.
  * @returns {String}
  * @example
- * // returns Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162
+ * // returns "Apple iPhone6,2, iOS 8.1, Fulcrum 2.7.0 2162"
  * VERSIONINFO()
  */
 function VERSIONINFO() {}

@@ -55,10 +55,13 @@ describe 'Documentation', ->
         (-> eval(example)).should.not.throw
 
         result = eval(example)
+        actual = JSON.stringify(result)
 
-        stringValue = switch true
-          when _.isArray(result) then "[" + _.map(result, (v) -> '' + v).join(',') + "]"
-          when _.isDate(result) then Utils.formatMachineDate(result)
-          else '' + result
+        if _.isUndefined(result)
+          actual = 'undefined'
+        else if _.isNaN(result)
+          actual = 'NaN'
+        else if _.isDate(result)
+          actual = Utils.formatMachineDate(result)
 
-        stringValue.should.eql(returnValue)
+        actual.should.eql(returnValue)
