@@ -475,6 +475,16 @@ describe 'GCD', ->
     GCD([]).should.be.NaN
     GCD(true).should.be.NaN
 
+describe 'GROUP', ->
+  it 'returns the grouped values from the parameters', ->
+    GROUP(1, 2, 3).should.be.eql({1: [1], 2: [2], 3: [3]})
+    GROUP(3, 2, 1, 3, 3, 3).should.be.eql({1: [1], 2: [2], 3: [3, 3, 3, 3]})
+    GROUP([3, 2, 1, 3, 3, 3]).should.be.eql({1: [1], 2: [2], 3: [3, 3, 3, 3]})
+    GROUP(1, 2, 'a').should.be.eql({1: [1], 2: [2], a: ['a']})
+    GROUP(1, 2, 'a', 'a').should.be.eql({1: [1], 2: [2], a: ['a', 'a']})
+    GROUP('a', 'c', 'c', 'b', 'a').should.be.eql({a: ['a', 'a'], b: ['b'], c: ['c', 'c']})
+    GROUP(1).should.be.eql({1: [1]})
+
 describe 'IF', ->
   it 'evaluates a condition', ->
     IF(1 > 0, 10, 20).should.be.exactly(10)

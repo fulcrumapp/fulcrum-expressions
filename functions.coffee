@@ -602,6 +602,20 @@ exports.REQUEST = (options, callback) ->
 
   HostFunctions.httpRequest(JSON.stringify(options), callback)
 
+exports.GROUP = ->
+  args = ARRAY(toArray(arguments))
+
+  return NO_VALUE if args.length is 0
+
+  callback = null
+  values = args
+
+  if _.isFunction(_.last(args))
+    callback = _.last(args)
+    values = _.first(args, args.length - 1)
+
+  _.groupBy(values, callback)
+
 exports.GROUPINGSEPARATOR = ->
   Config.groupingSeparator or Defaults.groupingSeparator
 

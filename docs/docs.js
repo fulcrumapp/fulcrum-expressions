@@ -864,6 +864,24 @@ function GCD() {}
 function GETRESULT() {}
 
 
+////GROUP
+
+/**
+ * GROUP
+ * Returns the sorted values within an array
+ * @param {Array} values The values to sort
+ * @param {Function} [callback] A transform function to use when sorting objects
+ * @returns {Array}
+ * @example
+ * // returns {"red":["red"],"green":["green","green"],"blue":["blue"]}
+ * GROUP(['red', 'green', 'green', 'blue'])
+ * @example
+ * // returns {"1":[1,1,1],"2":[2],"3":[3]}
+ * GROUP([1, 1, 1, 2, 3])
+ */
+function GROUP() {}
+
+
 ////GROUPINGSEPARATOR
 
 /**
