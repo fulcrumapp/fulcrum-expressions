@@ -1733,6 +1733,20 @@ exports.TYPEOF = (value) ->
     else
       'unknown'
 
+exports.UNIQUE = ->
+  args = ARRAY(toArray(arguments))
+
+  return NO_VALUE if args.length is 0
+
+  callback = null
+  values = args
+
+  if _.isFunction(_.last(args))
+    callback = _.last(args)
+    values = _.first(args, args.length - 1)
+
+  _.uniq(values, false, callback)
+
 exports.UPPER = (value) ->
   return NO_VALUE unless value?
   return NO_VALUE if _.isArray(value)

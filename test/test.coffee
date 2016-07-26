@@ -1620,6 +1620,19 @@ describe 'TIMEADD', ->
     TIMEADD('16:00', -30, 'minutes').should.be.exactly('15:30')
     TIMEADD('16:00', -100, 'minutes').should.be.exactly('14:20')
 
+describe 'UNIQUE', ->
+  it 'returns the unique values of the parameters', ->
+    UNIQUE(1, 2, 3).should.be.eql([1, 2, 3])
+    UNIQUE(1, 2, 3, 3, 3).should.be.eql([1, 2, 3])
+    UNIQUE(1, 2, 'a').should.be.eql([1, 2, 'a'])
+    UNIQUE(1, 2, 'a', 'a').should.be.eql([1, 2, 'a'])
+    UNIQUE('c', 'c', 'b', 'a').should.be.eql(['c', 'b', 'a'])
+    UNIQUE(1).should.be.eql([1])
+    UNIQUE(1, 1.5, 3.75).should.be.eql([1, 1.5, 3.75])
+    UNIQUE(1, [1.5, 3.75]).should.be.eql([1, 1.5, 3.75])
+    UNIQUE({test: 1}, {test: 1}, {test: 2}, (a) -> a.test).should.be.eql([{test: 1}, {test: 2}])
+    UNIQUE([{test: 1}, {test: 1}, {test: 2}], (a) -> a.test).should.be.eql([{test: 1}, {test: 2}])
+
 describe 'USERFULLNAME', ->
   it 'returns the user full name', ->
     USERFULLNAME().should.eql 'John Smith'

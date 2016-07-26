@@ -2437,6 +2437,24 @@ function TRUE() {}
 function TYPEOF() {}
 
 
+////UNIQUE
+
+/**
+ * UNIQUE
+ * Returns the unique values within an array
+ * @param {Array} values The values to unique
+ * @param {Function} [callback=null] A transform function to use when passing objects
+ * @returns {Array}
+ * @example
+ * // returns [1,2,3]
+ * UNIQUE([1, 2, 3, 3, 1])
+ * @example
+ * // returns [blue,red,green]
+ * UNIQUE(['blue', 'red', 'red', 'green', 'blue'])
+ */
+function UNIQUE() {}
+
+
 ////UPPER
 
 /**

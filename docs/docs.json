@@ -3662,6 +3662,38 @@
             }
         },
         {
+            "name": "UNIQUE",
+            "access": "",
+            "virtual": false,
+            "description": "UNIQUE\nReturns the unique values within an array",
+            "parameters": [
+                {
+                    "name": "values",
+                    "type": "Array",
+                    "description": "The values to unique",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "A transform function to use when passing objects",
+                    "default": null,
+                    "optional": true,
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [1,2,3]\nUNIQUE([1, 2, 3, 3, 1])",
+                "// returns [blue,red,green]\nUNIQUE(['blue', 'red', 'red', 'green', 'blue'])"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "UPPER",
             "access": "",
             "virtual": false,
