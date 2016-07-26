@@ -587,6 +587,8 @@ exports.REQUEST = (options, callback) ->
 
     options.url += queryString
 
+    delete options.qs
+
   if options.json?
     options.headers['Content-Type'] = 'application/json'
 
