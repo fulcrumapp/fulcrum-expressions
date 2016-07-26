@@ -1582,6 +1582,19 @@ describe 'RPAD', ->
     RPAD('1', 2, '0').should.be.exactly('10')
     RPAD('1', 4, '0').should.be.exactly('1000')
 
+describe 'SORT', ->
+  it 'returns the sorted values from the parameters', ->
+    SORT(1, 2, 3).should.be.eql([1, 2, 3])
+    SORT(3, 2, 1, 3, 3, 3).should.be.eql([1, 2, 3, 3, 3, 3])
+    SORT(1, 2, 'a').should.be.eql([1, 2, 'a'])
+    SORT(1, 2, 'a', 'a').should.be.eql([1, 2, 'a', 'a'])
+    SORT('a', 'c', 'c', 'b', 'a').should.be.eql(['a', 'a', 'b', 'c', 'c'])
+    SORT(1).should.be.eql([1])
+    SORT(1, 1.5, 3.75).should.be.eql([1, 1.5, 3.75])
+    SORT(1, [1.5, 3.75]).should.be.eql([1, 1.5, 3.75])
+    SORT({test: 2}, {test: 1}, {test: 1}, (a, b) -> a.test).should.be.eql([{test: 1}, {test: 1}, {test: 2}])
+    SORT([{test: 2}, {test: 1}, {test: 1}], (a, b) -> a.test).should.be.eql([{test: 1}, {test: 1}, {test: 2}])
+
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
     TIMEDIFF('00:00', '00:01').should.be.exactly(1 / 60)

@@ -1495,6 +1495,20 @@ exports.SINH = (number) ->
 
   (exp - 1 / exp) / 2
 
+exports.SORT = ->
+  args = ARRAY(toArray(arguments))
+
+  return NO_VALUE if args.length is 0
+
+  callback = null
+  values = args
+
+  if _.isFunction(_.last(args))
+    callback = _.last(args)
+    values = _.first(args, args.length - 1)
+
+  _.sortBy(values, callback)
+
 exports.SQRT = MATH_FUNC(Math.sqrt)
 
 exports.SQRTPI = (number) ->

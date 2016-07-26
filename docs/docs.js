@@ -2128,6 +2128,24 @@ function SIN() {}
 function SINH() {}
 
 
+////SORT
+
+/**
+ * SORT
+ * Returns the sorted values within an array
+ * @param {Array} values The values to sort
+ * @param {Function} [callback=null] A transform function to use when sorting objects
+ * @returns {Array}
+ * @example
+ * // returns [1,1,2,3,3]
+ * SORT([1, 2, 3, 3, 1])
+ * @example
+ * // returns [a,a,b,b,c]
+ * SORT(['a', 'c', 'b', 'a', 'b'])
+ */
+function SORT() {}
+
+
 ////SQRT
 
 /**
