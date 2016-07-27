@@ -311,7 +311,7 @@ function REQUEST() {}
  * SETASSIGNMENT
  * Set the user assignment of a record
  *
- * *NOTE* This function only works within the web record editor
+ * *NOTE* This function currently only works within the web record editor. However, scripts should be prepared to handle it working on mobile in the future.
  * @param {String} userEmail The email address of the user, or `null` to unset it
  * @example
  * // Sets the user assignment
