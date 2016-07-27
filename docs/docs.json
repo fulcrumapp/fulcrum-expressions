@@ -2545,6 +2545,20 @@
             }
         },
         {
+            "name": "PLATFORM",
+            "access": "",
+            "virtual": false,
+            "description": "PLATFORM\nReturns the current platform. Currently one of: `iOS`, `Android`, or `Web`.",
+            "parameters": [],
+            "examples": [
+                "// returns \"Web\"\nPLATFORM()"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "PLUCK",
             "access": "",
             "virtual": false,

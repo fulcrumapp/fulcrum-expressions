@@ -1675,6 +1675,19 @@ function OTHER() {}
 function PI() {}
 
 
+////PLATFORM
+
+/**
+ * PLATFORM
+ * Returns the current platform. Currently one of: `iOS`, `Android`, or `Web`.
+ * @returns {String}
+ * @example
+ * // returns "iOS"
+ * PLATFORM()
+ */
+function PLATFORM() {}
+
+
 ////PLUCK
 
 /**
