@@ -417,7 +417,7 @@ function CURRENCYSYMBOL() {}
 /**
  * DATANAMES
  * Returns the data names of the form fields
- * @param {String} [type=null] Optional field type
+ * @param {String} [type=any] Optional field type
  * @returns {Array}
  * @example
  * // returns ["name","items","cost"]

@@ -289,7 +289,7 @@
             "name": "SETASSIGNMENT",
             "access": "",
             "virtual": false,
-            "description": "SETASSIGNMENT\nSet the user assignment of a record\n\n*NOTE* This function only works within the web record editor",
+            "description": "SETASSIGNMENT\nSet the user assignment of a record\n\n*NOTE* This function currently only works within the web record editor. However, scripts should be prepared to handle it working on mobile in the future.",
             "parameters": [
                 {
                     "name": "userEmail",

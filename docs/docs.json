@@ -604,7 +604,7 @@
                     "name": "type",
                     "type": "String",
                     "description": "Optional field type",
-                    "default": null,
+                    "default": "any",
                     "optional": true,
                     "nullable": ""
                 }
@@ -2551,7 +2551,7 @@
             "description": "PLATFORM\nReturns the current platform. Currently one of: `iOS`, `Android`, or `Web`.",
             "parameters": [],
             "examples": [
-                "// returns \"Web\"\nPLATFORM()"
+                "// returns \"iOS\"\nPLATFORM()"
             ],
             "returns": {
                 "type": "String",
