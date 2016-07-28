@@ -487,6 +487,9 @@ exports.FLOOR = (number, significance) ->
   else
     -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
 
+exports.FORM = ->
+  $$runtime.form
+
 exports.FORMAT = ->
   format.apply(null, arguments)
 
