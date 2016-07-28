@@ -289,7 +289,7 @@
             "name": "SETASSIGNMENT",
             "access": "",
             "virtual": false,
-            "description": "SETASSIGNMENT\nSet the user assignment of a record\n\n*NOTE* This function only works within the web record editor",
+            "description": "SETASSIGNMENT\nSet the user assignment of a record\n\n*NOTE* This function currently only works within the web record editor. However, scripts should be prepared to handle it working on mobile in the future.",
             "parameters": [
                 {
                     "name": "userEmail",
@@ -680,6 +680,50 @@
             ],
             "examples": [
                 "// Sets the status of a record\nSETSTATUS('inspection_pending')"
+            ]
+        },
+        {
+            "name": "SETSTATUSHIDDEN",
+            "access": "",
+            "virtual": false,
+            "description": "SETSTATUSHIDDEN\nSet the visibility of the status field.",
+            "parameters": [
+                {
+                    "name": "hidden",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be hidden, or `null` to restore the original value",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETSTATUSHIDDEN(true)\n\n// Sets the status field to be hidden"
+            ]
+        },
+        {
+            "name": "SETSTATUSREADONLY",
+            "access": "",
+            "virtual": false,
+            "description": "SETSTATUSREADONLY\nSets the status field to be read-only or editable.",
+            "parameters": [
+                {
+                    "name": "readOnly",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "description": "Boolean value representing whether the field should be read-only, or `null` to restore the original state",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "SETSTATUSREADONLY(true)\n\n// Sets the status field to read only, not editable by the user"
             ]
         },
         {

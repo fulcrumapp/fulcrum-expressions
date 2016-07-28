@@ -311,7 +311,7 @@ function REQUEST() {}
  * SETASSIGNMENT
  * Set the user assignment of a record
  *
- * *NOTE* This function only works within the web record editor
+ * *NOTE* This function currently only works within the web record editor. However, scripts should be prepared to handle it working on mobile in the future.
  * @param {String} userEmail The email address of the user, or `null` to unset it
  * @example
  * // Sets the user assignment
@@ -588,6 +588,34 @@ function SETREQUIRED() {}
  * SETSTATUS('inspection_pending')
  */
 function SETSTATUS() {}
+
+
+////SETSTATUSHIDDEN
+
+/**
+ * SETSTATUSHIDDEN
+ * Set the visibility of the status field.
+ * @param {boolean|null} hidden Boolean value representing whether the field should be hidden, or `null` to restore the original value
+ * @example
+ * SETSTATUSHIDDEN(true)
+ *
+ * // Sets the status field to be hidden
+ */
+function SETSTATUSHIDDEN() {}
+
+
+////SETSTATUSREADONLY
+
+/**
+ * SETSTATUSREADONLY
+ * Sets the status field to be read-only or editable.
+ * @param {boolean|null} readOnly Boolean value representing whether the field should be read-only, or `null` to restore the original state
+ * @example
+ * SETSTATUSREADONLY(true)
+ *
+ * // Sets the status field to read only, not editable by the user
+ */
+function SETSTATUSREADONLY() {}
 
 
 ////SETSTATUSFILTER

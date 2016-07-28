@@ -185,19 +185,26 @@ class Runtime
 
     return
 
+  hookName: (name) ->
+    return null unless name?
+
+    'hook_' + name
+
   hooksByName: (name) ->
-    @events[name] ?= []
+    @events[@hookName(name)] ?= []
 
   hooksByParams: (name, param) ->
-    @hooksByName(name)[param] ?= []
+    @hooksByName(name)[@hookName(param)] ?= []
 
   removeHook: (name, param, callback) ->
+    param = @hookName(param) if param?
+
     if param? and callback?
       @hooksByName(name)[param] = _.without(@hooksByName(name)[param], callback)
     else if param?
       delete @hooksByName(name)[param]
     else
-      @events[name] = []
+      @events[@hookName(name)] = []
 
   addHook: (name, param, callback) ->
     @hooksByParams(name, param).push(callback)

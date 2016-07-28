@@ -76,9 +76,13 @@ exports.APPLICATIONINFO = (separator=', ') ->
 exports.APPLICATIONVERSION = ->
   Config.applicationVersion ? ''
 
+exports.ARRAY = ->
+  FLATTEN(toArray(arguments))
+
 exports.AVERAGE = ->
-  args = toArray(arguments)
+  args = ARRAY(toArray(arguments))
   return NaN if args.length is 0
+
   _.inject(args, ((memo, arg) -> memo + +arg), 0) / args.length
 
 exports.CEILING = (number, significance = 1) ->
@@ -143,7 +147,7 @@ exports.COMPACT = (value) ->
   _.filter value, (item) -> item?
 
 exports.CONCATENATE = ->
-  strings = _.map toArray(arguments), (arg) ->
+  strings = _.map ARRAY(toArray(arguments)), (arg) ->
     switch true
       when _.isString(arg)
         arg
@@ -194,14 +198,10 @@ exports.COUNT = (value) ->
   numbers.length
 
 exports.COUNTA = (value) ->
-  return NO_VALUE unless _.isArray(value)
-
-  value.length
+  ARRAY(toArray(arguments)).length
 
 exports.COUNTBLANK = (value) ->
-  return NaN unless _.isArray(value)
-
-  results = _.filter value, (item) ->
+  results = _.filter ARRAY(toArray(arguments)), (item) ->
     switch true
       when not item?
         true
@@ -226,8 +226,14 @@ exports.CURRENCYSYMBOL = ->
 exports.CURRENTLOCATION = ->
   $$runtime.currentLocation ? null
 
-exports.DATANAMES = () ->
-  $$runtime.elements.map (e) -> e.data_name
+exports.DATANAMES = (type) ->
+  elements =
+    if type?
+      _.filter $$runtime.elements, (e) -> e.type is type
+    else
+      $$runtime.elements
+
+  elements.map (e) -> e.data_name
 
 exports.DATE = (year, month, day) ->
   year = INT(year)
@@ -338,6 +344,13 @@ exports.FIELD = (dataName) ->
   return NO_VALUE unless element?
 
   element
+
+exports.FIELDTYPE = (dataName) ->
+  field = FIELD(dataName)
+
+  return NO_VALUE unless field?
+
+  field.type
 
 exports.FIRST = (array, count) ->
   _.first(array, count)
@@ -474,6 +487,9 @@ exports.FLOOR = (number, significance) ->
   else
     -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
 
+exports.FORM = ->
+  $$runtime.form
+
 exports.FORMAT = ->
   format.apply(null, arguments)
 
@@ -574,6 +590,8 @@ exports.REQUEST = (options, callback) ->
 
     options.url += queryString
 
+    delete options.qs
+
   if options.json?
     options.headers['Content-Type'] = 'application/json'
 
@@ -586,6 +604,20 @@ exports.REQUEST = (options, callback) ->
   options.followRedirect = !!options.followRedirect
 
   HostFunctions.httpRequest(JSON.stringify(options), callback)
+
+exports.GROUP = ->
+  args = ARRAY(toArray(arguments))
+
+  return NO_VALUE if args.length is 0
+
+  callback = null
+  values = args
+
+  if _.isFunction(_.last(args))
+    callback = _.last(args)
+    values = _.first(args, args.length - 1)
+
+  _.groupBy(values, callback)
 
 exports.GROUPINGSEPARATOR = ->
   Config.groupingSeparator or Defaults.groupingSeparator
@@ -728,7 +760,7 @@ exports.LATITUDE = ->
   NUM(CONFIG().featureGeometry?.coordinates[1])
 
 exports.LCM = ->
-  numbers = toArray(arguments).map (num) -> INT(num)
+  numbers = ARRAY(toArray(arguments)).map (num) -> INT(num)
 
   count = numbers.length
 
@@ -822,7 +854,7 @@ exports.LPAD = (value, count, padding=' ') ->
   RIGHT(Array(count).join(padding) + value, count)
 
 exports.MAX = ->
-  numbers = _.flatten(toArray(arguments))
+  numbers = ARRAY(toArray(arguments))
   numbers = _.map(numbers, NUM)
 
   return NO_VALUE if numbers.length is 0
@@ -833,14 +865,10 @@ exports.MAX = ->
 
   Math.max.apply(Math, numbers)
 
-exports.MAXA = ->
-  return NO_VALUE if arguments.length < 1
-  return NO_VALUE unless _.isArray(arguments[0])
-
-  MAX.apply(null, arguments[0])
+exports.MAXA = exports.MAX
 
 exports.MEDIAN = ->
-  numbers = _.flatten(toArray(arguments))
+  numbers = ARRAY(toArray(arguments))
   numbers = _.map(numbers, NUM)
 
   return NO_VALUE unless _.isArray(numbers)
@@ -874,7 +902,7 @@ exports.MID = (value, startPosition, numberOfCharacters) ->
   value.substr(startPosition - 1, numberOfCharacters)
 
 exports.MIN = ->
-  numbers = _.flatten(toArray(arguments))
+  numbers = ARRAY(toArray(arguments))
   numbers = _.map(numbers, NUM)
 
   return NO_VALUE if numbers.length is 0
@@ -885,11 +913,7 @@ exports.MIN = ->
 
   Math.min.apply(Math, numbers)
 
-exports.MINA = ->
-  return NO_VALUE if arguments.length < 1
-  return NO_VALUE unless _.isArray(arguments[0])
-
-  MIN.apply(null, arguments[0])
+exports.MINA = exports.MIN
 
 exports.MOD = (number, divisor) ->
   number = NUM(number)
@@ -955,7 +979,7 @@ exports.OFF = ->
   $$runtime.removeHook(name, param, callback)
 
 isMagicDataName = (name) ->
-  return _.include(['@status', '@project', '@geometry'], name)
+  return _.include(['@status', '@project', '@geometry', '@assignment'], name)
 
 validateEventParams = (event, param) ->
   invariant = (v) ->
@@ -1283,6 +1307,10 @@ exports.SETCHOICES = (dataName, value) ->
         when _.isObject(choice)
           choices.push(label: choice.label, value: choice.value or choice.label)
 
+     for choice in choices
+       choice.label = choice.label.toString() if choice.label?
+       choice.value = choice.value.toString() if choice.value?
+
   SETFORMATTRIBUTES(dataName, choices: choices)
 
 CONFIGURATION_ATTRIBUTES = [
@@ -1342,11 +1370,17 @@ exports.SETSTATUS = (status) ->
   ERROR('status must be a string') if status? and not _.isString(status)
   SETVALUE('@status', status)
 
+exports.SETSTATUSHIDDEN = (value) ->
+  SETHIDDEN('@status', value)
+
+exports.SETSTATUSREADONLY = (value) ->
+  SETREADONLY('@status', value)
+
 exports.SETSTATUSFILTER = (value) ->
   SETCHOICEFILTER('@status', value)
 
 exports.SETPROJECT = (project) ->
-  ERROR('project must be a string') if status? and not _.isString(status)
+  ERROR('project must be a string') if project? and not _.isString(project)
   SETVALUE('@project', project)
 
 exports.SETDESCRIPTION = (dataName, value) ->
@@ -1482,6 +1516,20 @@ exports.SINH = (number) ->
 
   (exp - 1 / exp) / 2
 
+exports.SORT = ->
+  args = ARRAY(toArray(arguments))
+
+  return NO_VALUE if args.length is 0
+
+  callback = null
+  values = args
+
+  if _.isFunction(_.last(args))
+    callback = _.last(args)
+    values = _.first(args, args.length - 1)
+
+  _.sortBy(values, callback)
+
 exports.SQRT = MATH_FUNC(Math.sqrt)
 
 exports.SQRTPI = (number) ->
@@ -1565,7 +1613,7 @@ exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
     text
 
 exports.SUM = ->
-  numbers = toArray(arguments).map(NUM)
+  numbers = ARRAY(toArray(arguments)).map(NUM)
 
   return NaN if numbers.length is 0
 
@@ -1576,7 +1624,7 @@ exports.SUM = ->
   _.inject(numbers, ((memo, number) -> memo += number), 0)
 
 exports.SUMSQ = ->
-  numbers = toArray(arguments).map(NUM)
+  numbers = ARRAY(toArray(arguments)).map(NUM)
 
   return NaN if numbers.length is 0
 
@@ -1719,6 +1767,20 @@ exports.TYPEOF = (value) ->
       'object'
     else
       'unknown'
+
+exports.UNIQUE = ->
+  args = ARRAY(toArray(arguments))
+
+  return NO_VALUE if args.length is 0
+
+  callback = null
+  values = args
+
+  if _.isFunction(_.last(args))
+    callback = _.last(args)
+    values = _.first(args, args.length - 1)
+
+  _.uniq(values, false, callback)
 
 exports.UPPER = (value) ->
   return NO_VALUE unless value?

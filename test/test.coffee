@@ -42,6 +42,24 @@ shouldBeUndefined = (value) ->
 beforeEach ->
   resetConfig()
 
+describe 'ARRAY', ->
+  it 'returns an array from the arguments', ->
+    ARRAY().should.eql([])
+    ARRAY(1, 2, 3, 4).should.eql([1, 2, 3, 4])
+    ARRAY([1, 2], [3, 4]).should.eql([1, 2, 3, 4])
+    ARRAY([1, 2], [3, 4], [5, 6]).should.eql([1, 2, 3, 4, 5, 6])
+    ARRAY([1, 2], [3, 4], [5, [6, [7, 8]]]).should.eql([1, 2, 3, 4, 5, 6, 7, 8])
+    ARRAY(undefined, null).should.eql([undefined, null])
+    ARRAY(NaN, NaN).should.eql([NaN, NaN])
+    ARRAY(1, 2, 3).should.eql([1, 2, 3])
+    ARRAY(1, '2', 3).should.eql([1, '2', 3])
+    ARRAY({}, '2', 'a7').should.eql([{}, '2', 'a7'])
+    ARRAY([], [], []).should.eql([])
+    ARRAY([]).should.eql([])
+    ARRAY(ARRAY([], [], [])).should.eql([])
+    ARRAY(ARRAY([], ARRAY([]), [], ARRAY())).should.eql([])
+    ARRAY(ARRAY(ARRAY(ARRAY([1, 2], [3, 4])))).should.eql([1, 2, 3, 4])
+
 describe 'NUMS', ->
   it 'returns an array of numbers from the arguments', ->
     NUMS(1, 2, 3).should.eql([1, 2, 3])
@@ -101,6 +119,9 @@ describe 'AVERAGE', ->
     AVERAGE(1, 2, 'a').should.be.NaN
     AVERAGE(1).should.be.exactly(1)
     AVERAGE(1, 1.5, 3.75).should.be.exactly(2.0833333333333335)
+    AVERAGE(1, [1.5, 3.75]).should.be.exactly(2.0833333333333335)
+    AVERAGE([1, 1.5, 3.75]).should.be.exactly(2.0833333333333335)
+    AVERAGE([[1], [1.5, 3.75]]).should.be.exactly(2.0833333333333335)
 
 describe 'ROUND', ->
   it 'round the given number to the specified number of digits', ->
@@ -270,6 +291,8 @@ describe 'CONCATENATE', ->
     CONCATENATE().should.eql('')
     CONCATENATE(null).should.eql('')
     CONCATENATE(undefined).should.eql('')
+    CONCATENATE('1', [2], '3').should.eql('123')
+    CONCATENATE('1', [2], '3', [4, 5]).should.eql('12345')
 
 describe 'COMPACT', ->
   it 'compacts an array', ->
@@ -451,6 +474,16 @@ describe 'GCD', ->
     GCD({}).should.be.NaN
     GCD([]).should.be.NaN
     GCD(true).should.be.NaN
+
+describe 'GROUP', ->
+  it 'returns the grouped values from the parameters', ->
+    GROUP(1, 2, 3).should.be.eql({1: [1], 2: [2], 3: [3]})
+    GROUP(3, 2, 1, 3, 3, 3).should.be.eql({1: [1], 2: [2], 3: [3, 3, 3, 3]})
+    GROUP([3, 2, 1, 3, 3, 3]).should.be.eql({1: [1], 2: [2], 3: [3, 3, 3, 3]})
+    GROUP(1, 2, 'a').should.be.eql({1: [1], 2: [2], a: ['a']})
+    GROUP(1, 2, 'a', 'a').should.be.eql({1: [1], 2: [2], a: ['a', 'a']})
+    GROUP('a', 'c', 'c', 'b', 'a').should.be.eql({a: ['a', 'a'], b: ['b'], c: ['c', 'c']})
+    GROUP(1).should.be.eql({1: [1]})
 
 describe 'IF', ->
   it 'evaluates a condition', ->
@@ -691,6 +724,7 @@ describe 'MAX', ->
     MAX('1', '2', '3').should.be.exactly(3)
     MAX('1.11', '2.22', '3.33').should.be.exactly(3.33)
     MAX(-1, -2, -3).should.be.exactly(-1)
+    MAX(-1, [-2, 5], -3).should.be.exactly(5)
 
     shouldHaveNoValue(MAX([]))
     shouldHaveNoValue(MAX({}))
@@ -721,6 +755,7 @@ describe 'MEDIAN', ->
   it 'returns the median number in a list of numbers', ->
     MEDIAN(1, 2, 3).should.be.exactly(2)
     MEDIAN(2, 3, 3, 5, 7, 10).should.be.exactly(4)
+    MEDIAN(2, 3, [3, 5], 7, 10).should.be.exactly(4)
     MEDIAN(10, 3, 7, 5, 3, 2).should.be.exactly(4)
     MEDIAN(10, 3, 5, 3, 2).should.be.exactly(3)
     MEDIAN('1.11', '2.22', '3.33').should.be.exactly(2.22)
@@ -737,6 +772,7 @@ describe 'MEDIAN', ->
 describe 'MIN', ->
   it 'returns the minimum number in a list of numbers', ->
     MIN(1, 2, 3).should.be.exactly(1)
+    MIN([1], 2, 3).should.be.exactly(1)
     MIN('1', '2', '3').should.be.exactly(1)
     MIN('1.11', '2.22', '3.33').should.be.exactly(1.11)
     MIN(-1, -2, -3).should.be.exactly(-3)
@@ -1122,6 +1158,9 @@ describe 'SUM', ->
     SUM(2, 3, 4).should.be.exactly(9)
     SUM(-2, 3, 4).should.be.exactly(5)
     SUM(-2, 3.1, 1.7).should.be.exactly(2.8)
+    SUM(-2, [3.1], 1.7).should.be.exactly(2.8)
+    SUM([-2, 3.1, 1.7]).should.be.exactly(2.8)
+    SUM([-2, 3.1, [1.7]]).should.be.exactly(2.8)
     SUM('-2', '3').should.be.exactly(1)
     SUM(1, 0).should.be.exactly(1)
     SUM(1, NaN).should.be.NaN
@@ -1136,6 +1175,7 @@ describe 'SUMSQ', ->
     SUMSQ(2, 3, 4).should.be.exactly(29)
     SUMSQ(-2, 3, 4).should.be.exactly(29)
     SUMSQ(-2, 3.1, 1.7).should.be.exactly(16.5)
+    SUMSQ(-2, [3.1, [1.7]]).should.be.exactly(16.5)
     SUMSQ('-2', '3').should.be.exactly(13)
     SUMSQ(1, 0).should.be.exactly(1)
     SUMSQ(1, NaN).should.be.NaN
@@ -1456,6 +1496,9 @@ describe 'DATANAMES', ->
     names = DATANAMES()
     names.should.eql([ 'name', 'items', 'cost' ])
 
+    names = DATANAMES('Repeatable')
+    names.should.eql([ 'items' ])
+
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->
     date = DATE(2015, 1, 14)
@@ -1549,6 +1592,19 @@ describe 'RPAD', ->
     RPAD('1', 2, '0').should.be.exactly('10')
     RPAD('1', 4, '0').should.be.exactly('1000')
 
+describe 'SORT', ->
+  it 'returns the sorted values from the parameters', ->
+    SORT(1, 2, 3).should.be.eql([1, 2, 3])
+    SORT(3, 2, 1, 3, 3, 3).should.be.eql([1, 2, 3, 3, 3, 3])
+    SORT(1, 2, 'a').should.be.eql([1, 2, 'a'])
+    SORT(1, 2, 'a', 'a').should.be.eql([1, 2, 'a', 'a'])
+    SORT('a', 'c', 'c', 'b', 'a').should.be.eql(['a', 'a', 'b', 'c', 'c'])
+    SORT(1).should.be.eql([1])
+    SORT(1, 1.5, 3.75).should.be.eql([1, 1.5, 3.75])
+    SORT(1, [1.5, 3.75]).should.be.eql([1, 1.5, 3.75])
+    SORT({test: 2}, {test: 1}, {test: 1}, (a, b) -> a.test).should.be.eql([{test: 1}, {test: 1}, {test: 2}])
+    SORT([{test: 2}, {test: 1}, {test: 1}], (a, b) -> a.test).should.be.eql([{test: 1}, {test: 1}, {test: 2}])
+
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
     TIMEDIFF('00:00', '00:01').should.be.exactly(1 / 60)
@@ -1586,6 +1642,19 @@ describe 'TIMEADD', ->
     TIMEADD('16:00', 100, 'minutes').should.be.exactly('17:40')
     TIMEADD('16:00', -30, 'minutes').should.be.exactly('15:30')
     TIMEADD('16:00', -100, 'minutes').should.be.exactly('14:20')
+
+describe 'UNIQUE', ->
+  it 'returns the unique values of the parameters', ->
+    UNIQUE(1, 2, 3).should.be.eql([1, 2, 3])
+    UNIQUE(1, 2, 3, 3, 3).should.be.eql([1, 2, 3])
+    UNIQUE(1, 2, 'a').should.be.eql([1, 2, 'a'])
+    UNIQUE(1, 2, 'a', 'a').should.be.eql([1, 2, 'a'])
+    UNIQUE('c', 'c', 'b', 'a').should.be.eql(['c', 'b', 'a'])
+    UNIQUE(1).should.be.eql([1])
+    UNIQUE(1, 1.5, 3.75).should.be.eql([1, 1.5, 3.75])
+    UNIQUE(1, [1.5, 3.75]).should.be.eql([1, 1.5, 3.75])
+    UNIQUE({test: 1}, {test: 1}, {test: 2}, (a) -> a.test).should.be.eql([{test: 1}, {test: 2}])
+    UNIQUE([{test: 1}, {test: 1}, {test: 2}], (a) -> a.test).should.be.eql([{test: 1}, {test: 2}])
 
 describe 'USERFULLNAME', ->
   it 'returns the user full name', ->
