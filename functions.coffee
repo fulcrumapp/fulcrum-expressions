@@ -1307,6 +1307,10 @@ exports.SETCHOICES = (dataName, value) ->
         when _.isObject(choice)
           choices.push(label: choice.label, value: choice.value or choice.label)
 
+     for choice in choices
+       choice.label = choice.label.toString() if choice.label?
+       choice.value = choice.value.toString() if choice.value?
+
   SETFORMATTRIBUTES(dataName, choices: choices)
 
 CONFIGURATION_ATTRIBUTES = [
