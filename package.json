@@ -1,6 +1,6 @@
 {
   "name": "fulcrum-expressions",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Expression runtime for Fulcrum",
   "main": "./dist/expressions.js",
   "repository": {
