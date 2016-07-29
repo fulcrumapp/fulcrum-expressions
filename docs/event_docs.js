@@ -234,7 +234,7 @@ function OPENURL() {}
 /**
  * PROGRESS
  * Display a non-dismissible progress message in the mobile app.
- * PROGRESS displays a non-dismissible message that can be used to provide feedback when performing an asynchronous function. For example, while fetching data from an API using [REQUEST](/data-events/reference/request/) it might be desirable to let the user know that the request is in progress. This is an advanced function that requires thorough testing and error checking in your logic since the message is not dismissible by the user.
+ * PROGRESS displays a non-dismissible message that can be used to provide feedback when performing an asynchronous function. For example, while fetching data from an API using [REQUEST](/data-events/reference/request/) it might be desirable to let the user know that the request is in progress. This is an advanced function that requires thorough testing and error checking in your logic since the message is not dismissible by the user. To dismiss the progress message, call `PROGRESS();`.
  * @param {String} title A short title for the progress message
  * @param {String} message The message content for the progress alert
  * @example
