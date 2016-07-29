@@ -8,6 +8,8 @@ inspect = require('object-inspect')
 
 qs = require('query-string')
 
+encodeUrl = require('encodeurl')
+
 Utils = require('./utils')
 
 {format} = require('util')
@@ -602,6 +604,10 @@ exports.REQUEST = (options, callback) ->
   options.headers = {}    unless _.isObject(options.headers)
   options.body    = null  unless _.isString(options.body)
   options.followRedirect = !!options.followRedirect
+
+  # Encode the entire URL. This allows sloppy inputs with partially encoded params
+  # and prevents double encoding.
+  options.url = encodeUrl(options.url)
 
   HostFunctions.httpRequest(JSON.stringify(options), callback)
 
