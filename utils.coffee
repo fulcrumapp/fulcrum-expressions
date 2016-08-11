@@ -7,6 +7,8 @@ repeatableValueElementsByDataNameCache = {}
 class Utils
   @DATE_REGEX: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
 
+  @UUID_REGEX: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i
+
   @toArray = (arrayLike) ->
     Array::slice.call arrayLike, 0
 
@@ -212,5 +214,12 @@ class Utils
         country: value.country?.toString() ? null
 
       address
+
+    RecordLinkField: (value) ->
+      return null unless _.isArray(value)
+
+      ids = value.map((id) => '' + id)
+      ids = _.select ids, (id) => Utils.UUID_REGEX.test(id)
+      ids.map((id) => { record_id: id })
 
 module.exports = Utils
