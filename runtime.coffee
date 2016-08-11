@@ -70,6 +70,8 @@ class Runtime
 
   scriptInitialized: false
 
+  hooksInitialized: false
+
   isCalculation: false
 
   extraVariableNames: [
@@ -210,7 +212,12 @@ class Runtime
     @hooksByParams(name, param).push(callback)
 
   trigger: ->
-    $$runtime.results = []
+    # When the global script runs, start with the results that were captured in that tick
+    # This lets function calls at global scope eventually take effect the first time an event
+    # is triggered (load-record).
+    $$runtime.results = if @hooksInitialized then [] else @results
+
+    @hooksInitialized = true
 
     @setupValues()
 
