@@ -18,6 +18,7 @@ SKIP_EXPORTS = [
   'LOCALE',
   'N',
   'T',
+  'SETASSIGNMENT',
   'TIMEZONE',
   'X_ISNEW',
   'X_ISUPDATE'
