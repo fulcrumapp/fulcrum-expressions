@@ -63,6 +63,9 @@ exports.ALERT = ->
 
   $$runtime.results.push(result)
 
+exports.ALTITUDE = ->
+  NUM(CONFIG().recordAltitude)
+
 exports.AND = ->
   _.find(toArray(arguments), (item) -> not item) is undefined
 
@@ -1474,12 +1477,26 @@ FORM_ATTRIBUTES = [
   'max_length'
   'choices'
   'choice_filter'
+  'media_gallery_enabled'
+  'media_capture_enabled'
+  'auto_sync_enabled'
+  'auto_location_enabled'
+  'auto_location_minimum_accuracy'
+  'manual_location_enabled'
+  'drafts_enabled'
+  'photo_quality'
+  'video_quality'
+  'audio_quality'
 ]
 
 exports.SETFORMATTRIBUTES = (dataName, attributes) ->
+  if arguments.length is 1
+    attributes = dataName
+    dataName = '@form'
+
   element = FIELD(dataName)
 
-  return NO_VALUE unless (element or dataName is '@status')
+  return NO_VALUE unless (element or dataName is '@status' or dataName is '@form')
 
   for attributeName, value of attributes
     continue unless _.contains(FORM_ATTRIBUTES, attributeName)
@@ -1828,7 +1845,7 @@ hostFunctionCall = (name, args) ->
 hostAsyncFunctionCall = (name, args, callback) ->
   $$runtime.invokeAsync $$runtime["$$#{name}"], args, callback
 
-HostFunctions = host = {}
+HostFunctions = exports.HostFunctions = host = {}
 
 host.formatNumber = (number, language, options) ->
   if hostFunctionExists('formatNumber')
