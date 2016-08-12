@@ -56,6 +56,8 @@ describe 'ARRAY', ->
     ARRAY({}, '2', 'a7').should.eql([{}, '2', 'a7'])
     ARRAY([], [], []).should.eql([])
     ARRAY([]).should.eql([])
+    ARRAY(undefined).should.eql([undefined])
+    ARRAY(undefined, undefined).should.eql([undefined, undefined])
     ARRAY(ARRAY([], [], [])).should.eql([])
     ARRAY(ARRAY([], ARRAY([]), [], ARRAY())).should.eql([])
     ARRAY(ARRAY(ARRAY(ARRAY([1, 2], [3, 4])))).should.eql([1, 2, 3, 4])
@@ -320,6 +322,7 @@ describe 'COUNT', ->
 describe 'COUNTA', ->
   it 'returns the count of items', ->
     COUNTA([1, 2, 3]).should.be.exactly(3)
+    COUNTA(undefined).should.be.exactly(0)
     shouldHaveNoValue(COUNTA())
     shouldHaveNoValue(COUNTA(null))
     shouldHaveNoValue(COUNTA(undefined))
@@ -330,6 +333,7 @@ describe 'COUNTBLANK', ->
   it 'returns the count of blank items', ->
     COUNTBLANK([1, 2, 3]).should.be.exactly(0)
     COUNTBLANK([1, 2, '']).should.be.exactly(1)
+    COUNTBLANK([1, 2, '', undefined]).should.be.exactly(2)
     COUNTBLANK([]).should.be.exactly(0)
     COUNTBLANK(null).should.be.NaN
     COUNTBLANK(undefined).should.be.NaN

@@ -203,7 +203,8 @@ exports.COUNT = (value) ->
   numbers.length
 
 exports.COUNTA = (value) ->
-  ARRAY(toArray(arguments)).length
+  values = _.select ARRAY(toArray(arguments)), EXISTS
+  values.length
 
 exports.COUNTBLANK = (value) ->
   results = _.filter ARRAY(toArray(arguments)), (item) ->
