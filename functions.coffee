@@ -1487,6 +1487,8 @@ FORM_ATTRIBUTES = [
   'auto_location_enabled'
   'auto_location_minimum_accuracy'
   'manual_location_enabled'
+  'edit_locations_enabled'
+  'edit_durations_enabled'
   'drafts_enabled'
   'photo_quality'
   'video_quality'
