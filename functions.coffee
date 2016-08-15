@@ -735,6 +735,9 @@ exports.ISODD = (value) ->
 
   (Math.floor(Math.abs(value)) & 1) is 1
 
+exports.ISROLE = ->
+  CONTAINS(ARRAY(toArray(arguments)), ROLE())
+
 exports.ISSELECTED = (value, choice) ->
   return false if ISBLANK(value)
   return false unless choice?

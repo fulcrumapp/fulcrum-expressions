@@ -1150,6 +1150,20 @@ function ISNUMBER() {}
 function ISODD() {}
 
 
+////ISROLE
+
+/**
+ * ISROLE
+ * Checks whether the current user's role is one of the arguments
+ * @param {String...} role The role values to check
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * ISROLE('Owner', 'Manager') // is the current role either Owner or Manager?
+ */
+function ISROLE() {}
+
+
 ////ISSELECTED
 
 /**

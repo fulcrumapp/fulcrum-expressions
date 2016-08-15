@@ -1740,6 +1740,29 @@
             }
         },
         {
+            "name": "ISROLE",
+            "access": "",
+            "virtual": false,
+            "description": "ISROLE\nChecks whether the current user's role is one of the arguments",
+            "parameters": [
+                {
+                    "name": "",
+                    "type": "",
+                    "description": "",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns true\nISROLE('Owner', 'Manager') // is the current role either Owner or Manager?"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
             "name": "ISSELECTED",
             "access": "",
             "virtual": false,
