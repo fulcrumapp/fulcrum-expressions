@@ -168,7 +168,7 @@ class Runtime
 
     delete @asyncCallbacks[id]
 
-    $$runtime.results = []
+    @resetResults()
 
     @isCalculation = false
 
@@ -211,13 +211,16 @@ class Runtime
   addHook: (name, param, callback) ->
     @hooksByParams(name, param).push(callback)
 
-  trigger: ->
+  resetResults: ->
     # When the global script runs, start with the results that were captured in that tick
     # This lets function calls at global scope eventually take effect the first time an event
     # is triggered (load-record).
     $$runtime.results = if @hooksInitialized then [] else @results
 
     @hooksInitialized = true
+
+  trigger: ->
+    @resetResults()
 
     @setupValues()
 
@@ -228,7 +231,7 @@ class Runtime
 
     hooks = @hooksByParams(name, param)
 
-    return [] unless hooks?.length
+    return $$runtime.results unless hooks?.length
 
     @isCalculation = false
 
@@ -237,7 +240,7 @@ class Runtime
     $$runtime.results
 
   evaluate: ->
-    $$runtime.results = []
+    @resetResults()
 
     @setupValues()
 
