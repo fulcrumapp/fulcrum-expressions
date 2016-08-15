@@ -1746,9 +1746,9 @@
             "description": "ISROLE\nChecks whether the current user's role is one of the arguments",
             "parameters": [
                 {
-                    "name": "",
-                    "type": "",
-                    "description": "",
+                    "name": "var_args_values",
+                    "type": "String",
+                    "description": "The role values to check",
                     "default": "",
                     "optional": "",
                     "nullable": ""
