@@ -721,6 +721,9 @@ exports.ISEVEN = (value) ->
 
   (Math.floor(Math.abs(value)) & 1) is 0
 
+exports.ISNEW = ->
+  CONFIG().featureIsNew is true
+
 exports.ISNONTEXT = (value) ->
   not _.isString(value)
 
@@ -755,6 +758,9 @@ exports.ISSELECTED = (value, choice) ->
 
 exports.ISTEXT = (value) ->
   _.isString(value)
+
+exports.ISUPDATE = ->
+  not ISNEW()
 
 exports.LABEL = (dataName) ->
   field = FIELD(dataName)
@@ -1835,12 +1841,6 @@ exports.YEAR = (date) ->
   return NO_VALUE unless date?
 
   date.getFullYear()
-
-exports.X_ISNEW = ->
-  CONFIG().featureIsNew is true
-
-exports.X_ISUPDATE = ->
-  not X_ISNEW()
 
 hostFunctionExists = (name) ->
   typeof $$runtime["$$#{name}"] is 'function'

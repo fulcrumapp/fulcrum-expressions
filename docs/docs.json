@@ -1667,6 +1667,20 @@
             }
         },
         {
+            "name": "ISNEW",
+            "access": "",
+            "virtual": false,
+            "description": "ISNEW\nReturns a boolean indicating whether the current feature (record or repeatable item) is new. It returns false if it's being updated.",
+            "parameters": [],
+            "examples": [
+                "// returns true\nISNEW()"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
             "name": "ISNONTEXT",
             "access": "",
             "virtual": false,
@@ -1812,6 +1826,20 @@
             "examples": [
                 "// returns true\nISTEXT(\"Text\")",
                 "// returns false\nISTEXT(4)"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
+            "name": "ISUPDATE",
+            "access": "",
+            "virtual": false,
+            "description": "ISUPDATE\nReturns a boolean indicating whether the current feature (record or repeatable item) is being updated. It returns false if it's a new record.",
+            "parameters": [],
+            "examples": [
+                "// returns false\nISUPDATE()"
             ],
             "returns": {
                 "type": "Boolean",
@@ -3888,34 +3916,6 @@
             ],
             "returns": {
                 "type": "Number",
-                "description": ""
-            }
-        },
-        {
-            "name": "X_ISNEW",
-            "access": "",
-            "virtual": false,
-            "description": "X_ISNEW\nReturns a boolean indicating whether the current feature (record or repeatable item) is new. It returns false if it's being updated.",
-            "parameters": [],
-            "examples": [
-                "// returns true\nX_ISNEW()"
-            ],
-            "returns": {
-                "type": "Boolean",
-                "description": ""
-            }
-        },
-        {
-            "name": "X_ISUPDATE",
-            "access": "",
-            "virtual": false,
-            "description": "X_ISUPDATE\nReturns a boolean indicating whether the current feature (record or repeatable item) is being updated. It returns false if it's a new record.",
-            "parameters": [],
-            "examples": [
-                "// returns false\nX_ISUPDATE()"
-            ],
-            "returns": {
-                "type": "Boolean",
                 "description": ""
             }
         }

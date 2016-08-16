@@ -1687,17 +1687,22 @@ describe 'YEAR', ->
 
     shouldHaveNoValue(YEAR('not a date'))
 
-describe 'X_ISNEW', ->
+describe 'ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
     CONFIGURE(featureIsNew: true)
 
-    X_ISNEW().should.be.true
-    X_ISUPDATE().should.be.false
+    ISNEW().should.be.true
+    ISUPDATE().should.be.false
 
     CONFIGURE(featureIsNew: false)
 
-    X_ISNEW().should.be.false
-    X_ISUPDATE().should.be.true
+    ISNEW().should.be.false
+    ISUPDATE().should.be.true
+
+    CONFIGURE(featureIsNew: undefined)
+
+    ISNEW().should.be.false
+    ISUPDATE().should.be.true
 
 describe 'Values', ->
   it 'should create choice values', ->
