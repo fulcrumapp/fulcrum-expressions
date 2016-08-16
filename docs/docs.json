@@ -1323,7 +1323,7 @@
             "name": "GROUP",
             "access": "",
             "virtual": false,
-            "description": "GROUP\nReturns the sorted values within an array",
+            "description": "GROUP\nReturns grouped values within an array",
             "parameters": [
                 {
                     "name": "values",

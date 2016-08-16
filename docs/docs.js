@@ -868,7 +868,7 @@ function GETRESULT() {}
 
 /**
  * GROUP
- * Returns the sorted values within an array
+ * Returns grouped values within an array
  * @param {Array} values The values to sort
  * @param {Function} [callback] A transform function to use when sorting objects
  * @returns {Array}
