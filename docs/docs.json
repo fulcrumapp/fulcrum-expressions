@@ -1642,6 +1642,20 @@
             }
         },
         {
+            "name": "ISMOBILE",
+            "access": "",
+            "virtual": false,
+            "description": "ISMOBILE\nReturns true if the record is being edited from the mobile app",
+            "parameters": [],
+            "examples": [
+                "// returns true\nISMOBILE() // on iOS"
+            ],
+            "returns": {
+                "type": "Boolean",
+                "description": ""
+            }
+        },
+        {
             "name": "ISNAN",
             "access": "",
             "virtual": false,

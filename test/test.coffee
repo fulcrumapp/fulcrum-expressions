@@ -1687,6 +1687,20 @@ describe 'YEAR', ->
 
     shouldHaveNoValue(YEAR('not a date'))
 
+describe 'ISMOBILE', ->
+  it 'returns a boolean indicating whether the current device is the mobile app', ->
+    CONFIGURE(platform: 'iOS')
+    ISMOBILE().should.be.true
+
+    CONFIGURE(platform: 'Android')
+    ISMOBILE().should.be.true
+
+    CONFIGURE(platform: 'Mac OS')
+    ISMOBILE().should.be.false
+
+    CONFIGURE(platform: null)
+    ISMOBILE().should.be.false
+
 describe 'ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
     CONFIGURE(featureIsNew: true)

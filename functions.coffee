@@ -721,6 +721,9 @@ exports.ISEVEN = (value) ->
 
   (Math.floor(Math.abs(value)) & 1) is 0
 
+exports.ISMOBILE = ->
+  CONTAINS(['iOS', 'Android'], PLATFORM())
+
 exports.ISNEW = ->
   CONFIG().featureIsNew is true
 

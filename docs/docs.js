@@ -1075,6 +1075,19 @@ function ISEVEN() {}
 function ISLOGICAL() {}
 
 
+////ISMOBILE
+
+/**
+ * ISMOBILE
+ * Returns true if the record is being edited from the mobile app
+ * @returns {Boolean}
+ * @example
+ * // returns true
+ * ISMOBILE() // on iOS
+ */
+function ISMOBILE() {}
+
+
 ////ISNAN
 
 /**
