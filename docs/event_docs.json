@@ -206,7 +206,7 @@
             "name": "REQUEST",
             "access": "",
             "virtual": false,
-            "description": "REQUEST\nPerforms an HTTP request and executes the callback on completion.\nThe REQUEST function is for making external HTTP requests. It's one of the most powerful data event functions and enables you to retrieve external data while filling out a form. It can be combined with the other functions to create very dynamic forms that populate information on-demand from external sources. It contains the necessary options to perform any HTTP request, including support for PUT, POST, etc and custom headers.\n\n### CORS and Web Browser Support\n\nTo work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.",
+            "description": "REQUEST\nPerforms an HTTP request and executes the callback on completion.\nThe REQUEST function is for making external HTTP requests. It's one of the most powerful data event functions and enables you to retrieve external data while filling out a form. It can be combined with the other functions to create very dynamic forms that populate information on-demand from external sources. It contains the necessary options to perform any HTTP request, including support for PUT, POST, etc and custom headers.\n\n### CORS and Web Browser Support\n\nTo work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.",
             "parameters": [
                 {
                     "name": "options",
@@ -395,6 +395,25 @@
             ],
             "examples": [
                 "SETDESCRIPTION('weather_summary', 'Could not automatically fetch weather data. Briefly describe the current weather.')\n\n// Sets the description of a weather summary field"
+            ]
+        },
+        {
+            "name": "SETFORMATTRIBUTES",
+            "access": "",
+            "virtual": false,
+            "description": "SETFORMATTRIBUTES\nConfigure specific device functionality and behaviors at the form level.\nAllows you to configure specific device functionality and behaviors at the form level. These configuration options help you control what features the user has available, improving the workflow and data quality for that particular form. You can currently control the following:\n* Disable adding photos from the camera roll\n* Force record to be sync’d upon save\n* Control the minimum accuracy required for the GPS location\n* Disable the ability to manually move the record location\n* Disable the “Save as Draft” feature\n* Control photo and video quality settings\n\nThe following table contains the available properties that be set:\n\n{:.table.table-striped.event-table}\n| Property | Type | Description | Default |\n|----------|------|-------------|---------|\n| `auto_sync_enabled` | boolean | auto-sync this record after saving | user-preference |\n| `auto_location_enabled` | boolean | auto-populate the record location | true |\n| `auto_location_minimum_accuracy` | integer | minimum accuracy in meters for the auto-populated location | 1500 |\n| `manual_location_enabled` | boolean | allow manually changing the record location | false |\n| `media_gallery_enabled` | boolean | allow media from the gallery or camera roll | true |\n| `photo_quality` | integer | maximum dimension of photos in pixels, or 'native' | user-preference |\n| `video_quality` | string | video resolution, one of: 480p, 720p, 1080p, 2160p | user-preference |\n| `drafts_enabled` | boolean | allow saving record as a draft | true |",
+            "parameters": [
+                {
+                    "name": "config",
+                    "type": "Object",
+                    "description": "A configuration object with the following optional properties",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "ON('load-record', function() {\n  var config = {\n    auto_sync_enabled: true,\n    auto_location_enabled: true,\n    auto_location_minimum_accuracy: 10,\n    manual_location_enabled: false,\n    media_gallery_enabled: false,\n    media_capture_enabled: true,\n    photo_quality: '2048',\n    video_quality: '720p',\n    drafts_enabled: false\n  };\n\n  SETFORMATTRIBUTES(config);\n});"
             ]
         },
         {

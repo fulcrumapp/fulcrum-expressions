@@ -270,7 +270,7 @@ function PROGRESS() {}
  *
  * ### CORS and Web Browser Support
  *
- * To work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.
+ * To work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.
  * @param {Object} options The options to pass for the request
  * @param {string} options.url The url for the request
  * @param {string} [options.method=GET] The HTTP method for the request (POST, PUT, DELETE, etc.)
@@ -401,6 +401,54 @@ function SETCHOICES() {}
  * // Sets the description of a weather summary field
  */
 function SETDESCRIPTION() {}
+
+
+////SETFORMATTRIBUTES
+
+/**
+ * SETFORMATTRIBUTES
+ * Configure specific device functionality and behaviors at the form level.
+ * Allows you to configure specific device functionality and behaviors at the form level. These configuration options help you control what features the user has available, improving the workflow and data quality for that particular form. You can currently control the following:
+ * * Disable adding photos from the camera roll
+ * * Force record to be sync’d upon save
+ * * Control the minimum accuracy required for the GPS location
+ * * Disable the ability to manually move the record location
+ * * Disable the “Save as Draft” feature
+ * * Control photo and video quality settings
+ *
+ * The following table contains the available properties that be set:
+ *
+ * {:.table.table-striped.event-table}
+ * | Property | Type | Description | Default |
+ * |----------|------|-------------|---------|
+ * | `auto_sync_enabled` | boolean | auto-sync this record after saving | user-preference |
+ * | `auto_location_enabled` | boolean | auto-populate the record location | true |
+ * | `auto_location_minimum_accuracy` | integer | minimum accuracy in meters for the auto-populated location | 1500 |
+ * | `manual_location_enabled` | boolean | allow manually changing the record location | false |
+ * | `media_gallery_enabled` | boolean | allow media from the gallery or camera roll | true |
+ * | `photo_quality` | integer | maximum dimension of photos in pixels, or 'native' | user-preference |
+ * | `video_quality` | string | video resolution, one of: 480p, 720p, 1080p, 2160p | user-preference |
+ * | `drafts_enabled` | boolean | allow saving record as a draft | true |
+ *
+ * @param {Object} config A configuration object with the following optional properties
+ * @example
+ * ON('load-record', function() {
+ *   var config = {
+ *     auto_sync_enabled: true,
+ *     auto_location_enabled: true,
+ *     auto_location_minimum_accuracy: 10,
+ *     manual_location_enabled: false,
+ *     media_gallery_enabled: false,
+ *     media_capture_enabled: true,
+ *     photo_quality: '2048',
+ *     video_quality: '720p',
+ *     drafts_enabled: false
+ *   };
+ *
+ *   SETFORMATTRIBUTES(config);
+ * });
+ */
+function SETFORMATTRIBUTES() {}
 
 
 ////SETHIDDEN
