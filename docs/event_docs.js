@@ -426,13 +426,17 @@ function SETDESCRIPTION() {}
  * | `auto_location_minimum_accuracy` | integer | minimum accuracy in meters for the auto-populated location | 1500 |
  * | `manual_location_enabled` | boolean | allow manually changing the record location | false |
  * | `media_gallery_enabled` | boolean | allow media from the gallery or camera roll | true |
+ * | `media_capture_enabled` | boolean | allow media from the camera | true |
  * | `photo_quality` | integer | maximum dimension of photos in pixels, or 'native' | user-preference |
- * | `video_quality` | string | video resolution, one of: 480p, 720p, 1080p, 2160p | user-preference |
+ * | `video_quality` | string | video resolution, one of: 480p, 720p, 1080p, 2160p (device/platform dependent) | user-preference |
  * | `drafts_enabled` | boolean | allow saving record as a draft | true |
+ * | `edit_locations_enabled` | boolean | track the locations of record edits | true |
+ * | `edit_durations_enabled` | boolean | track the durations of record edits | true |
  *
  * @param {Object} config A configuration object with the following optional properties
  * @example
  * ON('load-record', function() {
+ *   // This is just an example, it's not required to specify properties you don't want to override.
  *   var config = {
  *     auto_sync_enabled: true,
  *     auto_location_enabled: true,
@@ -442,7 +446,9 @@ function SETDESCRIPTION() {}
  *     media_capture_enabled: true,
  *     photo_quality: '2048',
  *     video_quality: '720p',
- *     drafts_enabled: false
+ *     drafts_enabled: false,
+ *     edit_locations_enabled: true,
+ *     edit_durations_enabled: true
  *   };
  *
  *   SETFORMATTRIBUTES(config);
