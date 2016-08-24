@@ -409,6 +409,7 @@ function SETDESCRIPTION() {}
  * SETFORMATTRIBUTES
  * Configure specific device functionality and behaviors at the form level.
  * Allows you to configure specific device functionality and behaviors at the form level. These configuration options help you control what features the user has available, improving the workflow and data quality for that particular form. You can currently control the following:
+ *
  * * Disable adding photos from the camera roll
  * * Force record to be sync’d upon save
  * * Control the minimum accuracy required for the GPS location
