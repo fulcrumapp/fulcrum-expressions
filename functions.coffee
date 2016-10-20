@@ -1000,6 +1000,10 @@ exports.OFF = ->
 
   $$runtime.removeHook(name, param, callback)
 
+  HostFunctions.removeListener(name, param)
+
+  null
+
 isMagicDataName = (name) ->
   return _.include(['@status', '@project', '@geometry', '@assignment'], name)
 
@@ -1062,6 +1066,10 @@ exports.ON = ->
   validateEventParams(name, param)
 
   $$runtime.addHook(name, param, callback)
+
+  HostFunctions.addListener(name, param)
+
+  null
 
 exports.ONCE = (value) ->
   $$runtime.$$currentValue ? value
@@ -1947,5 +1955,11 @@ host.storageRemoveItem = (storage, key) ->
 host.storageClear = (storage) ->
   return storage.clear() if 'clear' in storage
   return hostFunctionCall('storageClear', arguments) if hostFunctionExists('storageClear')
+
+host.addListener = (name, param) ->
+  return hostFunctionCall('addListener', arguments) if hostFunctionExists('addListener')
+
+host.removeListener = (name, param) ->
+  return hostFunctionCall('removeListener', arguments) if hostFunctionExists('removeListener')
 
 module.exports = exports
