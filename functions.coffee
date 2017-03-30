@@ -1297,7 +1297,7 @@ exports.SETASSIGNMENT = (user) ->
 
 exports.SETCHOICEFILTER = (dataName, value) ->
   filterValue = if value?
-    if not _.isArray(value) then [value] else value
+    _.flatten([value]).map(String)
   else
     null
 

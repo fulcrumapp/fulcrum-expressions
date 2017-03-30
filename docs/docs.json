@@ -610,7 +610,7 @@
                 }
             ],
             "examples": [
-                "// returns [\"name\",\"items\",\"cost\"]\nDATANAMES()",
+                "// returns [\"name\",\"items\",\"cost\",\"choice_field\"]\nDATANAMES()",
                 "// returns [\"items\"]\nDATANAMES('Repeatable')"
             ],
             "returns": {
