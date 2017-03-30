@@ -24,6 +24,7 @@ resetConfig = ->
   RESETCONFIG()
   runtime.values = variables.values.form_values
   runtime.setupValues()
+  runtime.resetResults()
   CONFIGURE(variables)
 
 runtime.form = variables.form
@@ -1836,7 +1837,11 @@ describe "SETCHOICEFILTER", ->
     SETCHOICEFILTER('choice_field', [1])
     runtime.results[0].value.should.eql '["1"]'
 
-  it 'accepts a bare nonnull object and converts it to an array with one item', ->
+  it 'removes falsey values from the collection passed in', ->
+    SETCHOICEFILTER('choice_field', [1, null])
+    runtime.results[0].value.should.eql '["1"]'
+
+  it 'accepts a bare nonnull object and converts it to an array of strings with one item', ->
     SETCHOICEFILTER('choice_field', 1)
     runtime.results[0].value.should.eql '["1"]'
 
