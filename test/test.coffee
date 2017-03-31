@@ -24,6 +24,7 @@ resetConfig = ->
   RESETCONFIG()
   runtime.values = variables.values.form_values
   runtime.setupValues()
+  runtime.resetResults()
   CONFIGURE(variables)
 
 runtime.form = variables.form
@@ -1498,7 +1499,7 @@ describe 'REPEATABLESUM', ->
 describe 'DATANAMES', ->
   it 'returns the data names of the form fields', ->
     names = DATANAMES()
-    names.should.eql([ 'name', 'items', 'cost' ])
+    names.should.eql([ 'name', 'items', 'cost', 'choice_field' ])
 
     names = DATANAMES('Repeatable')
     names.should.eql([ 'items' ])
@@ -1830,3 +1831,20 @@ describe 'Values', ->
 
     for field in fields
       shouldBeNull(Utils.makeValue(type: field, 'test'))
+
+describe "SETCHOICEFILTER", ->
+  it 'accepts an array of objects and converts them to strings', ->
+    SETCHOICEFILTER('choice_field', [1])
+    runtime.results[0].value.should.eql '["1"]'
+
+  it 'removes falsey values from the collection passed in', ->
+    SETCHOICEFILTER('choice_field', [1, null])
+    runtime.results[0].value.should.eql '["1"]'
+
+  it 'accepts a bare nonnull object and converts it to an array of strings with one item', ->
+    SETCHOICEFILTER('choice_field', 1)
+    runtime.results[0].value.should.eql '["1"]'
+
+  it 'accepts null and does not return an array', ->
+    SETCHOICEFILTER('choice_field', null)
+    shouldBeNull(runtime.results[0].value)

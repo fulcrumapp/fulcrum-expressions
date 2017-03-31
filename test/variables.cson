@@ -108,6 +108,31 @@ form:
       visible_conditions: null
       visible_conditions_type: null
     }
+    {
+      type: "ChoiceField"
+      key: "3620",
+      label: "choice field"
+      description: null
+      required: true,
+      disabled: false
+      hidden: false
+      data_name: "choice_field"
+      default_value: null
+      visible_conditions_type: null
+      visible_conditions: null
+      required_conditions_type: null
+      required_conditions: null
+      multiple: false
+      allow_other: false
+      default_previous_value: false
+      choices: [
+        { label: "1", value:"1" },
+        { label: "2", value:"2" },
+        { label: "4", value:"4" },
+        { label: "5", value:"5" },
+        { label: "6", value:"6" }
+      ]
+    }
   ]
   image: null
   name: "Test Form"
