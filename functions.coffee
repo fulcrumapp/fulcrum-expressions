@@ -344,8 +344,8 @@ exports.EXISTS = (value) ->
 
 exports.EXP = MATH_FUNC(Math.exp)
 
-exports.FIELD = (dataName) ->
-  element = $$runtime.elementsByDataName[dataName]
+exports.FIELD = (dataNameOrKey) ->
+  element = $$runtime.elementsByDataName[dataNameOrKey] or $$runtime.elementsByKey[dataNameOrKey]
 
   return NO_VALUE unless element?
 
@@ -908,6 +908,32 @@ exports.MEDIAN = ->
     numbers[half]
   else
     (numbers[half - 1] + numbers[half]) / 2.0
+
+exports.MEDIAURL = (item, options = {}) ->
+  type = null
+  id = null
+
+  if item.photo_id
+    type = 'photos'
+    id = item.photo_id
+  else if item.video_id
+    type = 'videos'
+    id = item.video_id
+  else if item.audio_id
+    type = 'audio'
+    id = item.audio_id
+  else if item.signature_id
+    type = 'signatures'
+    id = item.signature_id
+
+  return NO_VALUE unless type?
+
+  token = $$runtime.token or options.token or ''
+
+  if options.version
+    "#{$$runtime.baseURL}/api/v2/#{type}/#{id}/#{options.version}?token=#{token}"
+  else
+    "#{$$runtime.baseURL}/api/v2/#{type}/#{id}?token=#{token}"
 
 exports.MID = (value, startPosition, numberOfCharacters) ->
   startPosition = FLOOR(startPosition)
@@ -1621,6 +1647,39 @@ hostStorage.clear = ->
 
 exports.STORAGE = (scope) ->
   localStorage ? hostStorage
+
+exports.STRING = () ->
+  values = ARRAY(toArray(arguments))
+
+  strings = values.map (value) ->
+    if _.isUndefined(value) or value is null
+      null
+    else if _.isString(value)
+      value
+    else if _.isNumber(value)
+      value.toLocaleString()
+    else if _.isNaN(value)
+      null
+    else if _.isFunction(value)
+      null
+    else if _.isArray(value)
+      null
+    else if _.isDate(value)
+      value.toLocaleString()
+    else if value and value.choice_values
+      CHOICEVALUES(value)
+    else if value.photo_id
+      value.photo_id
+    else if value.video_id
+      value.video_id
+    else if value.audio_id
+      value.audio_id
+    else if value.signature_id
+      value.signature_id
+    else
+      value.toString()
+
+  COMPACT(strings).join(', ')
 
 exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
   occurrence = FLOOR(occurrence)

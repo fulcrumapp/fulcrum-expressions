@@ -17,6 +17,10 @@ class Runtime
 
   @defaultTimeZone: 'UTC'
 
+  baseURL: 'https://api.fulcrumapp.com'
+
+  token: null
+
   global: null
 
   expressions: []
