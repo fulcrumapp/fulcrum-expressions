@@ -24,14 +24,14 @@
                 }
             ],
             "examples": [
-                "ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?')\n\n// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+"
+                "ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?');\n\n// Displays an alert that looks like\n// +-------------------------------------------+\n// | Warning!                                  |\n// +-------------------------------------------|\n// |                                           |\n// | A depth of 98 feet is high. Are you sure? |\n// |                                           |\n// +-------------------------------------------+"
             ]
         },
         {
             "name": "CLEARINTERVAL",
             "access": "",
             "virtual": false,
-            "description": "CLEARINTERVAL\nClears an interval that was previously started with SETINTERVAL\nThe CLEARINTERVAL function clears an interval that was previously started with [SETINTERVAL](/data-events/reference/setinterval/).",
+            "description": "CLEARINTERVAL\nClears an interval that was previously started with SETINTERVAL.\nThe CLEARINTERVAL function clears an interval that was previously started with [SETINTERVAL](/data-events/reference/setinterval/).",
             "parameters": [
                 {
                     "name": "intervalID",
@@ -50,7 +50,7 @@
             "name": "CLEARTIMEOUT",
             "access": "",
             "virtual": false,
-            "description": "CLEARTIMEOUT\nClears a timeout that was previously started with SETTIMEOUT\nThe CLEARTIMEOUT function clears a timeout that was previously started with [SETTIMEOUT](/data-events/reference/settimeout/).",
+            "description": "CLEARTIMEOUT\nClears a timeout that was previously started with SETTIMEOUT.\nThe CLEARTIMEOUT function clears a timeout that was previously started with [SETTIMEOUT](/data-events/reference/settimeout/).",
             "parameters": [
                 {
                     "name": "timerID",
@@ -72,7 +72,7 @@
             "description": "CURRENTLOCATION\nReturns a location object containing metadata about the user's current location. This location may be different than the record location.\nReturns the current device location as an object. This can be used for Q/A purposes or other custom processing logic. This is *not* always the same as the record location. For example, if editing an imported record or previously created record, the current location will be different.\n\nReturns data in the following format:\n\n```json\n{\n  \"latitude\": 27.822209699105304,\n  \"longitude\": -82.69114932984364,\n  \"altitude\": 15.030448913574219,\n  \"accuracy\": 10,\n  \"course\": 213,\n  \"speed\": 3.4,\n  \"timestamp\": 1462414931.9999695\n}\n```",
             "parameters": [],
             "examples": [
-                "location = CURRENTLOCATION()\n\nif (!location) {\n  // location could not be determined.\n} else {\n  location.latitude  // 35.6443171\n  location.longitude // -80.8984504\n  location.altitude  // 213 - meters above sea level. Negative values indicate below sea level.\n  location.accuracy  // 5 - meters, the accuracy of the latitude and longitude values\n  location.speed     // 3.4 - meters per second\n  location.course    // 213 - degrees from due north. 0-359, negative values or `null` indicate invalid values.\n  location.timestamp // 1454015950.013456 - epoch time, seconds\n}"
+                "location = CURRENTLOCATION()\n\nif (!location) {\n  // location could not be determined.\n} else {\n  lat = location.latitude;   // 35.6443171\n  lng = location.longitude;  // -80.8984504\n  alt = location.altitude;   // 213 - meters above sea level. Negative values indicate below sea level.\n  acc = location.accuracy;   // 5 - meters, the accuracy of the latitude and longitude values\n  speed = location.speed;    // 3.4 - meters per second\n  course = location.course;  // 213 - degrees from due north. 0-359, negative values or `null` indicate invalid values.\n  time = location.timestamp; // 1454015950.013456 - epoch time, seconds\n}"
             ]
         },
         {
@@ -91,9 +91,9 @@
                 }
             ],
             "examples": [
-                "// Displays an alert and stops the record from being saved\nINVALID('Depth must be less than 20.')",
-                "// Use with the 'validate-record' event to stop a record from being saved\nON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.')\n   }\n});",
-                "// Use with the 'validate-repeatable' event to stop a repeatable from being saved\nON('validate-repeatable', 'repeatable_field_name', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!')\n   }\n});"
+                "// Displays an alert and stops the record from being saved\nINVALID('Depth must be less than 20.');",
+                "// Use with the 'validate-record' event to stop a record from being saved\nON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.');\n   }\n});",
+                "// Use with the 'validate-repeatable' event to stop a repeatable from being saved\nON('validate-repeatable', 'repeatable_field_name', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!');\n   }\n});"
             ]
         },
         {
@@ -120,8 +120,8 @@
                 }
             ],
             "examples": [
-                "OFF('validate-record', callback)\n\n// Detaches an event handler from the validate-record event",
-                "OFF('validate-record')\n\n// Detaches all event handlers listening to the 'validate-record' event"
+                "OFF('validate-record', callback);\n\n// Detaches an event handler from the validate-record event",
+                "OFF('validate-record');\n\n// Detaches all event handlers listening to the 'validate-record' event"
             ]
         },
         {
@@ -148,10 +148,10 @@
                 }
             ],
             "examples": [
-                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.')\n  }\n}\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range\nON('validate-record', callback)",
-                "var callback = function () {\n  // Do something with the new $weather_summary values\n}\n\n// Listens for changes to the weather summary field and executes callback\nON('change', 'weather_summary', callback)",
-                "var callback = function () {\n  // Do something with the location via LATITUDE() AND LONGITUDE() values\n}\n\n// Listens for changes to a record's geometry (location) and executes callback\nON('change-geometry', callback)",
-                "var callback = function () {\n  // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values\n}\n\n// Listens for changes to a repeatable item's geometry and executes callback\nON('change-geometry', 'repeatable_item', callback)"
+                "var callback = function () {\n  if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {\n    INVALID('Latitude must be between 40 and 41.');\n  }\n};\n\n// Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range\nON('validate-record', callback);",
+                "var callback = function () {\n  // Do something with the new $weather_summary values\n};\n\n// Listens for changes to the weather summary field and executes callback\nON('change', 'weather_summary', callback);",
+                "var callback = function () {\n  // Do something with the location via LATITUDE() AND LONGITUDE() values\n};\n\n// Listens for changes to a record's geometry (location) and executes callback\nON('change-geometry', callback);",
+                "var callback = function () {\n  // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values\n};\n\n// Listens for changes to a repeatable item's geometry and executes callback\nON('change-geometry', 'repeatable_item', callback);"
             ]
         },
         {
@@ -170,9 +170,11 @@
                 }
             ],
             "examples": [
-                "OPENURL('https://www.google.com/search?q=Fulcrum+Mobile+Solutions')\n\n// Opens a web browser to the specified address",
-                "OPENURL('comgooglemaps://?q=Pizza&center=37.759748,-122.427135')\n\n// Opens google maps and searches for Pizza near a location",
-                "OPENURL('mailto:clark.griswold@gmail.com?subject=turn+those+lights+off!&body=jk,+i+love+them.')\n\n// Opens an email client with a predefined subject and body"
+                "OPENURL('https://www.google.com/search?q=Fulcrum+Mobile+Solutions');\n\n// Opens a web browser to the specified address",
+                "OPENURL('comgooglemaps://?q=Pizza&center=37.759748,-122.427135');\n\n// Opens google maps and searches for Pizza near a location",
+                "OPENURL('mailto:clark.griswold@gmail.com?subject=turn+those+lights+off!&body=jk,+i+love+them.');\n\n// Opens an email client with a predefined subject and body",
+                "if (PLATFORM() === 'iOS') {\n  OPENURL('mailto:' + $field_1 + '?subject=' + encodeURIComponent($field_2) + '&body=' + encodeURIComponent($field_3));\n} else {\n  OPENURL('mailto:' + $field_1 + '?subject=' + $field_2 + '&body=' + $field_3);\n}\n\n// Opens an email client with dynamic to address, subject, and body.",
+                "ON('click', 'driving_directions', function(event) {\n  OPENURL(encodeURI('https://maps.google.com/maps?daddr=' + $address.sub_thoroughfare + '+' + $address.thoroughfare + '+' + $address.locality + '+' + $address.admin_area + '+' + $address.postal_code));\n});\n\n// Opens the Google Maps app and provides driving directions to address when the 'driving_directions' hyperlink field is clicked."
             ]
         },
         {
@@ -282,7 +284,7 @@
                 }
             ],
             "examples": [
-                "// This example looks up the place name from OpenStreetMap when the location changes and fills in a text\n// field with the place name. Replace 'place_name' below with a text field on your form.\n\nON('change-geometry', function(event) {\n  var options = {\n    url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' + LONGITUDE() + '?format=json&polygon=1&addressdetails=1'\n  }\n\n  REQUEST(options, function(error, response, body) {\n    if (error) {\n      ALERT('Error with request: ' + error)\n    } else {\n      var data = JSON.parse(body)\n\n      if (data.length) {\n        SETVALUE('place_name', data[0].display_name)\n      }\n    }\n  })\n});"
+                "// This example looks up the place name from OpenStreetMap when the location changes and fills in a text\n// field with the place name. Replace 'place_name' below with a text field on your form.\n\nON('change-geometry', function(event) {\n  var options = {\n    url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' + LONGITUDE() + '?format=json&polygon=1&addressdetails=1'\n  };\n\n  REQUEST(options, function(error, response, body) {\n    if (error) {\n      ALERT('Error with request: ' + error);\n    } else {\n      var data = JSON.parse(body);\n\n      if (data.length) {\n        SETVALUE('place_name', data[0].display_name);\n      }\n    }\n  });\n});"
             ]
         },
         {
@@ -308,7 +310,7 @@
             "name": "SETCHOICEFILTER",
             "access": "",
             "virtual": false,
-            "description": "SETCHOICEFILTER\nFilter the choices in a choice field or classification field\nThe SETCHOICEFILTER function allows for dynamic filtering of the choice options on choice fields or classification fields. This function differs from [SETCHOICES](/data-events/reference/setchoices/) in that only filters the existing choices. That distinction is important because it allows you to maintain your choice options as choice lists and classification sets with label+value pairs and control the available options from data events without having to completely redefine the options with labels *and* values. Using `SETCHOICEFILTER` you can supply the filter to apply and it will keep the label and values already defined on the choice options. The filtering is applied to the value portion of the choices and uses case-insensitive \"contains\" comparison.",
+            "description": "SETCHOICEFILTER\nFilter the choices in a choice field or classification field.\nThe SETCHOICEFILTER function allows for dynamic filtering of the choice options on choice fields or classification fields. This function differs from [SETCHOICES](/data-events/reference/setchoices/) in that only filters the existing choices. That distinction is important because it allows you to maintain your choice options as choice lists and classification sets with label+value pairs and control the available options from data events without having to completely redefine the options with labels *and* values. Using `SETCHOICEFILTER` you can supply the filter to apply and it will keep the label and values already defined on the choice options. The filtering is applied to the value portion of the choices and uses case-insensitive \"contains\" comparison.\n\n*NOTE*: SETCHOICEFILTERS() will filter the top level choice options in a classification set.",
             "parameters": [
                 {
                     "name": "field",
@@ -332,16 +334,16 @@
                 }
             ],
             "examples": [
-                "// Filters the choices in the weather summary field to those that contain 'cat'\nSETCHOICEFILTER('weather_summary', 'cat')",
-                "// Filters the choices in the weather summary field to those that contain 'cat' or 'dog'\nSETCHOICEFILTER('weather_summary', ['cat', 'dog'])",
-                "// Unsets any filter previously set by SETCHOICEFILTER and applies no filter\nSETCHOICEFILTER('weather_summary', null)"
+                "// Filters the choices in the weather summary field to those that contain 'cat'\nSETCHOICEFILTER('weather_summary', 'cat');",
+                "// Filters the choices in the weather summary field to those that contain 'cat' or 'dog'\nSETCHOICEFILTER('weather_summary', ['cat', 'dog']);",
+                "// Unsets any filter previously set by SETCHOICEFILTER and applies no filter\nSETCHOICEFILTER('weather_summary', null);"
             ]
         },
         {
             "name": "SETCHOICES",
             "access": "",
             "virtual": false,
-            "description": "SETCHOICES\nSet the available choices for a choice field\nThe SETCHOICES function allows for dynamic modification of the choice options on choice fields. For example, if you want to limit or completely replace the pick list options depending on other data scenarios on the form, you can use SETCHOICES to modify the options. Depending on what's required, it might be easier to use [SETCHOICEFILTER](/data-events/reference/setchoicefilter/), which is a similar function except it doesn't completely redefine the choices, it only applies a filter to them.\n\nThe `choices` parameter can be in 3 possible formats. The first format is provided for simplicity, and the last 2 formats are for more sophisticated scenarios where you want control over the label and value properties of the choices. The examples below demonstrate all 3 formats.\n\n* Array of strings - simplest format, the label and value are the same\n* Array of arrays - each choice item is an array in `[label, value]` order\n* Array of objects - each object has a `label` and `value` attribute",
+            "description": "SETCHOICES\nSet the available choices for a choice field.\nThe SETCHOICES function allows for dynamic modification of the choice options on choice fields. For example, if you want to limit or completely replace the pick list options depending on other data scenarios on the form, you can use SETCHOICES to modify the options. Depending on what's required, it might be easier to use [SETCHOICEFILTER](/data-events/reference/setchoicefilter/), which is a similar function except it doesn't completely redefine the choices, it only applies a filter to them.\n\nThe `choices` parameter can be in 3 possible formats. The first format is provided for simplicity, and the last 2 formats are for more sophisticated scenarios where you want control over the label and value properties of the choices. The examples below demonstrate all 3 formats.\n\n* Array of strings - simplest format, the label and value are the same\n* Array of arrays - each choice item is an array in `[label, value]` order\n* Array of objects - each object has a `label` and `value` attribute",
             "parameters": [
                 {
                     "name": "field",
@@ -364,10 +366,10 @@
                 }
             ],
             "examples": [
-                "choices = ['Rain', 'Hail', 'Snow', 'Graupel']\n\n// Sets the available choices of the weather summary field to an array of values\nSETCHOICES('weather_summary', choices)",
-                "choices = [\n  ['Light Rain', 'light_rain'],\n  ['Heavy Rain', 'heavy_rain']\n]\n\n// Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order\nSETCHOICES('weather_summary', choices)",
-                "choices = [\n  { label: 'Light Rain', value: 'light_rain' },\n  { label: 'Heavy Rain', value: 'heavy_rain' }\n]\n\n// Sets the available choices of the weather summary field to an array of labels and values in an object containing \"label\" and \"value\" keys\nSETCHOICES('weather_summary', choices)",
-                "// Unsets any override previously set by SETCHOICES and uses the original setting from the form schema\nSETCHOICES('weather_summary', null)"
+                "choices = ['Rain', 'Hail', 'Snow', 'Graupel'];\n\n// Sets the available choices of the weather summary field to an array of values\nSETCHOICES('weather_summary', choices);",
+                "choices = [\n  ['Light Rain', 'light_rain'],\n  ['Heavy Rain', 'heavy_rain']\n];\n\n// Sets the available choices of the weather summary field to an array of labels and values in [<label>, <value>] order\nSETCHOICES('weather_summary', choices);",
+                "choices = [\n  { label: 'Light Rain', value: 'light_rain' },\n  { label: 'Heavy Rain', value: 'heavy_rain' }\n];\n\n// Sets the available choices of the weather summary field to an array of labels and values in an object containing \"label\" and \"value\" keys\nSETCHOICES('weather_summary', choices);",
+                "// Unsets any override previously set by SETCHOICES and uses the original setting from the form schema\nSETCHOICES('weather_summary', null);"
             ]
         },
         {
@@ -394,7 +396,7 @@
                 }
             ],
             "examples": [
-                "SETDESCRIPTION('weather_summary', 'Could not automatically fetch weather data. Briefly describe the current weather.')\n\n// Sets the description of a weather summary field"
+                "SETDESCRIPTION('weather_summary', 'Could not automatically fetch weather data. Briefly describe the current weather.');\n\n// Sets the description of a weather summary field"
             ]
         },
         {
@@ -443,16 +445,16 @@
                 }
             ],
             "examples": [
-                "// Hides the weather summary field\nSETHIDDEN('weather_summary', true)",
-                "// Shows the weather summary field\nSETHIDDEN('weather_summary', false)",
-                "// Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema\nSETHIDDEN('weather_summary', null)"
+                "// Hides the weather summary field\nSETHIDDEN('weather_summary', true);",
+                "// Shows the weather summary field\nSETHIDDEN('weather_summary', false);",
+                "// Unsets any override previously set by SETHIDDEN and uses the original setting from the form schema\nSETHIDDEN('weather_summary', null);"
             ]
         },
         {
             "name": "SETINTERVAL",
             "access": "",
             "virtual": false,
-            "description": "SETINTERVAL\nRepeatedly calls a function with a fixed time delay between each call\nThe SETINTERVAL function can be used to repeatedly call a function at a specified interval. It's nearly identical to the web platform standard [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval).",
+            "description": "SETINTERVAL\nRepeatedly calls a function with a fixed time delay between each call.\nThe SETINTERVAL function can be used to repeatedly call a function at a specified interval. It's nearly identical to the web platform standard [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval).",
             "parameters": [
                 {
                     "name": "function",
@@ -506,8 +508,8 @@
                 }
             ],
             "examples": [
-                "// Sets the field's label to 'Weather Report'\nSETLABEL('weather_summary', 'Weather Report')",
-                "// Unsets any override previously set by SETLABEL and uses the original setting from the form schema\nSETLABEL('weather_summary', null)"
+                "// Sets the field's label to 'Weather Report'\nSETLABEL('weather_summary', 'Weather Report');",
+                "// Unsets any override previously set by SETLABEL and uses the original setting from the form schema\nSETLABEL('weather_summary', null);"
             ]
         },
         {
@@ -534,7 +536,7 @@
                 }
             ],
             "examples": [
-                "// Sets the location of a record\nSETLOCATION(35.5946167, -80.8638915)"
+                "// Sets the location of a record\nSETLOCATION(35.5946167, -80.8638915);"
             ]
         },
         {
@@ -564,8 +566,8 @@
                 }
             ],
             "examples": [
-                "SETMAXLENGTH('weather_summary', 25)\n\n// Sets the maximum length of the weather summary field to 25",
-                "// Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema\nSETMAXLENGTH('weather_summary', null)"
+                "SETMAXLENGTH('weather_summary', 25);\n\n// Sets the maximum length of the weather summary field to 25",
+                "// Unsets any override previously set by SETMAXLENGTH and uses the original setting from the form schema\nSETMAXLENGTH('weather_summary', null);"
             ]
         },
         {
@@ -595,8 +597,8 @@
                 }
             ],
             "examples": [
-                "SETMINLENGTH('weather_summary', 25)\n\n// Sets the minimum length of the weather summary field to 25",
-                "// Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema\nSETMINLENGTH('weather_summary', null)"
+                "SETMINLENGTH('weather_summary', 25);\n\n// Sets the minimum length of the weather summary field to 25",
+                "// Unsets any override previously set by SETMINLENGTH and uses the original setting from the form schema\nSETMINLENGTH('weather_summary', null);"
             ]
         },
         {
@@ -615,7 +617,7 @@
                 }
             ],
             "examples": [
-                "// Sets the project of a record\nSETPROJECT('Bells Crossing Phase 3')"
+                "// Sets the project of a record\nSETPROJECT('Bells Crossing Phase 3');"
             ]
         },
         {
@@ -645,9 +647,9 @@
                 }
             ],
             "examples": [
-                "SETREADONLY('weather_summary', true)\n\n// Sets the field to read only, not editable by the user",
-                "SETREADONLY('weather_summary', false)\n\n// Sets the field to be active, editable by the user",
-                "SETREADONLY('weather_summary', null)\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from the form schema"
+                "SETREADONLY('weather_summary', true);\n\n// Sets the field to read only, not editable by the user",
+                "SETREADONLY('weather_summary', false);\n\n// Sets the field to be active, editable by the user",
+                "SETREADONLY('weather_summary', null);\n\n// Unsets any override previously set by SETREADONLY and uses the original setting from the form schema"
             ]
         },
         {
@@ -677,9 +679,9 @@
                 }
             ],
             "examples": [
-                "// Sets the weather summary field as required\nSETREQUIRED('weather_summary', true)",
-                "// Sets the weather summary field as not required\nSETREQUIRED('weather_summary', false)",
-                "// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema\nSETREQUIRED('weather_summary', null)"
+                "// Sets the weather summary field as required\nSETREQUIRED('weather_summary', true);",
+                "// Sets the weather summary field as not required\nSETREQUIRED('weather_summary', false);",
+                "// Unsets any override previously set by SETREQUIRED and uses the original setting from the form schema\nSETREQUIRED('weather_summary', null);"
             ]
         },
         {
@@ -691,14 +693,14 @@
                 {
                     "name": "status",
                     "type": "String",
-                    "description": "The status value for the record",
+                    "description": "The status value for the record. Must be a valid status option!",
                     "default": "",
                     "optional": "",
                     "nullable": ""
                 }
             ],
             "examples": [
-                "// Sets the status of a record\nSETSTATUS('inspection_pending')"
+                "// Sets the status of a record\nSETSTATUS('inspection_pending');"
             ]
         },
         {
@@ -720,7 +722,7 @@
                 }
             ],
             "examples": [
-                "SETSTATUSHIDDEN(true)\n\n// Sets the status field to be hidden"
+                "SETSTATUSHIDDEN(true);\n\n// Sets the status field to be hidden"
             ]
         },
         {
@@ -742,7 +744,7 @@
                 }
             ],
             "examples": [
-                "SETSTATUSREADONLY(true)\n\n// Sets the status field to read only, not editable by the user"
+                "SETSTATUSREADONLY(true);\n\n// Sets the status field to read only, not editable by the user"
             ]
         },
         {
@@ -764,8 +766,8 @@
                 }
             ],
             "examples": [
-                "// Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection'\nSETSTATUSFILTER(['inspection_pending', 'in_inspection'])",
-                "// Unsets any previous status filters and allows any status to be selected for the record\nSETSTATUSFILTER(null)",
+                "// Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection'\nSETSTATUSFILTER(['inspection_pending', 'in_inspection']);",
+                "// Unsets any previous status filters and allows any status to be selected for the record\nSETSTATUSFILTER(null);",
                 "// Sets the allowable status values for the record to be 'inspection_pending' or 'in_inspection' for Standard Users\nON('load-record', function(event) {\n  if (ROLE() === 'Standard User') {\n    SETSTATUSFILTER(['inspection_pending', 'in_inspection']);\n  }\n});"
             ]
         },
@@ -773,7 +775,7 @@
             "name": "SETTIMEOUT",
             "access": "",
             "virtual": false,
-            "description": "SETTIMEOUT\nCalls a function after a specified delay\nThe SETTIMEOUT function can be used to delay execution of a function for a specified amount of time. It's nearly identical to the web platform standard [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setTimeout).",
+            "description": "SETTIMEOUT\nCalls a function after a specified delay.\nThe SETTIMEOUT function can be used to delay execution of a function for a specified amount of time. It's nearly identical to the web platform standard [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setTimeout).",
             "parameters": [
                 {
                     "name": "function",
@@ -824,14 +826,15 @@
                 }
             ],
             "examples": [
-                "// Sets the value of a weather summary field\nSETVALUE('text_field', 'A Text Value')",
-                "// Sets the value of a time field\nSETVALUE('time_field', '16:00')",
-                "// Sets the value of a date field\nSETVALUE('date_field', '2016-04-28')",
-                "// Sets the value of a single choice field\nSETVALUE('choice_field', 'red')",
-                "// Sets the value of a multiple choice field\nSETVALUE('multiple_choice_field', ['red', 'green', 'blue'])",
-                "// Sets the value of a classification field to level1 > level2 > level3\nSETVALUE('classification_field', ['level1', 'level2', 'level3'])",
-                "// Sets the value of a yes/no field\nSETVALUE('yes_no_field', 'yes')",
-                "// Sets the value of an address field\nvar address = {\n  sub_thoroughfare: '360',\n  thoroughfare: 'Central Avenue',\n  suite: '200',\n  locality: 'St. Petersburg',\n  sub_admin_area: 'Pinellas',\n  admin_area: 'FL',\n  postal_code: '33701',\n  country: 'US'\n};\n\nSETVALUE('address_field', address)"
+                "// Sets the value of a weather summary field\nSETVALUE('text_field', 'A Text Value');",
+                "// Sets the value of a time field\nSETVALUE('time_field', '16:00');",
+                "// Sets the value of a date field\nSETVALUE('date_field', '2016-04-28');",
+                "// Sets the value of a single choice field\nSETVALUE('choice_field', 'red');",
+                "// Sets the value of a multiple choice field\nSETVALUE('multiple_choice_field', ['red', 'green', 'blue']);",
+                "// Sets the value of a classification field to level1 > level2 > level3\nSETVALUE('classification_field', ['level1', 'level2', 'level3']);",
+                "// Sets the value of a yes/no field\nSETVALUE('yes_no_field', 'yes');",
+                "// Sets the value of an address field\nvar address = {\n  sub_thoroughfare: '360',\n  thoroughfare: 'Central Avenue',\n  suite: '200',\n  locality: 'St. Petersburg',\n  sub_admin_area: 'Pinellas',\n  admin_area: 'FL',\n  postal_code: '33701',\n  country: 'US'\n};\n\nSETVALUE('address_field', address);",
+                "// Sets the value of a record link field\nSETVALUE('record_link_field', ['fulcrum_id_1', 'fulcrum_id_2']);"
             ]
         },
         {
@@ -841,11 +844,11 @@
             "description": "STORAGE\nReturns a storage object for setting and getting local storage items.",
             "parameters": [],
             "examples": [
-                "storage = STORAGE()\nKEY = 'item_key'\nstorage.setItem(KEY, 'hello world')\n\n// Sets an item in local storage, must be a string",
-                "item = storage.getItem(KEY)\n\n// Gets an item from storage if it exists, otherwise returns null",
-                "geom = { type: 'Point', coordinates: [-100, 40] }\nstorage.setItem('geometry', JSON.stringify(geom))\n\nanotherGeom = JSON.parse(storage.getItem('geometry'))\n\n// Use JSON.stringify and JSON.parse to serialize and deserialize objects in local storage",
-                "storage.removeItem(KEY)\n\n// Removes an item from storage",
-                "storage.clear()\n\n// Removes all items from storage"
+                "storage = STORAGE();\nKEY = 'item_key';\nstorage.setItem(KEY, 'hello world');\n\n// Sets an item in local storage, must be a string",
+                "item = storage.getItem(KEY);\n\n// Gets an item from storage if it exists, otherwise returns null",
+                "geom = { type: 'Point', coordinates: [-100, 40] };\nstorage.setItem('geometry', JSON.stringify(geom));\n\nanotherGeom = JSON.parse(storage.getItem('geometry'));\n\n// Use JSON.stringify and JSON.parse to serialize and deserialize objects in local storage",
+                "storage.removeItem(KEY);\n\n// Removes an item from storage",
+                "storage.clear();\n\n// Removes all items from storage"
             ]
         }
     ]
