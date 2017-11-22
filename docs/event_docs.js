@@ -559,6 +559,7 @@ function SETLOCATION() {}
 /**
  * SETMAXLENGTH
  * Set the maximum length for a field.
+ * The SETMAXLENGTH function can be used to set the maximum number of characters for a text field or the maximum count of repeatables, photos, videos, or audio files.
  * @param {String} field The data name for the field
  * @param {number|null} length The maximum length of the field
  * @example
@@ -577,6 +578,7 @@ function SETMAXLENGTH() {}
 /**
  * SETMINLENGTH
  * Set the minimum length for a field.
+ * The SETMINLENGTH function can be used to set the minimum number of characters for a text field or the minimum count of repeatables, photos, videos, or audio files. Note that the minimum length is only enforced for non-empty fields. You must also make the field required to enforce the minimum length for empty fields.
  * @param {String} field The data name for the field
  * @param {number|null} length The minimum length of the field
  * @example

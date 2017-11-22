@@ -543,7 +543,7 @@
             "name": "SETMAXLENGTH",
             "access": "",
             "virtual": false,
-            "description": "SETMAXLENGTH\nSet the maximum length for a field.",
+            "description": "SETMAXLENGTH\nSet the maximum length for a field.\nThe SETMAXLENGTH function can be used to set the maximum number of characters for a text field or the maximum count of repeatables, photos, videos, or audio files.",
             "parameters": [
                 {
                     "name": "field",
@@ -574,7 +574,7 @@
             "name": "SETMINLENGTH",
             "access": "",
             "virtual": false,
-            "description": "SETMINLENGTH\nSet the minimum length for a field.",
+            "description": "SETMINLENGTH\nSet the minimum length for a field.\nThe SETMINLENGTH function can be used to set the minimum number of characters for a text field or the minimum count of repeatables, photos, videos, or audio files. Note that the minimum length is only enforced for non-empty fields. You must also make the field required to enforce the minimum length for empty fields.",
             "parameters": [
                 {
                     "name": "field",
