@@ -2953,7 +2953,8 @@
                 }
             ],
             "examples": [
-                "// returns [1,2,3]\nREPEATABLEVALUES($repeatable_field, 'cost')"
+                "// returns [1,2,3]\nREPEATABLEVALUES($repeatable_field, 'cost')",
+                "// Get the value from a choice list: returns [widget,spinner,gizmo]\nREPEATABLEVALUES($repeatable_field, 'item').map(CHOICEVALUE)"
             ],
             "returns": {
                 "type": "Array",

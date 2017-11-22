@@ -1967,6 +1967,9 @@ function REPEATABLENUMBER() {}
  * @example
  * // returns [1,2,3]
  * REPEATABLEVALUES($repeatable_field, 'cost')
+ * @example
+ * // Get the value from a choice list: returns [widget,spinner,gizmo]
+ * REPEATABLEVALUES($repeatable_field, 'item').map(CHOICEVALUE)
  */
 function REPEATABLEVALUES() {}
 
