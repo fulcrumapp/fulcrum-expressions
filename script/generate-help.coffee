@@ -19,7 +19,6 @@ SKIP_EXPORTS = [
   'N',
   'T',
   'SETASSIGNMENT',
-  'TIMEZONE',
   'X_ISNEW',
   'X_ISUPDATE'
 ]
