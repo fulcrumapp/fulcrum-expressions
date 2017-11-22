@@ -158,7 +158,7 @@ function CHOICEVALUE() {}
  * CHOICEVALUES
  * Returns the selected values for a choice field or classification field
  * @param {Object} field The choice field or classification field
- * @returns {String} the selected value
+ * @returns {Array} the selected value(s)
  * @example
  * // returns ["Red","Green","Blue"]
  * CHOICEVALUES($choice_field)

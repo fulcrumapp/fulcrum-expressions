@@ -243,8 +243,8 @@
                 "// returns [\"Red\",\"Green\",\"Blue\"]\nCHOICEVALUES($choice_field)"
             ],
             "returns": {
-                "type": "String",
-                "description": "the selected value"
+                "type": "Array",
+                "description": "the selected value(s)"
             }
         },
         {
