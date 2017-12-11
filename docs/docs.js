@@ -683,6 +683,23 @@ function FACTDOUBLE() {}
 function FALSE() {}
 
 
+////FIELD
+
+/**
+ * FIELD
+ * Returns definition object for a specified field
+ * @param {String} dataName The data name of the field
+ * @returns {Object}
+ * @example
+ * // returns the definition object for the field with a dataName of 'condition'
+ * FIELD('condition')
+ * @example
+ * // returns the label string for the parent of the field with a dataName of 'condition'
+ * FIELD('condition').parent.label
+ */
+function FIELD() {}
+
+
 ////FIELDTYPE
 
 /**
@@ -792,6 +809,22 @@ function FLATTEN() {}
  * FLOOR(126.25, 10)
  */
 function FLOOR() {}
+
+
+////FORM
+
+/**
+ * FORM
+ * Returns the form definition object
+ * @returns {Object}
+ * @example
+ * // returns the entire form object
+ * FORM()
+ * @example
+ * // returns "Fire Hydrant Inspection Form"
+ * FORM().name
+ */
+function FORM() {}
 
 
 ////FORMAT

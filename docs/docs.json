@@ -1024,6 +1024,30 @@
             }
         },
         {
+            "name": "FIELD",
+            "access": "",
+            "virtual": false,
+            "description": "FIELD\nReturns definition object for a specified field",
+            "parameters": [
+                {
+                    "name": "dataName",
+                    "type": "String",
+                    "description": "The data name of the field",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns the definition object for the field with a dataName of 'condition'\nFIELD('condition')",
+                "// returns the label string for the parent of the field with a dataName of 'condition'\nFIELD('condition').parent.label"
+            ],
+            "returns": {
+                "type": "Object",
+                "description": ""
+            }
+        },
+        {
             "name": "FIELDTYPE",
             "access": "",
             "virtual": false,
@@ -1213,6 +1237,21 @@
             ],
             "returns": {
                 "type": "Number",
+                "description": ""
+            }
+        },
+        {
+            "name": "FORM",
+            "access": "",
+            "virtual": false,
+            "description": "FORM\nReturns the form definition object",
+            "parameters": [],
+            "examples": [
+                "// returns the entire form object\nFORM()",
+                "// returns \"Fire Hydrant Inspection Form\"\nFORM().name"
+            ],
+            "returns": {
+                "type": "Object",
                 "description": ""
             }
         },
