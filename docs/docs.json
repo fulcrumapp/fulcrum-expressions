@@ -610,8 +610,8 @@
                 }
             ],
             "examples": [
-                "// returns [\"name\",\"items\",\"cost\",\"choice_field\"]\nDATANAMES()",
-                "// returns [\"items\"]\nDATANAMES('Repeatable')"
+                "// returns [\"name\",\"items\",\"cost\",\"choice_value\",\"child_items\",\"child_item_cost\",\"choice_field\"]\nDATANAMES()",
+                "// returns [\"items\",\"child_items\"]\nDATANAMES('Repeatable')"
             ],
             "returns": {
                 "type": "Array",
@@ -1039,8 +1039,8 @@
                 }
             ],
             "examples": [
-                "// returns the definition object for the field with a dataName of 'condition'\nFIELD('condition')",
-                "// returns the label string for the parent of the field with a dataName of 'condition'\nFIELD('condition').parent.label"
+                "// returns \"Child Item Cost\"\nFIELD('child_item_cost').label",
+                "// returns \"Child Items\"\nFIELD('child_item_cost').parent.label"
             ],
             "returns": {
                 "type": "Object",
@@ -1247,7 +1247,6 @@
             "description": "FORM\nReturns the form definition object",
             "parameters": [],
             "examples": [
-                "// returns the entire form object\nFORM()",
                 "// returns \"Fire Hydrant Inspection Form\"\nFORM().name"
             ],
             "returns": {
@@ -2993,7 +2992,7 @@
             ],
             "examples": [
                 "// returns [1,2,3]\nREPEATABLEVALUES($repeatable_field, 'cost')",
-                "// Get the value from a choice list: returns [widget,spinner,gizmo]\nREPEATABLEVALUES($repeatable_field, 'item').map(CHOICEVALUE)"
+                "// returns [\"widget\",\"spinner\",\"gizmo\"]\nREPEATABLEVALUES($repeatable_field, 'choice_value').map(CHOICEVALUE)"
             ],
             "returns": {
                 "type": "Array",

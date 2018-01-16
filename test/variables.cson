@@ -26,19 +26,31 @@ values:
       {
         id: '1'
         form_values: {
-          '1338': 1
+          '1338': 1,
+          '362a': {
+            choice_values: [ 'widget' ],
+            other_values: []
+          }
         }
       }
       {
         id: '2'
         form_values: {
-          '1338': 2
+          '1338': 2,
+          '362a': {
+            choice_values: [ 'spinner' ],
+            other_values: []
+          }
         }
       }
       {
         id: '3'
         form_values: {
-          '1338': 3
+          '1338': 3,
+          '362a': {
+            choice_values: [ 'gizmo' ],
+            other_values: []
+          }
         }
       }
     ]
@@ -72,25 +84,92 @@ form:
       description: null
       disabled: false
       elements: [
-        data_name: "cost"
-        default_value: null
-        description: null
-        disabled: false
-        format: "decimal"
-        hidden: false
-        key: "1338"
-        label: "Cost"
-        max: null
-        max_length: null
-        min: null
-        min_length: null
-        numeric: true
-        required: false
-        required_conditions: null
-        required_conditions_type: null
-        type: "TextField"
-        visible_conditions: null
-        visible_conditions_type: null
+        {
+          data_name: "cost"
+          default_value: null
+          description: null
+          disabled: false
+          format: "decimal"
+          hidden: false
+          key: "1338"
+          label: "Cost"
+          max: null
+          max_length: null
+          min: null
+          min_length: null
+          numeric: true
+          required: false
+          required_conditions: null
+          required_conditions_type: null
+          type: "TextField"
+          visible_conditions: null
+          visible_conditions_type: null
+        },
+        {
+          type: "ChoiceField"
+          key: "362a",
+          label: "Choice Picker"
+          description: null
+          required: true,
+          disabled: false
+          hidden: false
+          data_name: "choice_value"
+          default_value: null
+          visible_conditions_type: null
+          visible_conditions: null
+          required_conditions_type: null
+          required_conditions: null
+          multiple: false
+          allow_other: false
+          default_previous_value: false
+          choices: [
+            { label: "1", value: "widget" },
+            { label: "2", value: "spinner" },
+            { label: "4", value: "gizmo" }
+          ]
+        }
+        {
+          data_name: "child_items"
+          default_value: null
+          description: null
+          disabled: false
+          elements: [
+            data_name: "child_item_cost"
+            default_value: null
+            description: null
+            disabled: false
+            format: "decimal"
+            hidden: false
+            key: "1399"
+            label: "Child Item Cost"
+            max: null
+            max_length: null
+            min: null
+            min_length: null
+            numeric: true
+            required: false
+            required_conditions: null
+            required_conditions_type: null
+            type: "TextField"
+            visible_conditions: null
+            visible_conditions_type: null
+          ]
+          geometry_required: false
+          geometry_types: ["Point"]
+          hidden: false
+          key: "1347"
+          label: "Child Items"
+          max_length: null
+          min_length: null
+          required: false
+          required_conditions: null
+          required_conditions_type: null
+          title_field_key: null
+          title_field_keys: ["1399"]
+          type: "Repeatable"
+          visible_conditions: null
+          visible_conditions_type: null
+        }
       ]
       geometry_required: false
       geometry_types: ["Point"]
@@ -135,7 +214,7 @@ form:
     }
   ]
   image: null
-  name: "Test Form"
+  name: "Fire Hydrant Inspection Form"
   record_title_key: "97ab"
   status_field:
     choices: [

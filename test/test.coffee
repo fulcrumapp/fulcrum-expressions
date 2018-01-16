@@ -1499,10 +1499,10 @@ describe 'REPEATABLESUM', ->
 describe 'DATANAMES', ->
   it 'returns the data names of the form fields', ->
     names = DATANAMES()
-    names.should.eql([ 'name', 'items', 'cost', 'choice_field' ])
+    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'choice_field' ])
 
     names = DATANAMES('Repeatable')
-    names.should.eql([ 'items' ])
+    names.should.eql([ 'items', 'child_items' ])
 
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->

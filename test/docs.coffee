@@ -3,6 +3,7 @@ _ = require 'underscore'
 path = require 'path'
 CSON = require 'season'
 Utils = require '../utils'
+stringify = require 'json-stringify-safe'
 
 spawnSync = require('child_process').spawnSync or require('spawn-sync')
 
@@ -55,7 +56,7 @@ describe 'Documentation', ->
         (-> eval(example)).should.not.throw
 
         result = eval(example)
-        actual = JSON.stringify(result)
+        actual = stringify(result)
 
         if _.isUndefined(result)
           actual = 'undefined'

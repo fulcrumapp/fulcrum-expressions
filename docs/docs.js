@@ -420,10 +420,10 @@ function CURRENCYSYMBOL() {}
  * @param {String} [type=any] Optional field type
  * @returns {Array}
  * @example
- * // returns ["name","items","cost","choice_field"]
+ * // returns ["name","items","cost","choice_value","child_items","child_item_cost","choice_field"]
  * DATANAMES()
  * @example
- * // returns ["items"]
+ * // returns ["items","child_items"]
  * DATANAMES('Repeatable')
  */
 function DATANAMES() {}
@@ -691,11 +691,11 @@ function FALSE() {}
  * @param {String} dataName The data name of the field
  * @returns {Object}
  * @example
- * // returns the definition object for the field with a dataName of 'condition'
- * FIELD('condition')
+ * // returns "Child Item Cost"
+ * FIELD('child_item_cost').label
  * @example
- * // returns the label string for the parent of the field with a dataName of 'condition'
- * FIELD('condition').parent.label
+ * // returns "Child Items"
+ * FIELD('child_item_cost').parent.label
  */
 function FIELD() {}
 
@@ -817,9 +817,6 @@ function FLOOR() {}
  * FORM
  * Returns the form definition object
  * @returns {Object}
- * @example
- * // returns the entire form object
- * FORM()
  * @example
  * // returns "Fire Hydrant Inspection Form"
  * FORM().name
@@ -2001,8 +1998,8 @@ function REPEATABLENUMBER() {}
  * // returns [1,2,3]
  * REPEATABLEVALUES($repeatable_field, 'cost')
  * @example
- * // Get the value from a choice list: returns [widget,spinner,gizmo]
- * REPEATABLEVALUES($repeatable_field, 'item').map(CHOICEVALUE)
+ * // returns ["widget","spinner","gizmo"]
+ * REPEATABLEVALUES($repeatable_field, 'choice_value').map(CHOICEVALUE)
  */
 function REPEATABLEVALUES() {}
 
