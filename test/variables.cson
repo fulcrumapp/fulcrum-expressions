@@ -31,6 +31,20 @@ values:
             choice_values: [ 'widget' ],
             other_values: []
           }
+          '1347': [
+            {
+              id: '1a',
+              form_values: {
+                '1399': 4
+              }
+            },
+            {
+              id: '1b',
+              form_values: {
+                '1399': 5
+              }
+            }
+          ]
         }
       }
       {
@@ -41,6 +55,14 @@ values:
             choice_values: [ 'spinner' ],
             other_values: []
           }
+          '1347': [
+            {
+              id: '2a',
+              form_values: {
+                '1399': 10
+              }
+            }
+          ]
         }
       }
       {

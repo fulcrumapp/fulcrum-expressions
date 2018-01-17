@@ -198,7 +198,7 @@ exports.COSH = (number) ->
 exports.COUNT = (value) ->
   return NO_VALUE unless _.isArray(value)
 
-  numbers = _.select COMPACT(value).map(NUM), (num) -> not isNaN(num)
+  numbers = _.select COMPACT(value).map(NUM), ISNUMBER
 
   numbers.length
 
@@ -246,7 +246,7 @@ exports.DATE = (year, month, day) ->
   month = INT(month)
   day = INT(day)
 
-  return NO_VALUE if isNaN(year) or isNaN(month) or isNaN(day)
+  return NO_VALUE if ISNAN(year) or ISNAN(month) or ISNAN(day)
 
   new Date("#{year}/#{month}/#{day} 00:00:00")
 
@@ -255,7 +255,7 @@ exports.DATEADD = (date, number, type='day') ->
   number = INT(number)
 
   return NO_VALUE unless date?
-  return NO_VALUE if isNaN(number)
+  return NO_VALUE if ISNAN(number)
 
   return NO_VALUE unless type is 'day'
 
@@ -271,7 +271,7 @@ exports.DATEVALUE = (text) ->
 
   date = new Date(text)
 
-  return NO_VALUE if isNaN(date.getTime())
+  return NO_VALUE if ISNAN(date.getTime())
 
   date
 
@@ -309,7 +309,7 @@ exports.DEVICEMANUFACTURER = ->
 exports.DOLLAR = (value, decimals=2, currency=null, language=null) ->
   decimals = NUM(decimals)
   decimals ?= 2
-  decimals = 2 if isNaN(decimals)
+  decimals = 2 if ISNAN(decimals)
 
   value = NUM(value)
 
@@ -351,6 +351,25 @@ exports.FIELD = (dataName) ->
 
   element
 
+exports.FIELDS = (dataName, options = {}) ->
+  element = FIELD(dataName)
+
+  options ?= {}
+  options.repeatables ?= true
+  options.sections ?= true
+
+  return NO_VALUE unless element?
+  return NO_VALUE unless element.elements?
+
+  return Utils.flattenElements(element.elements, options.repeatables, false, null, options.sections)
+
+exports.FIELDNAMES = (dataName, options = {}) ->
+  fields = FIELDS(dataName, options)
+
+  return NO_VALUE unless fields?
+
+  fields.map (o) => o.data_name
+
 exports.FIELDTYPE = (dataName) ->
   field = FIELD(dataName)
 
@@ -366,7 +385,7 @@ exports.MEMOIZED_FACT = []
 exports.FACT = (value) ->
   value = NUM(value)
 
-  return NaN if isNaN(value)
+  return NaN if ISNAN(value)
   return NaN if value < 0
 
   n = Math.floor(value)
@@ -384,7 +403,7 @@ exports.MEMOIZED_FACTDOUBLE = []
 exports.FACTDOUBLE = (value) ->
   value = NUM(value)
 
-  return NaN if isNaN(value)
+  return NaN if ISNAN(value)
   return NaN if value < 0
 
   n = Math.floor(value)
@@ -402,7 +421,7 @@ exports.FALSE = ->
 
 exports.FIND = (needle, haystack, position) ->
   position = NUM(position)
-  position = 0 if isNaN(position)
+  position = 0 if ISNAN(position)
 
   return NO_VALUE unless haystack and haystack.indexOf
   return NO_VALUE if _.isArray(needle)
@@ -416,12 +435,12 @@ exports.FIND = (needle, haystack, position) ->
 exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
   number = NUM(number)
   decimals = NUM(decimals)
-  decimals = 2 if isNaN(decimals)
+  decimals = 2 if ISNAN(decimals)
   decimals = MAX(decimals, 0)
   decimals = MIN(decimals, 20)
 
-  return NO_VALUE if isNaN(number)
-  return NO_VALUE if isNaN(decimals)
+  return NO_VALUE if ISNAN(number)
+  return NO_VALUE if ISNAN(decimals)
 
   suppressGroupingSeparator = !!suppressGroupingSeparator
 
@@ -482,7 +501,7 @@ exports.FLOOR = (number, significance) ->
 
   number = NUM(number)
 
-  return NaN if isNaN(number) or isNaN(significance)
+  return NaN if ISNAN(number) or ISNAN(significance)
 
   return 0 if significance is 0
 
@@ -710,14 +729,14 @@ exports.ISERROR = (value) ->
 exports.ISLOGICAL = (value) ->
   _.isBoolean(value)
 
-exports.ISNAN = (number) ->
-  _.isNaN(NUM(number))
+exports.ISNAN = (value) ->
+  not ISNUMBER(value)
 
 exports.ISEVEN = (value) ->
   value = NUM(value)
 
   return false unless _.isNumber(value)
-  return false if isNaN(value)
+  return false if ISNAN(value)
 
   (Math.floor(Math.abs(value)) & 1) is 0
 
@@ -731,13 +750,13 @@ exports.ISNONTEXT = (value) ->
   not _.isString(value)
 
 exports.ISNUMBER = (value) ->
-  _.isNumber(value)
+  _.isFinite(NUM(value))
 
 exports.ISODD = (value) ->
   value = NUM(value)
 
   return false unless _.isNumber(value)
-  return false if isNaN(value)
+  return false if ISNAN(value)
 
   (Math.floor(Math.abs(value)) & 1) is 1
 
@@ -792,7 +811,7 @@ exports.LCM = ->
     b = Math.abs(numbers[i])
     c = a
 
-    return NaN if isNaN(b)
+    return NaN if ISNAN(b)
 
     while a and b
       if a > b
@@ -811,7 +830,7 @@ exports.LEFT = (value, numberOfCharacters = 1) ->
   return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if numberOfCharacters < 0
-  return NO_VALUE if isNaN(numberOfCharacters)
+  return NO_VALUE if ISNAN(numberOfCharacters)
 
   value = value.toString()
 
@@ -916,9 +935,9 @@ exports.MID = (value, startPosition, numberOfCharacters) ->
   return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if startPosition < 1
-  return NO_VALUE if isNaN(startPosition)
+  return NO_VALUE if ISNAN(startPosition)
   return NO_VALUE if numberOfCharacters < 0
-  return NO_VALUE if isNaN(numberOfCharacters)
+  return NO_VALUE if ISNAN(numberOfCharacters)
 
   value = value.toString()
   value.substr(startPosition - 1, numberOfCharacters)
@@ -1190,6 +1209,18 @@ exports.REPEATABLENUMBER = ->
   CONFIG().featureIndex + 1
 
 exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
+  if _.isArray(dataName)
+    if dataName.length is 1
+      dataName = dataName[0]
+    else
+      repeatableDataName = dataName[0]
+      restOfDataNames = dataName.slice(1)
+
+      childValues = REPEATABLEVALUES(repeatableValue, repeatableDataName).map (item) =>
+        REPEATABLEVALUES(item, restOfDataNames)
+
+      return _.flatten(childValues)
+
   dataElement = $$runtime.elementsByDataName[dataName]
 
   return NO_VALUE unless dataElement
@@ -1201,7 +1232,7 @@ exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
   Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
 
 exports.REPEATABLESUM = (repeatableValue, dataName) ->
-  SUM.apply(null, _.reject(REPEATABLEVALUES(repeatableValue, dataName), isNaN))
+  SUM.apply(null, _.filter(REPEATABLEVALUES(repeatableValue, dataName)), ISNUMBER)
 
 exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   startPosition = FLOOR(startPosition)
@@ -1211,9 +1242,9 @@ exports.REPLACE = (value, startPosition, numberOfCharacters, replacement) ->
   return NO_VALUE if arguments.length < 4
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if startPosition < 1
-  return NO_VALUE if isNaN(startPosition)
+  return NO_VALUE if ISNAN(startPosition)
   return NO_VALUE if numberOfCharacters < 0
-  return NO_VALUE if isNaN(numberOfCharacters)
+  return NO_VALUE if ISNAN(numberOfCharacters)
 
   value = value.toString()
 
@@ -1232,7 +1263,7 @@ exports.RIGHT = (value, numberOfCharacters) ->
   return NO_VALUE unless value?
   return NO_VALUE if _.isObject(value)
   return NO_VALUE if numberOfCharacters < 0
-  return NO_VALUE if isNaN(numberOfCharacters)
+  return NO_VALUE if ISNAN(numberOfCharacters)
 
   value = value.toString()
   value.substring(value.length - numberOfCharacters)
@@ -1275,7 +1306,7 @@ exports.RPAD = (value, count, padding=' ') ->
 exports.SEARCH = (needle, haystack, startPosition) ->
   startPosition ?= 1
   startPosition = NUM(startPosition)
-  startPosition = 1 if isNaN(startPosition)
+  startPosition = 1 if ISNAN(startPosition)
 
   haystack = haystack.toString() if _.isNumber(haystack)
   needle = needle.toString() if _.isNumber(needle)

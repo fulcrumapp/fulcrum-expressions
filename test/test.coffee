@@ -1257,6 +1257,26 @@ describe 'CONFIG', ->
     CONFIGURE(decimalSeparator: '.')
     CONFIG().decimalSeparator.should.eql('.')
 
+describe 'FIELD', ->
+  it 'returns the fields', ->
+    FIELD('name').label.should.eql('Name')
+    FIELD('items').type.should.eql('Repeatable')
+    shouldHaveNoValue(FIELD('does_not_exist'))
+
+describe 'FIELDS', ->
+  it 'returns the child fields', ->
+    shouldHaveNoValue(FIELDS('does_not_exist'))
+    shouldHaveNoValue(FIELDS('name'))
+    FIELDS('items').length.should.eql(4)
+    FIELDS('items', {repeatables: false}).length.should.eql(3)
+
+describe 'FIELDNAMES', ->
+  it 'returns the child field names', ->
+    shouldHaveNoValue(FIELDNAMES('does_not_exist'))
+    shouldHaveNoValue(FIELDNAMES('name'))
+    FIELDNAMES('items').should.eql(['cost', 'choice_value', 'child_items', 'child_item_cost'])
+    FIELDNAMES('items', {repeatables: false}).length.should.eql(3)
+
 describe 'FIXED', ->
   it 'returns the fixed represention of a number', ->
     FIXED(12345678901 / 3, 3).should.eql('4,115,226,300.333')
@@ -1429,6 +1449,18 @@ describe 'REPEATABLEVALUES', ->
 
     costs.should.eql([1, 2, 3])
 
+  it 'returns granchild data out of repeatables', ->
+    $repeatable_field = variables.values.form_values['1337']
+
+    child_items = REPEATABLEVALUES($repeatable_field, 'child_items').map (item) =>
+      REPEATABLEVALUES(item, 'child_item_cost')
+
+    child_items.should.eql([ [ 4, 5 ], [ 10 ], null ])
+
+    child_items_all = REPEATABLEVALUES($repeatable_field, ['child_items', 'child_item_cost'])
+
+    child_items_all.should.eql([ 4, 5, 10, null ])
+
   it 'returns a specific field out of a blank collection of repeatable items', ->
     $repeatable_field = []
 
@@ -1450,6 +1482,13 @@ describe 'REPEATABLESUM', ->
     totalCost = REPEATABLESUM($repeatable_field, 'cost')
 
     totalCost.should.eql(6)
+
+  it 'returns the sum of grandchild records', ->
+    $repeatable_field = variables.values.form_values['1337']
+
+    totalCost = REPEATABLESUM($repeatable_field, ['child_items', 'child_item_cost'])
+
+    totalCost.should.eql(19)
 
   it 'returns the sum of a specific numeric field within a blank collection of repeatable items', ->
     $repeatable_field = []

@@ -12,7 +12,7 @@ class Utils
   @toArray = (arrayLike) ->
     Array::slice.call arrayLike, 0
 
-  @flattenElements = (elements, recurseRepeatables=true, assignParent=false, parent=undefined) ->
+  @flattenElements = (elements, recurseRepeatables=true, assignParent=false, parent=undefined, recurseSections=true) ->
     _.tap [], (flat) ->
       _.each elements, (element) ->
         element.parent = parent if assignParent
@@ -21,14 +21,15 @@ class Utils
 
         recurse = true
         recurse = false if not recurseRepeatables and element.type is 'Repeatable'
+        recurse = false if not recurseSections and element.type is 'Section'
 
         if recurse and element.elements
-          children = Utils.flattenElements(element.elements, recurseRepeatables, assignParent, element)
+          children = Utils.flattenElements(element.elements, recurseRepeatables, assignParent, element, recurseSections)
 
           Array.prototype.push.apply(flat, children)
 
   @nearestRepeatable: (element) ->
-    iterator = element
+    iterator = element?.parent
 
     while iterator
       return iterator if iterator.type is 'Repeatable'
