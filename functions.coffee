@@ -1680,6 +1680,43 @@ hostStorage.clear = ->
 exports.STORAGE = (scope) ->
   localStorage ? hostStorage
 
+exports.STRING = () ->
+  values = ARRAY(toArray(arguments))
+
+  strings = values.map (value) ->
+    if _.isUndefined(value) or value is null
+      null
+    else if _.isString(value)
+      value
+    else if _.isNumber(value)
+      value.toLocaleString()
+    else if _.isNaN(value)
+      null
+    else if _.isFunction(value)
+      null
+    else if _.isArray(value)
+      STRING(value)
+    else if _.isDate(value)
+      value.toLocaleString()
+    else if value and value.choice_values
+      STRING(CHOICEVALUES(value))
+    else if value.photo_id
+      value.photo_id
+    else if value.video_id
+      value.video_id
+    else if value.audio_id
+      value.audio_id
+    else if value.signature_id
+      value.signature_id
+    else if value.record_id
+      value.record_id
+    else if value.id
+      value.id
+    else
+      value.toString()
+
+  COMPACT(strings).join(', ')
+
 exports.SUBSTITUTE = (text, oldText, newText, occurrence) ->
   occurrence = FLOOR(occurrence)
 

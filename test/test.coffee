@@ -1675,6 +1675,14 @@ describe 'SORT', ->
     SORT({test: 2}, {test: 1}, {test: 1}, (a, b) -> a.test).should.be.eql([{test: 1}, {test: 1}, {test: 2}])
     SORT([{test: 2}, {test: 1}, {test: 1}], (a, b) -> a.test).should.be.eql([{test: 1}, {test: 1}, {test: 2}])
 
+describe 'STRING', ->
+  it 'turns anything into a string', ->
+    STRING(1, 2, 3).should.be.eql('1, 2, 3')
+    STRING([1, 2, 3]).should.be.eql('1, 2, 3')
+    STRING([1, 2, 3], [4, 5, 6]).should.be.eql('1, 2, 3, 4, 5, 6')
+    STRING({choice_values: ['a', 'b', 'c']}, {choice_values: ['d', 'e', 'f']}).should.be.eql('a, b, c, d, e, f')
+    STRING(new Date('2018-02-07T10:00:01Z')).should.be.eql('2/7/2018, 5:00:01 AM')
+
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
     TIMEDIFF('00:00', '00:01').should.be.exactly(1 / 60)
