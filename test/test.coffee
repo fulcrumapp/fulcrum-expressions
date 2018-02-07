@@ -1727,6 +1727,11 @@ describe 'YEAR', ->
 
     shouldHaveNoValue(YEAR('not a date'))
 
+describe 'ISLANDSCAPE', ->
+  it 'is checks whether the media is landscape', ->
+    ISLANDSCAPE({width: 100, height: 200}).should.eql(false)
+    ISLANDSCAPE({width: 200, height: 100}).should.eql(true)
+
 describe 'ISMOBILE', ->
   it 'returns a boolean indicating whether the current device is the mobile app', ->
     CONFIGURE(platform: 'iOS')
@@ -1757,6 +1762,11 @@ describe 'ISNEW', ->
 
     ISNEW().should.be.false
     ISUPDATE().should.be.true
+
+describe 'ISPORTRAIT', ->
+  it 'is checks whether the media is portrait', ->
+    ISPORTRAIT({width: 100, height: 200}).should.eql(true)
+    ISPORTRAIT({width: 200, height: 100}).should.eql(false)
 
 describe 'Values', ->
   it 'should create choice values', ->

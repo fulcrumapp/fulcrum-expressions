@@ -740,6 +740,9 @@ exports.ISEVEN = (value) ->
 
   (Math.floor(Math.abs(value)) & 1) is 0
 
+exports.ISLANDSCAPE = (media) ->
+  return not ISPORTRAIT(media)
+
 exports.ISMOBILE = ->
   CONTAINS(['iOS', 'Android'], PLATFORM())
 
@@ -759,6 +762,24 @@ exports.ISODD = (value) ->
   return false if ISNAN(value)
 
   (Math.floor(Math.abs(value)) & 1) is 1
+
+exports.ISPORTRAIT = (media) ->
+  return NO_VALUE unless media?
+
+  width = media.width
+  height = media.height
+
+  # photos
+  if media.orientation is 6 or media.orientation is 8
+    width = media.height
+    height = media.width
+
+  # videos
+  if media.orientation is 90 or media.orientation is 270
+    width = media.height
+    height = media.width
+
+  return width <= height
 
 exports.ISROLE = ->
   CONTAINS(ARRAY(toArray(arguments)), ROLE())
