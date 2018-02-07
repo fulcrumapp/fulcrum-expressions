@@ -532,6 +532,30 @@ exports.FORM = ->
 exports.FORMAT = ->
   format.apply(null, arguments)
 
+exports.FORMATADDRESS = (address, {partSeparator, lineSeparator} = {}) ->
+  return NO_VALUE unless address?
+
+  lineSeparator ?= '\n'
+  partSeparator ?= ' '
+
+  formatLine = (parts...) =>
+    components = []
+
+    for part in parts
+      components.push(part) if EXISTS(part)
+
+    components.join(partSeparator)
+
+  line1 = formatLine(address.sub_thoroughfare, address.thoroughfare, address.suite and '#' + address.suite)
+  line2 = formatLine(address.locality, address.admin_area, address.postal_code)
+  line3 = formatLine(address.country)
+
+  lines = []
+  lines.push(line1) if EXISTS(line1)
+  lines.push(line2) if EXISTS(line2)
+  lines.push(line3) if EXISTS(line3)
+  lines.join(lineSeparator)
+
 exports.FORMATNUMBER = (number, language, options) ->
   number ?= NUM(number)
   language ?= LANGUAGE()

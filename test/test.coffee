@@ -1342,6 +1342,24 @@ describe 'FORMAT', ->
     FORMAT('%s', true).should.be.exactly('true')
     FORMAT('%j', {x:1}).should.be.exactly('{"x":1}')
 
+describe 'FORMATADDRESS', ->
+  it 'formats an address', ->
+    address =
+      sub_thoroughfare: '360',
+      thoroughfare: 'Central Avenue',
+      suite: '200',
+      locality: 'St. Petersburg',
+      sub_admin_area: 'Pinellas',
+      admin_area: 'FL',
+      postal_code: '33701',
+      country: 'US'
+
+    FORMATADDRESS(address).should.eql('360 Central Avenue #200\nSt. Petersburg FL 33701\nUS')
+    FORMATADDRESS(address, {lineSeparator: ' '}).should.eql('360 Central Avenue #200 St. Petersburg FL 33701 US')
+    FORMATADDRESS(address, {lineSeparator: ', ', partSeparator: ', '}).should.eql('360, Central Avenue, #200, St. Petersburg, FL, 33701, US')
+    FORMATADDRESS({locality: 'St. Petersburg'}).should.eql('St. Petersburg')
+    FORMATADDRESS({locality: 'St. Petersburg', thoroughfare: 'Central Avenue'}).should.eql('Central Avenue\nSt. Petersburg')
+
 describe 'FORMATNUMBER', ->
   it 'formats a number in a given locale', ->
     FORMATNUMBER(1 / 3).should.eql('0.333')
