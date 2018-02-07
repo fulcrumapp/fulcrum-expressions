@@ -1569,6 +1569,32 @@ describe 'DATE', ->
 
     shouldHaveNoValue(DATEVALUE('a', 'b', 'c'))
 
+describe 'DATEVALUE', ->
+  it 'returns a date value given a date and optional time string', ->
+    date = DATEVALUE('2018-02-07')
+    date.getFullYear().should.be.exactly(2018)
+    date.getMonth().should.be.exactly(1)
+    date.getDate().should.be.exactly(7)
+
+    # parse as UTC, read back as local
+    date = DATEVALUE('2018-02-08T01:01:01Z')
+    date.getFullYear().should.be.exactly(2018)
+    date.getMonth().should.be.exactly(1)
+    date.getDate().should.be.exactly(7)
+
+    # parse as UTC, read back as local
+    date = DATEVALUE('2018-02-07', '01:01')
+    date.getFullYear().should.be.exactly(2018)
+    date.getMonth().should.be.exactly(1)
+    date.getDate().should.be.exactly(7)
+    date.toISOString().should.be.exactly('2018-02-07T06:01:00.000Z')
+
+    date = DATEVALUE(new Date('2018-02-07T05:00:00.000Z'), '01:01')
+    date.getFullYear().should.be.exactly(2018)
+    date.getMonth().should.be.exactly(1)
+    date.getDate().should.be.exactly(7)
+    date.toISOString().should.be.exactly('2018-02-07T06:01:00.000Z')
+
 describe 'DAY', ->
   it 'returns a day given a date', ->
     DAY('2015/12/16').should.be.exactly(16)

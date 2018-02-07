@@ -264,12 +264,26 @@ exports.DATEADD = (date, number, type='day') ->
 
   new Date(time)
 
-exports.DATEVALUE = (text) ->
-  return text if _.isDate(text)
+exports.DATEVALUE = (dateString, timeString) ->
+  if _.isDate(dateString)
+    year = dateString.getFullYear()
+    month = LPAD(dateString.getMonth() + 1, 2, '0')
+    day = LPAD(dateString.getDate(), 2, '0')
 
-  text = text.replace(/-/g, '/') if _.isString(text) and text.length <= 10
+    dateString = year + '-' + month + '-' + day
 
-  date = new Date(text)
+  return NO_VALUE unless _.isString(dateString)
+
+  timeString = '00:00:00' unless _.isString(timeString)
+  timeString = timeString + ':00' if timeString.length is 5
+
+  date = null
+
+  if dateString.length <= 10
+    dateString = dateString.replace(/-/g, '/')
+    date = new Date(dateString + ' ' + timeString)
+  else
+    date = new Date(dateString)
 
   return NO_VALUE if ISNAN(date.getTime())
 
