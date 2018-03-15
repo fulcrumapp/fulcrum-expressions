@@ -53,6 +53,10 @@ or
 make dist copy # clean, build and deploy everything
 ```
 
+### Documentation
+
+Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
+
 ### Tests
 
 ```sh
