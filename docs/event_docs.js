@@ -74,6 +74,27 @@ function CLEARINTERVAL() {}
 function CLEARTIMEOUT() {}
 
 
+////CONFIRM
+
+/**
+ * CONFIRM
+ * Display a question to the user with an "Okay or Cancel" response and a callback to respond to the result
+ * CONFIRM displays a message to the user and allows a callback function that will be invoked to respond to the result of the question.
+ * @param {String} title A short title for the alert
+ * @param {String} message The message content for the alert
+ * @param {Function} callback invoked when the message box is dismissed
+ * @example
+ * CONFIRM('Confirm', 'You have selected a critical safety violation. Are you sure?', function (result) {
+ *   if (result.value === 'Okay') {
+ *     // Selected Okay
+ *   } else {
+ *     // Selected Cancel
+ *   }
+ * });
+ */
+function CONFIRM() {}
+
+
 ////CURRENTLOCATION
 
 /**
@@ -140,6 +161,26 @@ function CURRENTLOCATION() {}
  * });
  */
 function INVALID() {}
+
+
+////MESSAGEBOX
+
+/**
+ * MESSAGEBOX
+ * Display a message box with configurable title, message, buttons and optional text input.
+ * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box. Using the `buttons` parameter you can specify the button titles that are displayed in the message box.
+ * @param {Object} options The options for the message box
+ * @param {Function} callback invoked when the message box is dismissed
+ * @example
+ * MESSAGEBOX({title: 'Confirm', message: 'You have selected a critical safety violation. Are you sure?', buttons: ['Yes', 'No']}, function (result) {
+ *   if (result.value === 'Yes') {
+ *     // Selected Yes
+ *   } else {
+ *     // Selected No
+ *   }
+ * });
+ */
+function MESSAGEBOX() {}
 
 
 ////OFF
@@ -273,6 +314,26 @@ function OPENURL() {}
  * // +-------------------------------------------+
  */
 function PROGRESS() {}
+
+
+////PROMPT
+
+/**
+ * PROMPT
+ * Display a text field to get input from the user and a callback to respond to the result
+ * @param {String} title A short title for the alert
+ * @param {String} message The message content for the alert
+ * @param {Function} callback invoked when the message box is dismissed
+ * @example
+ * PROMPT('Please enter the current year', function (result) {
+ *   if (result.input === new Date().getFullYear()) {
+ *     // Correct
+ *   } else {
+ *     // Incorrect
+ *   }
+ * });
+ */
+function PROMPT() {}
 
 
 ////REQUEST

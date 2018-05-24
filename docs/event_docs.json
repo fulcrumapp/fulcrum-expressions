@@ -66,6 +66,41 @@
             ]
         },
         {
+            "name": "CONFIRM",
+            "access": "",
+            "virtual": false,
+            "description": "CONFIRM\nDisplay a question to the user with an \"Okay or Cancel\" response and a callback to respond to the result\nCONFIRM displays a message to the user and allows a callback function that will be invoked to respond to the result of the question.",
+            "parameters": [
+                {
+                    "name": "title",
+                    "type": "String",
+                    "description": "A short title for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The message content for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "invoked when the message box is dismissed",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "CONFIRM('Confirm', 'You have selected a critical safety violation. Are you sure?', function (result) {\n  if (result.value === 'Okay') {\n    // Selected Okay\n  } else {\n    // Selected Cancel\n  }\n});"
+            ]
+        },
+        {
             "name": "CURRENTLOCATION",
             "access": "",
             "virtual": false,
@@ -94,6 +129,33 @@
                 "// Displays an alert and stops the record from being saved\nINVALID('Depth must be less than 20.');",
                 "// Use with the 'validate-record' event to stop a record from being saved\nON('validate-record', function (event) {\n   if (NUM($depth) >= 20) {\n     INVALID('Depth must be less than 20.');\n   }\n});",
                 "// Use with the 'validate-repeatable' event to stop a repeatable from being saved\nON('validate-repeatable', 'repeatable_field_name', function (event) {\n   if (!ISSELECTED($choice_field, 'Purple')) {\n     INVALID('You gotta pick purple!');\n   }\n});"
+            ]
+        },
+        {
+            "name": "MESSAGEBOX",
+            "access": "",
+            "virtual": false,
+            "description": "MESSAGEBOX\nDisplay a message box with configurable title, message, buttons and optional text input.\nMESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box. Using the `buttons` parameter you can specify the button titles that are displayed in the message box.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "The options for the message box",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "invoked when the message box is dismissed",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "MESSAGEBOX({title: 'Confirm', message: 'You have selected a critical safety violation. Are you sure?', buttons: ['Yes', 'No']}, function (result) {\n  if (result.value === 'Yes') {\n    // Selected Yes\n  } else {\n    // Selected No\n  }\n});"
             ]
         },
         {
@@ -202,6 +264,41 @@
             ],
             "examples": [
                 "var url = 'https://example.com';\n\n// show progress message while request is happening\nPROGRESS('Searching for nearby facilities ...');\n\nREQUEST(url, function(error, response, body) {\n  PROGRESS();\n\n  if (error) {\n    ALERT(INSPECT(error));\n  } else {\n    // do something with the API response\n  }\n});\n\n// Displays an progress message that looks like this while the request is in progress\n// +-------------------------------------------+\n// | Searching for nearby facilities ...       |\n// +-------------------------------------------+"
+            ]
+        },
+        {
+            "name": "PROMPT",
+            "access": "",
+            "virtual": false,
+            "description": "PROMPT\nDisplay a text field to get input from the user and a callback to respond to the result",
+            "parameters": [
+                {
+                    "name": "title",
+                    "type": "String",
+                    "description": "A short title for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "message",
+                    "type": "String",
+                    "description": "The message content for the alert",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "invoked when the message box is dismissed",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "PROMPT('Please enter the current year', function (result) {\n  if (result.input === new Date().getFullYear()) {\n    // Correct\n  } else {\n    // Incorrect\n  }\n});"
             ]
         },
         {
