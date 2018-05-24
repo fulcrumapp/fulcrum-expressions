@@ -345,7 +345,7 @@ function PROMPT() {}
  *
  * ### CORS and Web Browser Support
  *
- * To work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.
+ * To work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. http://cors-anywhere.herokuapp.com/, http://cors-proxy.htmldriven.com/, and https://crossorigin.me are various CORS proxies. Note that these are not Fulcrum services. Please also note, when using CORS proxies you are effectively exposing everything about a network request to an unknown host. This should be especially considered if sending information like passwords, tokens, etc.
  * @param {Object} options The options to pass for the request
  * @param {string} options.url The url for the request
  * @param {string} [options.method=GET] The HTTP method for the request (POST, PUT, DELETE, etc.)
@@ -366,7 +366,7 @@ function PROMPT() {}
  *
  *   REQUEST(options, function(error, response, body) {
  *     if (error) {
- *       ALERT('Error with request: ' + error);
+ *       ALERT('Error with request: ' + INSPECT(error));
  *     } else {
  *       var data = JSON.parse(body);
  *
@@ -540,7 +540,7 @@ function SETFORMATTRIBUTES() {}
 /**
  * SETHIDDEN
  * Set the visibility of a field.
- * The SETHIDDEN function hides a form field. It can be used to add custom conditional logic above and beyond what can be configured in the Fulcrum builder. It has the same behavior as the 'Hidden' checkbox in the builder, which means that data is not automatically cleared out when hiding a field.
+ * The SETHIDDEN function hides a form field. It can be used to add custom conditional logic above and beyond what can be configured in the Fulcrum builder. It has the same behavior as the 'Hidden' checkbox in the builder, except data is not automatically cleared out when hiding a field.
  * @param {String} field The data name for the field
  * @param {boolean|null} hidden Boolean value representing whether the field should be hidden, or `null` to restore the original value
  * @example
