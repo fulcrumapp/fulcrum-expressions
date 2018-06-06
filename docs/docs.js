@@ -700,6 +700,36 @@ function FALSE() {}
 function FIELD() {}
 
 
+////FIELDS
+
+/**
+ * FIELDS
+ * Returns the child fields of a section or repeatable
+ * @param {String} dataName The data name of the section or repeatable
+ * @param {Object} options `repeatables` and `sections` boolean values to control whether to drill into further nested sections and repeatables when returning the child fields. For example, passing `{sections: false}` will not return fields that are in nested sections.
+ * @returns {Array}
+ * @example
+ * // returns 1
+ * FIELDS('child_items').length
+ */
+function FIELDS() {}
+
+
+////FIELDNAMES
+
+/**
+ * FIELDNAMES
+ * Returns the child field names of a section or repeatable
+ * @param {String} dataName The data name of the section or repeatable
+ * @param {Object} options `repeatables` and `sections` boolean values to control whether to drill into further nested sections and repeatables when returning the child fields. For example, passing `{sections: false}` will not return fields that are in nested sections. This function is identical to `FIELDS` except it returns only the data name strings instead of the actual field objects.
+ * @returns {Array}
+ * @example
+ * // returns ["child_item_cost"]
+ * FIELDNAMES('child_items')
+ */
+function FIELDNAMES() {}
+
+
 ////FIELDTYPE
 
 /**

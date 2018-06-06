@@ -1048,6 +1048,68 @@
             }
         },
         {
+            "name": "FIELDS",
+            "access": "",
+            "virtual": false,
+            "description": "FIELDS\nReturns the child fields of a section or repeatable",
+            "parameters": [
+                {
+                    "name": "dataName",
+                    "type": "String",
+                    "description": "The data name of the section or repeatable",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "`repeatables` and `sections` boolean values to control whether to drill into further nested sections and repeatables when returning the child fields. For example, passing `{sections: false}` will not return fields that are in nested sections.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns 1\nFIELDS('child_items').length"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
+            "name": "FIELDNAMES",
+            "access": "",
+            "virtual": false,
+            "description": "FIELDNAMES\nReturns the child field names of a section or repeatable",
+            "parameters": [
+                {
+                    "name": "dataName",
+                    "type": "String",
+                    "description": "The data name of the section or repeatable",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "`repeatables` and `sections` boolean values to control whether to drill into further nested sections and repeatables when returning the child fields. For example, passing `{sections: false}` will not return fields that are in nested sections. This function is identical to `FIELDS` except it returns only the data name strings instead of the actual field objects.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns [\"child_item_cost\"]\nFIELDNAMES('child_items')"
+            ],
+            "returns": {
+                "type": "Array",
+                "description": ""
+            }
+        },
+        {
             "name": "FIELDTYPE",
             "access": "",
             "virtual": false,

@@ -14,12 +14,12 @@ debug:
 	./node_modules/browserify/bin/cmd.js -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
 	./script/build-docs
 
-docs: build-docs help copy
+docs: build-docs generate-help copy
 
 build-docs:
 	./script/build-docs
 
-help:
+generate-help:
 	mkdir -p docs/output/help
 	mkdir -p docs/output/help/expressions/reference
 	mkdir -p docs/output/help/events/reference
@@ -28,7 +28,7 @@ help:
 copy:
 	./node_modules/coffee-script/bin/coffee script/copy-files.coffee
 
-dist: clean build help test
+dist: clean build generate-help test
 
 clean:
 	rm -f dist/*
@@ -41,4 +41,4 @@ test:
 	--compilers coffee:coffee-script/register \
 	$(TESTS)
 
-.PHONY: build debug test docs help copy clean dist
+.PHONY: build debug test docs generate-help copy clean dist
