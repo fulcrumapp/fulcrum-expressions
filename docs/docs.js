@@ -2367,6 +2367,35 @@ function STATUS() {}
 function STATUSLABEL() {}
 
 
+////STRING
+
+/**
+ * STRING
+ * Converts the given parameter to a string value
+ * @param {Object} anything Any value
+ * @returns {String}
+ * @example
+ * // returns "1, 2, 3"
+ * STRING(1, 2, 3)
+ * @example
+ * // returns "Red, Green, Blue"
+ * STRING($choice_field)
+ * @example
+ * // returns "1"
+ * STRING(1)
+ * @example
+ * // returns "true"
+ * STRING(true)
+ * @example
+ * // returns "1, 2, 3"
+ * STRING([1, 2, 3])
+ * @example
+ * // returns ""
+ * STRING(null)
+ */
+function STRING() {}
+
+
 ////SUBSTITUTE
 
 /**

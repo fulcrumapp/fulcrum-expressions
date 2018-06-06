@@ -3631,6 +3631,34 @@
             }
         },
         {
+            "name": "STRING",
+            "access": "",
+            "virtual": false,
+            "description": "STRING\nConverts the given parameter to a string value",
+            "parameters": [
+                {
+                    "name": "anything",
+                    "type": "Object",
+                    "description": "Any value",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns \"1, 2, 3\"\nSTRING(1, 2, 3)",
+                "// returns \"Red, Green, Blue\"\nSTRING($choice_field)",
+                "// returns \"1\"\nSTRING(1)",
+                "// returns \"true\"\nSTRING(true)",
+                "// returns \"1, 2, 3\"\nSTRING([1, 2, 3])",
+                "// returns \"\"\nSTRING(null)"
+            ],
+            "returns": {
+                "type": "String",
+                "description": ""
+            }
+        },
+        {
             "name": "SUBSTITUTE",
             "access": "",
             "virtual": false,
