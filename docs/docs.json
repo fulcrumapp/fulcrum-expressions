@@ -1287,6 +1287,30 @@
             }
         },
         {
+            "name": "FORMATADDRESS",
+            "access": "",
+            "virtual": false,
+            "description": "FORMATADDRESS\nFormats an address field object into a string",
+            "parameters": [
+                {
+                    "name": "address",
+                    "type": "Object",
+                    "description": "string format. Use %s for strings and %d for numbers.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// returns \"360 Central Avenue #200\\nSt. Petersburg FL 33701\"\nFORMATADDRESS({sub_thoroughfare: '360', thoroughfare: 'Central Avenue', suite: '200', locality: 'St. Petersburg', sub_admin_area: 'Pinellas', admin_area: 'FL', postal_code: '33701'})",
+                "// returns \"360 Central Avenue #200, St. Petersburg FL 33701\"\nFORMATADDRESS({sub_thoroughfare: '360', thoroughfare: 'Central Avenue', suite: '200', locality: 'St. Petersburg', sub_admin_area: 'Pinellas', admin_area: 'FL', postal_code: '33701'}, {lineSeparator: ', '})"
+            ],
+            "returns": {
+                "type": "String",
+                "description": "formatted string"
+            }
+        },
+        {
             "name": "FORMATNUMBER",
             "access": "",
             "virtual": false,

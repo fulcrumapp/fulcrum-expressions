@@ -14,7 +14,9 @@ debug:
 	./node_modules/browserify/bin/cmd.js -t coffeeify --extension=".coffee" runtime.coffee > dist/expressions.js
 	./script/build-docs
 
-docs:
+docs: build-docs help copy
+
+build-docs:
 	./script/build-docs
 
 help:

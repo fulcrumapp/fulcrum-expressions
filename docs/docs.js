@@ -842,6 +842,23 @@ function FORM() {}
 function FORMAT() {}
 
 
+////FORMATADDRESS
+
+/**
+ * FORMATADDRESS
+ * Formats an address field object into a string
+ * @param {Object} address string format. Use %s for strings and %d for numbers.
+ * @returns {String} formatted string
+ * @example
+ * // returns "360 Central Avenue #200\nSt. Petersburg FL 33701"
+ * FORMATADDRESS({sub_thoroughfare: '360', thoroughfare: 'Central Avenue', suite: '200', locality: 'St. Petersburg', sub_admin_area: 'Pinellas', admin_area: 'FL', postal_code: '33701'})
+ * @example
+ * // returns "360 Central Avenue #200, St. Petersburg FL 33701"
+ * FORMATADDRESS({sub_thoroughfare: '360', thoroughfare: 'Central Avenue', suite: '200', locality: 'St. Petersburg', sub_admin_area: 'Pinellas', admin_area: 'FL', postal_code: '33701'}, {lineSeparator: ', '})
+ */
+function FORMATADDRESS() {}
+
+
 ////FORMATNUMBER
 
 /**
