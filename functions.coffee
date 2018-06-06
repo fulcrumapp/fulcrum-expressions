@@ -168,6 +168,20 @@ exports.CONCAT = exports.CONCATENATE
 exports.CONFIG = ->
   Config
 
+exports.CONFIRM = ->
+  title = null
+  message = arguments[0]
+  callback = arguments[1]
+
+  if arguments.length > 2
+    title = arguments[0]
+    message = arguments[1]
+    callback = arguments[2]
+
+  buttons = ['Cancel', 'Okay']
+
+  MESSAGEBOX(title: title, message: message, buttons: buttons, callback)
+
 exports.CONFIGURE = (config, merge=true) ->
   if merge
     _.extend(Config, config)
@@ -987,6 +1001,47 @@ exports.MEDIAN = ->
   else
     (numbers[half - 1] + numbers[half]) / 2.0
 
+exports.MESSAGEBOX = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('options.buttons must be an array') if options.buttons and not _.isArray(options.buttons)
+  ERROR('options.validate must be a function') if options.validate and not _.isFunction(options.validate)
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  if options.buttons
+    options.buttons = COMPACT(options.buttons).map (item) -> item.toString()
+
+  options.buttons ?= ['Okay']
+
+  if options.input?
+    options.input = !!options.input
+
+  callback ?= () ->
+
+  payload =
+    title: if options.title? then options.title.toString() else null
+    message: if options.message? then options.message.toString() else null
+    buttons: if options.buttons? then options.buttons else null
+    input: if options.input? then options.input else null
+    placeholder: if options.placeholder? then options.placeholder.toString() else null
+    default: if options.default? then options.default.toString() else null
+
+  validationWrapper = (result) =>
+    if options.validate?
+      errorMessage = options.validate(result)
+
+      if _.isString(errorMessage)
+        newOptions = Object.assign({}, options, {default: result.input})
+
+        MESSAGEBOX({title: errorMessage}, (errorResult) =>
+          MESSAGEBOX(newOptions, callback)
+        )
+
+        return
+
+    callback(result)
+
+  HostFunctions.messageBox(JSON.stringify(payload), validationWrapper)
+
 exports.MID = (value, startPosition, numberOfCharacters) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
@@ -1222,6 +1277,20 @@ exports.PROJECTID = ->
 
 exports.PROJECTNAME = ->
   CONFIG().recordProjectName ? NO_VALUE
+
+exports.PROMPT = ->
+  title = null
+  message = arguments[0]
+  callback = arguments[1]
+
+  if arguments.length > 2
+    title = arguments[0]
+    message = arguments[1]
+    callback = arguments[2]
+
+  buttons = ['Cancel', 'Okay']
+
+  MESSAGEBOX(title: title, message: message, buttons: buttons, input: true, callback)
 
 exports.PROPER = (value) ->
   return NO_VALUE unless value?
@@ -1997,6 +2066,14 @@ host.httpRequest = (options, callback) ->
 
   if hostFunctionExists('httpRequest')
     hostAsyncFunctionCall('httpRequest', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.messageBox = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('messageBox')
+    hostAsyncFunctionCall('messageBox', args, callback)
   else
     callback(new Error('Not Supported'), null, null)
 

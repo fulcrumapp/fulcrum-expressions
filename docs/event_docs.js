@@ -74,6 +74,27 @@ function CLEARINTERVAL() {}
 function CLEARTIMEOUT() {}
 
 
+////CONFIRM
+
+/**
+ * CONFIRM
+ * Display a question to the user with an "Okay or Cancel" response and a callback to respond to the result
+ * CONFIRM displays a message to the user and allows a callback function that will be invoked to respond to the result of the question.
+ * @param {String} title A short title for the alert
+ * @param {String} message The message content for the alert
+ * @param {Function} callback invoked when the message box is dismissed
+ * @example
+ * CONFIRM('Confirm', 'You have selected a critical safety violation. Are you sure?', function (result) {
+ *   if (result.value === 'Okay') {
+ *     // Selected Okay
+ *   } else {
+ *     // Selected Cancel
+ *   }
+ * });
+ */
+function CONFIRM() {}
+
+
 ////CURRENTLOCATION
 
 /**
@@ -140,6 +161,26 @@ function CURRENTLOCATION() {}
  * });
  */
 function INVALID() {}
+
+
+////MESSAGEBOX
+
+/**
+ * MESSAGEBOX
+ * Display a message box with configurable title, message, buttons and optional text input.
+ * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box. Using the `buttons` parameter you can specify the button titles that are displayed in the message box.
+ * @param {Object} options The options for the message box
+ * @param {Function} callback invoked when the message box is dismissed
+ * @example
+ * MESSAGEBOX({title: 'Confirm', message: 'You have selected a critical safety violation. Are you sure?', buttons: ['Yes', 'No']}, function (result) {
+ *   if (result.value === 'Yes') {
+ *     // Selected Yes
+ *   } else {
+ *     // Selected No
+ *   }
+ * });
+ */
+function MESSAGEBOX() {}
 
 
 ////OFF
@@ -275,6 +316,26 @@ function OPENURL() {}
 function PROGRESS() {}
 
 
+////PROMPT
+
+/**
+ * PROMPT
+ * Display a text field to get input from the user and a callback to respond to the result
+ * @param {String} title A short title for the alert
+ * @param {String} message The message content for the alert
+ * @param {Function} callback invoked when the message box is dismissed
+ * @example
+ * PROMPT('Please enter the current year', function (result) {
+ *   if (result.input === new Date().getFullYear()) {
+ *     // Correct
+ *   } else {
+ *     // Incorrect
+ *   }
+ * });
+ */
+function PROMPT() {}
+
+
 ////REQUEST
 
 /**
@@ -284,7 +345,7 @@ function PROGRESS() {}
  *
  * ### CORS and Web Browser Support
  *
- * To work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. https://crossorigin.me is a freely hosted CORS proxy. Note that crossorigin.me is not a Fulcrum service.
+ * To work in the web browser, URLs fetched using REQUEST *require* HTTPS & [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website, all requests made from the site must also be secure and respond with the proper headers required by the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we recommend contacting the API provider and asking them to [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS proxy to proxy requests to URLs that don't support it. http://cors-anywhere.herokuapp.com/, http://cors-proxy.htmldriven.com/, and https://crossorigin.me are various CORS proxies. Note that these are not Fulcrum services. Please also note, when using CORS proxies you are effectively exposing everything about a network request to an unknown host. This should be especially considered if sending information like passwords, tokens, etc.
  * @param {Object} options The options to pass for the request
  * @param {string} options.url The url for the request
  * @param {string} [options.method=GET] The HTTP method for the request (POST, PUT, DELETE, etc.)
@@ -305,7 +366,7 @@ function PROGRESS() {}
  *
  *   REQUEST(options, function(error, response, body) {
  *     if (error) {
- *       ALERT('Error with request: ' + error);
+ *       ALERT('Error with request: ' + INSPECT(error));
  *     } else {
  *       var data = JSON.parse(body);
  *
@@ -479,7 +540,7 @@ function SETFORMATTRIBUTES() {}
 /**
  * SETHIDDEN
  * Set the visibility of a field.
- * The SETHIDDEN function hides a form field. It can be used to add custom conditional logic above and beyond what can be configured in the Fulcrum builder. It has the same behavior as the 'Hidden' checkbox in the builder, which means that data is not automatically cleared out when hiding a field.
+ * The SETHIDDEN function hides a form field. It can be used to add custom conditional logic above and beyond what can be configured in the Fulcrum builder. It has the same behavior as the 'Hidden' checkbox in the builder, except data is not automatically cleared out when hiding a field.
  * @param {String} field The data name for the field
  * @param {boolean|null} hidden Boolean value representing whether the field should be hidden, or `null` to restore the original value
  * @example
