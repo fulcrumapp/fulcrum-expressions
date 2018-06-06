@@ -163,6 +163,28 @@ function CURRENTLOCATION() {}
 function INVALID() {}
 
 
+////ISLANDSCAPE
+
+/**
+ * ISLANDSCAPE
+ * Returns true if the photo or video is in landscape mode. This is intended to be used inside the of the `add-photo` and `add-video` events and operate on the parameter passed to the event handler.
+ * @param {Object} value The value of the photo or video
+ * @returns {Boolean}
+ */
+function ISLANDSCAPE() {}
+
+
+////ISPORTRAIT
+
+/**
+ * ISPORTRAIT
+ * Returns true if the photo or video is in portrait mode. This is intended to be used inside the of the `add-photo` and `add-video` events and operate on the parameter passed to the event handler.
+ * @param {Object} value The value of the photo or video
+ * @returns {Boolean}
+ */
+function ISPORTRAIT() {}
+
+
 ////MESSAGEBOX
 
 /**
