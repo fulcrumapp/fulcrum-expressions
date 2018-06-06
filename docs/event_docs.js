@@ -78,7 +78,7 @@ function CLEARTIMEOUT() {}
 
 /**
  * CONFIRM
- * Display a question to the user with an "Okay or Cancel" response and a callback to respond to the result
+ * Display a question to the user with an 'Okay or Cancel' response and a callback to respond to the result
  * CONFIRM displays a message to the user and allows a callback function that will be invoked to respond to the result of the question.
  * @param {String} title A short title for the alert
  * @param {String} message The message content for the alert

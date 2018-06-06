@@ -69,7 +69,7 @@
             "name": "CONFIRM",
             "access": "",
             "virtual": false,
-            "description": "CONFIRM\nDisplay a question to the user with an \"Okay or Cancel\" response and a callback to respond to the result\nCONFIRM displays a message to the user and allows a callback function that will be invoked to respond to the result of the question.",
+            "description": "CONFIRM\nDisplay a question to the user with an 'Okay or Cancel' response and a callback to respond to the result\nCONFIRM displays a message to the user and allows a callback function that will be invoked to respond to the result of the question.",
             "parameters": [
                 {
                     "name": "title",
