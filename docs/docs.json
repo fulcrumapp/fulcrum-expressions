@@ -1295,7 +1295,7 @@
                 {
                     "name": "address",
                     "type": "Object",
-                    "description": "string format. Use %s for strings and %d for numbers.",
+                    "description": "the address field object",
                     "default": "",
                     "optional": "",
                     "nullable": ""

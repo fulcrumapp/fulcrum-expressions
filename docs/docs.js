@@ -847,7 +847,7 @@ function FORMAT() {}
 /**
  * FORMATADDRESS
  * Formats an address field object into a string
- * @param {Object} address string format. Use %s for strings and %d for numbers.
+ * @param {Object} address the address field object
  * @returns {String} formatted string
  * @example
  * // returns "360 Central Avenue #200\nSt. Petersburg FL 33701"
