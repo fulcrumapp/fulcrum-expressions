@@ -16,6 +16,14 @@ npm install
 make
 ```
 
+### Generate Documentation
+
+Make sure to set your `FULCRUM_DEV_SITE` environment variable so the script knows where to copy the generated documentation.
+
+```sh
+make docs
+```
+
 ### Distribute
 
 Builds the final output
