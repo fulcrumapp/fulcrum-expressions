@@ -20,6 +20,8 @@ make
 
 Make sure to set your `FULCRUM_DEV_SITE` environment variable so the script knows where to copy the generated documentation.
 
+Make changes to `docs.js` and `event_docs.js`.
+
 ```sh
 make docs
 ```
