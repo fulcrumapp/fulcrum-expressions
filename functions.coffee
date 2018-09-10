@@ -1456,7 +1456,7 @@ exports.SETASSIGNMENT = (user) ->
 
 exports.SETCHOICEFILTER = (dataName, value) ->
   filterValue = if value?
-    _.chain([value]).flatten().compact().map(String).value()
+    _.chain([value]).flatten().compact().map(String).uniq().value()
   else
     null
 
