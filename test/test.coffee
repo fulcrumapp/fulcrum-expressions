@@ -1949,3 +1949,7 @@ describe "SETCHOICEFILTER", ->
   it 'accepts null and does not return an array', ->
     SETCHOICEFILTER('choice_field', null)
     shouldBeNull(runtime.results[0].value)
+
+  it 'does not return duplicate results', ->
+    SETCHOICEFILTER('choice_field', [1, 1] )
+    runtime.results[0].value.should.eql '["1"]'
