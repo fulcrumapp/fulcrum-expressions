@@ -35,7 +35,8 @@ clean:
 	rm -rf docs/output/*
 
 jest:
-	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine yarn jest --watch
+	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
+	bash -l -c "yarn && yarn jest --watch"
 
 test:
 	./node_modules/mocha/bin/mocha \
