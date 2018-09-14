@@ -1,7 +1,6 @@
 import NUM from "./NUM"
 
 /**
- * ACOSH
  * Returns the inverse hyperbolic cosine of a number.
  * @param value The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
  * @example
