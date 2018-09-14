@@ -34,6 +34,9 @@ clean:
 	rm -f dist/*
 	rm -rf docs/output/*
 
+jest:
+	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine yarn jest --watch
+
 test:
 	./node_modules/mocha/bin/mocha \
 	--reporter $(REPORTER) \

@@ -16,9 +16,13 @@
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
   "license": "BSD",
   "dependencies": {
+    "@types/jest": "^23.3.2",
     "encodeurl": "^1.0.1",
+    "jest": "^23.6.0",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
+    "ts-jest": "^23.1.4",
+    "typescript": "^3.0.3",
     "underscore": "^1.7.0",
     "underscore.string": "^2.4.0"
   },
@@ -37,5 +41,20 @@
     "should": "^8.4.0",
     "spawn-sync": "^1.0.1",
     "uglify-js": "^2.4.16"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "setupTestFrameworkScriptFile": "src/test-helper.ts",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
