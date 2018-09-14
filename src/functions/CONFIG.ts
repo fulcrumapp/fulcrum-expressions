@@ -1,6 +1,7 @@
 interface Config {
   recordAltitude?: any,
   application?: string,
+  applicationBuild?: string,
   locale: string,
   language: string,
   country: string,
