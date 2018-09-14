@@ -35,7 +35,12 @@ clean:
 	rm -rf docs/output/*
 
 jest:
-	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine yarn jest --watch
+	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
+		bash -l -c "yarn && yarn jest --watch"
+
+tsdoc:
+	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
+		bash -l -c "yarn && yarn typedoc --theme minimal --out doc --exclude **/*.test.ts"
 
 test:
 	./node_modules/mocha/bin/mocha \
