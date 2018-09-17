@@ -2,10 +2,7 @@ import { isString, isFunction } from "lodash"
 import ERROR from "./ERROR"
 import { EventNames, EventBinder } from "../events";
 
-// These overloads must be kept in sync with `ON`
-
 /**
- * OFF
  * Detaches an event handler set by ON.
  * @param event The event name
  * @param field The (optional) field the event was bound to
