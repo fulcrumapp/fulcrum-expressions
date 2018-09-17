@@ -13,7 +13,8 @@ import { EventNames, EventBinder } from "../events";
  *
  */
 const OFF: EventBinder = function(name: EventNames, ...args: any[]): void {
-  let param, callback
+  let param = null
+  let callback = null
 
   if (args.length === 2) {
     [param, callback] = args
