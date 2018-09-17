@@ -1,20 +1,6 @@
 import { isString, isFunction } from "lodash"
 import ERROR from "./ERROR"
-import {
-  AddPhotoEvent,
-  RemoveMediaEvent,
-  AddVideoEvent,
-  RemoveVideoEvent,
-  AddAudioEvent,
-  RemoveAudioEvent,
-  FieldEventNames,
-  FieldEvent,
-  RepeatableEventNames,
-  RepeatableEvent,
-  GeometryEvent,
-  FormEventNames,
-  FormEvent,
-} from "../events";
+import { EventNames, EventBinder } from "../events";
 
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
@@ -62,25 +48,15 @@ import {
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-export default function ON(name: FormEventNames, callback: (event: FormEvent) => void): void
-export default function ON(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
-export default function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
-export default function ON(name: "change-geometry", callback: (event: GeometryEvent) => void): void
-export default function ON(name: "change-geometry", field: string, callback: (event: GeometryEvent) => void): void
-export default function ON(name: "add-photo", callback: (event: AddPhotoEvent) => void): void
-export default function ON(name: "remove-photo", callback: (event: RemoveMediaEvent) => void): void
-export default function ON(name: "add-video", callback: (event: AddVideoEvent) => void): void
-export default function ON(name: "remove-video", callback: (event: RemoveVideoEvent) => void): void
-export default function ON(name: "add-audio", callback: (event: AddAudioEvent) => void): void
-export default function ON(name: "remove-audio", callback: (event: RemoveAudioEvent) => void): void
-export default function ON(...args: any[]) {
+
+const ON: EventBinder = function(name: EventNames, ...args: any[]) {
   let param = null
-  let name, callback
+  let callback
 
   if (arguments.length === 3) {
-    [name, param, callback] = args
+    [param, callback] = args
   } else {
-    [name, callback] = args
+    [callback] = args
   }
 
   if (!isString(name)) {
@@ -98,3 +74,5 @@ export default function ON(...args: any[]) {
   // validateEventParams(name, param)
   // $$runtime.addHook(name, param, callback)
 }
+
+export default ON
