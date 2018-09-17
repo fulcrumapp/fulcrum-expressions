@@ -1,4 +1,7 @@
 import * as functions from "./functions"
+import { FormField, } from "./fields";
+import { EventNames, EventBinder } from "./events";
+import { MaybeString } from "./primitives";
 
 interface AlertResult {
   type: "message"
@@ -6,10 +9,26 @@ interface AlertResult {
   message?: string
 }
 
+interface ElementStore {
+  [key: string]: FormField
+}
+
+type ResultsCollection = (
+  AlertResult
+)[]
+
+interface RuntimeInterface {
+  results: ResultsCollection
+  elementsByKey: ElementStore
+  elementsByDataName: ElementStore
+  addHook: EventBinder
+  removeHook: EventBinder
+}
+
 /**
  * The Runtime class handles the state of a data event in the context of a single Record being edited.
  */
-export default class Runtime {
+export default class Runtime implements RuntimeInterface {
   static defaultLocale = 'en_US'
   static defaultCurrencyCode = 'USD'
   static defaultCurrencySymbol = '$'
@@ -47,7 +66,7 @@ export default class Runtime {
 
   variables = {}
 
-  results: (AlertResult)[] = []
+  results = []
 
   dataNames = {}
 
@@ -55,9 +74,9 @@ export default class Runtime {
 
   elementsByKey = {}
 
-  elementsByDataName = {}
+  elementsByDataName: ElementStore = {}
 
-  statusesByValue = {}
+  statusesByValue: ElementStore = {}
 
   featureIsNew = true
 
@@ -107,4 +126,12 @@ export default class Runtime {
     'featureUpdatedAt',
     'featureGeometry'
   ]
+
+  addHook(name: EventNames, ...args: any[]) {
+
+  }
+
+  removeHook(name: EventNames, ...args: any[]) {
+
+  }
 }

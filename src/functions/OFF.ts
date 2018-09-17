@@ -12,7 +12,7 @@ import { EventNames, EventBinder } from "../events";
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-const OFF: EventBinder = function(name: EventNames, ...args: any[]) {
+const OFF: EventBinder = function(name: EventNames, ...args: any[]): void {
   let param, callback
 
   if (args.length === 2) {
@@ -39,7 +39,7 @@ const OFF: EventBinder = function(name: EventNames, ...args: any[]) {
     ERROR('callback must be a function')
   }
 
-  // $$runtime.removeHook(name, param, callback)
+  $$runtime.removeHook(name, param, callback)
 }
 
 export default OFF

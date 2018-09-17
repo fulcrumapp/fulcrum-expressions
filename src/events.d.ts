@@ -86,7 +86,7 @@ interface FieldEvent extends EventWithField {
 
 interface GeometryEvent {
   field?: string
-  name: "change-geometry"
+  name: ChangeGeometryEventName
   value: {
     coordinates: number[],
     type: "Point"

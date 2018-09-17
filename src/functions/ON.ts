@@ -1,6 +1,9 @@
-import { isString, isFunction } from "lodash"
+import { isString, isFunction, includes } from "lodash"
 import ERROR from "./ERROR"
+import FIELD from "./FIELD"
+import FORMAT from "./FORMAT"
 import { EventNames, EventBinder } from "../events";
+import { MaybeString } from "../primitives"
 
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
@@ -49,8 +52,8 @@ import { EventNames, EventBinder } from "../events";
  * ON('change-geometry', 'repeatable_item', callback);
  */
 
-const ON: EventBinder = function(name: EventNames, ...args: any[]) {
-  let param = null
+const ON: EventBinder = function(name: EventNames, ...args: any[]): void {
+  let param: MaybeString = null
   let callback
 
   if (arguments.length === 3) {
@@ -71,8 +74,66 @@ const ON: EventBinder = function(name: EventNames, ...args: any[]) {
     ERROR("callback must be a function")
   }
 
-  // validateEventParams(name, param)
-  // $$runtime.addHook(name, param, callback)
+  validateEventParams(name, param)
+
+  $$runtime.addHook(name, param, callback)
+}
+
+const isMagicDataName = (param: MaybeString) =>
+  includes(['@status', '@project', '@geometry', '@assignment'], param)
+
+const validateEventParams = (event: EventNames, param: MaybeString) => {
+  const invariant = (value: any) => {
+    if (!value) {
+      ERROR(FORMAT('Invalid usage of ON(): "%s" is not a valid field for the "%s" event', param, event))
+    }
+  }
+
+  const field = FIELD(param)
+
+  switch (event) {
+    case "change": {
+      if (isMagicDataName(param)) return
+      invariant(FIELD(param))
+      break
+    }
+
+    case "click": {
+      invariant(field && field.type === "HyperlinkField")
+      break
+    }
+
+    case "load-repeatable":
+    case "new-repeatable":
+    case "edit-repeatable":
+    case "save-repeatable":
+    case "validate-repeatable": {
+      invariant(field && field.type === "Repeatable")
+    }
+
+    case "change-geometry": {
+      if (param) invariant(field && field.type === "Repeatable")
+      break
+    }
+
+    case "add-photo":
+    case "remove-photo": {
+      invariant(field && field.type === "PhotoField")
+      break
+    }
+
+    case "add-video":
+    case "remove-video": {
+      invariant(field && field.type === "VideoField")
+      break
+    }
+
+    case "add-audio":
+    case "remove-audio": {
+      invariant(field && field.type === "AudioField")
+      break
+    }
+  }
 }
 
 export default ON
