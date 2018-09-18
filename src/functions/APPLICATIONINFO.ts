@@ -8,5 +8,7 @@ import { CONFIG } from "./CONFIG";
  */
 
 export default function APPLICATIONINFO () : string {
-    return [ CONFIG().application, CONFIG().applicationVersion, CONFIG().applicationBuild ].join(', ');
+    const applicationInfo : string = [ CONFIG().application, CONFIG().applicationVersion, CONFIG().applicationBuild ].join(', ');
+    // default to '' if no information is available
+    return applicationInfo == ', , ' ? '' : applicationInfo;
 }
