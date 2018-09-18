@@ -3,7 +3,7 @@ interface Config {
   application?: string,
   applicationBuild?: string,
   applicationInfo?: string,
-  applicationVersion: string,
+  applicationVersion?: string,
   locale: string,
   language: string,
   country: string,

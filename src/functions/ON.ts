@@ -1,20 +1,9 @@
-import { isString, isFunction } from "lodash"
+import { isString, isFunction, includes } from "lodash"
 import ERROR from "./ERROR"
-import {
-  AddPhotoEvent,
-  RemoveMediaEvent,
-  AddVideoEvent,
-  RemoveVideoEvent,
-  AddAudioEvent,
-  RemoveAudioEvent,
-  FieldEventNames,
-  FieldEvent,
-  RepeatableEventNames,
-  RepeatableEvent,
-  GeometryEvent,
-  FormEventNames,
-  FormEvent,
-} from "../events";
+import FIELD from "./FIELD"
+import FORMAT from "./FORMAT"
+import { EventNames, EventBinder } from "../events";
+import { MaybeString } from "../primitives"
 
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
@@ -62,25 +51,15 @@ import {
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-export default function ON(name: FormEventNames, callback: (event: FormEvent) => void): void
-export default function ON(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
-export default function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
-export default function ON(name: "change-geometry", callback: (event: GeometryEvent) => void): void
-export default function ON(name: "change-geometry", field: string, callback: (event: GeometryEvent) => void): void
-export default function ON(name: "add-photo", callback: (event: AddPhotoEvent) => void): void
-export default function ON(name: "remove-photo", callback: (event: RemoveMediaEvent) => void): void
-export default function ON(name: "add-video", callback: (event: AddVideoEvent) => void): void
-export default function ON(name: "remove-video", callback: (event: RemoveVideoEvent) => void): void
-export default function ON(name: "add-audio", callback: (event: AddAudioEvent) => void): void
-export default function ON(name: "remove-audio", callback: (event: RemoveAudioEvent) => void): void
-export default function ON(...args: any[]) {
-  let param = null
-  let name, callback
+
+const ON: EventBinder = function(name: EventNames, ...args: any[]): void {
+  let param: MaybeString = null
+  let callback
 
   if (arguments.length === 3) {
-    [name, param, callback] = args
+    [param, callback] = args
   } else {
-    [name, callback] = args
+    [callback] = args
   }
 
   if (!isString(name)) {
@@ -95,6 +74,66 @@ export default function ON(...args: any[]) {
     ERROR("callback must be a function")
   }
 
-  // validateEventParams(name, param)
-  // $$runtime.addHook(name, param, callback)
+  validateEventParams(name, param)
+
+  $$runtime.addHook(name, param, callback)
 }
+
+const isMagicDataName = (param: MaybeString) =>
+  includes(['@status', '@project', '@geometry', '@assignment'], param)
+
+const validateEventParams = (event: EventNames, param: MaybeString) => {
+  const invariant = (value: any) => {
+    if (!value) {
+      ERROR(FORMAT('Invalid usage of ON(): "%s" is not a valid field for the "%s" event', param, event))
+    }
+  }
+
+  const field = FIELD(param)
+
+  switch (event) {
+    case "change": {
+      if (isMagicDataName(param)) return
+      invariant(FIELD(param))
+      break
+    }
+
+    case "click": {
+      invariant(field && field.type === "HyperlinkField")
+      break
+    }
+
+    case "load-repeatable":
+    case "new-repeatable":
+    case "edit-repeatable":
+    case "save-repeatable":
+    case "validate-repeatable": {
+      invariant(field && field.type === "Repeatable")
+    }
+
+    case "change-geometry": {
+      if (param) invariant(field && field.type === "Repeatable")
+      break
+    }
+
+    case "add-photo":
+    case "remove-photo": {
+      invariant(field && field.type === "PhotoField")
+      break
+    }
+
+    case "add-video":
+    case "remove-video": {
+      invariant(field && field.type === "VideoField")
+      break
+    }
+
+    case "add-audio":
+    case "remove-audio": {
+      invariant(field && field.type === "AudioField")
+      break
+    }
+  }
+}
+
+export default ON
