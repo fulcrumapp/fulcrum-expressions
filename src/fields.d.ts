@@ -29,6 +29,17 @@ export type FormFields =
   | DateTimeField
   | TimeField
   | YesNoField
+  | ChoiceField
+  | ClassificationField
+  | PhotoField
+  | VideoField
+  | AudioField
+  | Section
+  | AddressField
+  | SignatureField
+  | HyperlinkField
+  | CalculatedField
+  | RecordLinkField
 
 export interface FormField {
   type: FormFieldTypes
@@ -54,13 +65,22 @@ export interface FormField {
   /** Match all or any of the conditions to display this field. */
   visible_conditions_type?: FormFieldConditions
   /** Array of objects containing visibility conditions */
-  visible_conditions?: any[]
+  visible_conditions?: FormFieldCondition[]
   /**	Match all or any of the conditions to make this field required */
   required_conditions_type?: FormFieldConditions
   /** Array of objects containing requirement conditions */
-  required_conditions?: any[]
+  required_conditions?: FormFieldCondition[]
   /** Parent element of this field if it is in a section or repeatable */
   parent?: FormField,
+}
+
+interface FormFieldCondition {
+  /** The key of the record link field to match */
+  field_key: string
+  /** Condition operator */
+  operator: ConditionOperator,
+  /** The value to match against key field. (empty string for `is_empty` and `is_not_empty`) */
+  value: string
 }
 
 
@@ -210,6 +230,35 @@ interface CalculatedField extends FormField {
   type: "CalculatedField"
   /** Calculation display object. If the style is "currnecy" then a local currecy is required. */
   display: { style: "text" | "number" | "date" } | { style: "currency", currency: string }
+  /** Whether to automatically set the previously used value. */
+  default_previous_value?: boolean
+}
+
+type ConditionOperator = "equal_to" | "not_equal_to" | "is_empty" | "is_not_empty"
+
+interface RecordLinkDefaultProperty {
+  /** The key of the source field. */
+  source_field_key: string
+  /** The key of the destination field. */
+  destination_field_key: string
+}
+
+interface RecordLinkField extends FormField {
+  type: "RecordLinkField"
+  /** Whether to allow the user to select existing records from the app linked in the record link field. */
+  allow_existing_records: boolean
+  /** Whether to allow the user to create new records in the app that is linked to the record link field. */
+  allow_creating_records: boolean
+  /** Whether to allow the user to update data in existing records in the app linked to the record link field. */
+  allow_updating_records: boolean
+  /** Whether to allow the user to select multiple records to link from the app linked to the record link field. */
+  allow_multiple_records: boolean
+  /** Match all or any of the conditions to filter linked records. */
+  record_conditions_type: FormFieldConditions
+  /** Array of objects containing conditions to filter linked records */
+  record_conditions: FormFieldCondition[]
+  /** Array of objects containing conditions to filter linked records */
+  record_defaults: RecordLinkDefaultProperty[]
   /** Whether to automatically set the previously used value. */
   default_previous_value?: boolean
 }
