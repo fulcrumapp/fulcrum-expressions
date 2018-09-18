@@ -21,8 +21,6 @@ export type FormFieldTypes =
   | "CalculatedField"
   | "RecordLinkField"
 
-type FormFieldConditions = "all" | "any"
-
 export type FormFields =
   FormTextField
   | DateTimeField
@@ -73,6 +71,46 @@ export interface FormField {
   /** Parent element of this field if it is in a section or repeatable */
   parent?: FormField,
 }
+
+interface StatusField {
+  type: "StatusField"
+  /** The id for the field. Must be unique to the form and lowercase. The Fulcrum app builder uses
+   * system generated 4 character codes. */
+  key: string
+  /** The field label, visible to mobile and web users. */
+  label: string
+  /** Can be set manually or auto generated using the label of the element. The status field will be
+   * the column name on all exported files. It is recommended to use something that works easily
+   * with Esri Shapefiles that have a 10 character maximum column heading limitation. */
+  data_name: string
+  /** Is the status field required? */
+  required: boolean
+  /** Is the status field read only? */
+  enabled: boolean
+  /** Is the status field visible on mobile? */
+  hidden: boolean
+  /** The attribute to use as default value. */
+  default_value: string
+  /** Whether the status can be modified by the user */
+  read_only: boolean
+  /** Helper text for the user. */
+  description?: string
+  /** List of choices for the status field */
+  choices: StatusChoiceOption[]
+  /** Whether to automatically set the previously used value. */
+  default_previous_value?: boolean
+}
+
+interface StatusChoiceOption {
+  /** What’s shown to the user in the web and mobile apps when they select a status for records in this app. */
+  label: string
+  /** What’s stored in the record. */
+  value: string
+  /** The hexadecimal value for the color used for the status and the marker color on the map. */
+  color: string
+}
+
+type FormFieldConditions = "all" | "any"
 
 interface FormFieldCondition {
   /** The key of the record link field to match */
