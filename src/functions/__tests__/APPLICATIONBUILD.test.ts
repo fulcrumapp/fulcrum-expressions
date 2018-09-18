@@ -3,7 +3,7 @@ import { RESETCONFIG, CONFIG } from "../CONFIG"
 
 beforeEach(RESETCONFIG)
 
-test('fetches platform name off CONFIG', () => {
+test('fetches application name off CONFIG', () => {
     CONFIG().applicationBuild = 'Webkit'
     expect(APPLICATIONBUILD()).toEqual('Webkit')
 })

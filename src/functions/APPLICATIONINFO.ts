@@ -2,9 +2,9 @@
 import { CONFIG } from "./CONFIG";
 
 /**
- * Returns the name of the web engine and web platform Fulcrum is running on, 
- * as well as the current Fulcrum version.
- * @returns name of web engine, web platform, and Fulcrum version.
+ * Returns the name of the application engine, application platform, and application version
+ * on which Fulcrum is running
+ * @returns name of application engine, application platform, and application version.
  */
 
 export default function APPLICATIONINFO () : string {

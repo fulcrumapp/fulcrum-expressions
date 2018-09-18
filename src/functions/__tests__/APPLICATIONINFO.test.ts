@@ -3,7 +3,7 @@ import APPLICATIONINFO from '../APPLICATIONINFO';
 
 beforeEach(RESETCONFIG)
 
-test('fetches name of web engine, web platform, and Fulcrum version from CONFIG', () =>{
+test('fetches name of application engine, application platform, and application version from CONFIG', () =>{
     CONFIG().application = 'Chrome';
     CONFIG().applicationVersion = '4.2.3.5.2';
     CONFIG().applicationBuild = 'Webkit';

@@ -1,8 +1,8 @@
 import {CONFIG} from './CONFIG';
 
 /** 
- * Returns Fulcrum version
- * @returns Fulcrum version
+ * Returns application version
+ * @returns application version
  */
 
 export default function APPLICATIONVERSION () : string {
