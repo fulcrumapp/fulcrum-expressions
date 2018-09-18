@@ -4,14 +4,23 @@ interface Config {
   applicationBuild?: string,
   applicationInfo?: string,
   applicationVersion?: string,
+  /** Required, sets program locale - defaults to 'en_US' */
   locale: string,
+  /** Required, sets locale-specific language - defaults to 'en-US' */
   language: string,
+  /** Required, sets locale-specific country - defaults to 'US' */
   country: string,
+  /** Required, sets locale-specific currency code - defaults to 'USD' */  
   currencyCode: string,
+  /** Required, sets locale-specific currency Symbol - defaults to '$' */
   currencySymbol: string,
+  /** Required, sets locale-specific timezone - defaults to 'UTC' */
   timeZone: string,
+  /** Required, sets locale-specific symbol to delineate fractions in numbers - defaults to '.' */
   decimalSeparator: string,
+  /** Required, sets locale-specific symbol to group large numbers - defaults to ',' */
   groupingSeparator: string,
+  /** Required, sets locale-specific increment with which to group large numbers - defaults to 3 (thousands) */
   groupingSize: number,
 }
 
