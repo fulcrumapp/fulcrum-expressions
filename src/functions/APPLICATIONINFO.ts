@@ -1,3 +1,4 @@
+import { compact } from "lodash"
 import { CONFIG } from "./CONFIG";
 
 /**
@@ -5,12 +6,12 @@ import { CONFIG } from "./CONFIG";
  * as well as the current Fulcrum version.
  * @returns name of web engine, web platform, and Fulcrum version.
  */
-export default function APPLICATIONINFO() : string {
+export default function APPLICATIONINFO() {
   const {
     application,
     applicationVersion,
     applicationBuild
   } = CONFIG()
 
-  return `${application}, ${applicationVersion}, ${applicationBuild}`
+  return compact([application, applicationVersion, applicationBuild]).join(', ')
 }
