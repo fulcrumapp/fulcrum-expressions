@@ -72,6 +72,11 @@ export interface FormField {
   parent?: FormField,
 }
 
+interface FormFieldDefaultPreviousValue {
+  /** Whether to automaticyepally set the previously used value. */
+  default_previous_value?: boolean
+}
+
 interface StatusField {
   type: "StatusField"
   /** The id for the field. Must be unique to the form and lowercase. The Fulcrum app builder uses
@@ -122,7 +127,7 @@ interface FormFieldCondition {
 }
 
 
-interface FormTextField extends FormField {
+interface FormTextField extends FormField, FormFieldDefaultPreviousValue {
   type: "TextField",
   /** Is it a numeric field? */
   numeric?: boolean
@@ -140,20 +145,14 @@ interface FormTextField extends FormField {
   min?: number
   /** Maximum number (when numeric=true). */
   max?: number
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
-interface DateTimeField extends FormField {
+interface DateTimeField extends FormField, FormFieldDefaultPreviousValue {
   type: "DateTimeField"
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
-interface TimeField extends FormField {
+interface TimeField extends FormField, FormFieldDefaultPreviousValue {
   type: "TimeField"
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
 interface ChoiceOption {
@@ -161,7 +160,7 @@ interface ChoiceOption {
   value: string
 }
 
-interface YesNoField extends FormField {
+interface YesNoField extends FormField, FormFieldDefaultPreviousValue {
   type: "YesNoField"
   /** Enable N/A choice? */
   neutral_enabled: boolean
@@ -180,27 +179,21 @@ interface YesNoField extends FormField {
    * @default {"label": "No", "value": "no"}
    */
   negative: ChoiceOption
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
-interface ChoiceField extends FormField {
+interface ChoiceField extends FormField, FormFieldDefaultPreviousValue {
   type: "ChoiceField"
   choices: ChoiceOption[]
   /** Multiple choice field? */
   multiple?: boolean
   /** Allow other values? */
   alow_other?: boolean
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
-interface ClassificationField extends FormField {
+interface ClassificationField extends FormField, FormFieldDefaultPreviousValue {
   type: "ClassificationField"
   /** The id of the classification set to reference. */
   classification_set_id: GUID
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
 interface PhotoField extends FormField {
@@ -264,12 +257,10 @@ interface CalculatedFieldCurrencyDisplay {
   currency: string
 }
 
-interface CalculatedField extends FormField {
+interface CalculatedField extends FormField, FormFieldDefaultPreviousValue {
   type: "CalculatedField"
   /** Calculation display object. If the style is "currnecy" then a local currecy is required. */
   display: { style: "text" | "number" | "date" } | { style: "currency", currency: string }
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
 
 type ConditionOperator = "equal_to" | "not_equal_to" | "is_empty" | "is_not_empty"
@@ -281,7 +272,7 @@ interface RecordLinkDefaultProperty {
   destination_field_key: string
 }
 
-interface RecordLinkField extends FormField {
+interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
   type: "RecordLinkField"
   /** Whether to allow the user to select existing records from the app linked in the record link field. */
   allow_existing_records: boolean
@@ -297,6 +288,4 @@ interface RecordLinkField extends FormField {
   record_conditions: FormFieldCondition[]
   /** Array of objects containing conditions to filter linked records */
   record_defaults: RecordLinkDefaultProperty[]
-  /** Whether to automatically set the previously used value. */
-  default_previous_value?: boolean
 }
