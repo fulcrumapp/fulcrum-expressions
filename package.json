@@ -7,11 +7,8 @@
     "type": "git",
     "url": "git://github.com/fulcrumapp/fulcrum-expressions.git"
   },
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "make test"
+    "test": "jest"
   },
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
   "license": "BSD",
