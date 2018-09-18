@@ -29,8 +29,14 @@ const DEFAULTS = {
 
 let Config: Config
 
+/**
+ * The current configuration of the Form.
+ */
 export const CONFIG = () => Config
 
+/**
+ * Resets the config to the application defaults.
+ */
 export const RESETCONFIG = () => {
   Config = { ...DEFAULTS }
 }
