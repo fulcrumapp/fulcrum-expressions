@@ -1,5 +1,5 @@
 import { without, get, set } from "lodash"
-import { HostHTTPClient } from "./host"
+import { HostHTTPClient, HostSetTimeout } from "./host"
 import { FormField, } from "./fields";
 import { EventNames } from "./events";
 import { MaybeString } from "./primitives";
@@ -41,7 +41,7 @@ export default class Runtime implements RuntimeInterface {
   // Host specific runtime injections
   callbackArguments? : any[]
   $$httpRequest? : HostHTTPClient
-
+  $$setTimeout? : HostSetTimeout
 
   global = null
 

@@ -1,12 +1,13 @@
 // TODO: Make these work with imports
 const qs = require("query-string")
-const encodeUrl = require('encodeurl')
+const encodeUrl = require("encodeurl")
 
 import { isObject, isString, isFunction, isEmpty } from "lodash"
 import HostHTTPRequest, { HTTPRequestCallback } from "../host/http-request"
 import ERROR from "./ERROR"
 
-type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | string
+// TODO: This string fallback breaks auto-complete.
+type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS"
 
 interface RequestOptions {
   /** The url for the request */
@@ -35,7 +36,7 @@ interface RequestOptions {
 }
 
 const DEFAULT_OPTIONS = {
-  method: 'GET',
+  method: <HTTPMethod> "GET",
   headers: {},
   followRedirect: true,
 }
@@ -75,7 +76,7 @@ function REQUEST(options: HTTPMethod, callback: HTTPRequestCallback): void
 function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void
 function REQUEST(options: any, callback: HTTPRequestCallback) {
   if (!callback || !isFunction(callback)) {
-    ERROR('A callback must be provided to REQUEST')
+    ERROR("A callback must be provided to REQUEST")
   }
 
   let config: RequestOptions = {
@@ -89,15 +90,14 @@ function REQUEST(options: any, callback: HTTPRequestCallback) {
   }
 
   if (isEmpty(config.url)) {
-    ERROR('A url must be provided to REQUEST')
+    ERROR("A url must be provided to REQUEST")
   }
 
   if (isObject(config.qs)) {
+    const url = config.url!
     let queryString = qs.stringify(config.qs)
 
-    const url = config.url!
-
-    if (url.indexOf('?') < 0) {
+    if (url.indexOf("?") < 0) {
       queryString = `?${queryString}`
     } else if (url.substr(url.length - 1) != '&') {
       queryString = `&${queryString}`
@@ -109,7 +109,7 @@ function REQUEST(options: any, callback: HTTPRequestCallback) {
   }
 
   if (config.json) {
-    config.headers!['Content-Type'] = 'application/json'
+    config.headers!["Content-Type"] = "application/json"
 
     if (!isString(config.json)) {
       config.body = JSON.stringify(config.json)
