@@ -1,4 +1,4 @@
-import ALERT from "../alert"
+import ALERT from "../ALERT"
 import { prepareRuntime } from "../../test-helpers"
 
 beforeEach(prepareRuntime)
