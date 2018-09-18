@@ -1,3 +1,5 @@
+import { GUID } from "./primitives"
+
 export interface EventBinder {
   (name: FormEventNames, callback: (event: FormEvent) => void): void
   (name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
@@ -60,8 +62,6 @@ type AddVideoEventName = "add-video"
 type RemoveVideoEventName = "remove-video"
 type AddAudioEventName = "add-audio"
 type RemoveAudioEventName = "remove-audio"
-
-type GUID = string
 
 interface EventWithField {
   field: string

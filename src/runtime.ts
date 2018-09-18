@@ -1,13 +1,13 @@
 import { without, get, set } from "lodash"
 import { HostHTTPClient, HostSetTimeout } from "./host"
-import { FormField, } from "./fields";
+import { FormFields, } from "./fields";
 import { EventNames } from "./events";
 import { MaybeString } from "./primitives";
 import { ConfigurationResult } from "./functions/SETCONFIGURATION"
 import { AlertResult } from "./functions/ALERT"
 
 interface ElementStore {
-  [key: string]: FormField
+  [key: string]: FormFields
 }
 
 interface EventsStore {
