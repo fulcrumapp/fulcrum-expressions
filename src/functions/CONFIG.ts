@@ -1,10 +1,13 @@
 interface Config {
   /** Set to record's altitude */
   recordAltitude?: any,
-  /** Set to application name */
+  /** Set to name of application on which Fulcrum is running */
   application?: string,
+  /** Set to name of application engine on which Fulcrum is running */
   applicationBuild?: string,
+  /** Includes name, version, and engine of application on which Fulcrum is running */
   applicationInfo?: string,
+  /** Set to version of application on which Fulcrum is running */
   applicationVersion?: string,
   /** Required: sets program locale - defaults to 'en_US' */
   locale: string,
