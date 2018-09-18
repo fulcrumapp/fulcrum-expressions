@@ -1,3 +1,9 @@
+export interface AlertResult {
+  type: "message"
+  title?: string
+  message?: string
+}
+
 /**
  * Display a message as an alert.
  * ALERT displays a message to the user. You can provide both the title and message of the alert box.
@@ -13,7 +19,6 @@
  * // |                                           |
  * // +-------------------------------------------+
  */
-
 export default function ALERT(message: any): void;
 export default function ALERT(title: any, message: any): void;
 export default function ALERT(): void {

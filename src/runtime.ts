@@ -3,12 +3,8 @@ import * as functions from "./functions"
 import { FormField, } from "./fields";
 import { EventNames, EventBinder } from "./events";
 import { MaybeString } from "./primitives";
-
-interface AlertResult {
-  type: "message"
-  title?: string
-  message?: string
-}
+import { ConfigurationResult } from "./functions/SETCONFIGURATION"
+import { AlertResult } from "./functions/ALERT"
 
 interface ElementStore {
   [key: string]: FormField
@@ -20,9 +16,9 @@ interface EventsStore {
   }
 }
 
-type ResultsCollection = (
-  AlertResult
-)[]
+type ResultsCollection = Array<
+  AlertResult | ConfigurationResult
+>
 
 interface RuntimeInterface {
   results: ResultsCollection
@@ -76,7 +72,7 @@ export default class Runtime implements RuntimeInterface {
 
   variables = {}
 
-  results = []
+  results : ResultsCollection = []
 
   dataNames = {}
 
