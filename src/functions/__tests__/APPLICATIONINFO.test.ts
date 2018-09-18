@@ -1,4 +1,3 @@
-import APPLICATION from '../APPLICATION'
 import { RESETCONFIG, CONFIG } from "../CONFIG"
 import APPLICATIONINFO from '../APPLICATIONINFO';
 
