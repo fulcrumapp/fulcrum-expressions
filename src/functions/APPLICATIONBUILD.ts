@@ -6,5 +6,5 @@ import { CONFIG } from "./CONFIG";
  */
 
 export default function APPLICATIONBUILD() : string {
-    return CONFIG().applicationBuild || ''
+  return CONFIG().applicationBuild || ''
 }

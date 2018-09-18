@@ -13,6 +13,7 @@
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
   "license": "BSD",
   "dependencies": {
+    "@types/query-string": "^6.1.0",
     "encodeurl": "^1.0.1",
     "jest": "^23.6.0",
     "lodash": "^4.17.11",

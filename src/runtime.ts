@@ -1,14 +1,10 @@
 import { without, get, set } from "lodash"
-import * as functions from "./functions"
+import { HostHTTPClient } from "./host"
 import { FormField, } from "./fields";
-import { EventNames, EventBinder } from "./events";
+import { EventNames } from "./events";
 import { MaybeString } from "./primitives";
-
-interface AlertResult {
-  type: "message"
-  title?: string
-  message?: string
-}
+import { ConfigurationResult } from "./functions/SETCONFIGURATION"
+import { AlertResult } from "./functions/ALERT"
 
 interface ElementStore {
   [key: string]: FormField
@@ -20,15 +16,15 @@ interface EventsStore {
   }
 }
 
-type ResultsCollection = (
-  AlertResult
-)[]
+type ResultsCollection = Array<
+  AlertResult |
+  ConfigurationResult
+>
 
 interface RuntimeInterface {
   results: ResultsCollection
   elementsByKey: ElementStore
   elementsByDataName: ElementStore
-  callbackArguments?: any[] | null
 }
 
 const NO_PARAM = "__no_param"
@@ -41,6 +37,11 @@ export default class Runtime implements RuntimeInterface {
   static defaultCurrencyCode = 'USD'
   static defaultCurrencySymbol = '$'
   static defaultTimeZone = 'UTC'
+
+  // Host specific runtime injections
+  callbackArguments? : any[]
+  $$httpRequest? : HostHTTPClient
+
 
   global = null
 
@@ -62,7 +63,6 @@ export default class Runtime implements RuntimeInterface {
     }
   } = {}
 
-  callbackArguments = null
 
   script = null
 
@@ -76,7 +76,7 @@ export default class Runtime implements RuntimeInterface {
 
   variables = {}
 
-  results = []
+  results : ResultsCollection = []
 
   dataNames = {}
 
