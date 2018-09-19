@@ -38,6 +38,7 @@ export type FormFields =
   | HyperlinkField
   | CalculatedField
   | RecordLinkField
+  | RepeatableField
 
 export interface FormField {
   type: FormFieldTypes
@@ -288,4 +289,8 @@ interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
   record_conditions: FormFieldCondition[]
   /** Array of objects containing conditions to filter linked records */
   record_defaults: RecordLinkDefaultProperty[]
+}
+
+interface RepeatableField extends FormField {
+  type: "Repeatable"
 }
