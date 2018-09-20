@@ -9,5 +9,5 @@ import _ from 'underscore';
 
 export default function FLATTEN(value: any[]) : any[] {
   // return null if value is not an array, otherwise return a flattened array
-  return Array.isArray(value) ? _.flatten(value) : null;
+  return _.isArray(value) ? _.flatten(value) : [];
 }
