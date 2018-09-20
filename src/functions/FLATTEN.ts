@@ -1,4 +1,4 @@
-import { isArray, flatten } from 'lodash';
+import { isArray, flattenDeep } from 'lodash';
 
 /**
  * Accepts a nested array and returns an array flattened to one level deep
@@ -9,5 +9,5 @@ import { isArray, flatten } from 'lodash';
 
 export default function FLATTEN(value: any) : any[] {
   // return null if value is not an array, otherwise return a flattened array
-  return isArray(value) ? flatten(value) : [];
+  return isArray(value) ? flattenDeep(value) : [];
 }

@@ -1,4 +1,5 @@
 import FLATTEN from './FLATTEN';
+import { toArray } from 'lodash';
 
 /**
  * Accepts any number of arguments and returns them as an array
@@ -10,5 +11,5 @@ import FLATTEN from './FLATTEN';
  */
 
 export default function ARRAY(...args: any[]) : any[] {
-  return FLATTEN(args);
+  return FLATTEN(toArray(args));
 }
