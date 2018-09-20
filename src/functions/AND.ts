@@ -1,8 +1,9 @@
-import { toArray, find } from 'lodash';
+import { find } from 'lodash';
 
 
 /**
  * Accepts an array of expressions and returns true if both are true, and false if both or one is false
+ * @param args list of items of any type
  * @returns boolean value
  * @example 
  * AND('this' === 'that', 4 > 2) // returns false
