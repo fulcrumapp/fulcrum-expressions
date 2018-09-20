@@ -1,4 +1,4 @@
-import ISNAN from './ISNAN';
+import { isNaN } from 'lodash';
 /**
  * Parses the passed in value as a numeric value
  * @param value any type
@@ -9,6 +9,6 @@ import ISNAN from './ISNAN';
  */
 
 export default function NUM(value: any) {
-  if (ISNAN(value)) return NaN
+  if (isNaN(value)) return NaN
   return parseFloat(value)
 }
