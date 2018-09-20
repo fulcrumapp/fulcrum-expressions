@@ -11,4 +11,8 @@ test('it accepts more than two expressions', () => {
 
 test('it accepts one expression', () => {
   expect(AND('this' === 'that')).toEqual(false);
-})
+});
+
+test('it returns null if no arguments are passed', () => {
+  expect(AND()).toBe(null);
+});
