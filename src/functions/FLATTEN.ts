@@ -7,7 +7,7 @@ import _ from 'underscore';
  * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
  */
 
-export default function FLATTEN(value: any[]) : any[] {
+export default function FLATTEN(value: any) : any[] {
   // return null if value is not an array, otherwise return a flattened array
   return _.isArray(value) ? _.flatten(value) : [];
 }

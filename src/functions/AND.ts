@@ -10,6 +10,6 @@ import _ from 'underscore';
 
 export default function AND() : boolean | null {
   if (arguments.length === 0) return null;
-  
+
   return _.find(_.toArray(arguments), (item: any) => !item) === undefined;
 }
