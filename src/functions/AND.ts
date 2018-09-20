@@ -1,7 +1,7 @@
 import _ from 'underscore';
 
 /**
- * Accepts two conditional statments and returns true if both are true, false if both or one is false
+ * Accepts two expressions and returns true if both are true, and false if both or one is false
  * @returns boolean value
  * @example 
  * AND('this' === 'that', 4 > 2) // returns false
