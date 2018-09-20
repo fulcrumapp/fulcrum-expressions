@@ -2,7 +2,7 @@ import ARRAY from './ARRAY';
 
 /**
  * Accepts a list of numbers and returns their average (mean)
- * @param list of integers or floats
+ * @param multiple integers or floats
  * @returns integer or float
  * @example
  * AVERAGE(3, 5) // returns 4
