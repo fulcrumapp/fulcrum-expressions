@@ -6,7 +6,7 @@ import NUM from './NUM';
  * @returns a character as a string
  * @example 
  * CHAR(65) // returns 'A'
- */
+*/
 
 export default function CHAR(number : number | string) : string {
   const parsedNum = NUM(number);
