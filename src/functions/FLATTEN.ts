@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import { isArray, flatten } from 'lodash';
 
 /**
  * Accepts a nested array and returns an array flattened to one level deep
@@ -9,5 +9,5 @@ import _ from 'underscore';
 
 export default function FLATTEN(value: any) : any[] {
   // return null if value is not an array, otherwise return a flattened array
-  return _.isArray(value) ? _.flatten(value) : [];
+  return isArray(value) ? flatten(value) : [];
 }
