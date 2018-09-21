@@ -3,7 +3,15 @@ import { EventNames } from "./events"
 import { FormFields } from "./fields"
 import { AlertResult } from "./functions/ALERT"
 import { ConfigurationResult } from "./functions/SETCONFIGURATION"
-import { HostHTTPClient, HostSetTimeout } from "./host"
+import {
+  HostHTTPClient,
+  HostSetTimeout,
+  HostStorageClear,
+  HostStorageGetItem,
+  HostStorageKey,
+  HostStorageLength,
+  HostStorageRemoveItem,
+  HostStorageSetItem } from "./host"
 import { MaybeString } from "./primitives"
 
 interface ElementStore {
@@ -42,6 +50,12 @@ export default class Runtime implements RuntimeInterface {
   callbackArguments?: any[]
   $$httpRequest?: HostHTTPClient
   $$setTimeout?: HostSetTimeout
+  $$storageLength?: HostStorageLength
+  $$storageKey?: HostStorageKey
+  $$storageGetItem?: HostStorageGetItem
+  $$storageSetItem?: HostStorageSetItem
+  $$storageRemoveItem?: HostStorageRemoveItem
+  $$storageClear?: HostStorageClear
 
   global = null
 
