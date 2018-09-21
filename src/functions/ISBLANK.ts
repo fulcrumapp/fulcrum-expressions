@@ -10,10 +10,7 @@ import { isNaN,
          isArray 
         } from 'lodash';
 
-interface choiceFieldValue {
-  choice_values?: any[]|null
-  other_values?: any[]|null
-}
+import { FormFieldValues as ChoiceFieldValue} from '../values';
 
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
@@ -30,8 +27,8 @@ interface choiceFieldValue {
  * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
 
+export default function ISBLANK(value: ChoiceFieldValue): boolean
 export default function ISBLANK(value: any): boolean
-export default function ISBLANK(value: choiceFieldValue): boolean
 export default function ISBLANK(): boolean
 export default function ISBLANK(value?: any): boolean {
   // checking for a singular, non-object value
