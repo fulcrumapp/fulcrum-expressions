@@ -15,8 +15,10 @@ import ROUND from './ROUND';
  * CEILING(2.3333333, 4) // returns 4
  */
 
-export default function CEILING(number: number, multiple?: number) : number
-export default function CEILING(number: string, multiple?: number) : number
+export default function CEILING(number: number) : number
+export default function CEILING(number: number, multiple: number) : number
+export default function CEILING(number: string) : number
+export default function CEILING(number: string, multiple: number) : number
 export default function CEILING(number: any, multiple = 1) : number {
   const significance : number = ABS(multiple);
   const num : number = NUM(number);
