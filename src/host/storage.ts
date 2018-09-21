@@ -1,11 +1,7 @@
 class HostStorage {
-  scope: string
-
   // I have no idea what the point of the scope is. It doesn't seem to be respected by the mobile apps
   // and the web app uses the browser LocalStorage.
-  constructor(scope = "default") {
-    this.scope = scope
-  }
+  scope = "default"
 
   /**
    * Gets the number of keys stored in the local storage
