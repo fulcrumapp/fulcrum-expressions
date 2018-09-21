@@ -6,8 +6,9 @@ test('it returns the average of its arguments', () => {
   expect(AVERAGE(1, 1.5, 3.75)).toEqual(2.0833333333333335);
 });
 
-test('it will return NaN if a string is passed or no arguments are passed', () => {
-  expect(AVERAGE(1, 2, 'a')).toEqual(NaN);
+test('it will return NaN if a non-number is passed or no arguments are passed', () => {
+  // @ts-ignore: Checking for bad arguments
+  expect(AVERAGE(1, 2, 'a', {})).toEqual(NaN);
   expect(AVERAGE()).toEqual(NaN);
 });
 

@@ -1,5 +1,7 @@
 import { compact } from "lodash"
-import { CONFIG } from "./CONFIG";
+import APPLICATION from "./APPLICATION"
+import APPLICATIONBUILD from "./APPLICATIONBUILD"
+import APPLICATIONVERSION from "./APPLICATIONVERSION"
 
 /**
  * Returns the name of the application engine, application platform, and application version
@@ -10,11 +12,5 @@ import { CONFIG } from "./CONFIG";
  * APPLICATIONINFO() // returns 'Chrome, 68.43.9.0.1, WebKit'
  */
 export default function APPLICATIONINFO() {
-  const {
-    application,
-    applicationVersion,
-    applicationBuild
-  } = CONFIG()
-
-  return compact([application, applicationVersion, applicationBuild]).join(', ')
+  return compact([APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD()]).join(', ')
 }

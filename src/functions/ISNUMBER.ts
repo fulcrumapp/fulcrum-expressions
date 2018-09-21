@@ -9,6 +9,6 @@ import { isFinite } from 'lodash';
  * ISNUMBER(3.78) // returns true
  * ISNUMBER('3.67') // returns false
  */
-export default function ISNUMBER(value:  any): boolean {
+export default function ISNUMBER(value: any): boolean {
   return isFinite(value);
 }

@@ -1,4 +1,4 @@
-import FLATTEN from './FLATTEN';
+import FLATTEN, { RecursiveArray } from './FLATTEN';
 import { toArray } from 'lodash';
 
 /**

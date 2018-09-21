@@ -4,6 +4,10 @@ export interface AlertResult {
   message?: string
 }
 
+interface ToStringable {
+  toString(): string
+}
+
 /**
  * Display a message as an alert.
  * ALERT displays a message to the user. You can provide both the title and message of the alert box.
@@ -19,8 +23,8 @@ export interface AlertResult {
  * // |                                           |
  * // +-------------------------------------------+
  */
-export default function ALERT(message: any): void;
-export default function ALERT(title: any, message: any): void;
+export default function ALERT(message: ToStringable): void;
+export default function ALERT(title: ToStringable, message: ToStringable): void;
 export default function ALERT(): void {
   let title = null
   let message = arguments[0]
