@@ -9,5 +9,5 @@ const globalAny: any = global
  * Setup a new instance of the $$runtime global.
  */
 export const prepareRuntime = () => {
-  globalAny.$$runtime = new Runtime
+  globalAny.$$runtime = new Runtime()
 }

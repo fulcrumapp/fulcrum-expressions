@@ -1,14 +1,14 @@
-import SETCONFIGURATION, { ConfigurationResult } from "../SETCONFIGURATION"
 import { prepareRuntime } from "../../test-helpers"
+import SETCONFIGURATION, { ConfigurationResult } from "../SETCONFIGURATION"
 
 beforeEach(prepareRuntime)
 
 test("It passes each key as a runtime result", () => {
   SETCONFIGURATION({ auto_populate_location: true })
   expect($$runtime.results[0]).toEqual({
-    type: "configure",
     attribute: "auto_populate_location",
-    value: "true"
+    type: "configure",
+    value: "true",
   })
 })
 
