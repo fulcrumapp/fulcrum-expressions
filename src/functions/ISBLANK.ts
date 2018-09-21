@@ -10,18 +10,16 @@ import { isNaN,
          isArray 
         } from 'lodash';
 
-interface isBlankValue {
-  choice_values?: any[]|null;
-  other_values?: any[]|null;
+interface choiceFieldValue {
+  choice_values?: any[]|null
+  other_values?: any[]|null
 }
 
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
- * Values of null, undefined, and NaN are considered blank so that the function will return true
+ * Values of null, undefined, and NaN are considered blank and the function will return true.
  * 
- * @param value item to be checked for blankness or emptiness; 
- * If an object is passed in, allowable keys are 'choice_values' and 'other_values',
- * allowable values are null or an array of values.
+ * @param value item or Choice Field value to be checked for blankness or emptiness;
  * Example: ISBLANK( { choice_values: null, other_values: ['a', 'b'] } )
  * @returns boolean value
  * 
@@ -29,35 +27,33 @@ interface isBlankValue {
  * ISBLANK('') // returns true
  * ISBLANK(NaN) // returns true
  * ISBLANK({choice_values: ['a'], other_values: null}) // returns false 
+ * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
 
 export default function ISBLANK(value: any): boolean
-export default function ISBLANK(value: isBlankValue): boolean
+export default function ISBLANK(value: choiceFieldValue): boolean
 export default function ISBLANK(): boolean
 export default function ISBLANK(value?: any): boolean {
   // checking for a singular, non-object value
   if (isNaN(value) || isUndefined(value) || isNull(value)) return true;
   if (isBoolean(value) || isNumber(value) || isDate(value) || isRegExp(value)) return false;
-  if (isString(value)) return isEmpty('');
-  if (isArray(value)) return value.length === 0;
+  if (isString(value) || isArray(value)) return isEmpty(value);
 
   // checking for value as an object, assuming the appropriate keys
-  // used to be value && ...
-  if (value.choice_values || 
-      value.choice_values === null || 
-      value.other_values || 
-      value.other_values === null){
-        const choice: any[]|null|undefined = value.choice_values;
-        const others: any[]|null|undefined = value.other_values;
+  if (value && (value.choice_values || 
+                isNull(value.choice_values) || 
+                value.other_values || 
+                isNull(value.other_values))) {
+                  const choice: any[]|null|undefined = value.choice_values;
+                  const others: any[]|null|undefined = value.other_values;
 
-        const hasChoice: boolean = isArray(choice) && choice.length > 0;
-        const hasOthers: boolean = isArray(others) && others.length > 0;
-        //const hasEither: boolean = hasChoice || hasOthers;
-        
-        //return hasEither;
-        return hasChoice || hasOthers;
-      }
-  return Object.keys(value).length > 0;
+                  const hasChoice: boolean = isArray(choice) && choice.length > 0;
+                  const hasOthers: boolean = isArray(others) && others.length > 0;
+                  
+                  return !(hasChoice || hasOthers);
+                }
+  // return true if an empty object (no keys) is passed, otherwise false
+  return Object.keys(value).length < 1;
 }
 
 //   return true unless value?

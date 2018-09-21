@@ -28,11 +28,6 @@ test('accepts an object with keys "choice_values" and "other_values"', () => {
   expect(ISBLANK({choice_values: null, other_values: ['b']})).toEqual(false)
 });
 
-test('does not count an object with inappropriate keys', () => {
-  expect(ISBLANK({wrong: ['a']})).toEqual(true);
-  expect(ISBLANK({wrong: null, still_wrong: null})).toEqual(true);
-});
-
 test('returns true if no argument is passed in', () => {
   expect(ISBLANK()).toEqual(true);
 });
