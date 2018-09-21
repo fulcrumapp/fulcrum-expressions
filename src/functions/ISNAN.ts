@@ -1,4 +1,4 @@
-import ISNUMBER from './ISNUMBER';
+import ISNUMBER from "./ISNUMBER"
 
 /**
  * Returns a boolean value indicating if the passed in value is not a number
@@ -9,6 +9,6 @@ import ISNUMBER from './ISNUMBER';
  * ISNAN('a7') // returns true
  */
 
-export default function ISNAN(value: any) : boolean {
-  return !ISNUMBER(value);
+export default function ISNAN(value: any): boolean {
+  return !ISNUMBER(value)
 }

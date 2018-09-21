@@ -1,6 +1,6 @@
-import { isString, isFunction } from "lodash"
+import { isFunction, isString } from "lodash"
+import { EventBinder, EventNames } from "../events"
 import ERROR from "./ERROR"
-import { EventNames, EventBinder } from "../events";
 
 /**
  * Detaches an event handler set by ON.
@@ -29,15 +29,15 @@ const OFF: EventBinder = function(name: EventNames, ...args: any[]): void {
   }
 
   if (!isString(name)) {
-    ERROR('name must be a string')
+    ERROR("name must be a string")
   }
 
   if (param && !isString(param)) {
-    ERROR('param must be a string')
+    ERROR("param must be a string")
   }
 
   if (callback && !isFunction(callback)) {
-    ERROR('callback must be a function')
+    ERROR("callback must be a function")
   }
 
   $$runtime.removeHook(name, param, callback)

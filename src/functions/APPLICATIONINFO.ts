@@ -12,5 +12,5 @@ import APPLICATIONVERSION from "./APPLICATIONVERSION"
  * APPLICATIONINFO() // returns 'Chrome, 68.43.9.0.1, WebKit'
  */
 export default function APPLICATIONINFO() {
-  return compact([APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD()]).join(', ')
+  return compact([APPLICATION(), APPLICATIONVERSION(), APPLICATIONBUILD()]).join(", ")
 }

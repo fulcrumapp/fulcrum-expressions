@@ -19,7 +19,7 @@ const httpRequest = (body: string, callback: HTTPRequestCallback) => {
   if (request) {
     $$runtime.invokeAsync(request, [body], callback)
   } else {
-    callback(new Error('Not supported'), null, null)
+    callback(new Error("Not supported"), null, null)
   }
 }
 

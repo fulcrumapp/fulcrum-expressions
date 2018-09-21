@@ -12,4 +12,3 @@ const ABS = (number: number | string): number =>
   Math.abs(NUM(number))
 
 export default ABS
-

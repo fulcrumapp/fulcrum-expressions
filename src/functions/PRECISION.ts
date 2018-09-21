@@ -1,25 +1,25 @@
-import NUM from './NUM';
-import ISNAN from './ISNAN';
+import ISNAN from "./ISNAN"
+import NUM from "./NUM"
 
 /**
  * Returns the number of digits to the right of the decimal point
- * @param number a numeric type
+ * @param value a numeric type
  * @returns numberic value
  * @example
  * PRECISION(9.034) // returns 3
  * PRECISION(9) // returns 0
  */
-export default function PRECISION(number: number) : number
-export default function PRECISION(number: string) : number
-export default function PRECISION(number: any) : number {
-  number = NUM(number);
+export default function PRECISION(value: number): number
+export default function PRECISION(value: string): number
+export default function PRECISION(value: any): number {
+  value = NUM(value)
 
-  if (ISNAN(number)) return NaN;
+  if (ISNAN(value)) { return NaN }
 
-  // convert number to string and split at decimal point, if present
-  const parts : string[] = number.toString().split('.');
+  // convert value to string and split at decimal point, if present
+  const parts: string[] = value.toString().split(".")
 
-  if (parts.length < 2) return 0;
+  if (parts.length < 2) { return 0 }
 
-  return parts[1].length;
+  return parts[1].length
 }

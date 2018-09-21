@@ -1,9 +1,9 @@
-import { isString, isFunction, includes } from "lodash"
+import { includes, isFunction, isString } from "lodash"
+import { EventBinder, EventNames } from "../events"
+import { MaybeString } from "../primitives"
 import ERROR from "./ERROR"
 import FIELD from "./FIELD"
 import FORMAT from "./FORMAT"
-import { EventNames, EventBinder } from "../events";
-import { MaybeString } from "../primitives"
 
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
@@ -80,12 +80,12 @@ const ON: EventBinder = function(name: EventNames, ...args: any[]): void {
 }
 
 const isMagicDataName = (param: MaybeString) =>
-  includes(['@status', '@project', '@geometry', '@assignment'], param)
+  includes(["@status", "@project", "@geometry", "@assignment"], param)
 
 const validateEventParams = (event: EventNames, param: MaybeString) => {
   const invariant = (value: any) => {
     if (!value) {
-      ERROR(FORMAT('Invalid usage of ON(): "%s" is not a valid field for the "%s" event', param, event))
+      ERROR(FORMAT("Invalid usage of ON(): \"%s\" is not a valid field for the \"%s\" event", param, event))
     }
   }
 
@@ -93,7 +93,7 @@ const validateEventParams = (event: EventNames, param: MaybeString) => {
 
   switch (event) {
     case "change": {
-      if (isMagicDataName(param)) return
+      if (isMagicDataName(param)) { return }
       invariant(FIELD(param))
       break
     }
@@ -112,7 +112,7 @@ const validateEventParams = (event: EventNames, param: MaybeString) => {
     }
 
     case "change-geometry": {
-      if (param) invariant(field && field.type === "Repeatable")
+      if (param) { invariant(field && field.type === "Repeatable") }
       break
     }
 

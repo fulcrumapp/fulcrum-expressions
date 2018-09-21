@@ -23,8 +23,8 @@ interface ToStringable {
  * // |                                           |
  * // +-------------------------------------------+
  */
-export default function ALERT(message: ToStringable): void;
-export default function ALERT(title: ToStringable, message: ToStringable): void;
+export default function ALERT(message: ToStringable): void
+export default function ALERT(title: ToStringable, message: ToStringable): void
 export default function ALERT(): void {
   let title = null
   let message = arguments[0]
@@ -35,8 +35,8 @@ export default function ALERT(): void {
   }
 
   $$runtime.results.push({
-    type: 'message',
+    type: "message",
     title: title ? title.toString() : null,
-    message: message ? message.toString() : null
+    message: message ? message.toString() : null,
   })
 }

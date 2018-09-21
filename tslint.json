@@ -9,7 +9,10 @@
         "semicolon": [true, "never"],
         "indent": [true, "spaces", 2],
         "eofline": true,
-        "arrow-return-shorthand": true
+        "interface-name": false,
+        "member-access": false,
+        "unified-signatures": false,
+        "ban-types": false
     },
     "rulesDirectory": []
 }

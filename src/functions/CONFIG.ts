@@ -15,7 +15,7 @@ interface Config {
   language: string,
   /** Required: sets locale-specific country - defaults to 'US' */
   country: string,
-  /** Required: sets locale-specific currency code - defaults to 'USD' */  
+  /** Required: sets locale-specific currency code - defaults to 'USD' */
   currencyCode: string,
   /** Required: sets locale-specific currency Symbol - defaults to '$' */
   currencySymbol: string,
@@ -30,14 +30,14 @@ interface Config {
 }
 
 const DEFAULTS = {
-  locale: 'en_US',
-  language: 'en-US',
-  country: 'US',
-  currencyCode: 'USD',
-  currencySymbol: '$',
-  timeZone: 'UTC',
-  decimalSeparator: '.',
-  groupingSeparator: ',',
+  locale: "en_US",
+  language: "en-US",
+  country: "US",
+  currencyCode: "USD",
+  currencySymbol: "$",
+  timeZone: "UTC",
+  decimalSeparator: ".",
+  groupingSeparator: ",",
   groupingSize: 3,
 }
 

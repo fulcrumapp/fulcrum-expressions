@@ -11,4 +11,3 @@ const ACOS = (number: number | string): number =>
   Math.acos(NUM(number))
 
 export default ACOS
-

@@ -30,16 +30,16 @@ interface Configuration {
 }
 
 const CONFIGURATION_ATTRIBUTES = [
-  'auto_populate_location',
-  'auto_populate_minimum_accuracy',
-  'photo_quality',
-  'video_quality',
-  'allow_photo_gallery',
-  'allow_video_gallery',
-  'allow_draft_records',
-  'allow_manual_location',
-  'warn_on_location_accuracy',
-  'title'
+  "auto_populate_location",
+  "auto_populate_minimum_accuracy",
+  "photo_quality",
+  "video_quality",
+  "allow_photo_gallery",
+  "allow_video_gallery",
+  "allow_draft_records",
+  "allow_manual_location",
+  "warn_on_location_accuracy",
+  "title",
 ]
 
 /**
@@ -48,14 +48,14 @@ const CONFIGURATION_ATTRIBUTES = [
  */
 const SETCONFIGURATION = (settings: Configuration) =>
   each(settings, (value, attribute) => {
-    if (!includes(CONFIGURATION_ATTRIBUTES, attribute)) return
+    if (!includes(CONFIGURATION_ATTRIBUTES, attribute)) { return }
 
     const result = value ? JSON.stringify(value) : null
 
     $$runtime.results.push({
       type: "configure",
       attribute: attribute.toString(),
-      value: result
+      value: result,
     })
   })
 

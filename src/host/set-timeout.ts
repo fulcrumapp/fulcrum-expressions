@@ -8,7 +8,7 @@ import { state } from "./state"
 export default function setTimeout(callback: Function, timeout: number) {
   const hostSetTimeout = $$runtime.$$setTimeout
 
-  if (!hostSetTimeout) return
+  if (!hostSetTimeout) { return }
 
   const id = ++state().nextTimeoutID
 

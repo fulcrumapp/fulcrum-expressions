@@ -1,5 +1,5 @@
-import FLATTEN, { RecursiveArray } from './FLATTEN';
-import { toArray } from 'lodash';
+import { toArray } from "lodash"
+import FLATTEN, { RecursiveArray } from "./FLATTEN"
 
 /**
  * Accepts any number of arguments and returns them as an array
@@ -10,6 +10,6 @@ import { toArray } from 'lodash';
  * ARRAY([1, 2], '3', [4, 5]) // returns [1, 2, '3', 4, 5]
  */
 
-export default function ARRAY(...args: any[]) : any[] {
-  return FLATTEN(toArray(args));
+export default function ARRAY(...args: any[]): any[] {
+  return FLATTEN(toArray(args))
 }

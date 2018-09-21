@@ -1,13 +1,13 @@
-import {CONFIG} from './CONFIG';
+import {CONFIG} from "./CONFIG"
 
-/** 
+/**
  * Returns application version
  * @returns application version
- * @example 
+ * @example
  * APPLICATIONVERSION()
- * // if called with 
+ * // if called with
  */
 
-export default function APPLICATIONVERSION () : string {
-    return CONFIG().applicationVersion || ''
+export default function APPLICATIONVERSION(): string {
+    return CONFIG().applicationVersion || ""
 }

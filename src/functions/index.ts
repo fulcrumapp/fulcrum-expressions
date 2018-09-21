@@ -1,9 +1,9 @@
 import ABS from "./ABS"
 import ACOS from "./ACOS"
 import ACOSH from "./ACOSH"
-import ALERT from "./ALERT";
-import NUM from "./NUM";
+import ALERT from "./ALERT"
 import { CONFIG, RESETCONFIG } from "./CONFIG"
+import NUM from "./NUM"
 
 RESETCONFIG()
 

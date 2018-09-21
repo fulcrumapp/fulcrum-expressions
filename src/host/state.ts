@@ -13,10 +13,10 @@ let hostState: HostState
 
 export const resetState = () => {
   hostState = {
-    timeouts: {},
     intervals: {},
+    nextIntervalID: 0,
     nextTimeoutID: 0,
-    nextIntervalID: 0
+    timeouts: {},
   }
 }
 

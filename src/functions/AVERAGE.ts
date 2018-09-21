@@ -1,8 +1,8 @@
-import ARRAY from './ARRAY';
-import { some, isFinite, sum, isEmpty } from "lodash"
-import { RecursiveArray } from './FLATTEN';
+import { isEmpty, isFinite, some, sum } from "lodash"
+import ARRAY from "./ARRAY"
+import { RecursiveArray } from "./FLATTEN"
 
-type AverageValues = (number | RecursiveArray<number>)[]
+type AverageValues = Array<number | RecursiveArray<number>>
 
 /**
  * Accepts a list of numbers and returns their average (mean)
@@ -12,7 +12,7 @@ type AverageValues = (number | RecursiveArray<number>)[]
  * AVERAGE(3, 5) // returns 4
  * AVERAGE(1, 1.5, 3.75) // returns 2.0833333333333335
  */
-export default function AVERAGE(...values : AverageValues) : number {
+export default function AVERAGE(...values: AverageValues): number {
   values = ARRAY(values)
 
   if (hasNonNumberValues(values) || isEmpty(values)) {
@@ -23,4 +23,3 @@ export default function AVERAGE(...values : AverageValues) : number {
 }
 
 const hasNonNumberValues = (values: any[]) => some(values, (value) => !isFinite(value))
-

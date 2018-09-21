@@ -1,10 +1,10 @@
-import { without, get, set } from "lodash"
-import { HostHTTPClient, HostSetTimeout } from "./host"
-import { FormFields, } from "./fields";
-import { EventNames } from "./events";
-import { MaybeString } from "./primitives";
-import { ConfigurationResult } from "./functions/SETCONFIGURATION"
+import { get, set, without } from "lodash"
+import { EventNames } from "./events"
+import { FormFields } from "./fields"
 import { AlertResult } from "./functions/ALERT"
+import { ConfigurationResult } from "./functions/SETCONFIGURATION"
+import { HostHTTPClient, HostSetTimeout } from "./host"
+import { MaybeString } from "./primitives"
 
 interface ElementStore {
   [key: string]: FormFields
@@ -33,15 +33,15 @@ const NO_PARAM = "__no_param"
  * The Runtime class handles the state of a data event in the context of a single Record being edited.
  */
 export default class Runtime implements RuntimeInterface {
-  static defaultLocale = 'en_US'
-  static defaultCurrencyCode = 'USD'
-  static defaultCurrencySymbol = '$'
-  static defaultTimeZone = 'UTC'
+  static defaultLocale = "en_US"
+  static defaultCurrencyCode = "USD"
+  static defaultCurrencySymbol = "$"
+  static defaultTimeZone = "UTC"
 
   // Host specific runtime injections
-  callbackArguments? : any[]
-  $$httpRequest? : HostHTTPClient
-  $$setTimeout? : HostSetTimeout
+  callbackArguments?: any[]
+  $$httpRequest?: HostHTTPClient
+  $$setTimeout?: HostSetTimeout
 
   global = null
 
@@ -57,12 +57,11 @@ export default class Runtime implements RuntimeInterface {
 
   event = {}
 
-  events : {
+  events: {
     [key: string]: {
-      [grouping: string]: Function[]
-    }
+      [grouping: string]: Function[],
+    },
   } = {}
-
 
   script = null
 
@@ -76,7 +75,7 @@ export default class Runtime implements RuntimeInterface {
 
   variables = {}
 
-  results : ResultsCollection = []
+  results: ResultsCollection = []
 
   dataNames = {}
 
@@ -84,19 +83,19 @@ export default class Runtime implements RuntimeInterface {
 
   elementsByKey = {}
 
-  elementsByDataName : ElementStore = {}
+  elementsByDataName: ElementStore = {}
 
-  statusesByValue : ElementStore = {}
+  statusesByValue: ElementStore = {}
 
   featureIsNew = true
 
   showErrors = false
 
-  asyncCallbacks : {
-    [id: number]: Function
+  asyncCallbacks: {
+    [id: number]: Function,
   }  = {}
 
-  callbackID : number | null = null
+  callbackID: number | null = null
 
   asyncCount = 0
 
@@ -107,38 +106,38 @@ export default class Runtime implements RuntimeInterface {
   isCalculation = false
 
   extraVariableNames = [
-    'locale',
-    'language',
-    'timeZone',
-    'decimalSeparator',
-    'groupingSeparator',
-    'currencySymbol',
-    'currencyCode',
-    'country',
-    'deviceIdentifier',
-    'deviceModel',
-    'deviceManufacturer',
-    'platform',
-    'platformVersion',
-    'application',
-    'applicationVersion',
-    'applicationBuild',
-    'userEmail',
-    'userRoleName',
-    'recordStatus',
-    'recordSystemCreatedAt',
-    'recordSystemUpdatedAt',
-    'recordClientCreatedAt',
-    'recordClientUpdatedAt',
-    'recordProject',
-    'recordProjectName',
-    'recordGeometry',
-    'recordAltitude',
-    'recordVerticalAccuracy',
-    'recordHorizontalAccuracy',
-    'featureCreatedAt',
-    'featureUpdatedAt',
-    'featureGeometry'
+    "locale",
+    "language",
+    "timeZone",
+    "decimalSeparator",
+    "groupingSeparator",
+    "currencySymbol",
+    "currencyCode",
+    "country",
+    "deviceIdentifier",
+    "deviceModel",
+    "deviceManufacturer",
+    "platform",
+    "platformVersion",
+    "application",
+    "applicationVersion",
+    "applicationBuild",
+    "userEmail",
+    "userRoleName",
+    "recordStatus",
+    "recordSystemCreatedAt",
+    "recordSystemUpdatedAt",
+    "recordClientCreatedAt",
+    "recordClientUpdatedAt",
+    "recordProject",
+    "recordProjectName",
+    "recordGeometry",
+    "recordAltitude",
+    "recordVerticalAccuracy",
+    "recordHorizontalAccuracy",
+    "featureCreatedAt",
+    "featureUpdatedAt",
+    "featureGeometry",
   ]
 
   invokeAsync(func: Function, args: any[], callback: Function) {
@@ -148,7 +147,7 @@ export default class Runtime implements RuntimeInterface {
   }
 
   finishAsync() {
-    if (!this.callbackID) return
+    if (!this.callbackID) { return }
 
     const id = +this.callbackID
     const callback = this.asyncCallbacks[id]
@@ -182,6 +181,4 @@ export default class Runtime implements RuntimeInterface {
   private pathFor(name: EventNames, param: MaybeString) {
     return [name, param || NO_PARAM]
   }
-
-
 }

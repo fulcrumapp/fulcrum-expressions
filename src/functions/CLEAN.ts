@@ -8,6 +8,6 @@
 
 const CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
 
-export default function CLEAN(text: string) : string {
-  return text.replace(CLEAN_REGEX, '')
+export default function CLEAN(text: string): string {
+  return text.replace(CLEAN_REGEX, "")
 }
