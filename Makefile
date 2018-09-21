@@ -42,6 +42,10 @@ tsdoc:
 	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
 		bash -l -c "yarn && yarn typedoc --theme minimal --out doc --exclude **/*.test.ts"
 
+repl:
+	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
+		bash -l -c "make build && ./console"
+
 test:
 	./node_modules/mocha/bin/mocha \
 	--reporter $(REPORTER) \
