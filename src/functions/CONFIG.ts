@@ -30,15 +30,15 @@ interface Config {
 }
 
 const DEFAULTS = {
-  locale: "en_US",
-  language: "en-US",
   country: "US",
   currencyCode: "USD",
   currencySymbol: "$",
-  timeZone: "UTC",
   decimalSeparator: ".",
   groupingSeparator: ",",
   groupingSize: 3,
+  language: "en-US",
+  locale: "en_US",
+  timeZone: "UTC",
 }
 
 let Config: Config

@@ -1,4 +1,5 @@
 // TODO: Make these work with imports
+/* tslint:disable no-var-requires */
 const qs = require("query-string")
 const encodeUrl = require("encodeurl")
 

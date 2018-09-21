@@ -35,8 +35,8 @@ export default function ALERT(): void {
   }
 
   $$runtime.results.push({
-    type: "message",
-    title: title ? title.toString() : null,
     message: message ? message.toString() : null,
+    title: title ? title.toString() : null,
+    type: "message",
   })
 }

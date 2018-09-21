@@ -1,4 +1,4 @@
-import {CONFIG} from "./CONFIG"
+import { CONFIG } from "./CONFIG"
 
 /**
  * Returns application version

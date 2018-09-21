@@ -6,9 +6,10 @@ import NUM from "./NUM"
  * @example
  * ACOSH(7) // returns 2.6339157938496336
  */
-const ACOSH = (number: number | string) => {
-  const parsedNumber = NUM(number)
+
+export default function ACOSH(value: number): number
+export default function ACOSH(value: string): number
+export default function ACOSH(value: any) {
+  const parsedNumber = NUM(value)
   return Math.log(parsedNumber + Math.sqrt(parsedNumber * parsedNumber - 1))
 }
-
-export default ACOSH

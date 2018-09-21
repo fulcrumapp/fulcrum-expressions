@@ -6,7 +6,7 @@ import httpRequest from "./http-request"
 import setTimeout from "./set-timeout"
 
 export default {
-  httpRequest,
   clearTimeout,
+  httpRequest,
   setTimeout,
 }

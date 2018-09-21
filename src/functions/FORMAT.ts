@@ -12,7 +12,6 @@ import { format } from "util"
  * // returns "11/11/2015 12:30:30"
  * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
  */
-const FORMAT = (template: string, ...variables: any[]) =>
-  format(template, ...variables)
-
-export default FORMAT
+export default function FORMAT(template: string, ...variables: any[]) {
+  return format(template, ...variables)
+}

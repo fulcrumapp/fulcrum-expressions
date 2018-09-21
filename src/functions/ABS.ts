@@ -8,7 +8,8 @@ import NUM from "./NUM"
  * ABS(-1) // returns 1
  * ABS(42) // returns 42
  */
-const ABS = (number: number | string): number =>
-  Math.abs(NUM(number))
-
-export default ABS
+export default function ABS(value: number): number
+export default function ABS(value: string): number
+export default function ABS(value: any): number {
+  return Math.abs(NUM(value))
+}

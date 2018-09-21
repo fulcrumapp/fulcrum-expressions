@@ -7,7 +7,8 @@ import NUM from "./NUM"
  * @example
  * ACOS(0.8) // returns 0.6435011087932843
  */
-const ACOS = (number: number | string): number =>
-  Math.acos(NUM(number))
-
-export default ACOS
+export default function ACOS(value: number): number
+export default function ACOS(value: string): number
+export default function ACOS(value: any) {
+  return Math.acos(NUM(value))
+}

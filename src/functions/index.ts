@@ -13,7 +13,7 @@ export default {
   ACOSH,
   ALERT,
   CONFIG,
-  NUM,
   NO_VALUE: undefined,
+  NUM,
   RESETCONFIG,
 }

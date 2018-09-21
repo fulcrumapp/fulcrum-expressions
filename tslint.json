@@ -12,7 +12,8 @@
         "interface-name": false,
         "member-access": false,
         "unified-signatures": false,
-        "ban-types": false
+        "ban-types": false,
+        "only-arrow-functions": false
     },
     "rulesDirectory": []
 }

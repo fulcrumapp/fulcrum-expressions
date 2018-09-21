@@ -53,8 +53,8 @@ const SETCONFIGURATION = (settings: Configuration) =>
     const result = value ? JSON.stringify(value) : null
 
     $$runtime.results.push({
-      type: "configure",
       attribute: attribute.toString(),
+      type: "configure",
       value: result,
     })
   })
