@@ -164,7 +164,7 @@ export default class Runtime implements RuntimeInterface {
 
   addHook(name: EventNames, param: MaybeString, callback: Function) {
     const path = this.pathFor(name, param)
-    const callbacks = get(this.events, path) || []
+    const callbacks = get(this.events, path, [])
     this.events = set(this.events, path, callbacks.concat([ callback ]))
   }
 

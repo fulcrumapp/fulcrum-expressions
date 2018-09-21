@@ -1,13 +1,13 @@
-import APPLICATION from '../APPLICATION'
-import { RESETCONFIG, CONFIG } from "../CONFIG"
+import APPLICATION from "../APPLICATION"
+import { CONFIG, RESETCONFIG } from "../CONFIG"
 
 beforeEach(RESETCONFIG)
 
-test('fetches platform name off CONFIG', () => {
-    CONFIG().application = 'Chrome'
-    expect(APPLICATION()).toEqual('Chrome')
+test("fetches platform name off CONFIG", () => {
+  CONFIG().application = "Chrome"
+  expect(APPLICATION()).toEqual("Chrome")
 })
 
-test('falls back to empty string', () => {
-    expect(APPLICATION()).toEqual('')
+test("falls back to empty string", () => {
+  expect(APPLICATION()).toEqual("")
 })

@@ -41,6 +41,7 @@
     "season": "^5.0.3",
     "should": "^8.4.0",
     "spawn-sync": "^1.0.1",
+    "tslint": "^5.11.0",
     "uglify-js": "^2.4.16"
   },
   "jest": {

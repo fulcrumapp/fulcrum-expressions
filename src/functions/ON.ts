@@ -56,7 +56,7 @@ const ON: EventBinder = function(name: EventNames, ...args: any[]): void {
   let param: MaybeString = null
   let callback
 
-  if (arguments.length === 3) {
+  if (args.length === 2) {
     [param, callback] = args
   } else {
     [callback] = args

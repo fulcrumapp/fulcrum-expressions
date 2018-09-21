@@ -58,7 +58,7 @@ export interface FormField {
   /** Is this field visible on mobile? */
   hidden: boolean
   /** The attribute to use as default value. */
-  default_value: string
+  default_value?: string
   /** Helper text for the user. */
   description?: string
   /** Match all or any of the conditions to display this field. */

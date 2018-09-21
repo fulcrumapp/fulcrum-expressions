@@ -1,5 +1,5 @@
-import ALERT from "../ALERT"
 import { prepareRuntime } from "../../test-helpers"
+import ALERT from "../ALERT"
 
 beforeEach(prepareRuntime)
 
@@ -8,7 +8,7 @@ test("allows the message for the single argument", () => {
   expect($$runtime.results[0]).toEqual({
     type: "message",
     message: "Hello!",
-    title: null
+    title: null,
   })
 })
 
@@ -17,7 +17,7 @@ test("it allows a title and a message with multiple arguments", () => {
   expect($$runtime.results[0]).toEqual({
     type: "message",
     message: "Hello!",
-    title: "Welcome"
+    title: "Welcome",
   })
 })
 
@@ -26,6 +26,6 @@ test("it attempts to stringify values", () => {
   expect($$runtime.results[0]).toEqual({
     type: "message",
     message: "5",
-    title: "Welcome"
+    title: "Welcome",
   })
 })
