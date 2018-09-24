@@ -52,20 +52,3 @@ export default function ISBLANK(value?: any): boolean {
   // return true if an empty object (no keys) is passed, otherwise false
   return Object.keys(value).length < 1
 }
-
-//   return true unless value?
-//   if value and (value.choice_values or
-//                 value.choice_values is null or
-//                 value.other_values or
-//                 value.other_values is null)
-
-//     choice = value.choice_values
-//     others = value.other_values
-
-//     hasChoice = _.isArray(choice) and choice.length > 0
-//     hasOthers = _.isArray(others) and others.length > 0
-//     hasEither = hasChoice or hasOthers
-
-//     return not hasEither
-
-//   Object.keys(value).length is 0
