@@ -29,5 +29,5 @@ test("it returns undefined if passed a non-choice field value", () => {
   expect((CHOICEVALUE(7))).toBeUndefined()
   expect((CHOICEVALUE(true))).toBeUndefined()
   expect((CHOICEVALUE("test"))).toBeUndefined()
-  expect((CHOICEVALUE(new Date))).toBeUndefined()
+  expect((CHOICEVALUE(new Date()))).toBeUndefined()
 })
