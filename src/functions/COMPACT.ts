@@ -1,4 +1,4 @@
-import { filter, isArray } from "lodash"
+import { filter, isArray, isNull, isUndefined } from "lodash"
 
 /**
  * Returns a compacted array without null or undefined values.
@@ -14,5 +14,5 @@ export default function COMPACT(): undefined
 export default function COMPACT(value?: any[]): any[]|undefined {
   if (!isArray(value)) { return undefined }
   // allows falsey value like '', 0, and NaN to pass through
-  return filter(value, (item) => item !== null && item !== undefined)
+  return filter(value, (item) => !isNull(item) && !isUndefined(item))
 }

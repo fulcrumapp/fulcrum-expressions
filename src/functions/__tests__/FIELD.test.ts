@@ -1,6 +1,6 @@
-import FIELD from "../FIELD"
-import { FormFields } from "../../fields"
 import { prepareRuntime } from "../../test-helpers"
+import { FormFields } from "../../types/fields"
+import FIELD from "../FIELD"
 
 beforeEach(prepareRuntime)
 
@@ -12,7 +12,7 @@ test("It fetches the field from the runtime schema", () => {
     data_name: "my-field",
     required: false,
     disabled: false,
-    hidden: false
+    hidden: false,
   }
 
   $$runtime.elementsByDataName["my-field"] = field

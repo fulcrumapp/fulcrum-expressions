@@ -1,5 +1,5 @@
-import { FormFields as FormField } from "../fields"
-import { MaybeString } from "../primitives"
+import { FormFields as FormField } from "../types/fields"
+import { MaybeString } from "../types/primitives"
 
 /**
  * Returns definition object for a specified field

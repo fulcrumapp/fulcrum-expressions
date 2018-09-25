@@ -1,6 +1,6 @@
 import { includes, isFunction, isString } from "lodash"
-import { EventBinder, EventNames } from "../events"
-import { MaybeString } from "../primitives"
+import { EventBinder, EventNames } from "../types/events"
+import { MaybeString } from "../types/primitives"
 import ERROR from "./ERROR"
 import FIELD from "./FIELD"
 import FORMAT from "./FORMAT"

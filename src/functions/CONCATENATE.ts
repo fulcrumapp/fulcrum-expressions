@@ -12,16 +12,15 @@ import ARRAY from "./ARRAY"
 
 export default function CONCATENATE(...strings: any[]): string
 export default function CONCATENATE(): string
-export default function CONCATENATE(...strings: any[]): string {
-  strings = map(ARRAY(strings), (arg) => {
+export default function CONCATENATE(...strings: any[]) {
+  return map(ARRAY(strings), (arg) => {
     switch (true) {
       case isString(arg):
         return arg
       case isNumber(arg):
-        return "" + arg
+        return `${arg}`
       default:
         return ""
     }
-  })
-  return strings.join("")
+  }).join("")
 }

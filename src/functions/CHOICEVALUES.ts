@@ -1,5 +1,5 @@
 import { compact, concat, isUndefined } from "lodash"
-import { FormFieldValues as ChoiceFieldValue} from "../values"
+import { FormFieldValues as ChoiceFieldValue} from "../types/values"
 import ISBLANK from "./ISBLANK"
 
 /**
@@ -12,11 +12,13 @@ import ISBLANK from "./ISBLANK"
 export default function CHOICEVALUES(field: ChoiceFieldValue): string[]
 export default function CHOICEVALUES(field: any): any[]
 export default function CHOICEVALUES(): undefined
-export default function CHOICEVALUES(field?: any): any[]|undefined {
-  if (isUndefined(field)) {return undefined}
-  if (ISBLANK(field)) {return []}
+export default function CHOICEVALUES(field?: ChoiceFieldValue | any): string[] | undefined {
+  if (isUndefined(field)) { return undefined }
+  if (ISBLANK(field)) { return [] }
 
-  const values: any[] = concat(field.choice_values, field.other_values)
+  const choices = field as ChoiceFieldValue
+  const choiceValues = choices.choice_values || []
+  const otherValues = choices.other_values || []
 
-  return compact(values)
+  return compact(concat(choiceValues, otherValues))
 }

@@ -1,5 +1,5 @@
 import { isNumber, isString } from "lodash"
-import { MaybeString } from "../primitives"
+import { MaybeString } from "../types/primitives"
 
 /**
  * Returns numeric code for first character in passed in string
