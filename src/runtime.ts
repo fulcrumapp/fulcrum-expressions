@@ -1,6 +1,4 @@
 import { get, set, without } from "lodash"
-import { EventNames } from "./events"
-import { FormFields } from "./fields"
 import { AlertResult } from "./functions/ALERT"
 import { ConfigurationResult } from "./functions/SETCONFIGURATION"
 import {
@@ -12,7 +10,9 @@ import {
   HostStorageLength,
   HostStorageRemoveItem,
   HostStorageSetItem } from "./host"
-import { MaybeString } from "./primitives"
+import { EventNames } from "./types/events"
+import { FormFields } from "./types/fields"
+import { MaybeString } from "./types/primitives"
 
 interface ElementStore {
   [key: string]: FormFields
@@ -29,18 +29,12 @@ type ResultsCollection = Array<
   ConfigurationResult
 >
 
-interface RuntimeInterface {
-  results: ResultsCollection
-  elementsByKey: ElementStore
-  elementsByDataName: ElementStore
-}
-
 const NO_PARAM = "__no_param"
 
 /**
  * The Runtime class handles the state of a data event in the context of a single Record being edited.
  */
-export default class Runtime implements RuntimeInterface {
+export default class Runtime {
   static defaultLocale = "en_US"
   static defaultCurrencyCode = "USD"
   static defaultCurrencySymbol = "$"
@@ -95,7 +89,7 @@ export default class Runtime implements RuntimeInterface {
 
   elements = []
 
-  elementsByKey = {}
+  elementsByKey: ElementStore = {}
 
   elementsByDataName: ElementStore = {}
 

@@ -1,6 +1,6 @@
 import { isArray } from "lodash"
-import { MaybeString } from "../primitives"
-import { ChoiceFieldValue } from "../values"
+import { MaybeString } from "../types/primitives"
+import { ChoiceFieldValue } from "../types/values"
 import CHOICEVALUES from "./CHOICEVALUES"
 
 /**

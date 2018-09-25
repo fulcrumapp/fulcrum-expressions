@@ -1,9 +1,6 @@
-// TODO: Make these work with imports
-/* tslint:disable no-var-requires */
-const qs = require("query-string")
-const encodeUrl = require("encodeurl")
-
+import encodeUrl from "encodeurl"
 import { isEmpty, isFunction, isObject, isString } from "lodash"
+import { stringify } from "query-string"
 import HostHTTPRequest, { HTTPRequestCallback } from "../host/http-request"
 import ERROR from "./ERROR"
 
@@ -116,7 +113,7 @@ function REQUEST(options: any, callback: HTTPRequestCallback) {
 
   if (isObject(config.qs)) {
     const url = config.url!
-    let queryString = qs.stringify(config.qs)
+    let queryString = stringify(config.qs!)
 
     if (url.indexOf("?") < 0) {
       queryString = `?${queryString}`
@@ -139,7 +136,7 @@ function REQUEST(options: any, callback: HTTPRequestCallback) {
     delete config.json
   }
 
-  config.url = encodeUrl(config.url)
+  config.url = encodeUrl(config.url!)
 
   HostHTTPRequest(JSON.stringify(config), callback)
 }

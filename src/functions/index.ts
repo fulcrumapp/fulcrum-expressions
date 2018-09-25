@@ -4,6 +4,7 @@ import ACOSH from "./ACOSH"
 import ALERT from "./ALERT"
 import { CONFIG, RESETCONFIG } from "./CONFIG"
 import NUM from "./NUM"
+import REQUEST from "./REQUEST"
 
 RESETCONFIG()
 
@@ -15,5 +16,6 @@ export default {
   CONFIG,
   NO_VALUE: undefined,
   NUM,
+  REQUEST,
   RESETCONFIG,
 }

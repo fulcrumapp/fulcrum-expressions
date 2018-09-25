@@ -1,4 +1,4 @@
-import Runtime from "./runtime"
+import Runtime from "../runtime"
 
 declare global {
   var $$runtime: Runtime

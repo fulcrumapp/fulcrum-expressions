@@ -10,7 +10,7 @@ import { isArray,
          isUndefined,
         } from "lodash"
 
-import { ChoiceFieldValue } from "../values"
+import { ChoiceFieldValue } from "../types/values"
 
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.

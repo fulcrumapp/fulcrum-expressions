@@ -1,5 +1,5 @@
 import { isFunction, isString } from "lodash"
-import { EventBinder, EventNames } from "../events"
+import { EventBinder, EventNames } from "../types/events"
 import ERROR from "./ERROR"
 
 /**

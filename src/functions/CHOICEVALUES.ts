@@ -1,5 +1,5 @@
 import { compact, concat, isUndefined } from "lodash"
-import { FormFieldValues as ChoiceFieldValue} from "../values"
+import { FormFieldValues as ChoiceFieldValue} from "../types/values"
 import ISBLANK from "./ISBLANK"
 
 /**
