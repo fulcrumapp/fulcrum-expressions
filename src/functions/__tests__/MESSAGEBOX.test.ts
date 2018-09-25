@@ -1,7 +1,6 @@
-import MESSAGEBOX, { MessageBoxPayload } from "../MESSAGEBOX"
+import MESSAGEBOX from "../MESSAGEBOX"
 
 test("it must receive an options hash", () => {
-  // @ts-ignore Need to check an error is thrown
   expect(MESSAGEBOX).toThrow("options must be provided")
 })
 
