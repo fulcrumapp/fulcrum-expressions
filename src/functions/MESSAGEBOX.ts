@@ -1,10 +1,10 @@
-import { isArray, isFunction } from "lodash"
+import { isArray, isFunction, isUndefined } from "lodash"
 import { MaybeString } from "../primitives"
 import COMPACT from "./COMPACT"
 import ERROR from "./ERROR"
 import ISBLANK from "./ISBLANK"
 
-interface MessageBoxPayload {
+export interface MessageBoxPayload {
   title?: MaybeString
   message?: MaybeString
   buttons?: any[]|null|undefined
