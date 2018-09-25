@@ -41,7 +41,8 @@ interface MessageBoxPayload {
 
 export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): MessageBoxPayload | Function
 export default function MESSAGEBOX(options: MessageBoxPayload): MessageBoxPayload
-export default function MESSAGEBOX(options: MessageBoxPayload, callback?: Function): MessageBoxPayload | Function {
+export default function MESSAGEBOX(options: MessageBoxPayload,
+                                   callback?: Function|undefined): MessageBoxPayload | Function | undefined {
   if (ISBLANK(options)) { ERROR("options must be provided") }
   if (!ISBLANK(options.buttons) && !isArray(options.buttons)) { ERROR("options.buttons must be an array") }
   if (!ISBLANK(options.validate) && !isFunction(options.validate)) { ERROR("options.validate must be a function") }
@@ -62,7 +63,7 @@ export default function MESSAGEBOX(options: MessageBoxPayload, callback?: Functi
       buttons: !ISBLANK(options.buttons) ? options.buttons : null,
       default: !ISBLANK(options.default) ? options.default : null,
       input: !ISBLANK(options.input) ? options.input : null,
-      message: !ISBLANK(options.message) ? options.message.toString() : null,
+      message: !ISBLANK(options.message) ?  options.message.toString() : null,
       placeholder: !ISBLANK(options.placeholder) ? options.placeholder.toString() : null,
       title: !ISBLANK(options.title) ? options.title.toString() : null,
     }
