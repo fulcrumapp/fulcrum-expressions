@@ -66,13 +66,3 @@ export default function MESSAGEBOX(options: MessageBoxPayload, callback: Functio
     }
   }
 }
-//   return callback ? = () - >
-
-//   payload                                =
-//   title: if options.title ? then                                options.title.toString() else null
-//   message: if options.message ? then                                 options.message.toString() else null
-//   buttons: if options.buttons ? then                                 options.buttons else null
-//   input: if options.input ? then                                 options.input else null
-//   placeholder: if options.placeholder ? then                                 options.placeholder.toString() else null
-//   default: if options.default ? then                                  options.default.toString() else null
-// }
