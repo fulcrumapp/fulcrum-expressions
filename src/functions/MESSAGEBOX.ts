@@ -2,7 +2,6 @@ import { isArray, isFunction, isUndefined } from "lodash"
 import { MaybeString } from "../primitives"
 import COMPACT from "./COMPACT"
 import ERROR from "./ERROR"
-import ISBLANK from "./ISBLANK"
 
 export interface MessageBoxPayload {
   title?: MaybeString
@@ -43,29 +42,29 @@ export default function MESSAGEBOX(options: MessageBoxPayload, callback: Functio
 export default function MESSAGEBOX(options: MessageBoxPayload): MessageBoxPayload
 export default function MESSAGEBOX(options: MessageBoxPayload,
                                    callback?: Function|undefined): MessageBoxPayload | Function | undefined {
-  if (ISBLANK(options)) { ERROR("options must be provided") }
-  if (!ISBLANK(options.buttons) && !isArray(options.buttons)) { ERROR("options.buttons must be an array") }
-  if (!ISBLANK(options.validate) && !isFunction(options.validate)) { ERROR("options.validate must be a function") }
-  if (!ISBLANK(callback) && !isFunction(callback)) { ERROR("callback must be a function") }
+  if (isUndefined(options)) { ERROR("options must be provided") }
+  if (!isUndefined(options.buttons) && !isArray(options.buttons)) { ERROR("options.buttons must be an array") }
+  if (!isUndefined(options.validate) && !isFunction(options.validate)) { ERROR("options.validate must be a function") }
+  if (!isUndefined(callback) && !isFunction(callback)) { ERROR("callback must be a function") }
 
-  if (!ISBLANK(options.buttons)) {
+  if (!isUndefined(options.buttons)) {
     options.buttons = COMPACT(options.buttons).map((item: any) => item.toString())
   } else {
     options.buttons = ["Okay"]
   }
-  if (!ISBLANK(options.input)) {
+  if (!isUndefined(options.input)) {
     options.input = !!options.input
   }
-  if (!ISBLANK(callback)) {
+  if (!isUndefined(callback)) {
     return callback
   } else {
     return {
-      buttons: !ISBLANK(options.buttons) ? options.buttons : null,
-      default: !ISBLANK(options.default) ? options.default : null,
-      input: !ISBLANK(options.input) ? options.input : null,
-      message: !ISBLANK(options.message) ?  options.message.toString() : null,
-      placeholder: !ISBLANK(options.placeholder) ? options.placeholder.toString() : null,
-      title: !ISBLANK(options.title) ? options.title.toString() : null,
+      buttons: !isUndefined(options.buttons) ? options.buttons : null,
+      default: !isUndefined(options.default) ? options.default : null,
+      input: !isUndefined(options.input) ? options.input : null,
+      message: !isUndefined(options.message) ?  options.message.toString() : null,
+      placeholder: !isUndefined(options.placeholder) ? options.placeholder.toString() : null,
+      title: !isUndefined(options.title) ? options.title.toString() : null,
     }
   }
 }

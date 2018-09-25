@@ -59,6 +59,12 @@ test("callback passed in must be a function", () => {
   expect(goodEnough).not.toThrowError()
 })
 
+test("it invokes a callback", () => {
+  const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"] }
+  const cb = () => true
+  expect(MESSAGEBOX(options, cb)).toEqual(cb)
+})
+
 test("if a callback is not passed in it returns MessageBoxPayload object", () => {
   const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"] }
   const expectedReturn = { buttons: ["yas", "nah"],
