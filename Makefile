@@ -1,6 +1,10 @@
 REPORTER  ?= list
 TESTS     ?= test/*.coffee
 
+define docker_run
+	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine bash -l -c "${1}"
+endef
+
 all: build
 
 build:
@@ -35,16 +39,16 @@ clean:
 	rm -rf docs/output/*
 
 jest:
-	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
-		bash -l -c "yarn && yarn jest --watch"
+	$(call docker_run, yarn && yarn jest --watch)
+
+coverage:
+	$(call docker_run, yarn && yarn jest --coverage)
 
 tsdoc:
-	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
-		bash -l -c "yarn && yarn typedoc --theme minimal --out doc --exclude **/*.test.ts"
+	$(call docker_run, yarn && yarn typedoc --theme minimal --out doc --exclude **/*.test.ts)
 
 repl:
-	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine \
-		bash -l -c "make build && ./console"
+	$(call docker_run, make build && ./console)
 
 test:
 	./node_modules/mocha/bin/mocha \

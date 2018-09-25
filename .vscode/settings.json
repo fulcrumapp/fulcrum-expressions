@@ -2,5 +2,6 @@
   "editor.tabSize": 2,
   "editor.wordWrapColumn": 120,
   "editor.insertSpaces": true,
-  "tslint.autoFixOnSave": true
+  "tslint.autoFixOnSave": true,
+  "npm.packageManager": "yarn"
 }
