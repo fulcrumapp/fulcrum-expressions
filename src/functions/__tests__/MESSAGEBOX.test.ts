@@ -7,18 +7,18 @@ test("it must receive an options hash", () => {
 test("options.buttons must be an array", () => {
   const noop = () => { return }
 
-  const hashButtons: Object = { buttons: {yes: "yep", no: "nope"} }
-  const testHashButtons: Function = () => {
+  const hashButtons: Object  = { buttons: {yes: "yep", no: "nope"} }
+  const testHashButtons = () => {
     MESSAGEBOX(hashButtons, noop)
   }
 
   const stringButton: Object = { buttons: "Yasssss"}
-  const testStringButton: Function = () => {
+  const testStringButton = () => {
     MESSAGEBOX(stringButton, noop)
   }
 
-  const correctButton: Object = { buttons: ["yeppers", "nah"] }
-  const testCorrectButton: Function = () => {
+  const correctButton = { buttons: ["yeppers", "nah"] }
+  const testCorrectButton = () => {
     MESSAGEBOX(correctButton, noop)
   }
 
@@ -30,11 +30,11 @@ test("options.buttons must be an array", () => {
 test("options.validates must be a function", () => {
   const noop = () => { return }
   const arrayValidate: Object = { validate: ["this is not valid", "failure imminent"] }
-  const testArrayValidate: Function = () => {
+  const testArrayValidate = () => {
     MESSAGEBOX(arrayValidate, noop)
   }
-  const correctValidate: Object = { validate: () => true }
-  const testCorrectValidate: Function = () => {
+  const correctValidate = { validate: () => true }
+  const testCorrectValidate = () => {
     MESSAGEBOX(correctValidate, noop)
   }
 
@@ -57,4 +57,16 @@ test("callback passed in must be a function", () => {
 
   expect(badCall).toThrowError("callback must be a function")
   expect(goodEnough).not.toThrowError()
+})
+
+test("if a callback is not passed in it returns MessageBoxPayload object", () => {
+  const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"] }
+  const expectedReturn = { buttons: ["yas", "nah"],
+                           default: null,
+                           input: null,
+                           message: "You sure?",
+                           placeholder: null,
+                           title: "Confirm" }
+
+  expect(MESSAGEBOX(options)).toEqual(expectedReturn)
 })

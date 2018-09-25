@@ -39,7 +39,9 @@ interface MessageBoxPayload {
  * MESSAGEBOX(options, callback);
  */
 
-export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): MessageBoxPayload | Function {
+export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): MessageBoxPayload | Function
+export default function MESSAGEBOX(options: MessageBoxPayload): MessageBoxPayload
+export default function MESSAGEBOX(options: MessageBoxPayload, callback?: Function): MessageBoxPayload | Function {
   if (ISBLANK(options)) { ERROR("options must be provided") }
   if (!ISBLANK(options.buttons) && !isArray(options.buttons)) { ERROR("options.buttons must be an array") }
   if (!ISBLANK(options.validate) && !isFunction(options.validate)) { ERROR("options.validate must be a function") }
