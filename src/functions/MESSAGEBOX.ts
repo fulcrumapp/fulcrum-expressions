@@ -7,9 +7,9 @@ import ISBLANK from "./ISBLANK"
 interface MessageBoxPayload {
   title?: MaybeString
   message?: MaybeString
-  buttons?: any[]|null
-  validate?: Function
-  input?: boolean
+  buttons?: any[]|null|undefined
+  validate?: Function|undefined|null
+  input?: boolean|undefined|null
   placeholder?: MaybeString
   default?: any[]|null
 }
@@ -32,21 +32,22 @@ export default function MESSAGEBOX(options: MessageBoxPayload, callback: Functio
     return callback
   } else {
     return {
-      title: !ISBLANK(options.title) ? options.title.toString() : null,
-      message: !ISBLANK(options.message) ? options.message.toString() : null,
       buttons: !ISBLANK(options.buttons) ? options.buttons : null,
-      input: !ISBLANK(options.input) ? options.input : null,
-      placeholder: !ISBLANK(options.placeholder) ? options.placeholder.toString() : null,
       default: !ISBLANK(options.default) ? options.default : null,
+      input: !ISBLANK(options.input) ? options.input : null,
+      message: !ISBLANK(options.message) ? options.message.toString() : null,
+      placeholder: !ISBLANK(options.placeholder) ? options.placeholder.toString() : null,
+      title: !ISBLANK(options.title) ? options.title.toString() : null,
     }
   }
-  return callback ? = () - >
-
-  payload                                =
-  title: if options.title ? then                                options.title.toString() else null
-  message: if options.message ? then                                 options.message.toString() else null
-  buttons: if options.buttons ? then                                 options.buttons else null
-  input: if options.input ? then                                 options.input else null
-  placeholder: if options.placeholder ? then                                 options.placeholder.toString() else null
-    default: if options.default ? then                                  options.default.toString() else null
 }
+//   return callback ? = () - >
+
+//   payload                                =
+//   title: if options.title ? then                                options.title.toString() else null
+//   message: if options.message ? then                                 options.message.toString() else null
+//   buttons: if options.buttons ? then                                 options.buttons else null
+//   input: if options.input ? then                                 options.input else null
+//   placeholder: if options.placeholder ? then                                 options.placeholder.toString() else null
+//   default: if options.default ? then                                  options.default.toString() else null
+// }
