@@ -26,3 +26,18 @@ test("options.buttons must be an array", () => {
   expect(testStringButton).toThrow("options.buttons must be an array")
   expect(testCorrectButton).not.toThrow()
 })
+
+test("options.validates must be a function", () => {
+  const noop = () => { return }
+  const arrayValidate: Object = { validate: ["this is not valid", "failure imminent"] }
+  const testArrayValidate: Function = () => {
+    MESSAGEBOX(arrayValidate, noop)
+  }
+  const correctValidate: Object = { validate: () => true }
+  const testCorrectValidate: Function = () => {
+    MESSAGEBOX(correctValidate, noop)
+  }
+
+  expect(testArrayValidate).toThrowError("options.validate must be a function")
+  expect(testCorrectValidate).not.toThrowError()
+})
