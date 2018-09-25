@@ -41,3 +41,20 @@ test("options.validates must be a function", () => {
   expect(testArrayValidate).toThrowError("options.validate must be a function")
   expect(testCorrectValidate).not.toThrowError()
 })
+
+test("callback passed in must be a function", () => {
+  const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"] }
+  const badCallback = "not a function"
+  const technicallyACallback = () => true
+
+  const badCall = () => {
+    // @ts-ignore Need to pass non-function in to throw error
+    MESSAGEBOX(options, badCallback)
+  }
+  const goodEnough = () => {
+    MESSAGEBOX(options, technicallyACallback)
+  }
+
+  expect(badCall).toThrowError("callback must be a function")
+  expect(goodEnough).not.toThrowError()
+})
