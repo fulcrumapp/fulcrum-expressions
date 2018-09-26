@@ -55,6 +55,11 @@ export const RESETCONFIG = () => {
   Config = { ...DEFAULTS }
 }
 
+/**
+ * Overwrites the current configuration of the Form to be the object passed in.
+ * This method is destructive and should be private; use CONFIGURE to update configuration.
+ * @param config object to replace configuration of Form
+ */
 export const OVERWRITECONFIG = (config: any): any => {
   Config = config
   return Config
