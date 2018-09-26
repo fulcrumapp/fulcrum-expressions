@@ -23,7 +23,7 @@ import { CONFIG, Config, OVERWRITECONFIG } from "./CONFIG"
  * timeZone: "UTC" }
  */
 
-export default function CONFIGURE(config: Config): Config
+export default function CONFIGURE(config: Config|any): Config
 export default function CONFIGURE(config: Config|any, merge: boolean): Config
 export default function CONFIGURE(): Config
 export default function CONFIGURE(config?: Config, merge = true): Config {
