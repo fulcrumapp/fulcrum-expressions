@@ -1,6 +1,28 @@
 import { extend, isUndefined } from "lodash"
 import { CONFIG, Config, OVERWRITECONFIG } from "./CONFIG"
 
+/**
+ * CONFIGURE allows the user to set the config object that represents app configuration.
+ * Calling CONFIGURE without arguments will return the current config object.
+ * @param config object, will be merged with current config object
+ * @param merge boolean, defaults to true; passing in false will replace the current config
+ * object with the config parameter
+ * @returns a config object representing the current app configuration
+ * @example
+ * CONFIGURE({ recordAltitude: 87}) // merge defaults to true
+ * // returns
+ * { recordAltitude: 87
+ * country: "US",
+ * currencyCode: "USD",
+ * currencySymbol: "$",
+ * decimalSeparator: ".",
+ * groupingSeparator: ",",
+ * groupingSize: 3,
+ * language: "en-US",
+ * locale: "en_US",
+ * timeZone: "UTC" }
+ */
+
 export default function CONFIGURE(config: Config): Config
 export default function CONFIGURE(config: Config|any, merge: boolean): Config
 export default function CONFIGURE(): Config
