@@ -23,7 +23,7 @@ import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
 export default function CONFIRM(...args: any[]): Function | MessageBoxPayload
 export default function CONFIRM(): void
 export default function CONFIRM(...args: any[]): Function | MessageBoxPayload | void {
-  if (args.length < 2) { return ERROR("CONFIRM requires two arguments, a string message and a callback") }
+  if (args.length < 2) { ERROR("CONFIRM requires two arguments, a string message and a callback") }
 
   let title = null
   let message

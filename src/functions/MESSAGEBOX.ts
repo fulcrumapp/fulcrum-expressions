@@ -40,6 +40,7 @@ export interface MessageBoxPayload {
 
 export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): MessageBoxPayload | Function
 export default function MESSAGEBOX(options: MessageBoxPayload): MessageBoxPayload
+export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): void
 export default function MESSAGEBOX(options: MessageBoxPayload,
                                    callback?: Function|undefined): MessageBoxPayload | Function | undefined {
   if (isUndefined(options)) { ERROR("options must be provided") }
