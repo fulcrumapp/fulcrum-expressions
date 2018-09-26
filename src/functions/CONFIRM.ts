@@ -1,3 +1,4 @@
+import ERROR from "./ERROR"
 import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
 
 /**
@@ -19,18 +20,21 @@ import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
  * )
  */
 
-export default function CONFIRM(...args: any[]): Function | MessageBoxPayload {
+export default function CONFIRM(...args: any[]): Function | MessageBoxPayload
+export default function CONFIRM(): void
+export default function CONFIRM(...args: any[]): Function | MessageBoxPayload | void {
+  if (args.length < 2) { return ERROR("CONFIRM requires two arguments, a string message and a callback") }
+
   let title = null
-  let message = null
-  let callback = null
+  let message
+  let callback
   if (args.length === 2) {
-    title = null
     message = args[0]
     callback = args[1]
   } else {
-    title = arguments[0]
-    message = arguments[1]
-    callback = arguments[2]
+    title = args[0]
+    message = args[1]
+    callback = args[2]
   }
   const options = { title, message, buttons: ["Cancel", "Okay"]}
 
