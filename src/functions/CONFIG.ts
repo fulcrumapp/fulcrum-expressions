@@ -54,3 +54,8 @@ export const CONFIG = () => Config
 export const RESETCONFIG = () => {
   Config = { ...DEFAULTS }
 }
+
+export const OVERWRITECONFIG = (config: any): any => {
+  Config = config
+  return Config
+}
