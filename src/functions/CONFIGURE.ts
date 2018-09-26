@@ -2,7 +2,7 @@ import { extend, isUndefined } from "lodash"
 import { CONFIG, Config, OVERWRITECONFIG } from "./CONFIG"
 
 export default function CONFIGURE(config: Config): Config
-export default function CONFIGURE(config: Config, merge: boolean): Config
+export default function CONFIGURE(config: Config|any, merge: boolean): Config
 export default function CONFIGURE(): Config
 export default function CONFIGURE(config?: Config, merge = true): Config {
   let configuration = CONFIG()
