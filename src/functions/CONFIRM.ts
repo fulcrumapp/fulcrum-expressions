@@ -4,9 +4,9 @@ import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
 /**
  * CONFIRM displays a message to the user and allows a callback function
  * that will be invoked to respond to the result of the question.
- * @param title(optional) string; short title for confirm box
+ * @param title(optional) string; short title for popup box
  * @param message(required) string
- * @param callback(required) callback to invoke upon closing the confirm box
+ * @param callback(required) callback to invoke upon closing the popup box
  * @example
  * CONFIRM('Confirm',
  * 'You have selected a critical safety violation. Are you sure?',
@@ -36,7 +36,7 @@ export default function CONFIRM(...args: any[]): Function | MessageBoxPayload | 
     message = args[1]
     callback = args[2]
   }
-  const options = { title, message, buttons: ["Cancel", "Okay"]}
+  const options = { title, message, buttons: ["Cancel", "Okay"] }
 
   return MESSAGEBOX(options, callback)
 }
