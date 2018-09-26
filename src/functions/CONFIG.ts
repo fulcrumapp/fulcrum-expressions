@@ -1,4 +1,4 @@
-interface Config {
+export interface Config {
   /** Set to record's altitude */
   recordAltitude?: any,
   /** Set to name of application on which Fulcrum is running */
