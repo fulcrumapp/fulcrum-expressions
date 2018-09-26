@@ -1,7 +1,10 @@
 import { extend } from "lodash"
 import { CONFIG, Config } from "./CONFIG"
 
-export default function CONFIGURE(config: Config, merge = true): Config {
+export default function CONFIGURE(config: Config): Config
+export default function CONFIGURE(config: Config, merge: boolean): Config
+export default function CONFIGURE(): Config
+export default function CONFIGURE(config?: Config, merge = true): Config {
   let configuration = CONFIG()
   if (merge) {
     // extend mutates configuration object, no need to reassign
