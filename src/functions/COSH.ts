@@ -11,5 +11,11 @@ import NUM from "./NUM"
 export default function COSH(value: number): number
 export default function COSH(value: string): number
 export default function COSH(value: any): number {
-  return Math.cosh(NUM(value))
+  // no support for Math.cosh on IE so have to hard code it
+  value = NUM(value)
+
+  const exp = Math.exp(value)
+
+  return (exp + 1 / exp) / 2
+
 }
