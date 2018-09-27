@@ -15,10 +15,10 @@ import NUM from "./NUM"
 
 export default function COUNT(value: number[]): number
 export default function COUNT(value: string[]): number
-export default function COUNT(): number
-export default function COUNT(value: any): number
-export default function COUNT(value?: any[]): number {
-  if (!isArray(value)) { return NaN }
+export default function COUNT(): undefined
+export default function COUNT(value: any): number|undefined
+export default function COUNT(value?: any[]): number|undefined {
+  if (!isArray(value)) { return undefined }
 
   const numbers = filter(COMPACT(value).map(NUM), ISNUMBER)
 

@@ -13,7 +13,7 @@ test("it counts the number of numeric values in an array", () => {
 })
 
 test("it returns NaN if an array is not passed in", () => {
-  expect((COUNT(null))).toBeNaN()
-  expect((COUNT(undefined))).toBeNaN()
-  expect((COUNT({}))).toBeNaN()
+  expect((COUNT(null))).toBeUndefined()
+  expect((COUNT(undefined))).toBeUndefined()
+  expect((COUNT({}))).toBeUndefined()
 })
