@@ -1,4 +1,4 @@
-import { prepareRuntime } from "../../test-helpers"
+import { finishAsync, prepareRuntime } from "../../test-helpers"
 import MESSAGEBOX from "../MESSAGEBOX"
 
 let messageBoxMock = jest.fn()
@@ -75,9 +75,7 @@ test("generates a valid payload and executes the callback", () => {
 
   const [payload, callbackID] = messageBoxMock.mock.calls[0]
 
-  $$runtime.callbackID = callbackID
-
-  $$runtime.finishAsync()
+  finishAsync(callbackID)
 
   expect(callback).toHaveBeenCalled()
 

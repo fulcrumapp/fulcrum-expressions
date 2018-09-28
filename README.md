@@ -4,16 +4,22 @@ This implements the runtime for javascript expressions in Fulcrum.
 
 ### Setup
 
-Install npm dependencies
+Install Docker
+
+### Testing
+
+To start the watching test runner:
 
 ```sh
-npm install
+make
 ```
+
+This will rerun tests on save.
 
 ### Build
 
 ```sh
-make
+make dist
 ```
 
 ### Generate Documentation
@@ -24,14 +30,6 @@ Make changes to `docs.js` and `event_docs.js`.
 
 ```sh
 make docs
-```
-
-### Distribute
-
-Builds the final output
-
-```sh
-make dist
 ```
 
 ### Copy files to other repositories
@@ -67,16 +65,11 @@ make dist copy # clean, build and deploy everything
 
 Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
 
-### Tests
-
-```sh
-make test
-```
 
 ### Console
 
 Starts an interactive node terminal with the functions available to call
 
 ```sh
-./console
+make repl
 ```
