@@ -1,6 +1,6 @@
-import { get, set, without } from "lodash"
-import { AlertResult } from "./functions/ALERT"
-import { ConfigurationResult } from "./functions/SETCONFIGURATION"
+import { each, get, set, without } from "lodash"
+import { AlertResult } from "../functions/ALERT"
+import { ConfigurationResult } from "../functions/SETCONFIGURATION"
 import {
   HostHTTPClient,
   HostMessageBox,
@@ -11,10 +11,11 @@ import {
   HostStorageLength,
   HostStorageRemoveItem,
   HostStorageSetItem,
-} from "./host"
-import { EventNames } from "./types/events"
-import { FormFields } from "./types/fields"
-import { MaybeString } from "./types/primitives"
+} from "../host"
+import { EventNames } from "../types/events"
+import { FormFields } from "../types/fields"
+import { MaybeString } from "../types/primitives"
+import flattenElements from "../util/flatten-elements"
 
 interface ElementStore {
   [key: string]: FormFields
@@ -34,6 +35,17 @@ type RuntimeResults = Array<
 const NO_PARAM = "__no_param"
 
 type RuntimeResultCalculator = () => RuntimeResults
+
+type HostFunction =
+  HostHTTPClient
+  | HostSetTimeout
+  | HostStorageLength
+  | HostStorageKey
+  | HostStorageGetItem
+  | HostStorageSetItem
+  | HostStorageRemoveItem
+  | HostStorageClear
+  | HostMessageBox
 
 interface WindowWithRuntime extends Window {
   $$runtime: Runtime
@@ -68,7 +80,7 @@ export default class Runtime {
 
   expressions = []
 
-  form = {}
+  form: any = {}
 
   values = {}
 
@@ -98,15 +110,15 @@ export default class Runtime {
 
   results: RuntimeResults = []
 
-  dataNames = {}
+  dataNames: { [key: string]: string } = {}
 
-  elements = []
+  elements: FormFields[] = []
 
   elementsByKey: ElementStore = {}
 
   elementsByDataName: ElementStore = {}
 
-  statusesByValue: ElementStore = {}
+  statusesByValue: { [key: string]: string } = {}
 
   featureIsNew = true
 
@@ -195,7 +207,7 @@ export default class Runtime {
 
     delete this.asyncCallbacks[id]
 
-    // this.resetResults()
+    this.resetResults()
 
     this.isCalculation = false
 
@@ -210,10 +222,21 @@ export default class Runtime {
    * @example
    * $$runtime.form = { ...formSchema }
    * if (form.script) $$runtime.script = form.script
-   * const results = $$prepare()
-   * results.each((result) => ...)
+   * $$prepare()
    */
-  prepare = () => {}
+  prepare = () => {
+    each(get(this.form, "status_field.choices", []), (choice) => {
+      this.statusesByValue[choice.value] = choice.label
+    })
+
+    this.elements = flattenElements(this.form.elements)
+
+    each(this.elements, (element) => {
+      this.elementsByKey[element.key] = element
+      this.elementsByDataName[element.data_name] = element
+      this.dataNames[element.key] = element.data_name
+    })
+  }
 
   /**
    * Executed by the $$HOST when a form value changes.
@@ -233,7 +256,7 @@ export default class Runtime {
    * @example
    * $$runtime.values = { ...formValues }
    * $$runtime.event = 'CHANGE'
-   * $$trigger()
+   * const results = $$trigger()
    * results.each((result) => ...)
    */
   trigger: RuntimeResultCalculator = () => {
@@ -246,19 +269,31 @@ export default class Runtime {
    * @param args arguments to pass to the $$HOST function
    * @param callback callback to execute after the $$HOST has completed it's async operation
    */
-  invokeAsync(func: Function, args: any[], callback: Function) {
+  invokeAsync(func: HostFunction, args: any[], callback: Function) {
     const id = ++this.asyncCount
     this.asyncCallbacks[id] = callback
     func.apply(this, args.concat([id]))
   }
 
+  /**
+   * Add a hook to the Events table.
+   * @param name event to hook in to
+   * @param param field to bind to
+   * @param callback callback to execute
+   */
   addHook(name: EventNames, param: MaybeString, callback: Function) {
     const path = this.pathFor(name, param)
     const callbacks = get(this.events, path, [])
     this.events = set(this.events, path, callbacks.concat([ callback ]))
   }
 
-  removeHook(name: EventNames, param: MaybeString, callback: Function) {
+  /**
+   * Remove the hook from the Events table.
+   * @param name event to hook in to
+   * @param param field to bind to
+   * @param callback callback to execute
+   */
+  removeHook(name: EventNames, param: MaybeString, callback?: Function) {
     const path = this.pathFor(name, param)
 
     if (callback) {
@@ -271,5 +306,13 @@ export default class Runtime {
 
   private pathFor(name: EventNames, param: MaybeString) {
     return [name, param || NO_PARAM]
+  }
+
+  private resetResults() {
+    // When the global script runs, start with the results that were captured in that tick
+    // This lets function calls at global scope eventually take effect the first time an event
+    // is triggered (load-record).
+    this.results = this.hooksInitialized ? [] : this.results
+    this.hooksInitialized = true
   }
 }

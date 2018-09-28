@@ -293,4 +293,6 @@ interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
 
 interface RepeatableField extends FormField {
   type: "Repeatable"
+  /** FormField's nested inside of this section */
+  elements: FormFields[]
 }
