@@ -1,6 +1,16 @@
 import INT from "./INT"
 import ISNAN from "./ISNAN"
 
+/**
+ * Returns a new Date object given a year, month, and day.
+ * @param year four-digit number
+ * @param month one-two digit number
+ * @param day one-two digit number
+ * @returns Date object
+ * @example
+ * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
+ */
+
 export default function DATE(year: number, month: number, day: number): Date
 export default function DATE(year: string, month: string, day: string): Date | undefined
 export default function DATE(year?: any, month?: any, day?: any): undefined
