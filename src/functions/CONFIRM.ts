@@ -1,12 +1,13 @@
+import { MaybeString } from "../types/primitives"
 import ERROR from "./ERROR"
 import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
 
 /**
  * CONFIRM displays a message to the user and allows a callback function
  * that will be invoked to respond to the result of the question.
- * @param title(optional) string; short title for popup box
- * @param message(required) string
- * @param callback(required) callback to invoke upon closing the popup box
+ * @param title short title for popup box
+ * @param message message to display to the user
+ * @param callback callback to invoke upon closing the popup box
  * @example
  * CONFIRM('Confirm',
  * 'You have selected a critical safety violation. Are you sure?',
@@ -19,24 +20,26 @@ import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
  * });
  * )
  */
-
-export default function CONFIRM(...args: any[]): Function | MessageBoxPayload
-export default function CONFIRM(): void
-export default function CONFIRM(...args: any[]): Function | MessageBoxPayload | void {
+export default function CONFIRM(title: string, message: string, callback: Function): void
+export default function CONFIRM(message: string, callback: Function): void
+export default function CONFIRM(...args: Array<string | Function>) {
   if (args.length < 2) { ERROR("CONFIRM requires two arguments, a string message and a callback") }
 
   let title = null
   let message
   let callback
-  if (args.length === 2) {
-    message = args[0]
-    callback = args[1]
-  } else {
-    title = args[0]
-    message = args[1]
-    callback = args[2]
-  }
-  const options = { title, message, buttons: ["Cancel", "Okay"] }
 
-  return MESSAGEBOX(options, callback)
+  if (args.length === 2) {
+    [ message, callback ] = args
+  } else {
+    [ title, message, callback ] = args
+  }
+
+  const options = {
+    buttons: ["Cancel", "Okay"],
+    message: message as MaybeString,
+    title: title as MaybeString,
+  }
+
+  MESSAGEBOX(options, callback as Function)
 }

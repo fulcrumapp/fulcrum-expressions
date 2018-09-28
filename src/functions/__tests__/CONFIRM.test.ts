@@ -1,5 +1,13 @@
+import { prepareRuntime } from "../../test-helpers"
 import CONFIRM from "../CONFIRM"
 import MESSAGEBOX from "../MESSAGEBOX"
+
+const messageBoxMock = jest.fn()
+
+beforeEach(() => {
+  prepareRuntime()
+  $$runtime.$$messageBox = messageBoxMock
+})
 
 test("accepts three arguments and calls MESSAGEBOX", () => {
   const title = "Confirm"
@@ -20,7 +28,9 @@ test("accepts two arguments, message and a callback", () => {
 
 test("throws an error if less than two arguments are passed", () => {
   const willError = () => {
+    // @ts-ignore Testing for callbackless invocation
     CONFIRM("fail")
   }
+
   expect(willError).toThrowError("CONFIRM requires two arguments, a string message and a callback")
 })

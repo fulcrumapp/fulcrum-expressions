@@ -1,4 +1,12 @@
+import { prepareRuntime } from "../../test-helpers"
 import MESSAGEBOX from "../MESSAGEBOX"
+
+let messageBoxMock = jest.fn()
+
+beforeEach(() => {
+  prepareRuntime()
+  messageBoxMock = $$runtime.$$messageBox = jest.fn()
+})
 
 test("it must receive an options hash", () => {
   expect(MESSAGEBOX).toThrow("options must be provided")
@@ -59,20 +67,26 @@ test("callback passed in must be a function", () => {
   expect(goodEnough).not.toThrowError()
 })
 
-test("it invokes a callback", () => {
+test("generates a valid payload and executes the callback", () => {
   const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"] }
-  const cb = () => true
-  expect(MESSAGEBOX(options, cb)).toEqual(cb)
-})
+  const callback = jest.fn()
 
-test("if a callback is not passed in it returns MessageBoxPayload object", () => {
-  const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"] }
-  const expectedReturn = { buttons: ["yas", "nah"],
-                           default: null,
-                           input: null,
-                           message: "You sure?",
-                           placeholder: null,
-                           title: "Confirm" }
+  MESSAGEBOX(options, callback)
 
-  expect(MESSAGEBOX(options)).toEqual(expectedReturn)
+  const [payload, callbackID] = messageBoxMock.mock.calls[0]
+
+  $$runtime.callbackID = callbackID
+
+  $$runtime.finishAsync()
+
+  expect(callback).toHaveBeenCalled()
+
+  expect(JSON.parse(payload)).toEqual({
+    buttons: ["yas", "nah"],
+    default: null,
+    input: null,
+    message: "You sure?",
+    placeholder: null,
+    title: "Confirm",
+  })
 })
