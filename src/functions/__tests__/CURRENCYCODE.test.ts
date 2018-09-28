@@ -12,7 +12,7 @@ test("it returns the currency code from the configuration object", () => {
   expect(CURRENCYCODE()).toBe("ZAR")
 })
 
-test("it returns the default country if country is not present on configuration obejct", () => {
+test("it returns the default country code if country code is not present on configuration obejct", () => {
   CONFIGURE({currencyCode: "ZAR"})
   expect(CURRENCYCODE()).toBe("ZAR")
 
