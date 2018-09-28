@@ -6,8 +6,8 @@ beforeEach(prepareRuntime)
 test("allows the message for the single argument", () => {
   ALERT("Hello!")
   expect($$runtime.results[0]).toEqual({
-    type: "message",
     message: "Hello!",
+    type: "message",
     title: null,
   })
 })

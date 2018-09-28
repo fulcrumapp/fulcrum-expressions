@@ -5,6 +5,7 @@ import ALERT from "./ALERT"
 import { CONFIG, RESETCONFIG } from "./CONFIG"
 import NUM from "./NUM"
 import REQUEST from "./REQUEST"
+import SETTIMEOUT from "./SETTIMEOUT"
 
 RESETCONFIG()
 
@@ -18,4 +19,5 @@ export default {
   NUM,
   REQUEST,
   RESETCONFIG,
+  SETTIMEOUT,
 }

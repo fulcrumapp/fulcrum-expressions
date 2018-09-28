@@ -6,15 +6,4 @@ export type HostStorageGetItem = (scope: string, key: string) => any
 export type HostStorageSetItem = (scope: string, key: string, value: string) => void
 export type HostStorageRemoveItem = (scope: string, key: string) => void
 export type HostStorageClear = (scope: string) => void
-
-import clearTimeout from "./clear-timeout"
-import httpRequest from "./http-request"
-import setTimeout from "./set-timeout"
-import storage from "./storage"
-
-export default {
-  clearTimeout,
-  httpRequest,
-  setTimeout,
-  storage,
-}
+export type HostMessageBox = (json: string, callbackID: number) => void

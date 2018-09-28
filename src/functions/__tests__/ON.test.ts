@@ -13,13 +13,13 @@ test("it binds a selector based event", () => {
   const callback = jest.fn()
 
   $$runtime.elementsByDataName["my-field"] = {
-    type: "HyperlinkField",
-    key: "abcd",
-    label: "My Hyperlink Field",
     data_name: "my-field",
-    required: false,
     disabled: false,
     hidden: false,
+    key: "abcd",
+    label: "My Hyperlink Field",
+    required: false,
+    type: "HyperlinkField",
   }
 
   ON("click", "my-field", callback)

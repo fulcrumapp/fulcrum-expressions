@@ -3,13 +3,15 @@ import { AlertResult } from "./functions/ALERT"
 import { ConfigurationResult } from "./functions/SETCONFIGURATION"
 import {
   HostHTTPClient,
+  HostMessageBox,
   HostSetTimeout,
   HostStorageClear,
   HostStorageGetItem,
   HostStorageKey,
   HostStorageLength,
   HostStorageRemoveItem,
-  HostStorageSetItem } from "./host"
+  HostStorageSetItem,
+} from "./host"
 import { EventNames } from "./types/events"
 import { FormFields } from "./types/fields"
 import { MaybeString } from "./types/primitives"
@@ -50,6 +52,7 @@ export default class Runtime {
   $$storageSetItem?: HostStorageSetItem
   $$storageRemoveItem?: HostStorageRemoveItem
   $$storageClear?: HostStorageClear
+  $$messageBox?: HostMessageBox
 
   global = null
 
