@@ -10,5 +10,6 @@ test("it returns a count of blank items", () => {
   expect(COUNTBLANK(null)).toBe(1)
   expect(COUNTBLANK(0)).toBe(0)
   expect(COUNTBLANK()).toBe(0)
+  expect(COUNTBLANK(4, 7, NaN, 9)).toBe(0)
   expect(COUNTBLANK(1, 3, null)).toBe(1)
 })
