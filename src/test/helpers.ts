@@ -1,4 +1,4 @@
-import Runtime from "./runtime"
+import Runtime from "../runtime"
 
 /**
  * Setup a new instance of the $$runtime global.

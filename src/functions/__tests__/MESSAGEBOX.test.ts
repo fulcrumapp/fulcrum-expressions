@@ -1,4 +1,4 @@
-import { finishAsync, prepareRuntime } from "../../test-helpers"
+import { finishAsync, prepareRuntime } from "../../test/helpers"
 import MESSAGEBOX from "../MESSAGEBOX"
 
 let messageBoxMock = jest.fn()

@@ -1,4 +1,4 @@
-import { prepareRuntime } from "../../test-helpers"
+import { prepareRuntime } from "../../test/helpers"
 import { state, resetState } from "../state"
 import hostSetTimeout from "../set-timeout"
 

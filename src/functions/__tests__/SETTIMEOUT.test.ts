@@ -1,4 +1,4 @@
-import { prepareRuntime } from "../../test-helpers"
+import { prepareRuntime } from "../../test/helpers"
 import SETTIMEOUT from "../SETTIMEOUT"
 
 beforeEach(prepareRuntime)

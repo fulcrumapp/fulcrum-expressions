@@ -1,5 +1,5 @@
 import REQUEST from "../REQUEST"
-import { prepareRuntime } from "../../test-helpers"
+import { prepareRuntime } from "../../test/helpers"
 
 const url = "http://www.google.com"
 

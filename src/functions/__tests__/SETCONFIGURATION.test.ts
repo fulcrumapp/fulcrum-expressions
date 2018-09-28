@@ -1,4 +1,4 @@
-import { prepareRuntime } from "../../test-helpers"
+import { prepareRuntime } from "../../test/helpers"
 import SETCONFIGURATION, { ConfigurationResult } from "../SETCONFIGURATION"
 
 beforeEach(prepareRuntime)

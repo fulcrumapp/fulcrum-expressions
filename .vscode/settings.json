@@ -3,5 +3,13 @@
   "editor.wordWrapColumn": 120,
   "editor.insertSpaces": true,
   "tslint.autoFixOnSave": true,
-  "npm.packageManager": "yarn"
+  "npm.packageManager": "yarn",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "dist": true
+  }
 }

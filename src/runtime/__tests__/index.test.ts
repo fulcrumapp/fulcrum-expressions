@@ -1,7 +1,23 @@
-import Runtime from "../runtime"
+import form from "../../test/fixtures/form"
+import Runtime from "../index"
+
+test("the runtime can be prepared with a form schema", () => {
+  const runtime = new Runtime()
+  runtime.form = form
+
+  runtime.prepare()
+
+  expect(runtime.statusesByValue).toEqual({ approved: "Approved" })
+
+  expect(runtime.elements).toHaveLength(7)
+  expect(runtime.elementsByKey["97ab"].type).toEqual("TextField")
+  expect(runtime.elementsByDataName.name.type).toEqual("TextField")
+  expect(runtime.dataNames["97ab"]).toEqual("name")
+})
 
 test("using invokeAsync and finishAsync, it can start the process of a host long running process", () => {
   const runtime = new Runtime()
+  runtime.hooksInitialized = true
 
   const func = jest.fn()
   const callback = jest.fn()
@@ -15,12 +31,11 @@ test("using invokeAsync and finishAsync, it can start the process of a host long
 
   const callbackArguments = ["foo"]
 
+  runtime.results = [{ type: "message" }]
   runtime.callbackID = 1
   runtime.callbackArguments = callbackArguments
-  runtime.isCalculation = true
 
-  runtime.finishAsync()
-
+  expect(runtime.finishAsync()).toEqual([])
   expect(runtime.asyncCallbacks[1]).toBeUndefined()
   expect(callback).toHaveBeenCalledWith(...callbackArguments)
   expect(runtime.isCalculation).toBeFalsy()

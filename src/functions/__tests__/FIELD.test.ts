@@ -1,4 +1,4 @@
-import { prepareRuntime } from "../../test-helpers"
+import { prepareRuntime } from "../../test/helpers"
 import { FormFields } from "../../types/fields"
 import FIELD from "../FIELD"
 
