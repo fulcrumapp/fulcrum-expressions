@@ -1,13 +1,12 @@
 import Runtime from "./runtime"
 
 /**
- * Hack to get global working without TS complaining.
- */
-const globalAny: any = global
-
-/**
  * Setup a new instance of the $$runtime global.
  */
-export const prepareRuntime = () => {
-  globalAny.$$runtime = new Runtime()
+export const prepareRuntime = () => new Runtime()
+
+/** Simlate a host finishing an async operation */
+export const finishAsync = (callbackID: number) => {
+  $$runtime.callbackID = callbackID
+  $$runtime.finishAsync()
 }

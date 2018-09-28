@@ -26,12 +26,22 @@ interface EventsStore {
   }
 }
 
-type ResultsCollection = Array<
-  AlertResult |
-  ConfigurationResult
+type RuntimeResults = Array<
+  AlertResult
+  | ConfigurationResult
 >
 
 const NO_PARAM = "__no_param"
+
+type RuntimeResultCalculator = () => RuntimeResults
+
+interface WindowWithRuntime extends Window {
+  $$runtime: Runtime
+  $$evaluate: RuntimeResultCalculator
+  $$trigger: RuntimeResultCalculator
+  $$finishAsync: RuntimeResultCalculator
+  $$prepare: () => void
+}
 
 /**
  * The Runtime class handles the state of a data event in the context of a single Record being edited.
@@ -43,7 +53,7 @@ export default class Runtime {
   static defaultTimeZone = "UTC"
 
   // Host specific runtime injections
-  callbackArguments?: any[]
+  callbackArguments: any[] = []
   $$httpRequest?: HostHTTPClient
   $$setTimeout?: HostSetTimeout
   $$storageLength?: HostStorageLength
@@ -54,7 +64,7 @@ export default class Runtime {
   $$storageClear?: HostStorageClear
   $$messageBox?: HostMessageBox
 
-  global = null
+  global: WindowWithRuntime
 
   expressions = []
 
@@ -86,7 +96,7 @@ export default class Runtime {
 
   variables = {}
 
-  results: ResultsCollection = []
+  results: RuntimeResults = []
 
   dataNames = {}
 
@@ -151,14 +161,34 @@ export default class Runtime {
     "featureGeometry",
   ]
 
-  invokeAsync(func: Function, args: any[], callback: Function) {
-    const id = ++this.asyncCount
-    this.asyncCallbacks[id] = callback
-    func.apply(this, args.concat([id]))
+  constructor() {
+    try {
+      // This is the shorthand for getting direct access to the global scope. If it does not work
+      // we need to fall back to just `window`.
+      this.global = Function("return this")()
+    } catch (e) {
+      this.global = window as WindowWithRuntime
+    }
+
+    // Wire up the global functions on initialization time.
+    this.global.$$runtime     = this
+    this.global.$$prepare     = this.prepare
+    this.global.$$evaluate    = this.evaluate
+    this.global.$$trigger     = this.trigger
+    this.global.$$finishAsync = this.finishAsync
   }
 
-  finishAsync() {
-    if (!this.callbackID) { return }
+  /**
+   * This is executed by the $$HOST after completing an asycnronous action.
+   *
+   * @example
+   * $$runtime.callbackID = 200
+   * $$runtime.callbackArguments = ['Joe Smith']
+   * const results = $$finishAsync()
+   * results.each((result) => ...)
+   */
+  finishAsync: RuntimeResultCalculator = () => {
+    if (!this.callbackID) { return [] }
 
     const id = +this.callbackID
     const callback = this.asyncCallbacks[id]
@@ -170,6 +200,56 @@ export default class Runtime {
     this.isCalculation = false
 
     callback.apply(this, this.callbackArguments)
+
+    return this.results
+  }
+
+  /**
+   * This is executed by the $$HOST when initializing a new session.
+   *
+   * @example
+   * $$runtime.form = { ...formSchema }
+   * if (form.script) $$runtime.script = form.script
+   * const results = $$prepare()
+   * results.each((result) => ...)
+   */
+  prepare = () => {}
+
+  /**
+   * Executed by the $$HOST when a form value changes.
+   *
+   * @example
+   * $$runtime.values = { ...formValues }
+   * const results = $$evaluate()
+   * results.each((result) => ...)
+   */
+  evaluate: RuntimeResultCalculator = () => {
+    return this.results
+  }
+
+  /**
+   * Executed by the $$HOST when a form level event has occurred.
+   *
+   * @example
+   * $$runtime.values = { ...formValues }
+   * $$runtime.event = 'CHANGE'
+   * $$trigger()
+   * results.each((result) => ...)
+   */
+  trigger: RuntimeResultCalculator = () => {
+    return this.results
+  }
+
+  /**
+   * Dispatch a function to execute asyncronously on the $$HOST
+   * @param func host function to invoke
+   * @param args arguments to pass to the $$HOST function
+   * @param callback callback to execute after the $$HOST has completed it's async operation
+   */
+  invokeAsync(func: Function, args: any[], callback: Function) {
+    const id = ++this.asyncCount
+    this.asyncCallbacks[id] = callback
+    func.apply(this, args.concat([id]))
   }
 
   addHook(name: EventNames, param: MaybeString, callback: Function) {
