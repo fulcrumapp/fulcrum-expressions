@@ -29,7 +29,7 @@ export interface Config {
   groupingSize: number,
 }
 
-const DEFAULTS = {
+export const DEFAULTS = {
   country: "US",
   currencyCode: "USD",
   currencySymbol: "$",
