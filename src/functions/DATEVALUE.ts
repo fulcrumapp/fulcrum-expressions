@@ -13,8 +13,8 @@ import LPAD from "./LPAD"
  * DATEVALUE("2018-02-07", "06:01") // returns 2018-02-07T06:01:00.000Z
  */
 
-export default function DATEVALUE(dateString: string, timeString: string): Date
 export default function DATEVALUE(dateString: Date, timeString?: string): Date
+export default function DATEVALUE(dateString: string, timeString?: string): Date
 export default function DATEVALUE(dateString: string): Date
 export default function DATEVALUE(dateString: Date): Date
 export default function DATEVALUE(): undefined
