@@ -6,13 +6,13 @@ beforeEach(prepareRuntime)
 
 test("It fetches the field from the runtime schema", () => {
   const field: FormFields = {
-    type: "HyperlinkField",
-    key: "abcd",
-    label: "My Hyperlink Field",
     data_name: "my-field",
-    required: false,
     disabled: false,
     hidden: false,
+    key: "abcd",
+    label: "My Hyperlink Field",
+    required: false,
+    type: "HyperlinkField",
   }
 
   $$runtime.elementsByDataName["my-field"] = field
