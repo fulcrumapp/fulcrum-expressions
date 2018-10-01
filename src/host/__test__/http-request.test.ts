@@ -4,7 +4,7 @@ import httpRequest, { HTTPRequestCallback } from "../http-request"
 beforeEach(prepareRuntime)
 
 test("throwing an error if it is not defined on the host", () => {
-  const callback : HTTPRequestCallback = (error: Error | null) => {
+  const callback: HTTPRequestCallback = (error: Error | null) => {
     expect(error).toBeInstanceOf(Error)
   }
 
@@ -14,7 +14,7 @@ test("throwing an error if it is not defined on the host", () => {
 test("when the httpRequest property exists, it dispatches an event", () => {
   $$runtime.$$httpRequest = jest.fn()
 
-  const callback : HTTPRequestCallback = () => {}
+  const callback: HTTPRequestCallback = jest.fn()
 
   httpRequest(`{ foo: "bar" }`, callback)
 

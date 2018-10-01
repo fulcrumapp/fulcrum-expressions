@@ -1,6 +1,6 @@
 import { prepareRuntime } from "../../test/helpers"
-import { state, resetState } from "../state"
 import hostSetTimeout from "../set-timeout"
+import { resetState, state } from "../state"
 
 beforeEach(() => {
   prepareRuntime()
