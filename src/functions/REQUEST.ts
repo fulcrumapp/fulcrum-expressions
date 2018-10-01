@@ -64,7 +64,7 @@ const DEFAULT_OPTIONS = {
  * request to an unknown host. This should be especially considered if sending information like
  * passwords, tokens, etc.
  *
- * @param The url or options to pass for the request
+ * @param options The url or options to pass for the request
  * @param callback The function to call when the request is complete - The function is
  * passed `error`, `response`, and `body` parameters
  * @example
@@ -90,8 +90,8 @@ const DEFAULT_OPTIONS = {
  *   });
  * });
  */
-function REQUEST(options: HTTPMethod, callback: HTTPRequestCallback): void
 function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void
+function REQUEST(url: string, callback: HTTPRequestCallback): void
 function REQUEST(options: any, callback: HTTPRequestCallback) {
   if (!callback || !isFunction(callback)) {
     ERROR("A callback must be provided to REQUEST")

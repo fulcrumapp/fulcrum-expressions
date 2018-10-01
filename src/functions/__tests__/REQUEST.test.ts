@@ -1,5 +1,5 @@
-import REQUEST from "../REQUEST"
 import { prepareRuntime } from "../../test/helpers"
+import REQUEST from "../REQUEST"
 
 const url = "http://www.google.com"
 
@@ -24,7 +24,7 @@ test("Giving an invalid URL as a first argument throws", () => {
 })
 
 test("it dispatches an HTTP request for a single url", () => {
-  REQUEST(url, () => {})
+  REQUEST(url, jest.fn())
 
   const call = JSON.parse(httpRequest.mock.calls[0][0])
 
@@ -42,7 +42,7 @@ test("it supports a json property to build a JSON request", () => {
   const call = JSON.parse(httpRequest.mock.calls[0][0])
 
   expect(call.url).toEqual(url)
-  expect(call.headers['Content-Type']).toEqual('application/json')
+  expect(call.headers["Content-Type"]).toEqual("application/json")
   expect(call.body).toEqual(JSON.stringify(json))
   expect(call.json).toBeUndefined()
 })
@@ -50,7 +50,7 @@ test("it supports a json property to build a JSON request", () => {
 test("it supports building a query string from the qs prop", () => {
   const qs = { testing: "1" }
 
-  REQUEST({ url, qs }, () => {})
+  REQUEST({ url, qs }, jest.fn())
 
   const call = JSON.parse(httpRequest.mock.calls[0][0])
 
@@ -61,7 +61,7 @@ test("it supports building a query string from the qs prop", () => {
 it("handles the case if the URL has a question mark in it", () => {
   const qs = { testing: "1" }
 
-  REQUEST({ url: `${url}?inline=1`, qs }, () => {})
+  REQUEST({ url: `${url}?inline=1`, qs }, jest.fn())
 
   const call = JSON.parse(httpRequest.mock.calls[0][0])
 
@@ -71,7 +71,7 @@ it("handles the case if the URL has a question mark in it", () => {
 it("handles the case of trailing ampersands", () => {
   const qs = { testing: "1" }
 
-  REQUEST({ url: `${url}?inline=1&`, qs }, () => {})
+  REQUEST({ url: `${url}?inline=1&`, qs }, jest.fn())
 
   const call = JSON.parse(httpRequest.mock.calls[0][0])
 
@@ -79,7 +79,7 @@ it("handles the case of trailing ampersands", () => {
 })
 
 it("safely encodes the URL for bad user input", () => {
-  REQUEST("http://google.com/some space", () => {})
+  REQUEST("http://google.com/some space", jest.fn())
 
   const call = JSON.parse(httpRequest.mock.calls[0][0])
 
