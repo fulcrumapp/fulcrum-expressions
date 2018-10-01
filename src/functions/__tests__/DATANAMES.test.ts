@@ -17,3 +17,8 @@ test("it accepts a type argument to filter the data names by type", () => {
   const names = DATANAMES("Repeatable")
   expect(names).toEqual([ "items", "child_items" ])
 })
+
+test("if a type passed in is not a valid FormFieldType it returns all the elements", () => {
+  const names = DATANAMES("choicefield")
+  expect(names).toEqual([ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ])
+})
