@@ -16,7 +16,7 @@ test("returns a date given a date string or date object", () => {
 })
 
 test("returns undefined given invalid input", () => {
-  expect(DATEVALUE("a", "b", "c")).toBeUndefined()
+  expect(DATEVALUE("a", "b")).toBeUndefined()
 })
 
 test("returns a date value given a date and optional time string", () => {
