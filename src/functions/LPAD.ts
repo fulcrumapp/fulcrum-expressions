@@ -1,7 +1,6 @@
 import { isNaN, isNull, isString, isUndefined } from "lodash"
 import { MaybeString } from "../types/primitives"
 import FLOOR from "./FLOOR"
-import NUM from "./NUM"
 import RIGHT from "./RIGHT"
 
 /**
