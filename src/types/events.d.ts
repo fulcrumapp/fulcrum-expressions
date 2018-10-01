@@ -1,4 +1,5 @@
 import { GUID } from "./primitives"
+import { FormFields } from "./fields";
 
 export interface EventBinder {
   (name: FormEventNames, callback: (event: FormEvent) => void): void
@@ -12,6 +13,20 @@ export interface EventBinder {
   (name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void
   (name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void
   (name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void
+}
+
+export interface TriggeredEvent {
+  name: EventNames,
+  value: (
+    FieldEventValue
+    | GeometryEventValue
+    | AddAudioEventValue
+    | AddVideoEventValue
+    | AddPhotoEventValue
+    | RemoveMediaEventValue
+    | null
+  ),
+  field: FormFields | null
 }
 
 export type EventNames =
@@ -78,74 +93,86 @@ interface FormEvent {
   value?: string
 }
 
+type FieldEventValue = string | ChoiceFieldValue
+
 interface FieldEvent extends EventWithField {
   name: FieldEventNames,
   field: string,
-  value: string | ChoiceFieldValue
+  value: FieldEventValue
+}
+
+interface GeometryEventValue {
+  coordinates: number[],
+  type: "Point"
 }
 
 interface GeometryEvent {
   field?: string
   name: ChangeGeometryEventName
-  value: {
-    coordinates: number[],
-    type: "Point"
-  }
+  value: GeometryEventValue
 }
 
 interface RepeatableEvent extends EventWithField {
   name: RepeatableEventNames
 }
 
+interface AddPhotoEventValue {
+  id: GUID,
+  size: number,
+  latitude: number,
+  longitude: number,
+  altitude: number,
+  accuracy: number,
+  orientation: number,
+  width: number,
+  height: number
+}
+
 interface AddPhotoEvent extends EventWithField {
   name: AddPhotoEventName,
-  value: {
-    id: GUID,
-    size: number,
-    latitude: number,
-    longitude: number,
-    altitude: number,
-    accuracy: number,
-    orientation: number,
-    width: number,
-    height: number
-  }
+  value: AddPhotoEventValue
+}
+
+interface RemoveMediaEventValue {
+  id: GUID
 }
 
 interface RemoveMediaEvent extends EventWithField {
-  value: {
-    id: GUID
-  }
+  value: RemoveMediaEventValue
 }
 
 interface RemovePhotoEvent extends RemoveMediaEvent {
   name: RemovePhotoEventName
 }
 
+interface AddVideoEventValue {
+  id: GUID,
+  size: number,
+  duration: number,
+  orientation: number,
+  width: number,
+  height: number,
+  track: any
+}
+
 interface AddVideoEvent extends EventWithField {
   name: AddVideoEventName,
-  value: {
-    id: GUID,
-    size: number,
-    duration: number,
-    orientation: number,
-    width: number,
-    height: number,
-    track: any
-  }
+  value: AddVideoEventValue
 }
 
 interface RemoveVideoEvent extends RemoveMediaEvent {
   name: RemovePhotoEventName
 }
 
+interface AddAudioEventValue {
+  id: GUID,
+  size: number,
+  duration: number
+}
+
 interface AddAudioEvent extends EventWithField {
   name: AddAudioEventName,
-  value: {
-    id: GUID,
-    size: number,
-    duration: number
-  }
+  value: AddAudioEventValue
 }
 
 interface RemoveAudioEvent extends RemoveMediaEvent {
