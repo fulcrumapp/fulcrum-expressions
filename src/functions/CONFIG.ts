@@ -1,13 +1,13 @@
 export interface Config {
-  /** Set to record's altitude */
+  /** Optional: Set to record's altitude */
   recordAltitude?: any,
-  /** Set to name of application on which Fulcrum is running */
+  /** Optional: Set to name of application on which Fulcrum is running */
   application?: string,
-  /** Set to name of application engine on which Fulcrum is running */
+  /** Optional: Set to name of application engine on which Fulcrum is running */
   applicationBuild?: string,
-  /** Includes name, version, and engine of application on which Fulcrum is running */
+  /** Optional: Includes name, version, and engine of application on which Fulcrum is running */
   applicationInfo?: string,
-  /** Set to version of application on which Fulcrum is running */
+  /** Optional: Set to version of application on which Fulcrum is running */
   applicationVersion?: string,
   /** Required: sets program locale - defaults to 'en_US' */
   locale: string,
@@ -27,6 +27,10 @@ export interface Config {
   groupingSeparator: string,
   /** Required: sets locale-specific increment with which to group large numbers - defaults to 3 (thousands) */
   groupingSize: number,
+  /** Optional:  Set to the current device model or "" */
+  deviceModel: string,
+  /** Optional: Set to current device manufacter or "" */
+  deviceManufacturer: string,
 }
 
 export const DEFAULTS = {
