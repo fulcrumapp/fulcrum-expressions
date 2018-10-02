@@ -16,6 +16,6 @@ test("returns the description of a field", () => {
 
 test("returns undefined for an invalid dataName", () => {
   expect(DESCRIPTION("invalid_field")).toBeUndefined()
-  // @ts-ignore Invalid input type [] needed to return test the function doesn't break
+  // @ts-ignore Invalid input type [] needed to test the function doesn't break
   expect(DESCRIPTION(["invalid_field"])).toBeUndefined()
 })
