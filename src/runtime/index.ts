@@ -2,6 +2,7 @@ import { each, get, set, without } from "lodash"
 import { AlertResult } from "../functions/ALERT"
 import { ConfigurationResult } from "../functions/SETCONFIGURATION"
 import {
+  HostFormatNumber,
   HostHTTPClient,
   HostMessageBox,
   HostSetTimeout,
@@ -46,6 +47,7 @@ type HostFunction =
   | HostStorageRemoveItem
   | HostStorageClear
   | HostMessageBox
+  | HostFormatNumber
 
 interface WindowWithRuntime extends Window {
   $$runtime: Runtime
@@ -75,6 +77,7 @@ export default class Runtime {
   $$storageRemoveItem?: HostStorageRemoveItem
   $$storageClear?: HostStorageClear
   $$messageBox?: HostMessageBox
+  $$formatNumber?: HostFormatNumber
 
   global: WindowWithRuntime
 

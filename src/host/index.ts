@@ -7,3 +7,4 @@ export type HostStorageSetItem = (scope: string, key: string, value: string) => 
 export type HostStorageRemoveItem = (scope: string, key: string) => void
 export type HostStorageClear = (scope: string) => void
 export type HostMessageBox = (json: string, callbackID: number) => void
+export type HostFormatNumber = (value: number, locale: string, options: {}) => string
