@@ -26,7 +26,7 @@ export default function FORMATNUMBER(value: number, language?: MaybeString, opti
 
   options.style = style
 
-  if (options.style === "currency") {
+  if (options.style === "currency" && isUndefined(options.currency)) {
     options.currency = CURRENCYCODE()
   }
 
@@ -38,28 +38,32 @@ export default function FORMATNUMBER(value: number, language?: MaybeString, opti
       options.minimumSignificantDigits = 1
     }
     options.minimumSignificantDigits = NUM(options.minimumSignificantDigits)
+    // minimumSignificantDigits cannot fall outside the range 1 - 21
     options.minimumSignificantDigits = MIN(MAX(options.minimumSignificantDigits, 1), 21)
 
     if (isNull(options.maximumSignificantDigits) || isUndefined(options.maximumSignificantDigits)) {
       options.maximumSignificantDigits = options.minimumSignificantDigits
     }
     options.maximumSignificantDigits = NUM(options.maximumSignificantDigits)
+    // maximumSignificantDigits cannot fall outside the range 1 - 21
     options.maximumSignificantDigits = MIN(MAX(options.maximumSignificantDigits, 1), 21)
   } else {
-    if (isNull(options.minimumIntegerDigits) || isUndefined(options.minimumIntegerDigits)) {
+    if (isUndefined(options.minimumIntegerDigits)) {
       options.minimumIntegerDigits = 1
     }
     options.minimumIntegerDigits = NUM(options.minimumIntegerDigits)
+    // minimumIntegerDigits cannot fall outside the range 1 - 21
     options.minimumIntegerDigits = MIN(MAX(options.minimumIntegerDigits, 1), 21)
 
     if (isNull(options.minimumFractionDigits) || isUndefined(options.minimumFractionDigits)) {
       if (options.style === "currency") {
-      options.minimumIntegerDigits = 2
+      options.minimumFractionDigits = 2
       } else {
-      options.minimumIntegerDigits = 0
+      options.minimumFractionDigits = 0
       }
     }
     options.minimumFractionDigits = NUM(options.minimumFractionDigits)
+    // minimumFractionDigits cannot fall outside the range 0 - 20
     options.minimumFractionDigits = MIN(MAX(options.minimumFractionDigits, 0), 20)
 
     if (options.style === "currency") {
@@ -68,20 +72,25 @@ export default function FORMATNUMBER(value: number, language?: MaybeString, opti
       }
     } else if (options.style === "percent") {
       if (isNull(options.maximumFractionDigits) || isUndefined(options.maximumFractionDigits)) {
-        MAX(options.minimumFractionDigits, 0)
+        options.maximumFractionDigits = MAX(options.minimumFractionDigits, 0)
       }
     } else {
       if (isNull(options.maximumFractionDigits) || isUndefined(options.maximumFractionDigits)) {
-        MAX(options.minimumFractionDigits, 3)
+        options.maximumFractionDigits = MAX(options.minimumFractionDigits, 3)
       }
     }
 
     options.maximumFractionDigits = NUM(options.maximumFractionDigits)
+    // maximumFractionDigits cannot fall outside the range 0 - 20
     options.maximumFractionDigits = MIN(MAX(options.maximumFractionDigits, 0), 20)
   }
 
   if (!isBoolean(options.useGrouping)) {
     options.useGrouping = true
+  }
+
+  if (isUndefined(options.localeMatcher)) {
+    options.localeMatcher = "lookup"
   }
 
   return formatNumber(value, language, options)
