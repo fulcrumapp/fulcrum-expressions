@@ -1,7 +1,7 @@
 import EXP from "../EXP"
 
 test("it return Euler's number raised to a designated power", () => {
-  expect(EXP()).toBe(2.718281828459045)
+  expect(EXP(1)).toBe(2.718281828459045)
   expect(EXP(2)).toBe(7.38905609893065)
   expect(EXP(4)).toBe(54.598150033144236)
 })
@@ -13,4 +13,6 @@ test("it accepts numbers as strings", () => {
 
 test("it returns NaN for invalid input", () => {
   expect(EXP("test")).toBeNaN()
+  // @ts-ignore Expecting NaN from invalid input
+  expect(EXP()).toBeNaN()
 })
