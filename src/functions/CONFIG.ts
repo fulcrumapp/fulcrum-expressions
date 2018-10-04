@@ -28,9 +28,11 @@ export interface Config {
   /** Required: sets locale-specific increment with which to group large numbers - defaults to 3 (thousands) */
   groupingSize: number,
   /** Optional:  Set to the current device model or "" */
-  deviceModel: string,
+  deviceModel?: string,
   /** Optional: Set to current device manufacter or "" */
-  deviceManufacturer: string,
+  deviceManufacturer?: string,
+  /** Optional: Set to current user's email */
+  userEmail?: string,
 }
 
 export const DEFAULTS = {
