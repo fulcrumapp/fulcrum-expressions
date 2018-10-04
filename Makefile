@@ -39,10 +39,10 @@ clean:
 	rm -rf docs/output/*
 
 jest:
-	$(call docker_run, yarn && yarn jest --watch)
+	$(call docker_run, yarn && NODE_ICU_DATA=./node_modules/full-icu yarn jest --watch)
 
 coverage:
-	$(call docker_run, yarn && yarn jest --coverage)
+	$(call docker_run, yarn && NODE_ICU_DATA=./node_modules/full-icu yarn jest --coverage)
 
 tsdoc:
 	$(call docker_run, yarn && yarn typedoc --theme minimal --out doc --exclude **/*.test.ts)
