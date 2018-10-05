@@ -23,8 +23,7 @@ export default function FACT(value: any): number {
   } else if (MEMOIZED_FACT()[n] > 0) {
     return MEMOIZED_FACT()[n]
   } else {
-    return MEMOIZED_FACT()[n] = FACT(n - 1) * n
+    MEMOIZED_FACT()[n] = FACT(n - 1) * n
+    return MEMOIZED_FACT()[n]
   }
-
-  return MEMOIZED_FACT()[n]
 }

@@ -3,7 +3,7 @@ import { RESET_MEMOIZED_FACT} from "../MEMOIZED_FACT"
 
 beforeEach(RESET_MEMOIZED_FACT)
 
-test("returns the factorial of a postive integers", () => {
+test("returns the factorial of postive integers", () => {
   expect(FACT(0)).toBe(1)
   expect(FACT(1)).toBe(1)
   expect(FACT(2)).toBe(2)
