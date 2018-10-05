@@ -3,7 +3,7 @@ import { FormFields, RepeatableField, Section } from "../types/fields"
 import flattenElements from "../util/flatten-elements"
 import FIELD from "./FIELD"
 
-interface FieldsOptions {
+export interface FieldsOptions {
   repeatables?: boolean,
   sections?: boolean,
 }
