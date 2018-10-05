@@ -61,12 +61,12 @@ types:
 									--exclude **/src/util/** \
 									--exclude **/__tests__/** \
 									--exclude **/node_modules/** \
+									--exclude **/editor-types/** \
 									--exclude src/functions/index.ts \
 									--exclude src/types/globals.d.ts \
 									--exclude src/types/node_modules.d.ts \
-									--exclude functions.d.ts \
-									--out functions.d.ts \
-		&& ruby build.rb)
+									--out editor/functions.d.ts \
+		&& ruby editor/build.rb)
 
 test:
 	./node_modules/mocha/bin/mocha \
