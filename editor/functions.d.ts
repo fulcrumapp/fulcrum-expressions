@@ -1005,6 +1005,8 @@ declare function CURRENCYCODE(): string;
  */
 declare function CURRENCYSYMBOL(): string;
 
+declare function CURRENTLOCATION(): void;
+
 
  type FormFieldTypes =
   "TextField"
@@ -2081,6 +2083,18 @@ declare function FORMATNUMBER(value: number, language: MaybeString): string;
  */
 declare function FORMATNUMBER(value: number): string;
 
+
+/**
+ * Memoized store for `FACT` function
+ */
+declare function MEMOIZED_FACT(): [];
+ function RESET_MEMOIZED_FACT(): [];
+
+/**
+ * Memoized store for `FACTDOUBLE` function
+ */
+declare function MEMOIZED_FACTDOUBLE(): [];
+ function RESET_MEMOIZED_FACTDOUBLE(): [];
 
 
 /**
