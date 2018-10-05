@@ -25,7 +25,6 @@ declare function ABS(value: number): number;
  * ABS(-1) // returns 1
  * ABS(42) // returns 42
  */
-
 declare function ABS(value: string): number;
 
 /**
@@ -43,7 +42,6 @@ declare function ACOS(value: number): number;
  * @example
  * ACOS(0.8) // returns 0.6435011087932843
  */
-
 declare function ACOS(value: string): number;
 
 /**
@@ -59,7 +57,6 @@ declare function ACOSH(value: number): number;
  * @example
  * ACOSH(7) // returns 2.6339157938496336
  */
-
 declare function ACOSH(value: string): number;
 
 interface AlertResult {
@@ -101,7 +98,6 @@ declare function ALERT(message: ToStringable): void;
  * // |                                           |
  * // +-------------------------------------------+
  */
-
 declare function ALERT(title: ToStringable, message: ToStringable): void;
 
 interface Config {
@@ -233,7 +229,6 @@ declare function FLATTEN(value: RecursiveArray<any>): any[];
  * @example
  * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
  */
-
 declare function FLATTEN(value: any): any[];
 
 /**
@@ -294,7 +289,6 @@ declare function PRECISION(value: number): number;
  * PRECISION(9.034) // returns 3
  * PRECISION(9) // returns 0
  */
-
 declare function PRECISION(value: string): number;
 
 /**
@@ -316,7 +310,6 @@ declare function ROUND(value: number): number;
  * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
-
 declare function ROUND(value: number, scale: number): number;
 /**
  * Rounds a number to given scale
@@ -327,7 +320,6 @@ declare function ROUND(value: number, scale: number): number;
  * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
-
 declare function ROUND(value: string): number;
 /**
  * Rounds a number to given scale
@@ -338,7 +330,6 @@ declare function ROUND(value: string): number;
  * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
-
 declare function ROUND(value: string, scale: number): number;
 
 /**
@@ -362,7 +353,6 @@ declare function CEILING(value: number): number;
  * CEILING(3.45) // returns 4
  * CEILING(2.3333333, 4) // returns 4
  */
-
 declare function CEILING(value: number, multiple: number): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
@@ -374,7 +364,6 @@ declare function CEILING(value: number, multiple: number): number;
  * CEILING(3.45) // returns 4
  * CEILING(2.3333333, 4) // returns 4
  */
-
 declare function CEILING(value: string): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
@@ -386,7 +375,6 @@ declare function CEILING(value: string): number;
  * CEILING(3.45) // returns 4
  * CEILING(2.3333333, 4) // returns 4
  */
-
 declare function CEILING(value: string, multiple: number): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
@@ -398,7 +386,6 @@ declare function CEILING(value: string, multiple: number): number;
  * CEILING(3.45) // returns 4
  * CEILING(2.3333333, 4) // returns 4
  */
-
 declare function CEILING(): number;
 
 /**
@@ -416,7 +403,6 @@ declare function CHAR(value: number): string;
  * @example
  * CHAR(65) // returns 'A'
  */
-
 declare function CHAR(value: string): string;
 
 type GUID = string
@@ -460,7 +446,6 @@ declare function ISBLANK(value: ChoiceFieldValue): boolean;
  * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
  * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
-
 declare function ISBLANK(value: any): boolean;
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
@@ -476,7 +461,6 @@ declare function ISBLANK(value: any): boolean;
  * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
  * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
-
 declare function ISBLANK(): boolean;
 
 /**
@@ -494,7 +478,6 @@ declare function CHOICEVALUES(field: ChoiceFieldValue): string[];
  * @example
  * CHOICEVALUES({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns [ 'a', 'b', 'c', 'd' ]
  */
-
 declare function CHOICEVALUES(field: any): any[];
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
@@ -503,7 +486,6 @@ declare function CHOICEVALUES(field: any): any[];
  * @example
  * CHOICEVALUES({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns [ 'a', 'b', 'c', 'd' ]
  */
-
 declare function CHOICEVALUES(): undefined;
 
 /**
@@ -521,7 +503,6 @@ declare function CHOICEVALUE(field: ChoiceFieldValue): MaybeString;
  * @example
  * CHOICEVALUE({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns 'a'
  */
-
 declare function CHOICEVALUE(field: any): MaybeString;
 
 /**
@@ -552,7 +533,6 @@ declare function COALESCE(...args: any[]): string | number | undefined;
  * COALESCE([[2, 3], [3, 6, [5]]]) // returns 2
  * COALESCE([{}, {}, {foo: "bar"}]) // returns {foo: "bar"}
  */
-
 declare function COALESCE(): undefined;
 
 /**
@@ -574,7 +554,6 @@ declare function CODE(str: MaybeString): number;
  * CODE("apple") // returns 97
  * CODE(9) // returns 57
  */
-
 declare function CODE(str: number): number;
 /**
  * Returns numeric code for first character in passed in string
@@ -585,7 +564,6 @@ declare function CODE(str: number): number;
  * CODE("apple") // returns 97
  * CODE(9) // returns 57
  */
-
 declare function CODE(str: Object): number;
 /**
  * Returns numeric code for first character in passed in string
@@ -596,7 +574,6 @@ declare function CODE(str: Object): number;
  * CODE("apple") // returns 97
  * CODE(9) // returns 57
  */
-
 declare function CODE(str: any[]): number;
 /**
  * Returns numeric code for first character in passed in string
@@ -607,7 +584,6 @@ declare function CODE(str: any[]): number;
  * CODE("apple") // returns 97
  * CODE(9) // returns 57
  */
-
 declare function CODE(): number;
 
 /**
@@ -625,7 +601,6 @@ declare function COMPACT(value: any[]): any[] | undefined;
  * @example
  * COMPACT(['a', 'b', null, 'c']) // returns ['a', 'b', 'c']
  */
-
 declare function COMPACT(value: any): undefined;
 /**
  * Returns a compacted array without null or undefined values.
@@ -634,7 +609,6 @@ declare function COMPACT(value: any): undefined;
  * @example
  * COMPACT(['a', 'b', null, 'c']) // returns ['a', 'b', 'c']
  */
-
 declare function COMPACT(): undefined;
 
 /**
@@ -654,7 +628,6 @@ declare function CONCATENATE(...strings: any[]): string;
  * CONCATENATE('hello', 'world') // returns 'helloworld'
  * CONCATENATE(['a', 'b', null, 'c']) // returns 'abc'
  */
-
 declare function CONCATENATE(): string;
 
 
@@ -697,7 +670,6 @@ declare function CONFIGURE(config: Config | any): Config;
  * locale: "en_US",
  * timeZone: "UTC" }
  */
-
 declare function CONFIGURE(config: Config | any, merge: boolean): Config;
 /**
  * CONFIGURE allows the user to update the configuration of the Form.
@@ -718,7 +690,6 @@ declare function CONFIGURE(config: Config | any, merge: boolean): Config;
  * locale: "en_US",
  * timeZone: "UTC" }
  */
-
 declare function CONFIGURE(): Config;
 
 /**
@@ -786,7 +757,6 @@ declare function MESSAGEBOX(options: MessageBoxPayload, callback: Function): voi
  *
  * MESSAGEBOX(options, callback);
  */
-
 declare function MESSAGEBOX(options: MessageBoxPayload): void;
 /**
  * MESSAGEBOX displays a message to the user.
@@ -812,7 +782,6 @@ declare function MESSAGEBOX(options: MessageBoxPayload): void;
  *
  * MESSAGEBOX(options, callback);
  */
-
 declare function MESSAGEBOX(options: MessageBoxPayload, callback: Function): void;
 
 /**
@@ -852,7 +821,6 @@ declare function CONFIRM(title: string, message: string, callback: Function): vo
  * });
  * )
  */
-
 declare function CONFIRM(message: string, callback: Function): void;
 
 /**
@@ -876,7 +844,6 @@ declare function CONTAINS(haystack: string | any[], needle: MaybeString | number
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
  * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
-
 declare function CONTAINS(haystack: string | any[], needle: MaybeString | number, fromIndex?: number): boolean;
 /**
  * Checks that a value is present in a string or array
@@ -888,7 +855,6 @@ declare function CONTAINS(haystack: string | any[], needle: MaybeString | number
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
  * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
-
 declare function CONTAINS(haystack: string | any[], needle: MaybeString | number, fromIndex?: any): boolean;
 /**
  * Checks that a value is present in a string or array
@@ -900,7 +866,6 @@ declare function CONTAINS(haystack: string | any[], needle: MaybeString | number
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
  * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
-
 declare function CONTAINS(haystack: any, needle: MaybeString | number): boolean;
 
 /**
@@ -918,7 +883,6 @@ declare function COS(value: number): number;
  * @example
  * COS(12) // returns 0.8438539587324921
  */
-
 declare function COS(value: string): number;
 
 /**
@@ -936,7 +900,6 @@ declare function COSH(value: number): number;
  * @example
  * COSH(12) // returns 0.8438539587324921
  */
-
 declare function COSH(value: string): number;
 
 /**
@@ -958,7 +921,6 @@ declare function COUNT(value: number[]): number;
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
  */
-
 declare function COUNT(value: string[]): number;
 /**
  * Returns the count of the numeric values in an array.
@@ -969,7 +931,6 @@ declare function COUNT(value: string[]): number;
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
  */
-
 declare function COUNT(): undefined;
 /**
  * Returns the count of the numeric values in an array.
@@ -980,7 +941,6 @@ declare function COUNT(): undefined;
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
  */
-
 declare function COUNT(value: any): number | undefined;
 
 /**
@@ -998,7 +958,6 @@ declare function COUNTA(value: any[]): number;
  * @example
  * COUNTA(["orange", "lemon", null, "grape"]) // returns 3
  */
-
 declare function COUNTA(value: any): number;
 /**
  * Returns a count of the items in a list that are not null, undefined, or blank
@@ -1007,7 +966,6 @@ declare function COUNTA(value: any): number;
  * @example
  * COUNTA(["orange", "lemon", null, "grape"]) // returns 3
  */
-
 declare function COUNTA(): number;
 
 /**
@@ -1027,7 +985,6 @@ declare function COUNTBLANK(...args: any[]): number;
  * @example
  * COUNTBLANK([1, 2, null, 3]) // returns 1
  */
-
 declare function COUNTBLANK(): number;
 
 /**
@@ -1062,7 +1019,6 @@ declare function CURRENCYSYMBOL(): string;
   | "BarcodeField"
   | "DateTimeField"
   | "TimeField"
-  | "Section"
   | "Repeatable"
   | "AddressField"
   | "SignatureField"
@@ -1466,7 +1422,6 @@ interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
 interface RepeatableField extends FormField {
   type: "Repeatable"
   /** FormField's nested inside of this section */
-
 declare function DATANAMES(type: FormFieldTypes): any[];
   /**
    * Label/Value for negative choice
@@ -1587,7 +1542,6 @@ interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
 interface RepeatableField extends FormField {
   type: "Repeatable"
   /** FormField's nested inside of this section */
-
 declare function DATANAMES(type: string): any[];
 
 /**
@@ -1611,7 +1565,6 @@ declare function FLOOR(value: number): number;
  * FLOOR(3.45) // returns 3
  * FLOOR(2.3333333, 4) // returns 2
  */
-
 declare function FLOOR(value: number, multiple: number): number;
 /**
  * Returns number rounded down, away from zero, to the nearest multiple
@@ -1623,7 +1576,6 @@ declare function FLOOR(value: number, multiple: number): number;
  * FLOOR(3.45) // returns 3
  * FLOOR(2.3333333, 4) // returns 2
  */
-
 declare function FLOOR(value: string): number;
 /**
  * Returns number rounded down, away from zero, to the nearest multiple
@@ -1635,7 +1587,6 @@ declare function FLOOR(value: string): number;
  * FLOOR(3.45) // returns 3
  * FLOOR(2.3333333, 4) // returns 2
  */
-
 declare function FLOOR(value: string, multiple: number): number;
 /**
  * Returns number rounded down, away from zero, to the nearest multiple
@@ -1647,7 +1598,6 @@ declare function FLOOR(value: string, multiple: number): number;
  * FLOOR(3.45) // returns 3
  * FLOOR(2.3333333, 4) // returns 2
  */
-
 declare function FLOOR(): number;
 
 
@@ -1670,7 +1620,6 @@ declare function DATE(year: number, month: number, day: number): Date;
  * @example
  * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
  */
-
 declare function DATE(year: string, month: string, day: string): Date | undefined;
 /**
  * Returns a new Date object given a year, month, and day.
@@ -1681,7 +1630,6 @@ declare function DATE(year: string, month: string, day: string): Date | undefine
  * @example
  * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
  */
-
 declare function DATE(year?: any, month?: any, day?: any): undefined;
 /**
  * Returns a new Date object given a year, month, and day.
@@ -1692,7 +1640,6 @@ declare function DATE(year?: any, month?: any, day?: any): undefined;
  * @example
  * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
  */
-
 declare function DATE(): undefined;
 
 /**
@@ -1714,7 +1661,6 @@ declare function RIGHT(value: string, numberOfCharacters: number): MaybeString;
  * RIGHT("abc") // returns "c"
  * RIGHT("abc", 2) // returns "bc"
  */
-
 declare function RIGHT(value: any, numberOfCharacters?: any): MaybeString;
 /**
  * Returns the right characters of a string, i.e. the characters starting at index -1
@@ -1725,7 +1671,6 @@ declare function RIGHT(value: any, numberOfCharacters?: any): MaybeString;
  * RIGHT("abc") // returns "c"
  * RIGHT("abc", 2) // returns "bc"
  */
-
 declare function RIGHT(): undefined;
 
 /**
@@ -1749,7 +1694,6 @@ declare function LPAD(value: string, count: number, padding?: string): MaybeStri
  * LPAD("abc", 5) // returns "  abc"
  * LPAD("abc", 5, "0") // returns "00abc"
  */
-
 declare function LPAD(value: any, count: any, padding?: any): MaybeString;
 /**
  * Returns a string padded to the left with a character of choice.
@@ -1761,7 +1705,6 @@ declare function LPAD(value: any, count: any, padding?: any): MaybeString;
  * LPAD("abc", 5) // returns "  abc"
  * LPAD("abc", 5, "0") // returns "00abc"
  */
-
 declare function LPAD(): undefined;
 
 /**
@@ -1783,7 +1726,6 @@ declare function DATEVALUE(dateString: Date | MaybeString, timeString?: string):
  * DATEVALUE("2018-02-07") // returns 2018-02-07T00:00:00.000Z
  * DATEVALUE("2018-02-07", "06:01") // returns 2018-02-07T06:01:00.000Z
  */
-
 declare function DATEVALUE(dateString: string): Date;
 /**
  * Returns a date value given a date and optional time string
@@ -1794,7 +1736,6 @@ declare function DATEVALUE(dateString: string): Date;
  * DATEVALUE("2018-02-07") // returns 2018-02-07T00:00:00.000Z
  * DATEVALUE("2018-02-07", "06:01") // returns 2018-02-07T06:01:00.000Z
  */
-
 declare function DATEVALUE(dateString: Date): Date;
 /**
  * Returns a date value given a date and optional time string
@@ -1805,7 +1746,6 @@ declare function DATEVALUE(dateString: Date): Date;
  * DATEVALUE("2018-02-07") // returns 2018-02-07T00:00:00.000Z
  * DATEVALUE("2018-02-07", "06:01") // returns 2018-02-07T06:01:00.000Z
  */
-
 declare function DATEVALUE(): undefined;
 
 /**
@@ -1825,7 +1765,6 @@ declare function DAY(date: Date): number;
  * DAY("2015/12/16") // returns 16
  * DAY(new Date("2015/12/16 00:00:00") // returns 16
  */
-
 declare function DAY(date: MaybeString): number;
 /**
  * Returns a day given a date.
@@ -1835,7 +1774,6 @@ declare function DAY(date: MaybeString): number;
  * DAY("2015/12/16") // returns 16
  * DAY(new Date("2015/12/16 00:00:00") // returns 16
  */
-
 declare function DAY(): undefined;
 
 /**
@@ -1861,7 +1799,6 @@ declare function DEGREES(value: number | string): number;
  * DEGREES(Math.PI) // returns 180
  * DEGREES("0.78") // returns 44.69070802020421
  */
-
 declare function DEGREES(value: undefined | null): number;
 /**
  * Returns degrees for an input of radians.
@@ -1871,7 +1808,6 @@ declare function DEGREES(value: undefined | null): number;
  * DEGREES(Math.PI) // returns 180
  * DEGREES("0.78") // returns 44.69070802020421
  */
-
 declare function DEGREES(): number;
 
 /**
@@ -1889,7 +1825,6 @@ declare function FIELD(dataName: string): FormField;
  * FIELD('child_item_cost').label // returns "Child Item Cost"
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
-
 declare function FIELD(dataName: MaybeString): FormField | undefined;
 
 declare function DESCRIPTION(dataName: MaybeString): string | undefined;
@@ -1900,7 +1835,6 @@ declare function DESCRIPTION(dataName: MaybeString): string | undefined;
  * FIELD('child_item_cost').label // returns "Child Item Cost"
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
-
 declare function DESCRIPTION(): undefined;
 
 /**
@@ -1930,7 +1864,6 @@ declare function DEVICEINFO(separator?: string): string;
  * DEVICEINFO() // returns "Apple, MQCK2LL/A"
  * DEVICEINFO(": ") // returns "Apple: MQCK2LL/A"
  */
-
 declare function DEVICEINFO(separator?: any): string;
 
 declare function EMAIL(): string | undefined;
@@ -1952,7 +1885,6 @@ declare function EVEN(value: number): number;
  * EVEN(-3.4) // returns -2
  * EVEN([]) // returns NaN
  */
-
 declare function EVEN(value: string): number;
 /**
  * Returns number rounded up to the nearest even integer
@@ -1962,7 +1894,6 @@ declare function EVEN(value: string): number;
  * EVEN(-3.4) // returns -2
  * EVEN([]) // returns NaN
  */
-
 declare function EVEN(value: any): number;
 
 /**
@@ -2003,7 +1934,6 @@ declare function EXP(x: number): number;
  * EXP(1) // returns 2.718281828459045
  * EXP(2) // 7.38905609893065
  */
-
 declare function EXP(x: string): number;
 
 /**
@@ -2018,30 +1948,31 @@ interface FieldsOptions {
     sections?: boolean;
 }
 /**
- * Returns child fields associated with a given data name
+ * Returns child fields of a repeatable or section field associated with a given data name
  * @param dataName required; string
- * @param options optional; object: `{ repeatables: boolean, sections: boolean }`
+ * @param options optional; object indicating if result should be flattened recursively,
+ * e.g. `{ repeatables: boolean, sections: boolean }`
  * @returns array of child fields
  *
  */
 declare function FIELDS(dataName: string): FormFields[];
 /**
- * Returns child fields associated with a given data name
+ * Returns child fields of a repeatable or section field associated with a given data name
  * @param dataName required; string
- * @param options optional; object: `{ repeatables: boolean, sections: boolean }`
+ * @param options optional; object indicating if result should be flattened recursively,
+ * e.g. `{ repeatables: boolean, sections: boolean }`
  * @returns array of child fields
  *
  */
-
 declare function FIELDS(dataName: string, options: FieldsOptions): FormFields[];
 /**
- * Returns child fields associated with a given data name
+ * Returns child fields of a repeatable or section field associated with a given data name
  * @param dataName required; string
- * @param options optional; object: `{ repeatables: boolean, sections: boolean }`
+ * @param options optional; object indicating if result should be flattened recursively,
+ * e.g. `{ repeatables: boolean, sections: boolean }`
  * @returns array of child fields
  *
  */
-
 declare function FIELDS(): undefined;
 
 /**
@@ -2051,12 +1982,10 @@ declare function FIRST(item: any[] | string, n: number): any[] | undefined;
 /**
  * Returns the first n items of an array or string.
  */
-
 declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
 /**
  * Returns the first n items of an array or string.
  */
-
 declare function FIRST(item: any): any[] | undefined;
 
 /**
@@ -2108,7 +2037,6 @@ declare function FORMATNUMBER(value: number, language: MaybeString, options: Num
  * MIN(7, 4, 1, 2, 4) // returns 1
  * MIN(["45", "50", "32", "51"]) // returns 32
  */
-
 declare function FORMATNUMBER(value: number, language: MaybeString): string;
 /**
  * Returns min value from a list of values
@@ -2118,7 +2046,6 @@ declare function FORMATNUMBER(value: number, language: MaybeString): string;
  * MIN(7, 4, 1, 2, 4) // returns 1
  * MIN(["45", "50", "32", "51"]) // returns 32
  */
-
 declare function FORMATNUMBER(value: number): string;
 
 
@@ -2140,7 +2067,6 @@ declare function MONTH(date: Date): number;
  * MONTH("2015/12/16") // returns 12
  * MONTH(new Date("2015/12/16 00:00:00") // returns 12
  */
-
 declare function MONTH(date: MaybeString): number;
 /**
  * Returns a month given a date.
@@ -2150,7 +2076,6 @@ declare function MONTH(date: MaybeString): number;
  * MONTH("2015/12/16") // returns 12
  * MONTH(new Date("2015/12/16 00:00:00") // returns 12
  */
-
 declare function MONTH(): void;
 
 
@@ -2462,7 +2387,6 @@ declare function YEAR(date: Date): number;
  * YEAR("2015/12/16") // returns 2015
  * YEAR(new Date("2015/12/16 00:00:00") // returns 2015
  */
-
 declare function YEAR(date: MaybeString): number;
 /**
  * Returns a year given a date.
@@ -2472,7 +2396,6 @@ declare function YEAR(date: MaybeString): number;
  * YEAR("2015/12/16") // returns 2015
  * YEAR(new Date("2015/12/16 00:00:00") // returns 2015
  */
-
 declare function YEAR(): undefined;
 
 declare var ON: EventBinder
