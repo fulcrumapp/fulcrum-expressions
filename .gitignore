@@ -2,3 +2,8 @@ node_modules/
 docs/output
 doc/
 coverage/
+
+# debugging the type compiler
+final.txt
+filtered.txt
+yarn-error.log
