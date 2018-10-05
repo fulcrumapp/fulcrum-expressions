@@ -14,6 +14,7 @@
   "license": "BSD",
   "dependencies": {
     "@types/query-string": "^6.1.0",
+    "dts-generator": "^2.1.0",
     "encodeurl": "^1.0.1",
     "full-icu": "^1.2.1",
     "lodash": "^4.17.11",
