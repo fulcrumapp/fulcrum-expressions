@@ -13,7 +13,6 @@ export type FormFieldTypes =
   | "BarcodeField"
   | "DateTimeField"
   | "TimeField"
-  | "Section"
   | "Repeatable"
   | "AddressField"
   | "SignatureField"
