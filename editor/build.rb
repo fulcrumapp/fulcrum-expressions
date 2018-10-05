@@ -9,6 +9,17 @@ OUT_FILE = 'editor/functions.d.ts'.freeze
 
 filtered_lines = []
 
+MANGLED_LINE = /\} function/
+
+def clean(line)
+  line.gsub!('export default', 'declare')
+  line.gsub!('export interface', 'interface')
+  line.gsub!('export', '')
+  line.slice!(0, 1) # Trim leading whitespace
+  line.chomp!
+  line
+end
+
 #
 # The default output of the file wraps everything in modules. Let's flatten and
 # ensure that everything from the functions directory ends up as globals in this
@@ -21,12 +32,12 @@ File.readlines(OUT_FILE).each do |line|
   next if line.include?('export {}')
   next if line.include?('export default') && !line.include?('function')
 
-  line.gsub!('export default', 'declare')
-  line.gsub!('export interface', 'interface')
-  line.gsub!('export', '')
-  line.slice!(0, 1) # Trim leading whitespace
-
-  filtered_lines.push(line.chomp)
+  if line =~ MANGLED_LINE
+    functions = line.split('}').last.split(';').map(&:strip).map { |l| clean(" " + l) }
+    filtered_lines.push('}', *functions)
+  else
+    filtered_lines.push clean(line.chomp)
+  end
 end
 
 final_lines = []
@@ -86,9 +97,4 @@ end
 
 File.open(OUT_FILE, 'w+') do |file|
   final_lines.each { |line| file.write(line + "\n") }
-
-  file.write <<-TS
-declare var ON: EventBinder
-declare var OFF: EventBinder
-  TS
 end

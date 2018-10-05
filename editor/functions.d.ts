@@ -2079,20 +2079,6 @@ declare function MONTH(date: MaybeString): number;
 declare function MONTH(): void;
 
 
-interface EventBinder {
-  (name: FormEventNames, callback: (event: FormEvent) => void): void
-  (name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
-  (name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
-  (name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void
-  (name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void
-  (name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void
-  (name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void
-  (name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void
-  (name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void
-  (name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void
-  (name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void
-}
-
 interface TriggeredEvent {
   name: EventNames,
   value: (
@@ -2119,7 +2105,7 @@ interface TriggeredEvent {
   | AddAudioEventName
   | RemoveAudioEventName
 
-type RepeatableEventNames =
+ type RepeatableEventNames =
   "load-repeatable"
   | "unload-repeatable"
   | "new-repeatable"
@@ -2129,13 +2115,13 @@ type RepeatableEventNames =
   | "validate-repeatable"
   | "change-geometry"
 
-type FieldEventNames =
+ type FieldEventNames =
   "change"
   | "focus"
   | "blur"
   | "click"
 
-type FormEventNames =
+ type FormEventNames =
   "load-record"
   | "unload-record"
   | "new-record"
@@ -2148,13 +2134,13 @@ type FormEventNames =
   | "change-status"
   | "change-assignment"
 
-type ChangeGeometryEventName = "change-geometry"
-type AddPhotoEventName = "add-photo"
-type RemovePhotoEventName = "remove-photo"
-type AddVideoEventName = "add-video"
-type RemoveVideoEventName = "remove-video"
-type AddAudioEventName = "add-audio"
-type RemoveAudioEventName = "remove-audio"
+ type ChangeGeometryEventName = "change-geometry"
+ type AddPhotoEventName = "add-photo"
+ type RemovePhotoEventName = "remove-photo"
+ type AddVideoEventName = "add-video"
+ type RemoveVideoEventName = "remove-video"
+ type AddAudioEventName = "add-audio"
+ type RemoveAudioEventName = "remove-audio"
 
 interface EventWithField {
   field: string
@@ -2171,7 +2157,7 @@ interface FormEvent {
   value?: string
 }
 
-type FieldEventValue = string | ChoiceFieldValue
+ type FieldEventValue = string | ChoiceFieldValue
 
 interface FieldEvent extends EventWithField {
   name: FieldEventNames,
@@ -2257,7 +2243,645 @@ interface RemoveAudioEvent extends RemoveMediaEvent {
   name: RemoveAudioEventName
 }
 
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: FormEventNames, callback: (event: FormEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void;
 
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: FormEventNames, callback: (event: FormEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void;
 
 interface RequestOptions {
     /** The url for the request */
@@ -2285,7 +2909,111 @@ interface RequestOptions {
     json?: object | string;
     /** The request body */
     body?: string;
-} function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void; function REQUEST(url: string, callback: HTTPRequestCallback): void;
+}
+/**
+ * Performs an HTTP request and executes the callback on completion.
+ * The REQUEST function is for making external HTTP requests. It's one of the most powerful data
+ * event functions and enables you to retrieve external data while filling out a form. It can be
+ * combined with the other functions to create very dynamic forms that populate information on-demand
+ * from external sources. It contains the necessary options to perform any HTTP request, including
+ * support for PUT, POST, etc and custom headers.
+ *
+ * ### CORS and Web Browser Support
+ *
+ * To work in the web browser, URLs fetched using REQUEST *require* HTTPS &
+ * [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of
+ * Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website,
+ * all requests made from the site must also be secure and respond with the proper headers required by
+ * the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we
+ * recommend contacting the API provider and asking them to
+ * [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS
+ * proxy to proxy requests to URLs that don't support it.
+ *
+ * http://cors-anywhere.herokuapp.com/, http://cors-proxy.htmldriven.com/, and https://crossorigin.me
+ *  are various CORS proxies. Note that these are not Fulcrum services.
+ * Please also note, when using CORS proxies you are effectively exposing everything about a network
+ * request to an unknown host. This should be especially considered if sending information like
+ * passwords, tokens, etc.
+ *
+ * @param options The url or options to pass for the request
+ * @param callback The function to call when the request is complete - The function is
+ * passed `error`, `response`, and `body` parameters
+ * @example
+ * // This example looks up the place name from OpenStreetMap when the location changes and fills in a text
+ * // field with the place name. Replace 'place_name' below with a text field on your form.
+ *
+ * ON('change-geometry', function(event) {
+ *   var options = {
+ *     url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' +
+ *          LONGITUDE() + '?format=json&polygon=1&addressdetails=1'
+ *   };
+ *
+ *   REQUEST(options, function(error, response, body) {
+ *     if (error) {
+ *       ALERT('Error with request: ' + INSPECT(error));
+ *     } else {
+ *       var data = JSON.parse(body);
+ *
+ *       if (data.length) {
+ *         SETVALUE('place_name', data[0].display_name);
+ *       }
+ *     }
+ *   });
+ * });
+ */
+declare function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void;
+/**
+ * Performs an HTTP request and executes the callback on completion.
+ * The REQUEST function is for making external HTTP requests. It's one of the most powerful data
+ * event functions and enables you to retrieve external data while filling out a form. It can be
+ * combined with the other functions to create very dynamic forms that populate information on-demand
+ * from external sources. It contains the necessary options to perform any HTTP request, including
+ * support for PUT, POST, etc and custom headers.
+ *
+ * ### CORS and Web Browser Support
+ *
+ * To work in the web browser, URLs fetched using REQUEST *require* HTTPS &
+ * [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of
+ * Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website,
+ * all requests made from the site must also be secure and respond with the proper headers required by
+ * the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we
+ * recommend contacting the API provider and asking them to
+ * [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS
+ * proxy to proxy requests to URLs that don't support it.
+ *
+ * http://cors-anywhere.herokuapp.com/, http://cors-proxy.htmldriven.com/, and https://crossorigin.me
+ *  are various CORS proxies. Note that these are not Fulcrum services.
+ * Please also note, when using CORS proxies you are effectively exposing everything about a network
+ * request to an unknown host. This should be especially considered if sending information like
+ * passwords, tokens, etc.
+ *
+ * @param options The url or options to pass for the request
+ * @param callback The function to call when the request is complete - The function is
+ * passed `error`, `response`, and `body` parameters
+ * @example
+ * // This example looks up the place name from OpenStreetMap when the location changes and fills in a text
+ * // field with the place name. Replace 'place_name' below with a text field on your form.
+ *
+ * ON('change-geometry', function(event) {
+ *   var options = {
+ *     url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' +
+ *          LONGITUDE() + '?format=json&polygon=1&addressdetails=1'
+ *   };
+ *
+ *   REQUEST(options, function(error, response, body) {
+ *     if (error) {
+ *       ALERT('Error with request: ' + INSPECT(error));
+ *     } else {
+ *       var data = JSON.parse(body);
+ *
+ *       if (data.length) {
+ *         SETVALUE('place_name', data[0].display_name);
+ *       }
+ *     }
+ *   });
+ * });
+ */
+declare function REQUEST(url: string, callback: HTTPRequestCallback): void;
 
 interface ConfigurationResult {
     type: "configure";
@@ -2398,5 +3126,3 @@ declare function YEAR(date: MaybeString): number;
  */
 declare function YEAR(): undefined;
 
-declare var ON: EventBinder
-declare var OFF: EventBinder

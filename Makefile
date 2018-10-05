@@ -61,7 +61,7 @@ types:
 									--exclude **/src/util/** \
 									--exclude **/__tests__/** \
 									--exclude **/node_modules/** \
-									--exclude **/editor-types/** \
+									--exclude **/editor/** \
 									--exclude src/functions/index.ts \
 									--exclude src/types/globals.d.ts \
 									--exclude src/types/node_modules.d.ts \

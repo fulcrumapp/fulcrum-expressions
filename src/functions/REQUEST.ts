@@ -90,9 +90,10 @@ const DEFAULT_OPTIONS = {
  *   });
  * });
  */
-function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void
-function REQUEST(url: string, callback: HTTPRequestCallback): void
-function REQUEST(options: any, callback: HTTPRequestCallback) {
+
+export default function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void
+export default function REQUEST(url: string, callback: HTTPRequestCallback): void
+export default function REQUEST(options: any, callback: HTTPRequestCallback) {
   if (!callback || !isFunction(callback)) {
     ERROR("A callback must be provided to REQUEST")
   }
@@ -140,5 +141,3 @@ function REQUEST(options: any, callback: HTTPRequestCallback) {
 
   HostHTTPRequest(JSON.stringify(config), callback)
 }
-
-export default REQUEST

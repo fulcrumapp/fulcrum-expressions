@@ -1,20 +1,6 @@
 import { GUID } from "./primitives"
 import { FormFields } from "./fields";
 
-export interface EventBinder {
-  (name: FormEventNames, callback: (event: FormEvent) => void): void
-  (name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
-  (name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
-  (name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void
-  (name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void
-  (name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void
-  (name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void
-  (name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void
-  (name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void
-  (name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void
-  (name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void
-}
-
 export interface TriggeredEvent {
   name: EventNames,
   value: (
@@ -41,7 +27,7 @@ export type EventNames =
   | AddAudioEventName
   | RemoveAudioEventName
 
-type RepeatableEventNames =
+export type RepeatableEventNames =
   "load-repeatable"
   | "unload-repeatable"
   | "new-repeatable"
@@ -51,13 +37,13 @@ type RepeatableEventNames =
   | "validate-repeatable"
   | "change-geometry"
 
-type FieldEventNames =
+export type FieldEventNames =
   "change"
   | "focus"
   | "blur"
   | "click"
 
-type FormEventNames =
+export type FormEventNames =
   "load-record"
   | "unload-record"
   | "new-record"
@@ -70,53 +56,53 @@ type FormEventNames =
   | "change-status"
   | "change-assignment"
 
-type ChangeGeometryEventName = "change-geometry"
-type AddPhotoEventName = "add-photo"
-type RemovePhotoEventName = "remove-photo"
-type AddVideoEventName = "add-video"
-type RemoveVideoEventName = "remove-video"
-type AddAudioEventName = "add-audio"
-type RemoveAudioEventName = "remove-audio"
+export type ChangeGeometryEventName = "change-geometry"
+export type AddPhotoEventName = "add-photo"
+export type RemovePhotoEventName = "remove-photo"
+export type AddVideoEventName = "add-video"
+export type RemoveVideoEventName = "remove-video"
+export type AddAudioEventName = "add-audio"
+export type RemoveAudioEventName = "remove-audio"
 
-interface EventWithField {
+export interface EventWithField {
   field: string
 }
 
-interface ChoiceFieldValue {
+export interface ChoiceFieldValue {
   choice_values: string[],
   other_values: string[]
 }
 
-interface FormEvent {
+export interface FormEvent {
   name: FormEventNames
   field: null,
   value?: string
 }
 
-type FieldEventValue = string | ChoiceFieldValue
+export type FieldEventValue = string | ChoiceFieldValue
 
-interface FieldEvent extends EventWithField {
+export interface FieldEvent extends EventWithField {
   name: FieldEventNames,
   field: string,
   value: FieldEventValue
 }
 
-interface GeometryEventValue {
+export interface GeometryEventValue {
   coordinates: number[],
   type: "Point"
 }
 
-interface GeometryEvent {
+export interface GeometryEvent {
   field?: string
   name: ChangeGeometryEventName
   value: GeometryEventValue
 }
 
-interface RepeatableEvent extends EventWithField {
+export interface RepeatableEvent extends EventWithField {
   name: RepeatableEventNames
 }
 
-interface AddPhotoEventValue {
+export interface AddPhotoEventValue {
   id: GUID,
   size: number,
   latitude: number,
@@ -128,24 +114,24 @@ interface AddPhotoEventValue {
   height: number
 }
 
-interface AddPhotoEvent extends EventWithField {
+export interface AddPhotoEvent extends EventWithField {
   name: AddPhotoEventName,
   value: AddPhotoEventValue
 }
 
-interface RemoveMediaEventValue {
+export interface RemoveMediaEventValue {
   id: GUID
 }
 
-interface RemoveMediaEvent extends EventWithField {
+export interface RemoveMediaEvent extends EventWithField {
   value: RemoveMediaEventValue
 }
 
-interface RemovePhotoEvent extends RemoveMediaEvent {
+export interface RemovePhotoEvent extends RemoveMediaEvent {
   name: RemovePhotoEventName
 }
 
-interface AddVideoEventValue {
+export interface AddVideoEventValue {
   id: GUID,
   size: number,
   duration: number,
@@ -155,26 +141,26 @@ interface AddVideoEventValue {
   track: any
 }
 
-interface AddVideoEvent extends EventWithField {
+export interface AddVideoEvent extends EventWithField {
   name: AddVideoEventName,
   value: AddVideoEventValue
 }
 
-interface RemoveVideoEvent extends RemoveMediaEvent {
+export interface RemoveVideoEvent extends RemoveMediaEvent {
   name: RemovePhotoEventName
 }
 
-interface AddAudioEventValue {
+export interface AddAudioEventValue {
   id: GUID,
   size: number,
   duration: number
 }
 
-interface AddAudioEvent extends EventWithField {
+export interface AddAudioEvent extends EventWithField {
   name: AddAudioEventName,
   value: AddAudioEventValue
 }
 
-interface RemoveAudioEvent extends RemoveMediaEvent {
+export interface RemoveAudioEvent extends RemoveMediaEvent {
   name: RemoveAudioEventName
 }

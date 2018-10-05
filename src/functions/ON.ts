@@ -1,5 +1,27 @@
 import { includes, isFunction, isString } from "lodash"
-import { EventBinder, EventNames } from "../types/events"
+import {
+  AddAudioEvent,
+  AddAudioEventName,
+  AddPhotoEvent,
+  AddPhotoEventName,
+  AddVideoEvent,
+  AddVideoEventName,
+  ChangeGeometryEventName,
+  EventNames,
+  FieldEvent,
+  FieldEventNames,
+  FormEvent,
+  FormEventNames,
+  GeometryEvent,
+  RemoveAudioEvent,
+  RemoveAudioEventName,
+  RemoveMediaEvent,
+  RemovePhotoEventName,
+  RemoveVideoEvent,
+  RemoveVideoEventName,
+  RepeatableEvent,
+  RepeatableEventNames,
+} from "../types/events"
 import { MaybeString } from "../types/primitives"
 import ERROR from "./ERROR"
 import FIELD from "./FIELD"
@@ -52,7 +74,18 @@ import FORMAT from "./FORMAT"
  * ON('change-geometry', 'repeatable_item', callback);
  */
 
-const ON: EventBinder = function(name: EventNames, ...args: any[]): void {
+export default function ON(name: FormEventNames, callback: (event: FormEvent) => void): void
+export default function ON(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
+export default function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
+export default function ON(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void
+export default function ON(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void
+export default function ON(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void
+export default function ON(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void
+export default function ON(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void
+export default function ON(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void
+export default function ON(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void
+export default function ON(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void
+export default function ON(name: EventNames, ...args: any[]): void {
   let param: MaybeString = null
   let callback
 
@@ -135,5 +168,3 @@ const validateEventParams = (event: EventNames, param: MaybeString) => {
     }
   }
 }
-
-export default ON

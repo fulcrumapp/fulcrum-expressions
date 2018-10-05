@@ -1,5 +1,27 @@
 import { isFunction, isString } from "lodash"
-import { EventBinder, EventNames } from "../types/events"
+import {
+  AddAudioEvent,
+  AddAudioEventName,
+  AddPhotoEvent,
+  AddPhotoEventName,
+  AddVideoEvent,
+  AddVideoEventName,
+  ChangeGeometryEventName,
+  EventNames,
+  FieldEvent,
+  FieldEventNames,
+  FormEvent,
+  FormEventNames,
+  GeometryEvent,
+  RemoveAudioEvent,
+  RemoveAudioEventName,
+  RemoveMediaEvent,
+  RemovePhotoEventName,
+  RemoveVideoEvent,
+  RemoveVideoEventName,
+  RepeatableEvent,
+  RepeatableEventNames,
+} from "../types/events"
 import ERROR from "./ERROR"
 
 /**
@@ -12,7 +34,18 @@ import ERROR from "./ERROR"
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-const OFF: EventBinder = function(name: EventNames, ...args: any[]): void {
+export default function OFF(name: FormEventNames, callback: (event: FormEvent) => void): void
+export default function OFF(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
+export default function OFF(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
+export default function OFF(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void
+export default function OFF(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void
+export default function OFF(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void
+export default function OFF(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void
+export default function OFF(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void
+export default function OFF(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void
+export default function OFF(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void
+export default function OFF(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void
+export default function OFF(name: EventNames, ...args: any[]): void {
   let param = null
   let callback = null
 
@@ -42,5 +75,3 @@ const OFF: EventBinder = function(name: EventNames, ...args: any[]): void {
 
   $$runtime.removeHook(name, param, callback)
 }
-
-export default OFF
