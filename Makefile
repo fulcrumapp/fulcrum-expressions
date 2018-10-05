@@ -50,6 +50,24 @@ tsdoc:
 repl:
 	$(call docker_run, make build && ./console)
 
+types:
+	$(call docker_run, yarn run \
+		dts-generator \
+									--project . \
+									--target 0 \
+									--exclude **/src/host/** \
+									--exclude **/src/runtime/** \
+									--exclude **/src/test/** \
+									--exclude **/src/util/** \
+									--exclude **/__tests__/** \
+									--exclude **/node_modules/** \
+									--exclude src/functions/index.ts \
+									--exclude src/types/globals.d.ts \
+									--exclude src/types/node_modules.d.ts \
+									--exclude functions.d.ts \
+									--out functions.d.ts \
+		&& ruby build.rb)
+
 test:
 	./node_modules/mocha/bin/mocha \
 	--reporter $(REPORTER) \
