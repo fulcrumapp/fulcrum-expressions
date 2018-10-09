@@ -25,18 +25,17 @@ export default function FIXED(num: any): string|undefined
 export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator = false): string|undefined {
   num = NUM(num)
   decimals = NUM(decimals)
-  if (ISNAN(decimals)) {
-    decimals = 2
-  }
 
-  decimals = MIN(MAX(decimals, 0), 20)
+  if (ISNAN(decimals)) { decimals = 2 }
+
+  decimals = MIN(MAX(decimals, 0), 20) || NaN
 
   if (ISNAN(num) || ISNAN(decimals)) { return undefined }
 
   suppressGroupingSeparator = !!suppressGroupingSeparator
 
-  const power: number = Math.pow(10, decimals)
-
+  // both of these were present in the previous function but never used
+  // const power: number = Math.pow(10, decimals)
   // const scaled: number = num * power
 
   const machineDecimalSeparator: string = "."

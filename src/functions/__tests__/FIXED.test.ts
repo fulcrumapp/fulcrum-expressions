@@ -47,7 +47,5 @@ test("it returns undefined for invalid input", () => {
   expect(FIXED(undefined)).toBeUndefined()
   expect(FIXED(null)).toBeUndefined()
   expect(FIXED(new Date())).toBeUndefined()
-  // @ts-ignore Bad input on purpose
-  expect(FIXED(new RegExp())).toBeUndefined()
   expect(FIXED("")).toBeUndefined()
 })
