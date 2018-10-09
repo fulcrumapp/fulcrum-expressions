@@ -42,11 +42,12 @@ test("it uses configuration settings to customize return values", () => {
 })
 
 test("it returns undefined for invalid input", () => {
-  expect((FIXED([]))).toBeUndefined()
-  expect((FIXED({}))).toBeUndefined()
-  expect((FIXED(undefined))).toBeUndefined()
-  expect((FIXED(null))).toBeUndefined()
-  expect((FIXED(new Date))).toBeUndefined()
-  expect((FIXED(new RegExp))).toBeUndefined()
-  expect((FIXED(""))).toBeUndefined()
+  expect(FIXED([])).toBeUndefined()
+  expect(FIXED({})).toBeUndefined()
+  expect(FIXED(undefined)).toBeUndefined()
+  expect(FIXED(null)).toBeUndefined()
+  expect(FIXED(new Date())).toBeUndefined()
+  // @ts-ignore Bad input on purpose
+  expect(FIXED(new RegExp())).toBeUndefined()
+  expect(FIXED("")).toBeUndefined()
 })

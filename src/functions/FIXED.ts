@@ -7,8 +7,22 @@ import MIN from "./MIN"
 import NUM from "./NUM"
 import RIGHT from "./RIGHT"
 
+/**
+ * Returns fixed represention of a number
+ * @param num required; numeric value to be converted
+ * @param decimals  optional; integer between 0 - 20 indicating total fractional digits, defaults to 2
+ * @param suppressGroupingSeparator optional; boolean, whether to separate numbers with
+ * groupingSeparator character, defaults to false
+ * @returns fixed representation of a number as a string
+ * @example
+ * FIXED(12345678901 / 3, 3) // returns "4,115,226,300.333"
+ * FIXED(12345678901 / 3, 3, true) // returns "4115226300.333"
+ */
+
 export default function FIXED(num: number, decimals?: number, suppressGroupingSeparator?: boolean): string|undefined
-export default function FIXED(num: number, decimals = 2, suppressGroupingSeparator = false): string|undefined {
+export default function FIXED(num: number, decimals?: number): string|undefined
+export default function FIXED(num: any): string|undefined
+export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator = false): string|undefined {
   num = NUM(num)
   decimals = NUM(decimals)
   if (ISNAN(decimals)) {
