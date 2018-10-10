@@ -1,5 +1,6 @@
 import { each, get, set, without } from "lodash"
 import { AlertResult } from "../functions/ALERT"
+import { InvalidResult} from "../functions/INVALID"
 import { ConfigurationResult } from "../functions/SETCONFIGURATION"
 import {
   HostFormatNumber,
@@ -31,6 +32,7 @@ interface EventsStore {
 type RuntimeResults = Array<
   AlertResult
   | ConfigurationResult
+  | InvalidResult
 >
 
 const NO_PARAM = "__no_param"
