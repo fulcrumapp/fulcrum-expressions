@@ -5,7 +5,7 @@ import { isBoolean } from "lodash"
  * @param value required; value to be checked
  * @returns boolean value
  * @example
- * ISLOGICAL(false) // returns true
+ * ISLOGICAL(2 > 0) // returns true
  * ISLOGICAL([ false ]) // returns false
  */
 
