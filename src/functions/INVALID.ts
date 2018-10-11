@@ -1,4 +1,5 @@
 import { FormField } from "../types/fields"
+import FIELD from "./FIELD"
 
 export interface InvalidResult {
   /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
@@ -20,8 +21,9 @@ export interface InvalidResult {
  * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
  * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
  * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
- * @param message optional; string detailing the reason for invalidating a record
- * @param dataName optional; string
+ * @param message required; string detailing the reason for invalidating a record
+ * @param dataName optional; string, data_name of field to be validated
+ * @returns void
  */
 
 export default function INVALID(message: string, dataName?: string): void
