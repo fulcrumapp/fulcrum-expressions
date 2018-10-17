@@ -84,19 +84,20 @@ export const converters: Converter = {
   ChoiceField: (value: string) => {
     let choices: null|string[] = null
 
-    switch true
-    when isArray(value)
-    choices = map(compact(value), (v) => v.toString())
-    break
-    when isString(value) && value.length !== 0
-    choices = [ value ]
-    break
-    when isNumber(value)
-    choices = [ value.toString() ]
-    break
-    when isObject(value) && isArray(value.choice_values)
-    choices = map(compact(value.choice_values), (v) => v.toString())
-    break
+    switch (true) {
+      case isArray(value):
+        choices = map(compact(value), (v) => v.toString())
+        break
+      case isString(value) && value.length !== 0:
+        choices = [ value ]
+        break
+      case isNumber(value):
+        choices = [ value.toString() ]
+        break
+      case isObject(value) && isArray(value.choice_values):
+        choices = map(compact(value.choice_values), (v) => v.toString())
+        break
+    }
 
     if (!isArray(choices)) { return null }
 
