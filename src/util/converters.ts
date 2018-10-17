@@ -1,5 +1,10 @@
-import { compact, isArray, isNumber, isObject, isString, map } from "lodash"
-import { select } from "utils"
+import { compact,
+        filter,
+        isArray,
+        isNumber,
+        isObject,
+        isString,
+        map } from "lodash"
 import DATEVALUE from "../functions/DATEVALUE"
 import EXISTS from "../functions/EXISTS"
 import FORMAT from "../functions/FORMAT"
@@ -129,7 +134,7 @@ export const converters: Converter = {
     if (!isArray(value)) { return null }
 
     let ids: string[] = value.map((id) => "" + id)
-    ids = select(ids, (id: string) => UUID_REGEX.test(id))
+    ids = filter(ids, (id: string) => UUID_REGEX.test(id))
     return ids.map((id) => { record_id: id })
   },
 }
