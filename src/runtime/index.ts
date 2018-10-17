@@ -2,6 +2,7 @@ import { each, get, set, without } from "lodash"
 import { AlertResult } from "../functions/ALERT"
 import { InvalidResult} from "../functions/INVALID"
 import { ConfigurationResult } from "../functions/SETCONFIGURATION"
+import { SetValueResult } from "../functions/SETVALUE"
 import {
   HostFormatNumber,
   HostHTTPClient,
@@ -33,6 +34,7 @@ type RuntimeResults = Array<
   AlertResult
   | ConfigurationResult
   | InvalidResult
+  | SetValueResult
 >
 
 const NO_PARAM = "__no_param"
