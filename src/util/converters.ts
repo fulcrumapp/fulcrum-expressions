@@ -10,6 +10,7 @@ import EXISTS from "../functions/EXISTS"
 import FORMAT from "../functions/FORMAT"
 import LPAD from "../functions/LPAD"
 import NUM from "../functions/NUM"
+import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import makeChoiceValue from "./make-choice-value"
 
 const UUID_REGEX: RegExp = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i
@@ -30,45 +31,45 @@ interface Converter {
 }
 
 export const converters: Converter = {
-    TextField: (value: string) => {
+    TextField: (value: string): string|null => {
       if (!EXISTS(value)) { return null }
-      value.toString()
+      return value.toString()
     },
 
-  CalculatedField: (value: string) => {
-    converters.TextField(value)
+  CalculatedField: (value: string): string|null => {
+    return converters.TextField(value)
   },
 
-  HyperlinkField: (value: string) => {
-    converters.TextField(value)
+  HyperlinkField: (value: string): string|null => {
+    return converters.TextField(value)
   },
 
-  YesNoField: (value: string) => {
-    converters.TextField(value)
+  YesNoField: (value: string): string|null => {
+    return converters.TextField(value)
   },
 
-  BarcodeField: (value: string) => {
-    converters.TextField(value)
+  BarcodeField: (value: string): string|null => {
+    return converters.TextField(value)
   },
 
-  DateTimeField: (value: string) => {
+  DateTimeField: (value: string): string|null => {
     if (!EXISTS(value)) { return null }
 
     const date: Date = DATEVALUE(value)
 
     if (!EXISTS(date)) { return null }
 
-    FORMAT("%s-%s-%s",
+    return FORMAT("%s-%s-%s",
       date.getFullYear(),
       LPAD(date.getMonth() + 1, 2, "0"),
       LPAD(date.getDate(), 2, "0"))
   },
 
-  DateField: (value: string) => {
-    converters.DateTimeField(value)
+  DateField: (value: string): string|null => {
+    return converters.DateTimeField(value)
   },
 
-  TimeField: (value: string) => {
+  TimeField: (value: string): string|null => {
     if (!isString(value)) { return null }
     if (value.length !== 5) { return null }
     if (value[2] !== ":") { return null }
@@ -81,46 +82,42 @@ export const converters: Converter = {
     if (hour > 23 || hour < 0) { return null }
     if (minute > 59 || minute < 0) { return null }
 
-    FORMAT("%s:%s",
+    return FORMAT("%s:%s",
       LPAD(hour, 2, "0"),
       LPAD(minute, 2, "0"))
   },
 
-  ChoiceField: (value: string) => {
+  ChoiceField: (value: ChoiceFieldValue): ChoiceFieldValue|null => {
     let choices: null|string[] = null
 
-    switch (true) {
-      case isArray(value):
-        choices = map(compact(value), (v) => v.toString())
-        break
-      case isString(value) && value.length !== 0:
-        choices = [ value ]
-        break
-      case isNumber(value):
-        choices = [ value.toString() ]
-        break
-      case isObject(value) && isArray(value.choice_values):
-        choices = map(compact(value.choice_values), (v) => v.toString())
-        break
-    }
+    if (isArray(value)) {
+      choices = map(compact(value), (v) => v.toString())
+     } else if (isString(value) && value.length !== 0) {
+      choices = [ value ]
+     } else if (isNumber(value)) {
+      choices = [ value.toString() ]
+     } else if (isObject(value) && isArray(value.choice_values)) {
+      choices = map(compact(value.choice_values), (v) => v.toString())
+     }
 
     if (!isArray(choices)) { return null }
 
-    makeChoiceValue(choices, [])
+    return makeChoiceValue(choices, [])
   },
 
-  ClassificationField: (value: string) => {
-    converters.ChoiceField(value)
+  ClassificationField: (value: ChoiceFieldValue): ChoiceFieldValue|null => {
+    return converters.ChoiceField(value)
   },
 
-  AddressField: (value: {}) => {
+  AddressField: (value: AddressFieldValue): AddressFieldValue|null => {
     if (!isObject(value)) { return null }
 
-    const address: {} = {
+    const address: AddressFieldValue = {
       sub_thoroughfare: EXISTS(value.sub_thoroughfare) ? value.sub_thoroughfare.toString() : null,
       thoroughfare: EXISTS(value.thoroughfare) ? value.thoroughfare.toString() : null,
+      // tslint:disable-next-line:object-literal-sort-keys
       suite: EXISTS(value.suite) ? value.suite.toString() : null,
-      locality: EXISTS(value.locality) value.locality.toString() : null,
+      locality: EXISTS(value.locality) ? value.locality.toString() : null,
       sub_admin_area: EXISTS(value.sub_admin_area) ? value.sub_admin_area.toString() : null,
       admin_area: EXISTS(value.admin_area) ? value.admin_area.toString() : null,
       postal_code: EXISTS(value.postal_code) ? value.postal_code.toString() : null,
@@ -130,11 +127,11 @@ export const converters: Converter = {
     return address
   },
 
-  RecordLinkField: (value: string[]) => {
+  RecordLinkField: (value: string[]|number[]): any[]|null => {
     if (!isArray(value)) { return null }
 
-    let ids: string[] = value.map((id) => "" + id)
+    let ids: string[] = map(value, (id) => "" + id)
     ids = filter(ids, (id: string) => UUID_REGEX.test(id))
-    return ids.map((id) => { record_id: id })
+    return map(ids, (id) => ({ record_id: id }) )
   },
 }
