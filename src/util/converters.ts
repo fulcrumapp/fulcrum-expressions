@@ -4,7 +4,8 @@ import { compact,
         isNumber,
         isObject,
         isString,
-        map } from "lodash"
+        map,
+        toString } from "lodash"
 import DATEVALUE from "../functions/DATEVALUE"
 import EXISTS from "../functions/EXISTS"
 import FORMAT from "../functions/FORMAT"
@@ -117,15 +118,15 @@ export const converters: Converter = {
     if (!isObject(value)) { return null }
 
     const address: AddressFieldValue = {
-      sub_thoroughfare: EXISTS(value.sub_thoroughfare) ? value.sub_thoroughfare.toString() : null,
-      thoroughfare: EXISTS(value.thoroughfare) ? value.thoroughfare.toString() : null,
-      // tslint:disable-next-line:object-literal-sort-keys
-      suite: EXISTS(value.suite) ? value.suite.toString() : null,
-      locality: EXISTS(value.locality) ? value.locality.toString() : null,
-      sub_admin_area: EXISTS(value.sub_admin_area) ? value.sub_admin_area.toString() : null,
-      admin_area: EXISTS(value.admin_area) ? value.admin_area.toString() : null,
-      postal_code: EXISTS(value.postal_code) ? value.postal_code.toString() : null,
-      country: EXISTS(value.country) ? value.country.toString() : null,
+      sub_thoroughfare: EXISTS(value.sub_thoroughfare) ? toString(value.sub_thoroughfare) : null,
+      thoroughfare: EXISTS(value.thoroughfare) ? toString(value.thoroughfare) : null,
+      // tslint:disable-next-line:object-literal-sort-keys to follow standard address format
+      suite: EXISTS(value.suite) ? toString(value.suite) : null,
+      locality: EXISTS(value.locality) ? toString(value.locality) : null,
+      sub_admin_area: EXISTS(value.sub_admin_area) ? toString(value.sub_admin_area) : null,
+      admin_area: EXISTS(value.admin_area) ? toString(value.admin_area) : null,
+      postal_code: EXISTS(value.postal_code) ? toString(value.postal_code) : null,
+      country: EXISTS(value.country) ? toString(value.country) : null,
     }
 
     return address
