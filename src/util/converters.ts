@@ -30,6 +30,10 @@ interface Converter {
   RecordLinkField: Function
 }
 
+interface RecordLinkIds {
+  record_id: string
+}
+
 export const converters: Converter = {
     TextField: (value: string): string|null => {
       if (!EXISTS(value)) { return null }
@@ -127,7 +131,7 @@ export const converters: Converter = {
     return address
   },
 
-  RecordLinkField: (value: string[]|number[]): any[]|null => {
+  RecordLinkField: (value: string[]|number[]): RecordLinkIds[]|null => {
     if (!isArray(value)) { return null }
 
     let ids: string[] = map(value, (id) => "" + id)
