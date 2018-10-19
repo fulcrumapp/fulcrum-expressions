@@ -17,21 +17,10 @@ import makeChoiceValue from "./make-choice-value"
 const UUID_REGEX: RegExp = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i
 
 interface Converter {
-  TextField: Function,
-  CalculatedField: Function,
-  HyperlinkField: Function,
-  YesNoField: Function,
-  BarcodeField: Function,
-  DateTimeField: Function,
-  DateField: Function,
-  TimeField: Function,
-  ChoiceField: Function,
-  ClassificationField: Function,
-  AddressField: Function,
-  RecordLinkField: Function
+  [FormField: string]: Function
 }
 
-interface RecordLinkIds {
+export interface RecordLinkIds {
   record_id: string
 }
 
