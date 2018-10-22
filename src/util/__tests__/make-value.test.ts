@@ -5,14 +5,31 @@ import { converters } from "../converters"
 import makeValue from "../make-value"
 
 beforeEach(() => {
-  const runtime = prepareRuntime()
-  runtime.form = form
+  prepareRuntime()
+  // need to populate elementsByDataName so that FIELD call in make-value works
+  const field: FormFields = {
+    data_name: "name",
+    disabled: false,
+    hidden: false,
+    key: "abcd",
+    label: "My TextField",
+    required: false,
+    type: "TextField",
+  }
+
+  $$runtime.elementsByDataName.name = field
 })
 
-test("does what its supposed to do", () => {
+test("returns a properly formatted value based on the form element type", () => {
   const element = FIELD("name")
-  // const textFieldFunc = converters["TextField"] = jest.fn()
   const result = makeValue(element, "Testy McTesterson")
   expect(result).toEqual("Testy McTesterson")
-  // expect(textFieldFunc).toHaveBeenCalled()
+})
+
+test("calls the correct value converter based on form element type", () => {
+  const textFieldFunc = converters.TextField = jest.fn()
+  const element = FIELD("name")
+  makeValue(element, "Testy McTesterson")
+
+  expect(textFieldFunc).toHaveBeenCalled()
 })
