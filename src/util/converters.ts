@@ -1,13 +1,14 @@
 import { compact,
         filter,
         isArray,
+        isNull,
         isNumber,
         isObject,
         isString,
+        isUndefined,
         map,
         toString } from "lodash"
 import DATEVALUE from "../functions/DATEVALUE"
-import EXISTS from "../functions/EXISTS"
 import FORMAT from "../functions/FORMAT"
 import LPAD from "../functions/LPAD"
 import NUM from "../functions/NUM"
@@ -26,7 +27,7 @@ export interface RecordLinkIds {
 
 export const converters: Converter = {
     TextField: (value: string): string|null => {
-      if (!EXISTS(value)) { return null }
+      if (isUndefined(value) || isNull(value)) { return null }
       return value.toString()
     },
 
@@ -47,11 +48,11 @@ export const converters: Converter = {
   },
 
   DateTimeField: (value: string): string|null => {
-    if (!EXISTS(value)) { return null }
+    if (isUndefined(value) || isNull(value)) { return null }
 
     const date: Date = DATEVALUE(value)
 
-    if (!EXISTS(date)) { return null }
+    if (isUndefined(date) || isNull(date)) { return null }
 
     return FORMAT("%s-%s-%s",
       date.getFullYear(),
@@ -107,15 +108,18 @@ export const converters: Converter = {
     if (!isObject(value)) { return null }
 
     const address: AddressFieldValue = {
-      sub_thoroughfare: EXISTS(value.sub_thoroughfare) ? toString(value.sub_thoroughfare) : null,
-      thoroughfare: EXISTS(value.thoroughfare) ? toString(value.thoroughfare) : null,
+      sub_thoroughfare: (!isUndefined(value.sub_thoroughfare) && !isNull(value.sub_thoroughfare)) ?
+        toString(value.sub_thoroughfare) : null,
+      thoroughfare: (!isUndefined(value.thoroughfare) && !isNull(value.thoroughfare)) ?
+        toString(value.thoroughfare) : null,
       // tslint:disable-next-line:object-literal-sort-keys to follow standard address format
-      suite: EXISTS(value.suite) ? toString(value.suite) : null,
-      locality: EXISTS(value.locality) ? toString(value.locality) : null,
-      sub_admin_area: EXISTS(value.sub_admin_area) ? toString(value.sub_admin_area) : null,
-      admin_area: EXISTS(value.admin_area) ? toString(value.admin_area) : null,
-      postal_code: EXISTS(value.postal_code) ? toString(value.postal_code) : null,
-      country: EXISTS(value.country) ? toString(value.country) : null,
+      suite: (!isUndefined(value.suite) && !isNull(value.suite)) ? toString(value.suite) : null,
+      locality: (!isUndefined(value.locality) && !isNull(value.locality)) ? toString(value.locality) : null,
+      sub_admin_area: (!isUndefined(value.sub_admin_area) && !isNull(value.sub_admin_area)) ?
+        toString(value.sub_admin_area) : null,
+      admin_area: (!isUndefined(value.admin_area) && !isNull(value.admin_area)) ? toString(value.admin_area) : null,
+      postal_code: (!isUndefined(value.postal_code) && !isNull(value.postal_code)) ? toString(value.postal_code) : null,
+      country: (!isUndefined(value.country) && !isNull(value.country)) ? toString(value.country) : null,
     }
 
     return address
