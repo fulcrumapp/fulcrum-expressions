@@ -33,3 +33,25 @@ test("calls the correct value converter based on form element type", () => {
 
   expect(textFieldFunc).toHaveBeenCalled()
 })
+
+test("returns null if no value is passed in", () => {
+  const element = FIELD("name")
+  const result = makeValue(element)
+  expect(result).toBeNull()
+})
+
+test("returns null if element type is not a FormField", () => {
+  const badField  = {
+    data_name: "whoops",
+    disabled: false,
+    hidden: false,
+    key: "efgh",
+    label: "Huge Mistake",
+    required: false,
+    type: "FailField",
+  }
+  // @ts-ignore Not a proper FormField so makeValue returns null
+  $$runtime.elementsByDataName.whoops = badField
+  const badElement = FIELD("whoops")
+  expect(makeValue(badElement, "this doesn't matter")).toBeNull()
+})
