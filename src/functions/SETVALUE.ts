@@ -10,12 +10,15 @@ import FORMAT from "./FORMAT"
 
 export interface SetValueResult {
   type: "set-value",
-  key: FormField|string,
-  value: string
+  key: string,
+  value: string|null
 }
 
-export default function SETVALUE(dataName: string, value: string): void {
+export default function SETVALUE(dataName: string,
+                                 value: string|ChoiceFieldValue|AddressFieldValue|string[]|number[]|null): void {
+
   const element: FormFields|undefined = FIELD(dataName)
+  let convertedValue: string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null
   if (!isUndefined(element)) {
   // don't let the user accidentally blow out data in unsupported fields
     let containerElements: FormFields[]
@@ -31,9 +34,8 @@ export default function SETVALUE(dataName: string, value: string): void {
     if (!supported) {
       ERROR(FORMAT("Setting the value of '%s' is not supported.", dataName))
     }
+    convertedValue = !isUndefined(value) ? makeValue(element, value) : null
   }
-  let convertedValue: string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null
-  convertedValue = !isUndefined(value) ? makeValue(element, value) : null
   // TODO(zhm) guard well-known supported values in the else case
   // @project, @status, @geometry, etc
   // Force the types to be correct so we don't pass back an array for
@@ -41,9 +43,9 @@ export default function SETVALUE(dataName: string, value: string): void {
   // should never be handed back data with the wrong JS types.
 
   const result: SetValueResult = {
-    key: element.key || dataName,
+    key: isUndefined(element) ? dataName : element.key,
     type: "set-value",
-    value: JSON.stringify(convertedValue),
+    value: isUndefined(convertedValue) ? JSON.stringify(value) : JSON.stringify(convertedValue),
   }
 
   $$runtime.results.push(result)
