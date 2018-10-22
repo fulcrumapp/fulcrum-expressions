@@ -1,5 +1,4 @@
 import FIELD from "../../functions/FIELD"
-import form from "../../test/fixtures/form"
 import { prepareRuntime } from "../../test/helpers"
 import { converters } from "../converters"
 import makeValue from "../make-value"
