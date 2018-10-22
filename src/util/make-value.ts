@@ -1,13 +1,14 @@
-import EXISTS from "../functions/EXISTS"
+// import EXISTS from "../functions/EXISTS"
+import { isNull, isUndefined } from "lodash"
 import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import { converters, RecordLinkIds } from "./converters"
 
 export default function makeValue(element: FormFields,
-                                  value: string|ChoiceFieldValue|AddressFieldValue|string[]|number[],
+                                  value: string|ChoiceFieldValue|AddressFieldValue|string[]|number[]|null,
                                   ): string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null {
-  if (!EXISTS(value)) { return null }
+  if (isUndefined(value) || isNull(value)) { return null }
 
   const converter: Function = converters[element.type]
-
-  return EXISTS(converter) ? converter(value) : null
+  debugger
+  return (!isUndefined(converter) && !isNull(converter)) ? converter(value) : null
 }
