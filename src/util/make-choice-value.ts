@@ -8,7 +8,7 @@ import { ChoiceFieldValue } from "../types/values"
  * @returns ChoiceFieldValue: { choice_values: [ ... ], other_values: [ ... ] }
  */
 
-export default function makeChoiceValue(choices?: string[], others?: string[]): ChoiceFieldValue {
+export default function makeChoiceValue(choices?: string[]|null, others?: string[]|null): ChoiceFieldValue {
   choices = (!isNull(choices) && !isUndefined(choices)) ? choices : []
   others = (!isNull(others) && !isUndefined(others)) ? others : []
   return { choice_values: choices, other_values: others }
