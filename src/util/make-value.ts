@@ -9,5 +9,5 @@ export default function makeValue(element: FormFields,
 
   const converter: Function = converters[element.type]
 
-  return (!isUndefined(converter) && !isNull(converter)) ? converter(value) : null
+  return !isUndefined(converter) ? converter(value) : null
 }
