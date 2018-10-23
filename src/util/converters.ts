@@ -131,7 +131,7 @@ export const converters: Converter = {
     return address
   },
 
-  RecordLinkField: (value: string[]|number[]): RecordLinkIds[]|null => {
+  RecordLinkField: (value: string[]): RecordLinkIds[]|null => {
     if (!isArray(value)) { return null }
 
     let ids: string[] = map(value, (id) => "" + id)
