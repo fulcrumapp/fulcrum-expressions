@@ -43,10 +43,13 @@ test("reverts to dataName and value in response if the dataName field is not fou
   expect(resultValue).toEqual(expectedValue)
 })
 
-test("throws an error if SETVALUE is not supported for a field", () => {
-  const badCall: Function = () => {
-    SETVALUE("not_real", "FailField")
+test("throws an error if SETVALUE parameters is not in the current editing scope", () => {
+  // set runtime repeatable variable indicates one is editing fields within a repeatable section
+  $$runtime.repeatable = "1337"
+  const notInRepeatableSection: Function = () => {
+    // sits outside of the repeatable section of the form so an error should be thrown
+    SETVALUE("name", "John Jacob Jingleheimer Schmidt")
   }
 
-  expect(badCall).toThrow("Setting the value of 'not_real' is not supported")
+  expect(notInRepeatableSection).toThrow("Setting the value of 'name' is not supported.")
 })
