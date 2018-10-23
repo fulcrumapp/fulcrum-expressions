@@ -2,6 +2,13 @@ import { isNull, isUndefined } from "lodash"
 import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import { converters, RecordLinkIds } from "./converters"
 
+/**
+ * Converts value to proper format for $$HOST depending on element type.
+ * @param element required; single element of type FormFields
+ * @param value required; value to be converted
+ * @returns converted value as `string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null`
+ */
+
 export default function makeValue(element: FormFields,
                                   value?: string|ChoiceFieldValue|AddressFieldValue|string[]|number[]|null,
                                   ): string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null {
