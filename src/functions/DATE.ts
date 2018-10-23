@@ -8,7 +8,7 @@ import ISNAN from "./ISNAN"
  * @param day one-two digit number
  * @returns Date object
  * @example
- * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
+ * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
  */
 
 export default function DATE(year: number, month: number, day: number): Date
