@@ -91,7 +91,7 @@ export default class Runtime {
 
   values = {}
 
-  repeatable = null
+  repeatable: null|string = null
 
   hooks = {}
 
