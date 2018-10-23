@@ -1,5 +1,5 @@
 import { isNull, isUndefined } from "lodash"
-import { FormFields } from "../types/fields"
+import { FormFields, RepeatableField } from "../types/fields"
 import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import { RecordLinkIds } from "../util/converters"
 import isSetValueSupported from "../util/is-set-value-supported"
@@ -18,24 +18,26 @@ export default function SETVALUE(dataName: string,
                                  value: string|ChoiceFieldValue|AddressFieldValue|string[]|number[]|null): void {
 
   const element: FormFields|undefined = FIELD(dataName)
-  let convertedValue: string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null
+  let convertedValue: string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null = null
+
   if (!isUndefined(element)) {
   // don't let the user accidentally blow out data in unsupported fields
-    let containerElements: FormFields[]
-    if (!isNull($$runtime.repeatable)) {
-      // @ts-ignore if-statement checks that $$runtime.repeatable will not be null so it can be used as an index here
-      containerElements = $$runtime.elementsByKey[$$runtime.repeatable].elements
-    }  else {
-      containerElements = $$runtime.form.elements
-    }
+  const repeatable: RepeatableField|null = !isNull($$runtime.repeatable) ?
+    $$runtime.elementsByKey[$$runtime.repeatable] : null
 
-    const supported: boolean = isSetValueSupported(containerElements, element, element.type)
+  // set containterElements to repeatable children if setting a value in a repeatable field
+  // else set containerElements to all form elements
+  const containerElements: FormFields[] = repeatable ? repeatable.elements : $$runtime.form.elements
 
-    if (!supported) {
-      ERROR(FORMAT("Setting the value of '%s' is not supported.", dataName))
-    }
-    convertedValue = !isUndefined(value) ? makeValue(element, value) : null
+  // check that requested changes is taking place in the current editing scope
+  // this is particularly important for repeatables
+  const supported: boolean = isSetValueSupported(containerElements, element, element.type)
+  if (!supported) {
+    ERROR(FORMAT("Setting the value of '%s' is not supported.", dataName))
   }
+
+  convertedValue = (!isUndefined(value) && !isUndefined(element)) ? makeValue(element, value) : null
+ }
   // TODO(zhm) guard well-known supported values in the else case
   // @project, @status, @geometry, etc
   // Force the types to be correct so we don't pass back an array for
@@ -45,7 +47,7 @@ export default function SETVALUE(dataName: string,
   const result: SetValueResult = {
     key: isUndefined(element) ? dataName : element.key,
     type: "set-value",
-    value: isUndefined(convertedValue) ? JSON.stringify(value) : JSON.stringify(convertedValue),
+    value: isNull(convertedValue) ? JSON.stringify(value) : JSON.stringify(convertedValue),
   }
 
   $$runtime.results.push(result)
