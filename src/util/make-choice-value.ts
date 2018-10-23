@@ -1,8 +1,15 @@
-import EXISTS from "../functions/EXISTS"
+import { isNull, isUndefined } from "lodash"
 import { ChoiceFieldValue } from "../types/values"
 
-export default function makeChoiceValue(choices: string[], others: string[]): ChoiceFieldValue {
-  choices = EXISTS(choices) ? choices : []
-  others = EXISTS(others) ? others : []
+/**
+ * Creates a ChoiceFieldValue from given params
+ * @param choices optional; array of strings
+ * @param other optional; array of strings
+ * @returns ChoiceFieldValue: { choice_values: [ ... ], other_values: [ ... ] }
+ */
+
+export default function makeChoiceValue(choices?: string[], others?: string[]): ChoiceFieldValue {
+  choices = (!isNull(choices) && !isUndefined(choices)) ? choices : []
+  others = (!isNull(others) && !isUndefined(others)) ? others : []
   return { choice_values: choices, other_values: others }
 }
