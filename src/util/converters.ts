@@ -25,6 +25,12 @@ export interface RecordLinkIds {
   record_id: string
 }
 
+/** Object containing functions to convert values to appropriate format for $$HOST.
+ * Functions are accessed according to FieldType.
+ * @example
+ * converters["CalculatedField"]
+ */
+
 export const converters: Converter = {
     TextField: (value: string): string|null => {
       if (isUndefined(value) || isNull(value)) { return null }
