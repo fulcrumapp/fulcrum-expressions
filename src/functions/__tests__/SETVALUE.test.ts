@@ -27,6 +27,17 @@ test("it pushes a SetValueResponse to runtime", () => {
   expect(resultValue).toEqual(expectedValue)
 })
 
+test("passing in null as a value will push stringified null to runtime", () => {
+  SETVALUE("name", null)
+  const resultValue = $$runtime.results[0]
+  const expectedValue: SetValueResult = {
+    key: "97ab",
+    type: "set-value",
+    value: "null",
+  }
+  expect(resultValue).toEqual(expectedValue)
+})
+
 test("reverts to dataName and value in response if the dataName field is not found on the form", () => {
   const favoriteIceCreams: string[] = ["Neapolitan", "Mint Chocolate Chip", "Butter Pecan"]
   SETVALUE("fav_ice_creams", favoriteIceCreams)
