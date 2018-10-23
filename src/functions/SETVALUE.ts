@@ -14,6 +14,15 @@ export interface SetValueResult {
   value: string|null
 }
 
+/**
+ * Sets or clears the value of a field depending on value passed in.
+ * @param dataName required; string, data_name of field to be set
+ * @param value required; value for field, or `null` to clear the field
+ * @example
+ * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
+ * SETVALUE('name', null) // Clears the value of field called 'name'
+ */
+
 export default function SETVALUE(dataName: string,
                                  value: string|ChoiceFieldValue|AddressFieldValue|string[]|number[]|null): void {
 
