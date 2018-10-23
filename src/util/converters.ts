@@ -53,7 +53,7 @@ export const converters: Converter = {
     return converters.TextField(value)
   },
 
-  DateTimeField: (value: string): string|null => {
+  DateTimeField: (value: string|Date): string|null => {
     if (isUndefined(value) || isNull(value)) { return null }
 
     const date: Date = DATEVALUE(value)
@@ -66,7 +66,7 @@ export const converters: Converter = {
       LPAD(date.getDate(), 2, "0"))
   },
 
-  DateField: (value: string): string|null => {
+  DateField: (value: string|Date): string|null => {
     return converters.DateTimeField(value)
   },
 
