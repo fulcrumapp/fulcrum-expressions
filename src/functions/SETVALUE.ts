@@ -22,6 +22,9 @@ export default function SETVALUE(dataName: string,
 
   if (!isUndefined(element)) {
   // don't let the user accidentally blow out data in unsupported fields
+
+  // @ts-ignore Clash between $$runtime.elementsByKey type (FormFields) and RepeatableField type
+  // that will actually be returned by ternary operation
   const repeatable: RepeatableField|null = !isNull($$runtime.repeatable) ?
     $$runtime.elementsByKey[$$runtime.repeatable] : null
 
@@ -30,12 +33,13 @@ export default function SETVALUE(dataName: string,
   const containerElements: FormFields[] = repeatable ? repeatable.elements : $$runtime.form.elements
 
   // check that requested changes is taking place in the current editing scope
-  // this is particularly important for repeatables
+  // this is particularly important for repeatable values
   const supported: boolean = isSetValueSupported(containerElements, element, element.type)
   if (!supported) {
     ERROR(FORMAT("Setting the value of '%s' is not supported.", dataName))
   }
 
+  // takes value param and formats it for $$HOST according to field type
   convertedValue = (!isUndefined(value) && !isUndefined(element)) ? makeValue(element, value) : null
  }
   // TODO(zhm) guard well-known supported values in the else case
