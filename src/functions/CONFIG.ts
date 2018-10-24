@@ -33,6 +33,8 @@ export interface Config {
   deviceManufacturer?: string,
   /** Optional: Set to current user's email */
   userEmail?: string,
+  /** Optional: Set to current user's role */
+  userRoleName?: string,
 }
 
 export const DEFAULTS = {
