@@ -3,7 +3,19 @@ import { ChoiceFieldValue } from "../types/values"
 import CONTAINS from "./CONTAINS"
 import ISBLANK from "./ISBLANK"
 
-export default function ISSELECTED(value: ChoiceFieldValue, choice: string): boolean {
+/**
+ * Checks to see if a choice is selected
+ * @param value required; ChoiceFieldValues containing possible choices to check against
+ * @param choice required; choice or array of choices to check if they are selected
+ * @returns boolean
+ * @example
+ * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
+ */
+
+export default function ISSELECTED(value: ChoiceFieldValue, choice: string|string[]): boolean
+export default function ISSELECTED(value: ChoiceFieldValue, choice?: string|string[]): boolean
+export default function ISSELECTED(value?: any, choice?: any): boolean
+export default function ISSELECTED(value: any, choice?: any): boolean {
   if (ISBLANK(value)) { return false }
   if (isUndefined(choice) || isNull(choice)) { return false }
 
