@@ -9,7 +9,7 @@ test("returns the current user's email if present", () => {
   expect(EMAIL()).toBe("test@example.com")
 })
 
-test("it returns an empty string if the userEmail is not set", () => {
+test("it returns undefined if the userEmail is not set", () => {
   // default is that userEmail does not exist
-  expect(EMAIL()).toBe("")
+  expect(EMAIL()).toBeUndefined()
 })
