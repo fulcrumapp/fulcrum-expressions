@@ -1,7 +1,7 @@
 import { CONFIG } from "./CONFIG"
 
 /**
- * Indicates whether the feature currently being edited is new.
+ * Returns a boolean indicating whether the feature is new or an update.
  */
 
 export default function ISNEW(): boolean {
