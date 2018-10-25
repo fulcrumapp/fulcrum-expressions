@@ -35,6 +35,8 @@ export interface Config {
   userEmail?: string,
   /** Optional: Set to current user's role */
   userRoleName?: string,
+  /** Optional: Indicates where the current feature is new */
+  featureIsNew?: boolean,
 }
 
 export const DEFAULTS = {
