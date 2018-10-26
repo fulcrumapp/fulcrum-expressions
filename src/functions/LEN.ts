@@ -7,6 +7,15 @@ import { isArray,
           isString,
           isUndefined } from "lodash"
 
+/**
+ * Returns the length of a value as a string or an array-like object.
+ * @param value required; item to be measured
+ * @returns number
+ * @example
+ * LEN("test") // returns 4
+ * LEN(["test", "test"]) // returns 2
+ */
+
 export default function LEN(value: any): number {
   if (isUndefined(value) || isNull(value) || isNaN(value)) { return 0 }
 
