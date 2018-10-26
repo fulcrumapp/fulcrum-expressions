@@ -37,6 +37,12 @@ export interface Config {
   userRoleName?: string,
   /** Optional: Indicates where the current feature is new */
   featureIsNew?: boolean,
+  /** Optional: Object containing feature geometry */
+  featureGeometry?: FeatureGeometry
+}
+
+export interface FeatureGeometry {
+  coordinates: string[]
 }
 
 export const DEFAULTS = {
