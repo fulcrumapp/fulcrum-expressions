@@ -14,5 +14,5 @@ test("returns NaN if it receives bad input", () => {
   expect(LCM(null)).toBeNaN()
   expect(LCM(true)).toBeNaN()
   expect(LCM("")).toBeNaN()
-  expect(LCM(new Date)).toBeNaN()
+  expect(LCM(new Date())).toBeNaN()
 })

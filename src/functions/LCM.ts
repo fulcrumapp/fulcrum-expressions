@@ -12,6 +12,7 @@ import ISNAN from "./ISNAN"
 
 export default function LCM(...args: number[]): number
 export default function LCM(...args: string[]): number
+export default function LCM(...args: any[]): number
 export default function LCM(...args: any[]): number {
   const numbers: number[] = ARRAY((args)).map((num) => INT(num))
 
