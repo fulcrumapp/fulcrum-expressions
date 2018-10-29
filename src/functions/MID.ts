@@ -14,7 +14,16 @@ import ISNAN from "./ISNAN"
 
 export default function MID(value: string,
                             startPosition: number,
-                            numberOfCharacters: number): string|undefined {
+                            numberOfCharacters: number): string|undefined
+export default function MID(value: string,
+                            startPosition: string,
+                            numberOfCharacters: string): string|undefined
+export default function MID(value?: any,
+                            startPosition?: any,
+                            numberOfCharacters?: any): string|undefined
+export default function MID(value?: any,
+                            startPosition?: any,
+                            numberOfCharacters?: any): string|undefined {
 
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
