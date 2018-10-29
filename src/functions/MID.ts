@@ -4,6 +4,12 @@ import ISNAN from "./ISNAN"
 
 /**
  * Returns a specific number of characters from a text string.
+ * @param value required; text string
+ * @param startPosition required; numeric value indicating where in the `value` one should start cutting
+ * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ * @returns string
+ * @example
+ * MID("abcd", 2, 2) // returns "bc"
  */
 
 export default function MID(value: string,
