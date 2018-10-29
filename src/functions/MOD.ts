@@ -1,7 +1,10 @@
 import { isNaN } from "lodash"
 import NUM from "./NUM"
 
-export default function MOD(num: number, divisor: number): number {
+export default function MOD(num: number, divisor: number): number
+export default function MOD(num: string, divisor: string): number
+export default function MOD(num?: any, divisor?: any): number
+export default function MOD(num?: any, divisor?: any): number {
   num = NUM(num)
   divisor = NUM(divisor)
 
