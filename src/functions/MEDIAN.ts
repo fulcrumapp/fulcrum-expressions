@@ -2,6 +2,14 @@ import { isArray, isNaN, map, some } from "lodash"
 import ARRAY from "./ARRAY"
 import NUM from "./NUM"
 
+/**
+ * Returns the median value of list of numbers.
+ * @param args required; numeric values to be evaluated
+ * @returns median value
+ * @example
+ * MEDIAN(3, 4, 2, 5, 1) // returns 3
+ */
+
 export default function MEDIAN(...args: number[]): number
 export default function MEDIAN(...args: any[]): number|undefined
 export default function MEDIAN(...args: any[]): number|undefined {
