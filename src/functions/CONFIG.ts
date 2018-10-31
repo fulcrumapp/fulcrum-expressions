@@ -38,7 +38,9 @@ export interface Config {
   /** Optional: Indicates where the current feature is new */
   featureIsNew?: boolean,
   /** Optional: Object containing feature geometry */
-  featureGeometry?: FeatureGeometry
+  featureGeometry?: FeatureGeometry,
+  /** Optional: Indicates where the current feature is new */
+  platform?: string,
 }
 
 export interface FeatureGeometry {
