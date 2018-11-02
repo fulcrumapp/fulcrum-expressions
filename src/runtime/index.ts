@@ -1,6 +1,7 @@
 import { each, get, set, without } from "lodash"
 import { AlertResult } from "../functions/ALERT"
 import { InvalidResult} from "../functions/INVALID"
+import { ProgressResult } from "../functions/PROGRESS"
 import { ConfigurationResult } from "../functions/SETCONFIGURATION"
 import { SetValueResult } from "../functions/SETVALUE"
 import {
@@ -35,6 +36,7 @@ type RuntimeResults = Array<
   | ConfigurationResult
   | InvalidResult
   | SetValueResult
+  | ProgressResult
 >
 
 const NO_PARAM = "__no_param"
