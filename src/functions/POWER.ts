@@ -9,8 +9,9 @@ import NUM from "./NUM"
  * @example
  * POWER(3, 4) // returns 81
  */
-
-export default function POWER(base: number, power: number): number {
+export default function POWER(base: number, power: number): number
+export default function POWER(base?: any, power?: any): number
+export default function POWER(base?: any, power?: any): number {
   base = NUM(base)
   power = NUM(power)
 
