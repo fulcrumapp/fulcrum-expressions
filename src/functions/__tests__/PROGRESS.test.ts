@@ -28,7 +28,7 @@ test("accepts one or two arguments, a title and message", () => {
   }
 
   PROGRESS("Progress update", "So much progress going on right now")
-  PROGRESS("So much progress going on right now")
+  PROGRESS(null, "So much progress going on right now")
 
   expect($$runtime.results[0]).toEqual(expectedWithTitle)
   expect($$runtime.results[1]).toEqual(expectedNoTitle)
