@@ -41,8 +41,10 @@ export interface Config {
   featureGeometry?: FeatureGeometry,
   /** Optional: current platform name */
   platform?: string,
-   /** Optional: Current platform version */
-   platformVersion?: string,
+  /** Optional: Current platform version */
+  platformVersion?: string,
+  /** Optional: Current project id */
+  recordProject?: string,
 }
 
 export interface FeatureGeometry {
