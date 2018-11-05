@@ -47,6 +47,8 @@ export interface Config {
   recordProject?: string,
   /** Optional: Current project name */
   recordProjectName?: string,
+  /** Optional: Current record's id */
+  recordID?: string,
 }
 
 export interface FeatureGeometry {
