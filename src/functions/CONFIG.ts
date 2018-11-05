@@ -51,6 +51,8 @@ export interface Config {
   recordID?: string,
   /** Optional: Current repeatables's id */
   featureID?: string,
+  /** Optional: Current repeatable field's index */
+  featureIndex?: number,
 }
 
 export interface FeatureGeometry {
