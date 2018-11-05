@@ -49,6 +49,8 @@ export interface Config {
   recordProjectName?: string,
   /** Optional: Current record's id */
   recordID?: string,
+  /** Optional: Current repeatables's id */
+  featureID?: string,
 }
 
 export interface FeatureGeometry {
