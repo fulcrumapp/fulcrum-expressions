@@ -17,9 +17,10 @@ interface RepeatableElementsByDataName {
   [dataName: string]: RepeatableElements
 }
 
-const repeatableValueElementsCache: RepeatableElementsCache = {}
-const repeatableValueElementsByKeyCache: RepeatableElementsByKey = {}
-const repeatableValueElementsByDataNameCache: RepeatableElementsByDataName = {}
+// exporting for tests
+export const repeatableValueElementsCache: RepeatableElementsCache = {}
+export const repeatableValueElementsByKeyCache: RepeatableElementsByKey = {}
+export const repeatableValueElementsByDataNameCache: RepeatableElementsByDataName = {}
 
 export default function repeatableValueElements(repeatable: RepeatableField): {} {
   const key: string = repeatable.key
