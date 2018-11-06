@@ -22,10 +22,20 @@ export const repeatableValueElementsCache: RepeatableElementsCache = {}
 export const repeatableValueElementsByKeyCache: RepeatableElementsByKey = {}
 export const repeatableValueElementsByDataNameCache: RepeatableElementsByDataName = {}
 
+/**
+ * Returns an object that has the elements of a repeatable field.
+ * @param repeatable required; Repeatable field
+ * @returns
+ *  Object contains three keys:
+ * `all`: contains all elements of the repeatable field as an array of FormFields.
+ * `byDataName`: contains all first-level elements of a repeatable field by data_name.
+ * `byKey`: contains all first-level elements of a repeatable field by the form field's 4 digit key
+ */
+
 export default function repeatableValueElements(repeatable: RepeatableField): {} {
   const key: string = repeatable.key
 
-  // if element is already cached
+  // if element is already cached, simply pull values from cache
   if (repeatableValueElementsCache[key]) {
     const cached = {
       all: repeatableValueElementsCache[key],
