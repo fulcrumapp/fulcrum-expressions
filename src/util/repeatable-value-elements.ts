@@ -6,7 +6,7 @@ interface RepeatableElementsCache {
 }
 
 interface RepeatableElements {
-  [key: string]: FormField
+  [key: string]: FormFields
 }
 
 interface RepeatableElementsByKey {
