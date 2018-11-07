@@ -17,6 +17,12 @@ interface RepeatableElementsByDataName {
   [dataName: string]: RepeatableElements
 }
 
+interface RepeatableValueElementsResult {
+  all: FormFields[],
+  byDataName: RepeatableElements,
+  byKey: RepeatableElements,
+}
+
 // exporting for tests
 export const repeatableValueElementsCache: RepeatableElementsCache = {}
 export const repeatableValueElementsByKeyCache: RepeatableElementsByKey = {}
@@ -32,7 +38,7 @@ export const repeatableValueElementsByDataNameCache: RepeatableElementsByDataNam
  * `byKey`: contains all first-level elements of a repeatable field by the form field's 4 digit key
  */
 
-export default function repeatableValueElements(repeatable: RepeatableField): {} {
+export default function repeatableValueElements(repeatable: RepeatableField): RepeatableValueElementsResult {
   const key: string = repeatable.key
 
   // if element is already cached, simply pull values from cache
