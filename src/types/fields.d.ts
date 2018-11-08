@@ -69,7 +69,7 @@ export interface FormField {
   /** Array of objects containing requirement conditions */
   required_conditions?: FormFieldCondition[]
   /** Parent element of this field if it is in a section or repeatable */
-  parent?: FormField,
+  parent?: FormFields,
 }
 
 interface FormFieldDefaultPreviousValue {
