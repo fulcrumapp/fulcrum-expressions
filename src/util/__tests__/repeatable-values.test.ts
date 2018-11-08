@@ -1,4 +1,3 @@
-import form from "../../test/fixtures/form"
 import repeatableValues from "../repeatable-values"
 
 const repeatable: RepeatableField = {
