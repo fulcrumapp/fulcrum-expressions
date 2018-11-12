@@ -7,25 +7,28 @@ import repeatableValues from "../util/repeatable-values"
  * Returns a specific field out of a collection of repeatable items.
  */
 
-export default function REPEATABLEVALUES(repeatableValue: any[], dataName: string[]|string): any[] {
+export default function REPEATABLEVALUES(repeatableValue: any[], dataName: string[]|string): any[]|undefined|null {
   if (isArray(dataName)) {
     if (dataName.length === 1) {
       dataName = dataName[0]
     } else {
       const repeatableDataName: string = dataName[0]
       const restOfDataNames: string[] = dataName.slice(1)
+      const parentValues = REPEATABLEVALUES(repeatableValue, repeatableDataName)
 
-      const childValues: any[]|undefined = REPEATABLEVALUES(repeatableValue, repeatableDataName).map((item) =>
-      REPEATABLEVALUES(item, restOfDataNames))
+      if (isArray(parentValues)) {
+        const childValues: any[]|undefined = parentValues.map((item) =>
+        REPEATABLEVALUES(item, restOfDataNames))
 
-      return flatten(childValues)
+        return flatten(childValues)
+      } else { return }
     }
   }
   const dataElement: FormFields = $$runtime.elementsByDataName[dataName]
 
   if (isUndefined(dataElement) || isNull(dataElement)) { return }
 
-  const repeatableElement = nearestRepeatable(dataElement)
+  const repeatableElement: FormFields|null = nearestRepeatable(dataElement)
 
   if (isUndefined(repeatableElement) || isNull(repeatableElement)) { return }
 
