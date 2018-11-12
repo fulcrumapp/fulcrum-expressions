@@ -8,19 +8,27 @@ beforeEach(() => {
   $$runtime.elementsByDataName = {}
   $$runtime.elementsByDataName.items = repeatable
   const cost = repeatable.elements[0]
+  // @ts-ignore parent is an optional key
   cost.parent = repeatable
+  // @ts-ignore
   $$runtime.elementsByDataName.cost = cost
 
   const choiceValue = repeatable.elements[1]
+  // @ts-ignore parent is an optional key
   choiceValue.parent = repeatable
+  // @ts-ignore
   $$runtime.elementsByDataName.choice_value = choiceValue
 
   const childItems = repeatable.elements[2]
+  // @ts-ignore parent is an optional key
   childItems.parent = repeatable
+  // @ts-ignore
   $$runtime.elementsByDataName.child_items = childItems
-
+  // @ts-ignore childItems.elements is not undefined
   const childItemCost = childItems.elements[0]
+  // @ts-ignore parent is an optional key
   childItemCost.parent = childItems
+  // @ts-ignore
   $$runtime.elementsByDataName.child_item_cost = childItemCost
 })
 
@@ -34,6 +42,7 @@ test("returns a specific field out of a collection of repeatable items", () => {
 
 test("returns granchild data out of repeatables", () => {
   const childItems = REPEATABLEVALUES(repeatableValue, "child_items")
+  // @ts-ignore childItems will not return undefined or null
   const childItemsCost = childItems.map((item) => {
     return REPEATABLEVALUES(item, "child_item_cost")
   })
