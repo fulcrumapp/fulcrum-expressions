@@ -7,7 +7,7 @@ import repeatableValues from "../util/repeatable-values"
  * Returns a specific field out of a collection of repeatable items.
  */
 
-export default function REPEATABLEVALUES(repeatableValue: RepeatableField, dataName: string[]|string): any[]|undefined {
+export default function REPEATABLEVALUES(repeatableValue: any[], dataName: string[]|string): any[] {
   if (isArray(dataName)) {
     if (dataName.length === 1) {
       dataName = dataName[0]
@@ -15,13 +15,12 @@ export default function REPEATABLEVALUES(repeatableValue: RepeatableField, dataN
       const repeatableDataName: string = dataName[0]
       const restOfDataNames: string[] = dataName.slice(1)
 
-      const childValues: any[]|null = REPEATABLEVALUES(repeatableValue, repeatableDataName).map((item) =>
+      const childValues: any[]|undefined = REPEATABLEVALUES(repeatableValue, repeatableDataName).map((item) =>
       REPEATABLEVALUES(item, restOfDataNames))
 
       return flatten(childValues)
     }
   }
-
   const dataElement: FormFields = $$runtime.elementsByDataName[dataName]
 
   if (isUndefined(dataElement) || isNull(dataElement)) { return }
