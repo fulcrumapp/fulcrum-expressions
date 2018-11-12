@@ -13,6 +13,12 @@ import valueForElement from "./value-for-element"
 
 export default function repeatableValues(repeatable: RepeatableField,
                                          items: any[],
+                                         dataName: string): null|any[]
+export default function repeatableValues(repeatable: any,
+                                         items: any,
+                                         dataName: string): null|any[]
+export default function repeatableValues(repeatable: any,
+                                         items: any,
                                          dataName: string): null|any[] {
 
   if (!isArray(items)) { return null }
