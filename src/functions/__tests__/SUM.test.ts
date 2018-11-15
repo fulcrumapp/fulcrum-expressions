@@ -16,6 +16,6 @@ test("returns NaN for invalid input", () => {
   expect(SUM(undefined)).toBeNaN()
   expect(SUM(null)).toBeNaN()
   expect(SUM(true)).toBeNaN()
-  expect(SUM(new Date)).toBeNaN()
+  expect(SUM(new Date())).toBeNaN()
   expect(SUM()).toBeNaN()
 })
