@@ -5,6 +5,9 @@ import repeatableValues from "../util/repeatable-values"
 
 /**
  * Returns a specific field out of a collection of repeatable items.
+ * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
+ * @param dataName required; data name of desired field or an array of data names
+ * @returns array of values
  */
 
 export default function REPEATABLEVALUES(repeatableValue: any[], dataName: string[]|string): any[]|undefined|null {
