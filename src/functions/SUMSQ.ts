@@ -11,7 +11,9 @@ import NUM from "./NUM"
  * SUMSQ(1, 2, 3, 4) // returns 30
  */
 
-export default function SUMSQ(...args: number[]): number {
+export default function SUMSQ(...args: number[]): number
+export default function SUMSQ(...args: any[]): number
+export default function SUMSQ(...args: any[]): number {
   const numbers: number[] = ARRAY(args).map(NUM)
 
   if (numbers.length === 0) { return NaN }
