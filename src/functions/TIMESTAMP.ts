@@ -9,6 +9,7 @@ import LPAD from "./LPAD"
  * @example
  * TIMESTAMP("December 16, 1982 03:24:00") // returns "1982-12-16 03:24:00"
  */
+
 export default function TIMESTAMP(date: Date): string
 export default function TIMESTAMP(date?: Date): string
 export default function TIMESTAMP(date?: Date): string {
