@@ -53,6 +53,8 @@ export interface Config {
   featureID?: string,
   /** Optional: Current repeatable field's index */
   featureIndex?: number,
+  /** Optional: Current user's full name */
+  userFullName: string,
 }
 
 export interface FeatureGeometry {
