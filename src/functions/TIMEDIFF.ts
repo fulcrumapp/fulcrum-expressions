@@ -1,7 +1,20 @@
 import { includes, isString } from "lodash"
 import NUM from "./NUM"
 
-export default function TIMEDIFF(startTime: string, endTime: string, format= "hours"): number|undefined {
+/**
+ * Returns the difference between two times in minutes or hours. Format defaults to hours if no format is specified.
+ * @param startTime required; string specifying a start time: XX:XX
+ * @param endTime required; string specifying an end time: XX:XX
+ * @param format optional; "hours" or "minutes"
+ * @returns numeric value indicating the difference between two times in either minutes or hours
+ * @example
+ * TIMEDIFF("14:00", "18:00") // returns 4
+ * TIMEDIFF("14:00", "18:00", "minutes") // returns 240
+ */
+
+export default function TIMEDIFF(startTime: string, endTime: string, format?: string): number|undefined
+export default function TIMEDIFF(startTime: any, endTime: any, format?: any): number|undefined
+export default function TIMEDIFF(startTime: any, endTime: any, format= "hours"): number|undefined {
   if (!isString(startTime) || startTime.length !== 5 || startTime[2] !== ":") { return }
   if (!isString(endTime) || endTime.length !== 5 || endTime[2] !== ":") { return }
 

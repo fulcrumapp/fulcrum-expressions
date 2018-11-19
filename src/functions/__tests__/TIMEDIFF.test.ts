@@ -22,6 +22,7 @@ test("returns undefined for invalid input", () => {
   expect(TIMEDIFF(1, 2)).toBeUndefined()
   expect(TIMEDIFF("0000", "0001")).toBeUndefined()
   expect(TIMEDIFF("2:00", "6:00")).toBeUndefined()
+  expect(TIMEDIFF("00:00", "00:01", "seconds")).toBeUndefined()
   expect(TIMEDIFF(new Date(), null)).toBeUndefined()
   expect(TIMEDIFF("2:00", undefined)).toBeUndefined()
 })
