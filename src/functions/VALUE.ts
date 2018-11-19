@@ -6,7 +6,9 @@ import { isNull, isUndefined } from "lodash"
  * @returns a form field value
  */
 
-export default function VALUE(dataName: string): string|undefined {
+export default function VALUE(dataName: string): string|undefined
+export default function VALUE(dataName: any): string|undefined
+export default function VALUE(dataName: any): string|undefined {
   if (isNull(dataName) || isUndefined(dataName)) { return }
   // @ts-ignore variables object is populated with keys according to form data names, there is no set interface
   return $$runtime.variables["$" + dataName]
