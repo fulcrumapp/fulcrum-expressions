@@ -1,5 +1,6 @@
 import { isNull, isUndefined } from "lodash"
 import { FormFields, RepeatableField } from "../types/fields"
+import { SetValueResult } from "../types/results"
 import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import { RecordLinkIds } from "../util/converters"
 import isSetValueSupported from "../util/is-set-value-supported"
@@ -7,12 +8,6 @@ import makeValue from "../util/make-value"
 import ERROR from "./ERROR"
 import FIELD from "./FIELD"
 import FORMAT from "./FORMAT"
-
-export interface SetValueResult {
-  type: "set-value",
-  key: string,
-  value: string|null
-}
 
 /**
  * Sets or clears the value of a field depending on value passed in.
