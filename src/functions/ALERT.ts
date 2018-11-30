@@ -1,8 +1,3 @@
-export interface AlertResult {
-  type: "message"
-  title?: string
-  message?: string
-}
 
 interface ToStringable {
   toString(): string
