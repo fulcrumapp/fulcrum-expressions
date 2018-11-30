@@ -1,11 +1,5 @@
 import { each, includes } from "lodash"
 
-export interface ConfigurationResult {
-  type: "configure",
-  attribute: string,
-  value: any
-}
-
 interface Configuration {
   /** When creating a new form, ensure that the location is set. */
   auto_populate_location?: boolean
