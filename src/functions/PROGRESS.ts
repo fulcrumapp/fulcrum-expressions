@@ -1,15 +1,5 @@
 import { isNull, isUndefined } from "lodash"
-
-export interface ProgressResult {
-  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
-   * system generated 4 character codes.
-   */
-  title: string|null,
-  /** message to be displayed with invalidation error */
-  message: string|null,
-  /** result type  */
-  type: "progress"
-}
+import { ProgressResult } from "../types/results"
 
 /**
  * Displays a non-dismissible message that can be used to provide feedback when performing an asynchronous function.
