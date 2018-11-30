@@ -1,16 +1,6 @@
 import { FormField } from "../types/fields"
+import { InvalidResult } from "../types/results"
 import FIELD from "./FIELD"
-
-export interface InvalidResult {
-  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
-   * system generated 4 character codes.
-   */
-  key: string|null,
-  /** message to be displayed with invalidation error */
-  message: string|null,
-  /** result type  */
-  type: "validation"
-}
 
 /**
  * Displays an alert and stops a record from being saved
