@@ -1,9 +1,4 @@
 import { each, get, set, without } from "lodash"
-import { AlertResult } from "../functions/ALERT"
-import { InvalidResult} from "../functions/INVALID"
-import { ProgressResult } from "../functions/PROGRESS"
-import { ConfigurationResult } from "../functions/SETCONFIGURATION"
-import { SetValueResult } from "../functions/SETVALUE"
 import {
   HostFormatNumber,
   HostHTTPClient,
@@ -19,6 +14,13 @@ import {
 import { EventNames } from "../types/events"
 import { FormFields } from "../types/fields"
 import { MaybeString } from "../types/primitives"
+import {
+  AlertResult,
+  ConfigurationResult,
+  InvalidResult,
+  ProgressResult,
+  SetValueResult,
+        } from "../types/results"
 import flattenElements from "../util/flatten-elements"
 
 interface ElementStore {
@@ -84,6 +86,7 @@ export default class Runtime {
   $$storageClear?: HostStorageClear
   $$messageBox?: HostMessageBox
   $$formatNumber?: HostFormatNumber
+// not sure about this: $$result?: AlertResult | ConfigurationResult | InvalidResult | SetValueResult | ProgressResult
 
   global: WindowWithRuntime
 
