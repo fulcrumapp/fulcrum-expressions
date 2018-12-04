@@ -1,4 +1,10 @@
-import { each, get, set, without } from "lodash"
+import { each,
+         get,
+         isString,
+         set,
+         without,
+} from "lodash"
+import CONFIGURE from "../functions/CONFIGURE"
 import {
   HostFormatNumber,
   HostHTTPClient,
@@ -108,7 +114,7 @@ export default class Runtime {
     },
   } = {}
 
-  script = null
+  script: null|string = null
 
   customVariables = {}
 
@@ -261,6 +267,30 @@ export default class Runtime {
         delete this.variables[prop]
       }
     }
+  }
+
+  /**
+   * Initialize a script during setupValues call if it is needed.
+   */
+
+  initializeScriptIfNecessary = (): undefined => {
+    if (this.scriptInitialized) { return }
+
+    this.scriptInitialized = true
+
+    if (!isString(this.script)) { return }
+    // replaces
+    // with (this.variables) { eval(this.script) } as `with` is deprecated
+
+    for (const prop of Object.keys(this.variables)) {
+      // @ts-ignore
+      this[prop] = this.variables[prop]
+    }
+
+    // tslint:disable-next-line:no-eval
+    eval(this.script)
+
+    return
   }
 
   /**
