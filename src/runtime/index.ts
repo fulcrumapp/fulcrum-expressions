@@ -118,7 +118,7 @@ export default class Runtime {
 
   currencySymbol = Runtime.defaultCurrencySymbol
 
-  variables = {}
+  variables: { [key: string]: any } = {}
 
   results: RuntimeResults = []
 
@@ -248,6 +248,19 @@ export default class Runtime {
       this.elementsByDataName[element.data_name] = element
       this.dataNames[element.key] = element.data_name
     })
+  }
+
+  /**
+   * Clear the values so that the references from the `with` statements remain
+   * on the same root object. If we create a new `variables` it won't stay the same
+   * across executions. This is so the $field variables work in the form-level scripts.
+   */
+  clearValues = (): void => {
+    for (const prop in this.variables) {
+      if (this.variables[prop]) {
+        delete this.variables[prop]
+      }
+    }
   }
 
   /**
