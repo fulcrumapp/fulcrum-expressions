@@ -28,6 +28,7 @@ import {
   SetValueResult,
         } from "../types/results"
 import flattenElements from "../util/flatten-elements"
+import valueForElement from "../util/value-for-element"
 
 interface ElementStore {
   [key: string]: FormFields
@@ -100,7 +101,7 @@ export default class Runtime {
 
   form: any = {}
 
-  values = {}
+  values: { [key: string]: any } = {}
 
   repeatable: null|string = null
 
@@ -116,7 +117,7 @@ export default class Runtime {
 
   script: null|string = null
 
-  customVariables = {}
+  customVariables: { [key: string]: any } = {}
 
   locale = Runtime.defaultLocale
 
@@ -267,6 +268,43 @@ export default class Runtime {
         delete this.variables[prop]
       }
     }
+  }
+
+  setupValues = () => {
+    this.clearValues()
+
+    const state = this.variables
+    const names = this.dataNames
+
+    // @ts-ignore names is an {} and is compatible with for...of... syntax
+    for (const key of names) {
+      state[`$${names[key]}`] = undefined
+    }
+
+    // @ts-ignore this.values is an {} and is compatible with for...of... syntax
+    for (const key of this.values) {
+      const value = this.values[key]
+
+      const element = this.elementsByKey[key]
+
+      if (element && this.dataNames[key]) {
+        state[`$${this.dataNames[key]}`] = valueForElement(element, value)
+      }
+    }
+
+    // tslint:disable-next-line:forin
+    for (const name in this.extraVariableNames) {
+      state[`$$${name}`] = this[name]
+    }
+
+    // @ts-ignore this.customVariables is an {} and is compatible with for...of... syntax
+    for (const name of this.customVariables) {
+      state[`${name}`] = this.customVariables[name]
+    }
+
+    CONFIGURE(this, false)
+
+    this.initializeScriptIfNecessary()
   }
 
   /**
