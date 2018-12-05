@@ -89,4 +89,21 @@ test("hookName returns a formatted hook name or null if it receives not paramete
   expect(runtime.hookName()).toBeNull()
 })
 
+test("hooksByName returns a event grouping object according to the name passed in", () => {
+  const runtime = new Runtime()
+  runtime.events = {
+    hook_blur: {
+      test_grouping: [
+        () => true,
+        () => false,
+      ],
+    },
+  }
+
+  expect(runtime.hooksByName("blur")).toEqual(runtime.events.hook_blur)
+  expect(runtime.hooksByName("click")).toEqual([])
+  // @ts-ignore No parameters to ensure it doesn't break
+  expect(runtime.hooksByName()).toEqual([])
+})
+
 // test("setupValues populates")

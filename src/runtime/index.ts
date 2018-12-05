@@ -1,6 +1,8 @@
 import { each,
          get,
+         isNull,
          isString,
+         isUndefined,
          set,
          without,
 } from "lodash"
@@ -342,6 +344,21 @@ export default class Runtime {
     if (!name) { return null }
 
     return "hook_" + name
+  }
+
+  /**
+   * Find hooks by name from the events object. If no hooks are available with the given name,
+   * an empty array is returned.
+   * @param name required; hook name one is looking for
+   * @returns object: { [grouping: string]: Function[] } || array: []
+   */
+  hooksByName = (name: string) => {
+    const hookName = this.hookName(name)
+    if (!isNull(hookName) && !isUndefined(this.events[hookName])) {
+      return this.events[hookName]
+    } else {
+      return []
+    }
   }
 
   /**
