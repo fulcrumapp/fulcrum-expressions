@@ -81,4 +81,12 @@ test("clearValues function clears values without resetting previous variable", (
   expect(runtime.variables).toEqual({})
 })
 
+test("hookName returns a formatted hook name or null if it receives not parameters", () => {
+  const runtime = new Runtime()
+
+  expect(runtime.hookName("blur")).toEqual("hook_blur")
+  // @ts-ignore No parameters to get null result
+  expect(runtime.hookName()).toBeNull()
+})
+
 // test("setupValues populates")
