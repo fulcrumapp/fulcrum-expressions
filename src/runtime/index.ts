@@ -302,6 +302,8 @@ export default class Runtime {
       state[`${name}`] = this.customVariables[name]
     }
 
+    // overwrites configuration to be runtime global attributes
+    // converted from CONFIGURE(@, false) in coffeescript
     CONFIGURE(this, false)
 
     this.initializeScriptIfNecessary()
@@ -329,6 +331,17 @@ export default class Runtime {
     eval(this.script)
 
     return
+  }
+
+  /**
+   * Creates a hook name formatted to read `hook_name`
+   * @param name required; name for hook
+   * @returns string: `hook_name`
+   */
+  hookName = (name: string): string|null => {
+    if (!name) { return null }
+
+    return "hook_" + name
   }
 
   /**

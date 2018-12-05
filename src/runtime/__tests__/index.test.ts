@@ -80,3 +80,5 @@ test("clearValues function clears values without resetting previous variable", (
   runtime.clearValues()
   expect(runtime.variables).toEqual({})
 })
+
+// test("setupValues populates")
