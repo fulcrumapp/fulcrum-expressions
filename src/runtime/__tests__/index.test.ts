@@ -64,3 +64,19 @@ test("Adding one with an event generates an object of callbacks", () => {
 
   expect(runtime.events.blur.my_label).toEqual([])
 })
+
+test("initializes script if necessary", () => {
+  const runtime = new Runtime()
+  runtime.variables = { foo: "bar", fizz: "buzz" }
+  runtime.script = "const testVar = this.foo"
+
+  expect(runtime.initializeScriptIfNecessary()).toBeUndefined()
+  expect(runtime.scriptInitialized).toEqual(true)
+})
+
+test("clearValues function clears values without resetting previous variable", () => {
+  const runtime = new Runtime()
+  runtime.variables = { foo: "bar", fizz: "buzz" }
+  runtime.clearValues()
+  expect(runtime.variables).toEqual({})
+})
