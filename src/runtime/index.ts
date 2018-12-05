@@ -352,10 +352,29 @@ export default class Runtime {
    * @param name required; hook name one is looking for
    * @returns object: { [grouping: string]: Function[] } || array: []
    */
-  hooksByName = (name: string) => {
+  hooksByName = (name: string): { [grouping: string]: Function[] }|[] => {
     const hookName = this.hookName(name)
     if (!isNull(hookName) && !isUndefined(this.events[hookName])) {
       return this.events[hookName]
+    } else {
+      return []
+    }
+  }
+
+  /**
+   * Returns an array of functions associated with each hook name and hook parameter.
+   * @param name required; string, hook name one is looking for
+   * @param param required; string, parameter to filter hook groupings by
+   * @returns an array of functions
+   */
+  hooksByParams =  (name: string, param: string): Function[]|[] => {
+    const hookName: { [grouping: string]: Function[] }|[] = this.hooksByName(name)
+    const groupingName: string|null = this.hookName(param)
+
+    // @ts-ignore if condition checks if hookName has index signature or not so bracket notation works here
+    if (!isNull(groupingName) && hookName !== [] && !isUndefined(hookName[groupingName])) {
+      // @ts-ignore if condition implicitly checks that hookName has index signature so bracket notation works here
+      return hookName[groupingName]
     } else {
       return []
     }
