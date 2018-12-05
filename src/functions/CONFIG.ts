@@ -54,7 +54,7 @@ export interface Config {
   /** Optional: Current repeatable field's index */
   featureIndex?: number,
   /** Optional: Current user's full name */
-  userFullName: string,
+  userFullName?: string,
 }
 
 export interface FeatureGeometry {
