@@ -93,7 +93,7 @@ test("hooksByName returns a event grouping object according to the name passed i
   const runtime = new Runtime()
   runtime.events = {
     hook_blur: {
-      test_grouping: [
+      hook_test: [
         () => true,
         () => false,
       ],
@@ -104,6 +104,24 @@ test("hooksByName returns a event grouping object according to the name passed i
   expect(runtime.hooksByName("click")).toEqual([])
   // @ts-ignore No parameters to ensure it doesn't break
   expect(runtime.hooksByName()).toEqual([])
+})
+
+test("hooksByParams returns an array of event Functions when passed an event name and parameter", () => {
+  const runtime = new Runtime()
+  runtime.events = {
+    hook_blur: {
+      hook_test: [
+        () => true,
+        () => false,
+      ],
+    },
+  }
+
+  expect(runtime.hooksByParams("blur", "test")).toEqual(runtime.events.hook_blur.hook_test)
+  expect(runtime.hooksByParams("click", "test")).toEqual([])
+  expect(runtime.hooksByParams("blur", "nonexistant")).toEqual([])
+  // @ts-ignore No parameters to ensure it doesn't break
+  expect(runtime.hooksByParams()).toEqual([])
 })
 
 // test("setupValues populates")
