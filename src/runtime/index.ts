@@ -362,9 +362,9 @@ export default class Runtime {
   }
 
   /**
-   * Returns an array of functions associated with each hook name and hook parameter.
-   * @param name required; string, hook name one is looking for
-   * @param param required; string, parameter to filter hook groupings by
+   * Returns an array of functions from the Events table given filtered by event type and field.
+   * @param name event to hook in to
+   * @param param field to bind to
    * @returns an array of functions
    */
   hooksByParams =  (name: string, param: string): Function[]|[] => {
