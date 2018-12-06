@@ -110,15 +110,15 @@ test("hooksByParams returns an array of event Functions when passed an event nam
   const runtime = new Runtime()
   runtime.events = {
     hook_blur: {
-      hook_test: [
+      "hook_edit-record": [
         () => true,
         () => false,
       ],
     },
   }
-
-  expect(runtime.hooksByParams("blur", "test")).toEqual(runtime.events.hook_blur.hook_test)
-  expect(runtime.hooksByParams("click", "test")).toEqual([])
+  expect(runtime.hooksByParams("blur", "edit-record")).toEqual(runtime.events.hook_blur["hook_edit-record"])
+  expect(runtime.hooksByParams("click", "edit-record")).toEqual([])
+  // @ts-ignore passed in incorrect record event on purpose
   expect(runtime.hooksByParams("blur", "nonexistant")).toEqual([])
   // @ts-ignore No parameters to ensure it doesn't break
   expect(runtime.hooksByParams()).toEqual([])
