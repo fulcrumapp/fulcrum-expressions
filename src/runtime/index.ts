@@ -340,7 +340,7 @@ export default class Runtime {
    * @param name required; name for hook
    * @returns string: `hook_name`
    */
-  hookName = (name: string): string|null => {
+  hookName = (name: MaybeString): string|null => {
     if (!name) { return null }
 
     return "hook_" + name
@@ -352,7 +352,7 @@ export default class Runtime {
    * @param name required; hook name one is looking for
    * @returns object: { [grouping: string]: Function[] } || array: []
    */
-  hooksByName = (name: string): { [grouping: string]: Function[] }|[] => {
+  hooksByName = (name: MaybeString): { [grouping: string]: Function[] }|[] => {
     const hookName = this.hookName(name)
     if (!isNull(hookName) && !isUndefined(this.events[hookName])) {
       return this.events[hookName]
@@ -367,7 +367,7 @@ export default class Runtime {
    * @param param field to bind to
    * @returns an array of functions
    */
-  hooksByParams =  (name: string, param: string): Function[]|[] => {
+  hooksByParams =  (name: MaybeString, param: EventNames): Function[]|[] => {
     const hookName: { [grouping: string]: Function[] }|[] = this.hooksByName(name)
     const groupingName: string|null = this.hookName(param)
 
