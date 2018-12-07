@@ -81,47 +81,50 @@ test("clearValues function clears values without resetting previous variable", (
   expect(runtime.variables).toEqual({})
 })
 
-test("hookName returns a formatted hook name or null if it receives not parameters", () => {
-  const runtime = new Runtime()
+// TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
+// with the new `addHook` method and then either delete or uncomment
+//
+// test("hookName returns a formatted hook name or null if it receives not parameters", () => {
+//   const runtime = new Runtime()
 
-  expect(runtime.hookName("blur")).toEqual("hook_blur")
-  // @ts-ignore No parameters to get null result
-  expect(runtime.hookName()).toBeNull()
-})
+//   expect(runtime.hookName("blur")).toEqual("hook_blur")
+//   // @ts-ignore No parameters to get null result
+//   expect(runtime.hookName()).toBeNull()
+// })
 
-test("hooksByName returns a event grouping object according to the name passed in", () => {
-  const runtime = new Runtime()
-  runtime.events = {
-    hook_blur: {
-      hook_test: [
-        () => true,
-        () => false,
-      ],
-    },
-  }
+// test("hooksByName returns a event grouping object according to the name passed in", () => {
+//   const runtime = new Runtime()
+//   runtime.events = {
+//     hook_blur: {
+//       hook_test: [
+//         () => true,
+//         () => false,
+//       ],
+//     },
+//   }
 
-  expect(runtime.hooksByName("blur")).toEqual(runtime.events.hook_blur)
-  expect(runtime.hooksByName("click")).toEqual([])
-  // @ts-ignore No parameters to ensure it doesn't break
-  expect(runtime.hooksByName()).toEqual([])
-})
+//   expect(runtime.hooksByName("blur")).toEqual(runtime.events.hook_blur)
+//   expect(runtime.hooksByName("click")).toEqual([])
+//   // @ts-ignore No parameters to ensure it doesn't break
+//   expect(runtime.hooksByName()).toEqual([])
+// })
 
-test("hooksByParams returns an array of event Functions when passed an event name and parameter", () => {
-  const runtime = new Runtime()
-  runtime.events = {
-    hook_blur: {
-      "hook_edit-record": [
-        () => true,
-        () => false,
-      ],
-    },
-  }
-  expect(runtime.hooksByParams("blur", "edit-record")).toEqual(runtime.events.hook_blur["hook_edit-record"])
-  expect(runtime.hooksByParams("click", "edit-record")).toEqual([])
-  // @ts-ignore passed in incorrect record event on purpose
-  expect(runtime.hooksByParams("blur", "nonexistant")).toEqual([])
-  // @ts-ignore No parameters to ensure it doesn't break
-  expect(runtime.hooksByParams()).toEqual([])
-})
+// test("hooksByParams returns an array of event Functions when passed an event name and parameter", () => {
+//   const runtime = new Runtime()
+//   runtime.events = {
+//     hook_blur: {
+//       "hook_edit-record": [
+//         () => true,
+//         () => false,
+//       ],
+//     },
+//   }
+//   expect(runtime.hooksByParams("blur", "edit-record")).toEqual(runtime.events.hook_blur["hook_edit-record"])
+//   expect(runtime.hooksByParams("click", "edit-record")).toEqual([])
+//   // @ts-ignore passed in incorrect record event on purpose
+//   expect(runtime.hooksByParams("blur", "nonexistant")).toEqual([])
+//   // @ts-ignore No parameters to ensure it doesn't break
+//   expect(runtime.hooksByParams()).toEqual([])
+// })
 
 // test("setupValues populates")
