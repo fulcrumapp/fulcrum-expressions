@@ -109,7 +109,7 @@ export default class Runtime {
 
   hooks = {}
 
-  event = {}
+  event: { name?: string, field?: string } = {}
 
   events: {
     [key: string]: {
@@ -418,7 +418,7 @@ export default class Runtime {
 
     }
     // rewrite to use get() from lodash
-    const hooks = this.hooksByParams(name, param)
+    const hooks = get(this.events, [name, param])
 
     if (hooks.length === 0) {
       this.isCalculation = false
