@@ -1,4 +1,5 @@
 import { each,
+         find,
          get,
          isDate,
          isNull,
@@ -6,6 +7,7 @@ import { each,
          isString,
          isUndefined,
          set,
+         toArray,
          without,
 } from "lodash"
 import CONFIGURE from "../functions/CONFIGURE"
@@ -445,6 +447,10 @@ export default class Runtime {
 
       return this.createResult(context.key, null, null, ex.toString(), true)
     }
+  }
+
+  coalesce = (...args: any[]) => {
+    return find(toArray(args), (arg: any) => !isUndefined(arg))
   }
 
   /**
