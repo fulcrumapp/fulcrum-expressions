@@ -1,6 +1,8 @@
 import { each,
          get,
+         isDate,
          isNull,
+         isNumber,
          isString,
          isUndefined,
          set,
@@ -401,10 +403,48 @@ export default class Runtime {
 
     // tslint:disable-next-line:forin
     for (const context in this.expressions) {
-      this.results.push(this.evaluateExpression(context))
+     this.results.push(this.evaluateExpression(context))
     }
 
     return this.results
+  }
+
+  // param type is not correct - just a placeholder to appease tslint
+  evaluateExpression = (context: any) => {
+    const variables = this.variables
+
+    const thisVariableName = `$${context.dataName}`
+
+    try {
+      this.showErrors = false
+
+      variables.$$current = variables[thisVariableName]
+      this.$$currentValue = variables[thisVariableName]
+
+      let stringValue
+      let rawValue
+      // this.$$result where does this thing come from?
+
+      if (!isUndefined(context.expression) && context.expression.length > 0) {
+        const evalResult = undefined
+
+        `with (variables) { evalResult = eval(context.expression) }`
+
+        rawValue = this.coalesce(this.$$result, evalResult)
+
+        stringValue = this.formatValue(rawValue)
+
+        variables[thisVariableName] =  isNumber(rawValue) || isDate(rawValue) ? rawValue : stringValue
+      }
+
+      return this.createResult(context.key, rawValue, stringValue, null, this.showErrors)
+    } catch (ex) {
+      console.log(`JS ERROR : ${context.dataName} : ${ex.toString()}`)
+
+      variables[thisVariableName] = undefined
+
+      return this.createResult(context.key, null, null, ex.toString(), true)
+    }
   }
 
   /**
