@@ -393,6 +393,17 @@ export default class Runtime {
    * results.each((result) => ...)
    */
   evaluate: RuntimeResultCalculator = () => {
+    this.resetResults()
+
+    this.setupValues()
+
+    this.isCalculation = true
+
+    // tslint:disable-next-line:forin
+    for (const context in this.expressions) {
+      this.results.push(this.evaluateExpression(context))
+    }
+
     return this.results
   }
 
@@ -425,7 +436,6 @@ export default class Runtime {
       this.isCalculation = false
       // tslint:disable-next-line:forin
       for (const hook in hooks) {
-        // called with @, @event as params
         hook.call(this, this.event)
       }
       return this.results
