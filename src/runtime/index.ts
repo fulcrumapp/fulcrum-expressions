@@ -4,9 +4,11 @@ import { each,
          isArray,
          isDate,
          isFunction,
+         isNaN,
          isNull,
          isNumber,
          isObject,
+         isRegExp,
          isString,
          isUndefined,
          set,
@@ -38,6 +40,8 @@ import {
         } from "../types/results"
 import flattenElements from "../util/flatten-elements"
 import valueForElement from "../util/value-for-element"
+import createResult from "./calculation-result"
+import formatValue from "./format-value"
 
 interface ElementStore {
   [key: string]: FormFields
@@ -454,29 +458,6 @@ export default class Runtime {
 
   coalesce = (...args: any[]) => {
     return find(toArray(args), (arg: any) => !isUndefined(arg))
-  }
-
-  createResult = (key, rawValue, stringValue, err: string|null, showErrors) => {
-    if (showErrors) {
-      if (err) {
-        err = err.toString()
-      } else if (isUndefined(rawValue)) {
-        err = "[Undefined]"
-      } else if (isNaN(rawValue)) {
-        err = "[Not a Number]"
-      } else if (isFunction(rawValue)) {
-        err = "[Function]"
-      } else if (isArray(rawValue)) {
-        err = "[Array]"
-      } else if (isDate(rawValue)) {
-        err = null
-      } else if (isObject(rawValue)) {
-        err = "[Object]"
-      } else {
-        err = null
-      }
-    }
-    return { type: "calculation", key, value: stringValue, error: err }
   }
 
   /**
