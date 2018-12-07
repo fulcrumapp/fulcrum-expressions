@@ -109,7 +109,7 @@ export default class Runtime {
 
   hooks = {}
 
-  event: { name?: string, field?: string } = {}
+  event: { name: EventNames, field?: MaybeString } = {}
 
   events: {
     [key: string]: {
@@ -409,26 +409,25 @@ export default class Runtime {
     this.resetResults()
 
     this.setupValues()
-    let name: EventNames
-    let param: MaybeString
-    if (isUndefined(this.event.field) || isNull(this.event.field)) {
-      [name, param] = [this.event.name, null]
-    } else {
-      [name, param] = [this.event.name, this.event.field]
+    const name: EventNames = this.event.name
+    const param: MaybeString = this.event.field
 
+    let hooks
+    if (isNull(param) || isUndefined(param)) {
+      hooks = get(this.events, [name])
+    } else {
+      hooks = get(this.events, [name, param])
     }
-    // rewrite to use get() from lodash
-    const hooks = get(this.events, [name, param])
 
     if (hooks.length === 0) {
+      return this.results
+    } else {
       this.isCalculation = false
       // tslint:disable-next-line:forin
       for (const hook in hooks) {
         // called with @, @event as params
-        // this needs to be a Function
         hook.call(this, this.event)
       }
-    } else {
       return this.results
     }
   }
