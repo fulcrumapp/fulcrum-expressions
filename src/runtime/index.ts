@@ -335,50 +335,54 @@ export default class Runtime {
     return
   }
 
-  /**
-   * Creates a hook name formatted to read `hook_name`
-   * @param name required; name for hook
-   * @returns string: `hook_name`
-   */
-  hookName = (name: EventNames|MaybeString): string|null => {
-    if (!name) { return null }
+  // TODO jirles:
+  // Evaluate whether or not these hook helper functions are necessary given the new addHook setup.
+  // Need to see if anything in $$HOST interacts with the runtime events object and depends on the 'hook_' key pattern.
+  //
+  // /**
+  //  * Creates a hook name formatted to read `hook_name`
+  //  * @param name required; name for hook
+  //  * @returns string: `hook_name`
+  //  */
+  // hookName = (name: EventNames|MaybeString): string|null => {
+  //   if (!name) { return null }
 
-    return "hook_" + name
-  }
+  //   return "hook_" + name
+  // }
 
-  /**
-   * Find hooks by name from the events object. If no hooks are available with the given name,
-   * an empty array is returned.
-   * @param name required; hook name one is looking for
-   * @returns object: { [grouping: string]: Function[] } || array: []
-   */
-  hooksByName = (name: EventNames): { [grouping: string]: Function[] }|[] => {
-    const hookName = this.hookName(name)
-    if (!isNull(hookName) && !isUndefined(this.events[hookName])) {
-      return this.events[hookName]
-    } else {
-      return []
-    }
-  }
+  // /**
+  //  * Find hooks by name from the events object. If no hooks are available with the given name,
+  //  * an empty array is returned.
+  //  * @param name required; hook name one is looking for
+  //  * @returns object: { [grouping: string]: Function[] } || array: []
+  //  */
+  // hooksByName = (name: EventNames): { [grouping: string]: Function[] }|[] => {
+  //   const hookName = this.hookName(name)
+  //   if (!isNull(hookName) && !isUndefined(this.events[hookName])) {
+  //     return this.events[hookName]
+  //   } else {
+  //     return []
+  //   }
+  // }
 
-  /**
-   * Returns an array of functions from the Events table given filtered by event type and field.
-   * @param name event to hook in to
-   * @param param field to bind to
-   * @returns an array of functions
-   */
-  hooksByParams =  (name: EventNames, param: MaybeString): Function[]|[] => {
-    const hookName: { [grouping: string]: Function[] }|[] = this.hooksByName(name)
-    const groupingName: string|null = this.hookName(param)
+  // /**
+  //  * Returns an array of functions from the Events table given filtered by event type and field.
+  //  * @param name event to hook in to
+  //  * @param param field to bind to
+  //  * @returns an array of functions
+  //  */
+  // hooksByParams =  (name: EventNames, param: MaybeString): Function[]|[] => {
+  //   const hookName: { [grouping: string]: Function[] }|[] = this.hooksByName(name)
+  //   const groupingName: string|null = this.hookName(param)
 
-    // @ts-ignore if condition checks if hookName has index signature or not so bracket notation works here
-    if (!isNull(groupingName) && hookName !== [] && !isUndefined(hookName[groupingName])) {
-      // @ts-ignore if condition implicitly checks that hookName has index signature so bracket notation works here
-      return hookName[groupingName]
-    } else {
-      return []
-    }
-  }
+  //   // @ts-ignore if condition checks if hookName has index signature or not so bracket notation works here
+  //   if (!isNull(groupingName) && hookName !== [] && !isUndefined(hookName[groupingName])) {
+  //     // @ts-ignore if condition implicitly checks that hookName has index signature so bracket notation works here
+  //     return hookName[groupingName]
+  //   } else {
+  //     return []
+  //   }
+  // }
 
   /**
    * Executed by the $$HOST when a form value changes.
