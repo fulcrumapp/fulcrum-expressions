@@ -406,7 +406,31 @@ export default class Runtime {
    * results.each((result) => ...)
    */
   trigger: RuntimeResultCalculator = () => {
-    return this.results
+    this.resetResults()
+
+    this.setupValues()
+    let name: EventNames
+    let param: MaybeString
+    if (isUndefined(this.event.field) || isNull(this.event.field)) {
+      [name, param] = [this.event.name, null]
+    } else {
+      [name, param] = [this.event.name, this.event.field]
+
+    }
+    // rewrite to use get() from lodash
+    const hooks = this.hooksByParams(name, param)
+
+    if (hooks.length === 0) {
+      this.isCalculation = false
+      // tslint:disable-next-line:forin
+      for (const hook in hooks) {
+        // called with @, @event as params
+        // this needs to be a Function
+        hook.call(this, this.event)
+      }
+    } else {
+      return this.results
+    }
   }
 
   /**
