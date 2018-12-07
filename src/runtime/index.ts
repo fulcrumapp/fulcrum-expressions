@@ -441,18 +441,18 @@ export default class Runtime {
 
         rawValue = this.coalesce(this.$$result, evalResult)
 
-        stringValue = this.formatValue(rawValue)
+        stringValue = formatValue(rawValue)
 
         variables[thisVariableName] =  isNumber(rawValue) || isDate(rawValue) ? rawValue : stringValue
       }
 
-      return this.createResult(context.key, rawValue, stringValue, null, this.showErrors)
+      return createResult(context.key, rawValue, stringValue, null, this.showErrors)
     } catch (ex) {
       console.log(`JS ERROR : ${context.dataName} : ${ex.toString()}`)
 
       variables[thisVariableName] = undefined
 
-      return this.createResult(context.key, null, null, ex.toString(), true)
+      return createResult(context.key, null, null, ex.toString(), true)
     }
   }
 
