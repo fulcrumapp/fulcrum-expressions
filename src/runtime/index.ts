@@ -120,7 +120,7 @@ export default class Runtime {
 
   hooks = {}
 
-  event: { name: EventNames, field?: MaybeString } = {}
+  event: { name?: EventNames, field?: MaybeString } = {}
 
   events: {
     [key: string]: {
@@ -432,12 +432,12 @@ export default class Runtime {
 
       let stringValue
       let rawValue
-      // this.$$result where does this thing come from?
+      this.$$result = undefined
 
       if (!isUndefined(context.expression) && context.expression.length > 0) {
         const evalResult = undefined
 
-        `with (variables) { evalResult = eval(context.expression) }`
+        with (variables) { evalResult = eval(context.expression) }
 
         rawValue = this.coalesce(this.$$result, evalResult)
 

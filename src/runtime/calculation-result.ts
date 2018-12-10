@@ -23,7 +23,11 @@ export interface ExpressionResult {
  * @param error errors generated
  * @param showErrors show errors as the value or not
  */
-export default function(key: string, rawValue: any, value: string, error: any, showErrors: boolean): ExpressionResult {
+export default function(key: string,
+                        rawValue: any,
+                        value: MaybeString,
+                        error: any,
+                        showErrors: boolean): ExpressionResult {
   if (showErrors) {
     if (error) {
       error = error.toString()
