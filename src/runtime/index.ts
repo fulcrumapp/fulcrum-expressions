@@ -106,7 +106,6 @@ export default class Runtime {
   $$storageClear?: HostStorageClear
   $$messageBox?: HostMessageBox
   $$formatNumber?: HostFormatNumber
-// not sure about this: $$result?: AlertResult | ConfigurationResult | InvalidResult | SetValueResult | ProgressResult
 
   global: WindowWithRuntime
 
@@ -132,6 +131,8 @@ export default class Runtime {
 
   customVariables: { [key: string]: any } = {}
 
+  currentValue: any = null
+
   locale = Runtime.defaultLocale
 
   currencyCode = Runtime.defaultCurrencyCode
@@ -141,6 +142,8 @@ export default class Runtime {
   variables: { [key: string]: any } = {}
 
   results: RuntimeResults = []
+
+  result: any = null
 
   dataNames: { [key: string]: string } = {}
 
@@ -428,18 +431,18 @@ export default class Runtime {
       this.showErrors = false
 
       variables.$$current = variables[thisVariableName]
-      this.$$currentValue = variables[thisVariableName]
+      this.currentValue = variables[thisVariableName]
 
       let stringValue
       let rawValue
-      this.$$result = undefined
+      this.result = undefined
 
       if (!isUndefined(context.expression) && context.expression.length > 0) {
         const evalResult = undefined
 
         with (variables) { evalResult = eval(context.expression) }
 
-        rawValue = this.coalesce(this.$$result, evalResult)
+        rawValue = this.coalesce(this.result, evalResult)
 
         stringValue = formatValue(rawValue)
 
