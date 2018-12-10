@@ -476,8 +476,10 @@ export default class Runtime {
     this.resetResults()
 
     this.setupValues()
-    const name: EventNames = this.event.name
-    const param: MaybeString = this.event.field
+    const name: EventNames|string = isUndefined(this.event.name) || isNull(this.event.name) ?
+                                    "__no_name" : this.event.name
+
+    const param: string = isUndefined(this.event.field) || isNull(this.event.field) ? NO_PARAM : this.event.field
 
     let hooks
     if (isNull(param) || isUndefined(param)) {
@@ -490,9 +492,10 @@ export default class Runtime {
       return this.results
     } else {
       this.isCalculation = false
-      // tslint:disable-next-line:forin
       for (const hook in hooks) {
-        hook.call(this, this.event)
+        if (isFunction(hook)) {
+          hook.call(this, this.event)
+        }
       }
       return this.results
     }
