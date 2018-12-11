@@ -34,6 +34,7 @@ import { MaybeString } from "../types/primitives"
 import {
   AlertResult,
   ConfigurationResult,
+  ExpressionResult,
   InvalidResult,
   ProgressResult,
   SetValueResult,
@@ -59,6 +60,7 @@ type RuntimeResults = Array<
   | InvalidResult
   | SetValueResult
   | ProgressResult
+  | ExpressionResult
 >
 
 const NO_PARAM = "__no_param"
@@ -109,7 +111,7 @@ export default class Runtime {
 
   global: WindowWithRuntime
 
-  expressions = []
+  expressions: any[] = []
 
   form: any = {}
 
@@ -416,8 +418,9 @@ export default class Runtime {
     return this.results
   }
 
+  // context = { dataName: string, expression: any (has length... array|string), key: string }
   // param type is not correct - just a placeholder to appease tslint
-  evaluateExpression = (context: any) => {
+  evaluateExpression = (context: any): ExpressionResult => {
     const variables = this.variables
 
     const thisVariableName = `$${context.dataName}`
@@ -446,7 +449,7 @@ export default class Runtime {
 
       return createResult(context.key, rawValue, stringValue, null, this.showErrors)
     } catch (ex) {
-      // @ts-ignore console.log needed for logging
+      // tslint:disable-next-line:no-console
       console.log(`JS ERROR : ${context.dataName} : ${ex.toString()}`)
 
       variables[thisVariableName] = undefined
