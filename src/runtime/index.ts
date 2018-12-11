@@ -409,8 +409,7 @@ export default class Runtime {
 
     this.isCalculation = true
 
-    // tslint:disable-next-line:forin
-    for (const context in this.expressions) {
+    for (const context of this.expressions) {
      this.results.push(this.evaluateExpression(context))
     }
 
