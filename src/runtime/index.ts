@@ -64,6 +64,7 @@ type RuntimeResults = Array<
 >
 
 const NO_PARAM = "__no_param"
+const NO_NAME = "__no_name"
 
 type RuntimeResultCalculator = () => RuntimeResults
 
@@ -309,6 +310,7 @@ export default class Runtime {
     }
 
     for (const name of this.extraVariableNames) {
+      // @ts-ignore
       state[`$$${name}`] = this[name]
     }
 
@@ -337,12 +339,10 @@ export default class Runtime {
     // with (this.variables) { eval(this.script) } as `with` is deprecated
 
     for (const prop of Object.keys(this.variables)) {
-      // @ts-ignore
+      // @ts-ignore Runtime implicitly has `any` type
       this[prop] = this.variables[prop]
     }
-
-    // tslint:disable-next-line:no-eval
-    eval(this.script)
+    Function(this.script)
 
     return
   }
@@ -436,9 +436,13 @@ export default class Runtime {
       this.result = undefined
 
       if (!isUndefined(context.expression) && context.expression.length > 0) {
-        const evalResult = undefined
-
-        with (variables) { evalResult = eval(context.expression) }
+        // TODO jirles: potential bug in next line - written originally as
+        //              with (variables) { evalResult = eval(context.expression) }
+        //              `with` statements are forbidden as of ES5, but in the above line it would have bumped
+        //              to the top of the scope chain so the bug may be performance issues
+        //              `eval()` is not recommended as it can
+        //              potentially run malicious code. Function() was the suggested alternative on MDN
+        const evalResult = Function(context.expression)
 
         rawValue = this.coalesce(this.result, evalResult)
 
@@ -475,8 +479,8 @@ export default class Runtime {
     this.resetResults()
 
     this.setupValues()
-    const name: EventNames|string = isUndefined(this.event.name) || isNull(this.event.name) ?
-                                    "__no_name" : this.event.name
+
+    const name: EventNames|string = isUndefined(this.event.name) || isNull(this.event.name) ? NO_NAME : this.event.name
 
     const param: string = isUndefined(this.event.field) || isNull(this.event.field) ? NO_PARAM : this.event.field
 
