@@ -292,13 +292,11 @@ export default class Runtime {
     const state = this.variables
     const names = this.dataNames
 
-    // @ts-ignore names is an {} and is compatible with for...of... syntax
-    for (const key of names) {
+    for (const key of Object.keys(names)) {
       state[`$${names[key]}`] = undefined
     }
 
-    // @ts-ignore this.values is an {} and is compatible with for...of... syntax
-    for (const key of this.values) {
+    for (const key of Object.keys(this.values)) {
       const value = this.values[key]
 
       const element = this.elementsByKey[key]
@@ -308,13 +306,11 @@ export default class Runtime {
       }
     }
 
-    // tslint:disable-next-line:forin
-    for (const name in this.extraVariableNames) {
+    for (const name of this.extraVariableNames) {
       state[`$$${name}`] = this[name]
     }
 
-    // @ts-ignore this.customVariables is an {} and is compatible with for...of... syntax
-    for (const name of this.customVariables) {
+    for (const name of Object.keys(this.customVariables)) {
       state[`${name}`] = this.customVariables[name]
     }
 
@@ -451,6 +447,7 @@ export default class Runtime {
 
       return createResult(context.key, rawValue, stringValue, null, this.showErrors)
     } catch (ex) {
+      // @ts-ignore console.log needed for logging
       console.log(`JS ERROR : ${context.dataName} : ${ex.toString()}`)
 
       variables[thisVariableName] = undefined

@@ -12,7 +12,7 @@ export interface ExpressionResult {
   type: "calculation",
   key: string,
   error?: MaybeString,
-  value: string
+  value: MaybeString
 }
 
 /**
