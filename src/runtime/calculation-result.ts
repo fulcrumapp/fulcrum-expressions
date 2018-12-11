@@ -7,13 +7,7 @@ import {
   isUndefined,
 } from "lodash"
 import { MaybeString } from "../types/primitives"
-
-export interface ExpressionResult {
-  type: "calculation",
-  key: string,
-  error?: MaybeString,
-  value: MaybeString
-}
+import { ExpressionResult } from "../types/results"
 
 /**
  * Generate a Results object for a given expression.
