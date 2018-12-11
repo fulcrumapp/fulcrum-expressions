@@ -48,3 +48,16 @@ export interface SetValueResult {
   /** value to which field is to be set */
   value: string|null
 }
+
+export interface ExpressionResult {
+  /** result type */
+  type: "calculation",
+  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
+   * system generated 4 character codes.
+   */
+  key: string,
+  /* optional error string */
+  error?: MaybeString,
+  /** value of field */
+  value: MaybeString
+}
