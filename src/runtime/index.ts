@@ -289,7 +289,7 @@ export default class Runtime {
     }
   }
 
-  setupValues = () => {
+  setupValues = (): void => {
     this.clearValues()
 
     const state = this.variables
@@ -342,6 +342,7 @@ export default class Runtime {
       // @ts-ignore Runtime implicitly has `any` type
       this[prop] = this.variables[prop]
     }
+
     Function(this.script)
 
     return
@@ -439,7 +440,7 @@ export default class Runtime {
         // TODO jirles: potential bug in next line - written originally as
         //              with (variables) { evalResult = eval(context.expression) }
         //              `with` statements are forbidden as of ES5, but in the above line it would have bumped
-        //              to the top of the scope chain so the bug may be performance issues
+        //              variables to the top of the scope chain so the bug may just be a performance issues
         //              `eval()` is not recommended as it can
         //              potentially run malicious code. Function() was the suggested alternative on MDN
         const evalResult = Function(context.expression)
@@ -485,7 +486,7 @@ export default class Runtime {
     const param: string = isUndefined(this.event.field) || isNull(this.event.field) ? NO_PARAM : this.event.field
 
     let hooks
-    if (isNull(param) || isUndefined(param)) {
+    if (param === NO_PARAM) {
       hooks = get(this.events, [name])
     } else {
       hooks = get(this.events, [name, param])
@@ -495,7 +496,7 @@ export default class Runtime {
       return this.results
     } else {
       this.isCalculation = false
-      for (const hook in hooks) {
+      for (const hook of hooks) {
         if (isFunction(hook)) {
           hook.call(this, this.event)
         }
