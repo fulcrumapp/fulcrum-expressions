@@ -1,14 +1,10 @@
 import { each,
          find,
          get,
-         isArray,
          isDate,
          isFunction,
-         isNaN,
          isNull,
          isNumber,
-         isObject,
-         isRegExp,
          isString,
          isUndefined,
          set,
@@ -16,6 +12,7 @@ import { each,
          without,
 } from "lodash"
 import CONFIGURE from "../functions/CONFIGURE"
+import ERROR from "../functions/ERROR"
 import {
   HostFormatNumber,
   HostHTTPClient,
@@ -158,6 +155,8 @@ export default class Runtime {
 
   statusesByValue: { [key: string]: string } = {}
 
+  functions: { [name: string]: Function } = {}
+
   featureIsNew = true
 
   showErrors = false
@@ -210,6 +209,7 @@ export default class Runtime {
     "featureUpdatedAt",
     "featureGeometry",
   ]
+    wrapper =
 
   constructor() {
     try {
@@ -226,7 +226,67 @@ export default class Runtime {
     this.global.$$evaluate    = this.evaluate
     this.global.$$trigger     = this.trigger
     this.global.$$finishAsync = this.finishAsync
-  }
+}
+
+  // maybe this should be in constructor? the section about wiring up the global functions was originally
+  // a separate function itself
+setupFunctions = () => {
+    const functions = this.functions
+
+    const specialFunctions: { [name: string]: boolean } = {
+      ALERT: true,
+      CURRENTLOCATION: true,
+      INVALID: true,
+      OFF: true,
+      ON: true,
+      OPENURL: true,
+      PROGRESS: true,
+      REQUEST: true,
+      SETCHOICEFILTER: true,
+      SETCHOICES: true,
+      SETCONFIGURATION: true,
+      SETGEOMETRY: true,
+      SETLOCATION: true,
+      SETSTATUS: true,
+      SETSTATUSFILTER: true,
+      SETPROJECT: true,
+      SETDESCRIPTION: true,
+      SETDISABLED: true,
+      SETHIDDEN: true,
+      SETLABEL: true,
+      SETMAXLENGTH: true,
+      SETMINLENGTH: true,
+      SETREQUIRED: true,
+      SETTIMEOUT: true,
+      CLEARTIMEOUT: true,
+      SETINTERVAL: true,
+      CLEARINTERVAL: true,
+      SETVALUE: true,
+      SETFORMATTRIBUTES: true,
+      STORAGE: true,
+    }
+
+    const checkCall = (name: string, func: Function, args: string) => {
+      if (this.isCalculation && specialFunctions[name]) {
+        ERROR(name + " cannot be used in a calculation")
+      }
+    }
+
+    export Object = (exportName) =>
+      object = functions[exportName]
+    if _.isFunction(functions[exportName])
+           - >
+            checkCall(exportName, object, arguments)
+            object.apply(functions, arguments)
+        else
+          object
+
+    @functions[exportName] = object
+    @global[exportName] = wrapper
+
+    for name of functions
+        exportObject(name)
+}
 
   /**
    * This is executed by the $$HOST after completing an asycnronous action.
@@ -237,7 +297,7 @@ export default class Runtime {
    * const results = $$finishAsync()
    * results.each((result) => ...)
    */
-  finishAsync: RuntimeResultCalculator = () => {
+finishAsync: RuntimeResultCalculator = () => {
     if (!this.callbackID) { return [] }
 
     const id = +this.callbackID
@@ -262,7 +322,7 @@ export default class Runtime {
    * if (form.script) $$runtime.script = form.script
    * $$prepare()
    */
-  prepare = () => {
+prepare = () => {
     each(get(this.form, "status_field.choices", []), (choice) => {
       this.statusesByValue[choice.value] = choice.label
     })
@@ -281,7 +341,7 @@ export default class Runtime {
    * on the same root object. If we create a new `variables` it won't stay the same
    * across executions. This is so the $field variables work in the form-level scripts.
    */
-  clearValues = (): void => {
+clearValues = (): void => {
     for (const prop in this.variables) {
       if (this.variables[prop]) {
         delete this.variables[prop]
@@ -289,7 +349,7 @@ export default class Runtime {
     }
   }
 
-  setupValues = (): void => {
+setupValues = (): void => {
     this.clearValues()
 
     const state = this.variables
@@ -329,7 +389,7 @@ export default class Runtime {
    * Initialize a script during setupValues call if it is needed.
    */
 
-  initializeScriptIfNecessary = (): undefined => {
+initializeScriptIfNecessary = (): undefined => {
     if (this.scriptInitialized) { return }
 
     this.scriptInitialized = true
@@ -405,7 +465,7 @@ export default class Runtime {
    * const results = $$evaluate()
    * results.each((result) => ...)
    */
-  evaluate: RuntimeResultCalculator = () => {
+evaluate: RuntimeResultCalculator = () => {
     this.resetResults()
 
     this.setupValues()
@@ -421,7 +481,7 @@ export default class Runtime {
 
   // context = { dataName: string, expression: any (has length... array|string), key: string }
   // param type is not correct - just a placeholder to appease tslint
-  evaluateExpression = (context: any): ExpressionResult => {
+evaluateExpression = (context: any): ExpressionResult => {
     const variables = this.variables
 
     const thisVariableName = `$${context.dataName}`
@@ -463,7 +523,7 @@ export default class Runtime {
     }
   }
 
-  coalesce = (...args: any[]) => {
+coalesce = (...args: any[]) => {
     return find(toArray(args), (arg: any) => !isUndefined(arg))
   }
 
@@ -476,7 +536,7 @@ export default class Runtime {
    * const results = $$trigger()
    * results.each((result) => ...)
    */
-  trigger: RuntimeResultCalculator = () => {
+trigger: RuntimeResultCalculator = () => {
     this.resetResults()
 
     this.setupValues()
@@ -511,7 +571,7 @@ export default class Runtime {
    * @param args arguments to pass to the $$HOST function
    * @param callback callback to execute after the $$HOST has completed it's async operation
    */
-  invokeAsync(func: HostFunction, args: any[], callback: Function) {
+invokeAsync(func: HostFunction, args: any[], callback: Function) {
     const id = ++this.asyncCount
     this.asyncCallbacks[id] = callback
     func.apply(this, args.concat([id]))
@@ -523,7 +583,7 @@ export default class Runtime {
    * @param param field to bind to
    * @param callback callback to execute
    */
-  addHook(name: EventNames, param: MaybeString, callback: Function) {
+addHook(name: EventNames, param: MaybeString, callback: Function) {
     const path = this.pathFor(name, param)
     const callbacks = get(this.events, path, [])
     this.events = set(this.events, path, callbacks.concat([ callback ]))
@@ -535,7 +595,7 @@ export default class Runtime {
    * @param param field to bind to
    * @param callback callback to execute
    */
-  removeHook(name: EventNames, param: MaybeString, callback?: Function) {
+removeHook(name: EventNames, param: MaybeString, callback ? : Function) {
     const path = this.pathFor(name, param)
 
     if (callback) {
