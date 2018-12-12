@@ -259,13 +259,8 @@ export default class Runtime {
     this.global.$$evaluate    = this.evaluate
     this.global.$$trigger     = this.trigger
     this.global.$$finishAsync = this.finishAsync
-  }
 
-  // maybe this should be in constructor? the section about wiring up the global functions was originally
-  // a separate function itself
-  setupFunctions = () => {
-    const functions = this.functions
-
+    // setup functions on intialization
     const checkCall = (name: string, func: Function, args: any[]) => {
       if (this.isCalculation && this.specialFunctions[name]) {
         ERROR(name + " cannot be used in a calculation")
@@ -273,12 +268,12 @@ export default class Runtime {
     }
 
     const exportObject = (exportName: string, ...args: any[]) => {
-      const object = functions[exportName]
+      const object = this.functions[exportName]
 
       const wrapper = () => {
-        if (isFunction(functions[exportName])) {
+        if (isFunction(this.functions[exportName])) {
           checkCall(exportName, object, args)
-          return object.apply(functions, args)
+          return object.apply(this.functions, args)
         } else {
           return object
         }
@@ -289,7 +284,7 @@ export default class Runtime {
       this.global[exportName] = wrapper
     }
 
-    for (const name of Object.keys(functions)) {
+    for (const name of Object.keys(this.functions)) {
       exportObject(name)
     }
   }
