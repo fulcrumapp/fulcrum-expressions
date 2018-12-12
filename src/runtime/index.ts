@@ -408,7 +408,7 @@ setupValues = (): void => {
       this[prop] = this.variables[prop]
     }
 
-    Function(this.script)
+    Function(this.script)()
 
     return
   }
