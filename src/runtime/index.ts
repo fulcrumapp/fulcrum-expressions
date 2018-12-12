@@ -209,7 +209,6 @@ export default class Runtime {
     "featureUpdatedAt",
     "featureGeometry",
   ]
-    wrapper =
 
   constructor() {
     try {
@@ -226,11 +225,11 @@ export default class Runtime {
     this.global.$$evaluate    = this.evaluate
     this.global.$$trigger     = this.trigger
     this.global.$$finishAsync = this.finishAsync
-}
+  }
 
   // maybe this should be in constructor? the section about wiring up the global functions was originally
   // a separate function itself
-setupFunctions = () => {
+  setupFunctions = () => {
     const functions = this.functions
 
     const specialFunctions: { [name: string]: boolean } = {
@@ -266,27 +265,32 @@ setupFunctions = () => {
       STORAGE: true,
     }
 
-    const checkCall = (name: string, func: Function, args: string) => {
+    const checkCall = (name: string, func: Function, args: any[]) => {
       if (this.isCalculation && specialFunctions[name]) {
         ERROR(name + " cannot be used in a calculation")
       }
     }
 
-    export Object = (exportName) =>
-      object = functions[exportName]
-    if _.isFunction(functions[exportName])
-           - >
-            checkCall(exportName, object, arguments)
-            object.apply(functions, arguments)
-        else
-          object
+    expObject = (exportName: string, ...args: any[]) => {
+      const object = functions[exportName]
 
-    @functions[exportName] = object
-    @global[exportName] = wrapper
+      const wrapper = () => {
+        if (isFunction(functions[exportName])) {
+          checkCall(exportName, object, args)
+          return object.apply(functions, args)
+        } else {
+          return object
+        }
+      }
 
-    for name of functions
-        exportObject(name)
-}
+      this.functions[exportName] = object
+      this.global[exportName] = wrapper
+    }
+
+    for (const name of functions) {
+        expObject(name)
+    }
+  }
 
   /**
    * This is executed by the $$HOST after completing an asycnronous action.
@@ -595,7 +599,7 @@ addHook(name: EventNames, param: MaybeString, callback: Function) {
    * @param param field to bind to
    * @param callback callback to execute
    */
-removeHook(name: EventNames, param: MaybeString, callback ? : Function) {
+removeHook(name: EventNames, param: MaybeString, callback ?: Function) {
     const path = this.pathFor(name, param)
 
     if (callback) {
