@@ -248,6 +248,7 @@ export default class Runtime {
       SETLOCATION: true,
       SETSTATUS: true,
       SETSTATUSFILTER: true,
+      // tslint:disable-next-line:object-literal-sort-keys
       SETPROJECT: true,
       SETDESCRIPTION: true,
       SETDISABLED: true,
@@ -271,7 +272,7 @@ export default class Runtime {
       }
     }
 
-    expObject = (exportName: string, ...args: any[]) => {
+    const expObject = (exportName: string, ...args: any[]) => {
       const object = functions[exportName]
 
       const wrapper = () => {
@@ -284,11 +285,12 @@ export default class Runtime {
       }
 
       this.functions[exportName] = object
+      // @ts-ignore implicit any on Runtime
       this.global[exportName] = wrapper
     }
 
-    for (const name of functions) {
-        expObject(name)
+    for (const name of Object.keys(functions)) {
+      expObject(name)
     }
   }
 
