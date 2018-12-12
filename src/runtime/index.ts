@@ -356,6 +356,10 @@ clearValues = (): void => {
     }
   }
 
+/**
+ * Used to reset values when a form value changes and $$evaluate is called.
+ */
+
 setupValues = (): void => {
     this.clearValues()
 
@@ -386,7 +390,7 @@ setupValues = (): void => {
     }
 
     // overwrites configuration to be runtime global attributes
-    // converted from CONFIGURE(@, false) in coffeescript
+    // BUG jirles: converted from CONFIGURE(@, false) in coffeescript
     CONFIGURE(this, false)
 
     this.initializeScriptIfNecessary()
@@ -396,7 +400,7 @@ setupValues = (): void => {
    * Initialize a script during setupValues call if it is needed.
    */
 
-initializeScriptIfNecessary = (): undefined => {
+  initializeScriptIfNecessary = (): undefined => {
     if (this.scriptInitialized) { return }
 
     this.scriptInitialized = true
@@ -486,8 +490,6 @@ evaluate: RuntimeResultCalculator = () => {
     return this.results
   }
 
-  // context = { dataName: string, expression: any (has length... array|string), key: string }
-  // param type is not correct - just a placeholder to appease tslint
 evaluateExpression = (context: any): ExpressionResult => {
     const variables = this.variables
 
@@ -504,7 +506,7 @@ evaluateExpression = (context: any): ExpressionResult => {
       this.result = undefined
 
       if (!isUndefined(context.expression) && context.expression.length > 0) {
-        // TODO jirles: potential bug in next line - written originally as
+        // BUG jirles: potential bug in next line - written originally as
         //              with (variables) { evalResult = eval(context.expression) }
         //              `with` statements are forbidden as of ES5, but in the above line it would have bumped
         //              variables to the top of the scope chain so the bug may just be a performance issues
