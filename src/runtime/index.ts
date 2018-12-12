@@ -272,7 +272,7 @@ export default class Runtime {
       }
     }
 
-    const expObject = (exportName: string, ...args: any[]) => {
+    const exportObject = (exportName: string, ...args: any[]) => {
       const object = functions[exportName]
 
       const wrapper = () => {
@@ -290,7 +290,7 @@ export default class Runtime {
     }
 
     for (const name of Object.keys(functions)) {
-      expObject(name)
+      exportObject(name)
     }
   }
 
@@ -529,9 +529,9 @@ evaluateExpression = (context: any): ExpressionResult => {
     }
   }
 
-coalesce = (...args: any[]) => {
-    return find(toArray(args), (arg: any) => !isUndefined(arg))
-  }
+  coalesce = (...args: any[]) => {
+      return find(toArray(args), (arg: any) => !isUndefined(arg))
+    }
 
   /**
    * Executed by the $$HOST when a form level event has occurred.
