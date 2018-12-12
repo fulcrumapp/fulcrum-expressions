@@ -11,6 +11,7 @@ import { each,
          toArray,
          without,
 } from "lodash"
+import COALESCE from "../functions/COALESCE"
 import CONFIGURE from "../functions/CONFIGURE"
 import ERROR from "../functions/ERROR"
 import {
@@ -511,7 +512,7 @@ evaluateExpression = (context: any): ExpressionResult => {
         //              potentially run malicious code. Function() was the suggested alternative on MDN
         const evalResult = Function(context.expression)
 
-        rawValue = this.coalesce(this.result, evalResult)
+        rawValue = COALESCE(this.result, evalResult)
 
         stringValue = formatValue(rawValue)
 
@@ -529,9 +530,13 @@ evaluateExpression = (context: any): ExpressionResult => {
     }
   }
 
-  coalesce = (...args: any[]) => {
-      return find(toArray(args), (arg: any) => !isUndefined(arg))
-    }
+  // BUG jirles: replaced with COALESCE which uses !ISBLANK to check values to avoid functions
+  // that are roughly duplicates of each other
+  // depending on implementation this could cause problems
+  //
+  // coalesce = (...args: any[]) => {
+  //     return find(toArray(args), (arg: any) => !isUndefined(arg))
+  //   }
 
   /**
    * Executed by the $$HOST when a form level event has occurred.
