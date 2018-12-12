@@ -506,7 +506,7 @@ evaluateExpression = (context: any): ExpressionResult => {
         //              variables to the top of the scope chain so the bug may just be a performance issues
         //              `eval()` is not recommended as it can
         //              potentially run malicious code. Function() was the suggested alternative on MDN
-        const evalResult = Function(context.expression)
+        const evalResult = Function(context.expression)()
 
         rawValue = COALESCE(this.result, evalResult)
 
