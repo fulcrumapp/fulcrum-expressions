@@ -211,6 +211,39 @@ export default class Runtime {
     "featureGeometry",
   ]
 
+  specialFunctions: { [name: string]: boolean } = {
+    ALERT: true,
+    CURRENTLOCATION: true,
+    INVALID: true,
+    OFF: true,
+    ON: true,
+    OPENURL: true,
+    PROGRESS: true,
+    REQUEST: true,
+    SETCHOICEFILTER: true,
+    SETCHOICES: true,
+    SETCONFIGURATION: true,
+    SETGEOMETRY: true,
+    SETLOCATION: true,
+    SETSTATUS: true,
+    SETSTATUSFILTER: true,
+    // tslint:disable-next-line:object-literal-sort-keys
+    SETPROJECT: true,
+    SETDESCRIPTION: true,
+    SETDISABLED: true,
+    SETHIDDEN: true,
+    SETLABEL: true,
+    SETMAXLENGTH: true,
+    SETMINLENGTH: true,
+    SETREQUIRED: true,
+    SETTIMEOUT: true,
+    CLEARTIMEOUT: true,
+    SETINTERVAL: true,
+    CLEARINTERVAL: true,
+    SETVALUE: true,
+    SETFORMATTRIBUTES: true,
+    STORAGE: true,
+  }
   constructor() {
     try {
       // This is the shorthand for getting direct access to the global scope. If it does not work
@@ -233,42 +266,8 @@ export default class Runtime {
   setupFunctions = () => {
     const functions = this.functions
 
-    const specialFunctions: { [name: string]: boolean } = {
-      ALERT: true,
-      CURRENTLOCATION: true,
-      INVALID: true,
-      OFF: true,
-      ON: true,
-      OPENURL: true,
-      PROGRESS: true,
-      REQUEST: true,
-      SETCHOICEFILTER: true,
-      SETCHOICES: true,
-      SETCONFIGURATION: true,
-      SETGEOMETRY: true,
-      SETLOCATION: true,
-      SETSTATUS: true,
-      SETSTATUSFILTER: true,
-      // tslint:disable-next-line:object-literal-sort-keys
-      SETPROJECT: true,
-      SETDESCRIPTION: true,
-      SETDISABLED: true,
-      SETHIDDEN: true,
-      SETLABEL: true,
-      SETMAXLENGTH: true,
-      SETMINLENGTH: true,
-      SETREQUIRED: true,
-      SETTIMEOUT: true,
-      CLEARTIMEOUT: true,
-      SETINTERVAL: true,
-      CLEARINTERVAL: true,
-      SETVALUE: true,
-      SETFORMATTRIBUTES: true,
-      STORAGE: true,
-    }
-
     const checkCall = (name: string, func: Function, args: any[]) => {
-      if (this.isCalculation && specialFunctions[name]) {
+      if (this.isCalculation && this.specialFunctions[name]) {
         ERROR(name + " cannot be used in a calculation")
       }
     }
