@@ -67,7 +67,6 @@ test("Adding one with an event generates an object of callbacks", () => {
 
 test("initializes script if necessary", () => {
   const runtime = new Runtime()
-  runtime.variables = { foo: "bar", fizz: "buzz" }
   runtime.script = "this.foo = 'bar'"
 
   expect(runtime.initializeScriptIfNecessary()).toBeUndefined()
