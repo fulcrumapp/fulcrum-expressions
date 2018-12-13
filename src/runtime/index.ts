@@ -355,30 +355,28 @@ clearValues = (): void => {
 setupValues = (): void => {
     this.clearValues()
 
-    const state = this.variables
-    const names = this.dataNames
-
-    for (const key of Object.keys(names)) {
-      state[`$${names[key]}`] = undefined
+    for (const key of Object.keys(this.dataNames)) {
+      this.variables[`$${this.dataNames[key]}`] = undefined
     }
 
     for (const key of Object.keys(this.values)) {
       const value = this.values[key]
 
-      const element = this.elementsByKey[key]
+      const elementByKey = this.elementsByKey[key]
+      const dataName = this.dataNames[key]
 
-      if (element && this.dataNames[key]) {
-        state[`$${this.dataNames[key]}`] = valueForElement(element, value)
+      if (!isUndefined(elementByKey) && !isUndefined(dataName)) {
+        this.variables[`$${dataName}`] = valueForElement(elementByKey, value)
       }
     }
 
     for (const name of this.extraVariableNames) {
       // @ts-ignore
-      state[`$$${name}`] = this[name]
+      this.variables[`$$${name}`] = this[name]
     }
 
     for (const name of Object.keys(this.customVariables)) {
-      state[`${name}`] = this.customVariables[name]
+      this.variables[`${name}`] = this.customVariables[name]
     }
 
     // overwrites configuration to be runtime global attributes
