@@ -67,11 +67,10 @@ test("Adding one with an event generates an object of callbacks", () => {
 
 test("initializes script if necessary", () => {
   const runtime = new Runtime()
-  runtime.script = "this.foo = 'bar'"
+  runtime.script = "$$runtime.foo = 'bar'"
 
   expect(runtime.initializeScriptIfNecessary()).toBeUndefined()
   expect(runtime.scriptInitialized).toEqual(true)
-  // @ts-ignore foo will exist on runtime once runtime.script is run
   expect(runtime.foo).toEqual("bar")
 })
 
