@@ -343,10 +343,8 @@ prepare = () => {
    * across executions. This is so the $field variables work in the form-level scripts.
    */
 clearValues = (): void => {
-    for (const prop in this.variables) {
-      if (this.variables[prop]) {
+    for (const prop of Object.keys(this.variables)) {
         delete this.variables[prop]
-      }
     }
   }
 
