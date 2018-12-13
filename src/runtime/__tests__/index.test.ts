@@ -82,6 +82,28 @@ test("clearValues function clears values without resetting previous variable", (
   expect(runtime.variables).toEqual({})
 })
 
+test("setupValues populates the variables object with form values by dataName", () => {
+  const runtime = new Runtime()
+  runtime.form = form
+  runtime.values = {
+    "97ab": "Test Record",
+    // tslint:disable-next-line:object-literal-sort-keys
+    "1338": 1,
+    "362a": {
+      choice_values: [ "widget" ],
+      other_values: [],
+    },
+  }
+  runtime.prepare()
+
+  runtime.setupValues()
+
+  expect(runtime.variables.$name).toEqual("Test Record")
+  expect(runtime.variables.$cost).toEqual(1)
+  expect(runtime.variables.$choice_value).toEqual({ choice_values: [ "widget" ], other_values: [] })
+  expect(runtime.variables.$child_item_cost).toBeUndefined()
+})
+
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
 // with the new `addHook` method and then either delete or uncomment
 //
@@ -127,5 +149,3 @@ test("clearValues function clears values without resetting previous variable", (
 //   // @ts-ignore No parameters to ensure it doesn't break
 //   expect(runtime.hooksByParams()).toEqual([])
 // })
-
-// test("setupValues populates")
