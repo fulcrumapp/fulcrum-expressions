@@ -396,14 +396,17 @@ setupValues = (): void => {
     this.scriptInitialized = true
 
     if (!isString(this.script)) { return }
-    // replaces
+    // BUG jirles: lines before return replaces
     // with (this.variables) { eval(this.script) } as `with` is deprecated
-
+    // this may be unnecessary depending on how with was used
     for (const prop of Object.keys(this.variables)) {
       // @ts-ignore Runtime implicitly has `any` type
       this[prop] = this.variables[prop]
     }
-
+    // BUG jirles: depending on how this.script is written, this may not work
+    // Function()() does not recognize 'this' as $$runtime where eval() does if script uses
+    // this.var or this['var'] to set a property on runtime, only eval() will work
+    // Function requires $$runtime
     Function(this.script)()
 
     return
