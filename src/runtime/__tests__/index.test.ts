@@ -81,7 +81,7 @@ test("clearValues function clears values without resetting previous variable", (
   expect(runtime.variables).toEqual({})
 })
 
-test("setupValues populates the variables object with form values by dataName", () => {
+test("setupValues populates the variables object", () => {
   const runtime = new Runtime()
   runtime.form = form
   runtime.values = {
@@ -93,6 +93,9 @@ test("setupValues populates the variables object with form values by dataName", 
       other_values: [],
     },
   }
+  // object in extraVariableNames array, values injected by host during setup
+  runtime.locale = "en-US"
+  runtime.customVariables = { foo: "bar", fizz: "buzz" }
   runtime.prepare()
 
   runtime.setupValues()
@@ -101,6 +104,10 @@ test("setupValues populates the variables object with form values by dataName", 
   expect(runtime.variables.$cost).toEqual(1)
   expect(runtime.variables.$choice_value).toEqual({ choice_values: [ "widget" ], other_values: [] })
   expect(runtime.variables.$child_item_cost).toBeUndefined()
+  expect(runtime.variables.$$locale).toEqual("en-US")
+  expect(runtime.variables.$$decimalSeparator).toBeUndefined()
+  expect(runtime.variables.foo).toEqual("bar")
+  expect(runtime.variables.fizz).toEqual("buzz")
 })
 
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
