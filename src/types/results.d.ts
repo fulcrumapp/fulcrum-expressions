@@ -59,5 +59,5 @@ export interface ExpressionResult {
   /* optional error string */
   error?: MaybeString,
   /** value of field */
-  value: MaybeString
+  value: any
 }
