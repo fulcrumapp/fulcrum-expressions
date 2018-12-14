@@ -560,7 +560,7 @@ trigger: RuntimeResultCalculator = () => {
       hooks = get(this.events, [name, param])
     }
 
-    if (hooks.length === 0) {
+    if (isUndefined(hooks) || hooks.length === 0) {
       return this.results
     } else {
       this.isCalculation = false
