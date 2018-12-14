@@ -111,7 +111,7 @@ test("setupValues populates the variables object", () => {
   expect(runtime.variables.fizz).toEqual("buzz")
 })
 
-test("evaluates an expression", () => {
+test("evaluates an expression and formats the value if needed", () => {
   const context = { dataName: "cost", key: "1338", expression: "9 * 2" }
   const expectedResult = { type: "calculation", key: "1338", error: null, value: 18 }
   const runtime = new Runtime()
@@ -156,6 +156,41 @@ test("evaluates an expression", () => {
   const actualResult = runtime.evaluateExpression(context)
   expect(actualResult).toEqual(expectedResult)
   expect(runtime.variables.$name).toEqual("It worked")
+})
+
+test("evaluteExpression throws an error to the console and adds the error message to the result", () => {
+  const outputData = ""
+  const storeLog = (inputs: string) => (outputData += inputs)
+  console.log = jest.fn(storeLog)
+  const context = {
+    dataName: "name",
+    key: "97ab",
+    // tslint:disable-next-line:object-literal-sort-keys
+    expression: "return 'this is an illegal return statment'",
+  }
+  const expectedResult = {
+    type: "calculation",
+    // tslint:disable-next-line:object-literal-sort-keys
+    key: "97ab",
+    error: "SyntaxError: Illegal return statement",
+    value: null }
+  const runtime = new Runtime()
+  runtime.form = form
+  runtime.values = {
+    "97ab": "Test Record",
+    // tslint:disable-next-line:object-literal-sort-keys
+    "1338": 1,
+    "362a": {
+      choice_values: [ "widget" ],
+      other_values: [],
+    },
+  }
+  runtime.prepare()
+  runtime.setupValues()
+  const actualResult = runtime.evaluateExpression(context)
+  expect(actualResult).toEqual(expectedResult)
+  expect(runtime.variables.$name).toBeUndefined()
+  expect(outputData).toEqual("JS ERROR : name : SyntaxError: Illegal return statement")
 })
 
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
