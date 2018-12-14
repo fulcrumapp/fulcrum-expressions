@@ -1,3 +1,4 @@
+import ISLOGICAL from "../../functions/ISLOGICAL"
 import form from "../../test/fixtures/form"
 import Runtime from "../index"
 
@@ -226,6 +227,42 @@ test("it evaluates an array of expressions and pushes results to runtime", () =>
   expect(runtime.results.length).toBe(2)
   expect(runtime.results[1]).toEqual({ type: "calculation", key: "1338", error: null, value: 18 })
   expect(runtime.results[0]).toEqual({ type: "calculation", key: "97ab", error: null, value: "It worked" })
+})
+
+test("triggers a series of callbacks when a form-level event occurs", () => {
+  const setResult = () => $$runtime.results.push({ type: "calculation", key: "1338", error: null, value: 18 })
+  const runtime = new Runtime()
+  const callback = jest.fn(setResult)
+
+  runtime.addHook("blur", "my_label", callback)
+  runtime.addHook("blur", "my_label", callback)
+  runtime.form = form
+  runtime.prepare()
+  runtime.event = { name: "blur", field: "my_label" }
+
+  runtime.trigger()
+  expect(callback).toHaveBeenCalledTimes(2)
+  expect(runtime.isCalculation).toBe(false)
+  expect(runtime.results.length).toBe(2)
+  expect(runtime.results[1]).toEqual({ type: "calculation", key: "1338", error: null, value: 18 })
+})
+
+test("returns results if a callback is not triggered based on the events table", () => {
+  const setResult = () => $$runtime.results.push({ type: "calculation", key: "1338", error: null, value: 18 })
+  const runtime = new Runtime()
+  const callback = jest.fn(setResult)
+
+  runtime.addHook("blur", "my_label", callback)
+  runtime.addHook("blur", "my_label", callback)
+  runtime.form = form
+  runtime.prepare()
+  runtime.results = [{ type: "calculation", key: "97ab", error: null, value: "test" }]
+  runtime.event = { name: "change", field: "my_label" }
+
+  const results = runtime.trigger()
+  expect(callback).not.toHaveBeenCalled()
+  expect(runtime.results.length).toBe(1)
+  expect(results[0]).toEqual({ type: "calculation", key: "97ab", error: null, value: "test" })
 })
 
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
