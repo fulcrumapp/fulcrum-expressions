@@ -490,8 +490,7 @@ evaluateExpression = (context: any): ExpressionResult => {
     try {
       this.showErrors = false
 
-      this.variables.$$current = this.variables[thisVariableName]
-      this.currentValue = this.variables[thisVariableName]
+      this.variables.$$current = this.currentValue = this.variables[thisVariableName]
 
       let stringValue
       let rawValue
@@ -501,6 +500,7 @@ evaluateExpression = (context: any): ExpressionResult => {
         // BUG jirles: originally was `with (variables) { evalResult = eval(context.expression) }`
         //              `with` statements are forbidden as of ES5, but in the above line it would have bumped
         //              variables to the top of the scope chain so the bug may just be a performance issues
+        //              as this.variables is still accessible from here
 
         // TODO jirles: `eval()` is not recommended as it can potentially run malicious code.
         //              Consider changing implementations to Function(context.expression)()
