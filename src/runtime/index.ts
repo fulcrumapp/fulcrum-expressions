@@ -397,17 +397,18 @@ setupValues = (): void => {
 
     if (!isString(this.script)) { return }
     // BUG jirles: lines before return replaces
-    // with (this.variables) { eval(this.script) } as `with` is deprecated
-    // this may be unnecessary depending on how with was used
+    //             with (this.variables) { eval(this.script) } as `with` is deprecated
+    //             this may be unnecessary depending on how with was used
     for (const prop of Object.keys(this.variables)) {
       // @ts-ignore Runtime implicitly has `any` type
       this[prop] = this.variables[prop]
     }
-    // BUG jirles: depending on how this.script is written, this may not work
-    // Function()() does not recognize 'this' as $$runtime where eval() does if script uses
-    // this.var or this['var'] to set a property on runtime, only eval() will work
-    // Function requires $$runtime['var'] to work in the same way
-    Function(this.script)()
+    // TODO jirles: `eval()` is not recommended as it can potentially run malicious code.
+    //              Consider changing implementations to Function(this.script)()
+    //              To do this we'd need to change the mobile scripts to refer to runtime as
+    //              $$runtime, not this as is the current case
+    // tslint:disable-next-line:no-eval
+    eval(this.script)
 
     return
   }
@@ -497,13 +498,16 @@ evaluateExpression = (context: any): ExpressionResult => {
       this.result = undefined
 
       if (!isUndefined(context.expression) && context.expression.length > 0) {
-        // BUG jirles: potential bug in next line - written originally as
-        //              with (variables) { evalResult = eval(context.expression) }
+        // BUG jirles: originally was `with (variables) { evalResult = eval(context.expression) }`
         //              `with` statements are forbidden as of ES5, but in the above line it would have bumped
         //              variables to the top of the scope chain so the bug may just be a performance issues
-        //              `eval()` is not recommended as it can
-        //              potentially run malicious code. Function() was the suggested alternative on MDN
-        const evalResult = Function(context.expression)()
+
+        // TODO jirles: `eval()` is not recommended as it can potentially run malicious code.
+        //              Consider changing implementations to Function(context.expression)()
+        //              To do this we'd need to change the mobile scripts to refer to runtime as
+        //              $$runtime, not this as is the current case
+        // tslint:disable-next-line:no-eval
+        const evalResult = eval(context.expression)
         // BUG jirles: COALESCE is a little more strenuous a check than the original coalesce
         //             used in the coffeescript version of data-events. OG coalesce only checked
         //             that things were not undefined, COALESCE disregards null, {}, [], and '' as well
@@ -525,9 +529,7 @@ evaluateExpression = (context: any): ExpressionResult => {
     }
   }
 
-  // BUG jirles: replaced with COALESCE which uses !ISBLANK to check values to avoid functions
-  // that are roughly duplicates of each other
-  // depending on implementation this could cause problems
+  // BUG jirles: duplicate coalesce
   //
   // coalesce = (...args: any[]) => {
   //     return find(toArray(args), (arg: any) => !isUndefined(arg))
