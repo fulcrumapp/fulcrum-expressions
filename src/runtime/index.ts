@@ -344,7 +344,7 @@ prepare = () => {
    */
 clearValues = (): void => {
     for (const prop of Object.keys(this.variables)) {
-        delete this.variables[prop]
+      delete this.variables[prop]
     }
   }
 
@@ -406,7 +406,7 @@ setupValues = (): void => {
     // BUG jirles: depending on how this.script is written, this may not work
     // Function()() does not recognize 'this' as $$runtime where eval() does if script uses
     // this.var or this['var'] to set a property on runtime, only eval() will work
-    // Function requires $$runtime
+    // Function requires $$runtime['var'] to work in the same way
     Function(this.script)()
 
     return
@@ -484,15 +484,13 @@ evaluate: RuntimeResultCalculator = () => {
   }
 
 evaluateExpression = (context: any): ExpressionResult => {
-    const variables = this.variables
-
     const thisVariableName = `$${context.dataName}`
 
     try {
       this.showErrors = false
 
-      variables.$$current = variables[thisVariableName]
-      this.currentValue = variables[thisVariableName]
+      this.variables.$$current = this.variables[thisVariableName]
+      this.currentValue = this.variables[thisVariableName]
 
       let stringValue
       let rawValue
@@ -506,12 +504,14 @@ evaluateExpression = (context: any): ExpressionResult => {
         //              `eval()` is not recommended as it can
         //              potentially run malicious code. Function() was the suggested alternative on MDN
         const evalResult = Function(context.expression)()
-
+        // BUG jirles: COALESCE is a little more strenuous a check than the original coalesce
+        //             used in the coffeescript version of data-events. OG coalesce only checked
+        //             that things were not undefined, COALESCE disregards null, {}, [], and '' as well
         rawValue = COALESCE(this.result, evalResult)
 
         stringValue = formatValue(rawValue)
 
-        variables[thisVariableName] =  isNumber(rawValue) || isDate(rawValue) ? rawValue : stringValue
+        this.variables[thisVariableName] =  isNumber(rawValue) || isDate(rawValue) ? rawValue : stringValue
       }
 
       return createResult(context.key, rawValue, stringValue, null, this.showErrors)
@@ -519,7 +519,7 @@ evaluateExpression = (context: any): ExpressionResult => {
       // tslint:disable-next-line:no-console
       console.log(`JS ERROR : ${context.dataName} : ${ex.toString()}`)
 
-      variables[thisVariableName] = undefined
+      this.variables[thisVariableName] = undefined
 
       return createResult(context.key, null, null, ex.toString(), true)
     }
