@@ -132,7 +132,7 @@ test("evaluates an expression and formats the value if needed", () => {
   expect(runtime.variables.$cost).toEqual(18)
 })
 
-test("evaluates an expression", () => {
+test("evaluateExpression returns a calculation result", () => {
   const context = {
     dataName: "name",
     key: "97ab",
@@ -192,6 +192,40 @@ test("evaluteExpression throws an error to the console and adds the error messag
   expect(actualResult).toEqual(expectedResult)
   expect(runtime.variables.$name).toBeUndefined()
   expect(outputData).toEqual("JS ERROR : name : SyntaxError: Illegal return statement")
+})
+
+test("it evaluates an array of expressions and pushes results to runtime", () => {
+  const runtime = new Runtime()
+  runtime.form = form
+  runtime.values = {
+    "97ab": "Test Record",
+    // tslint:disable-next-line:object-literal-sort-keys
+    "1338": 1,
+    "362a": {
+      choice_values: [ "widget" ],
+      other_values: [],
+    },
+  }
+  runtime.expressions = [
+    {
+      dataName: "name",
+      key: "97ab",
+      // tslint:disable-next-line:object-literal-sort-keys
+      expression: "if (this.variables.$name === 'Test Record') { 'It worked' } else { 'nope' }",
+    },
+    {
+      dataName: "cost",
+      key: "1338",
+      // tslint:disable-next-line:object-literal-sort-keys
+      expression: "9 * 2",
+    },
+  ]
+  runtime.prepare()
+  runtime.evaluate()
+
+  expect(runtime.results.length).toBe(2)
+  expect(runtime.results[1]).toEqual({ type: "calculation", key: "1338", error: null, value: 18 })
+  expect(runtime.results[0]).toEqual({ type: "calculation", key: "97ab", error: null, value: "It worked" })
 })
 
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
