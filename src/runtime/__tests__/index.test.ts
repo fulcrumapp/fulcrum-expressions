@@ -159,8 +159,9 @@ test("evaluates an expression", () => {
 })
 
 test("evaluteExpression throws an error to the console and adds the error message to the result", () => {
-  const outputData = ""
+  let outputData = ""
   const storeLog = (inputs: string) => (outputData += inputs)
+  // tslint:disable-next-line:no-console
   console.log = jest.fn(storeLog)
   const context = {
     dataName: "name",
