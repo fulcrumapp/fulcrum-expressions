@@ -111,6 +111,53 @@ test("setupValues populates the variables object", () => {
   expect(runtime.variables.fizz).toEqual("buzz")
 })
 
+test("evaluates an expression", () => {
+  const context = { dataName: "cost", key: "1338", expression: "9 * 2" }
+  const expectedResult = { type: "calculation", key: "1338", error: null, value: 18 }
+  const runtime = new Runtime()
+  runtime.form = form
+  runtime.values = {
+    "97ab": "Test Record",
+    // tslint:disable-next-line:object-literal-sort-keys
+    "1338": 1,
+    "362a": {
+      choice_values: [ "widget" ],
+      other_values: [],
+    },
+  }
+  runtime.prepare()
+  runtime.setupValues()
+  const actualResult = runtime.evaluateExpression(context)
+  expect(actualResult).toEqual(expectedResult)
+  expect(runtime.variables.$cost).toEqual(18)
+})
+
+test("evaluates an expression", () => {
+  const context = {
+    dataName: "name",
+    key: "97ab",
+    // tslint:disable-next-line:object-literal-sort-keys
+    expression: "if (this.variables.$name === 'Test Record') { 'It worked' } else { 'nope' }",
+  }
+  const expectedResult = { type: "calculation", key: "97ab", error: null, value: "It worked" }
+  const runtime = new Runtime()
+  runtime.form = form
+  runtime.values = {
+    "97ab": "Test Record",
+    // tslint:disable-next-line:object-literal-sort-keys
+    "1338": 1,
+    "362a": {
+      choice_values: [ "widget" ],
+      other_values: [],
+    },
+  }
+  runtime.prepare()
+  runtime.setupValues()
+  const actualResult = runtime.evaluateExpression(context)
+  expect(actualResult).toEqual(expectedResult)
+  expect(runtime.variables.$name).toEqual("It worked")
+})
+
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
 // with the new `addHook` method and then either delete or uncomment
 //
