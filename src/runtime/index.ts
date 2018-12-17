@@ -483,7 +483,11 @@ evaluate: RuntimeResultCalculator = () => {
 
     return this.results
   }
-
+/**
+ * Evaluates an expression and returns an ExpressionResult.
+ * @param context required; object that contains a field's dataName, key, and an expression
+ * @returns ExpressionResult: { type: 'calculation', key: string, error?: string, value: any }
+ */
 evaluateExpression = (context: any): ExpressionResult => {
     const thisVariableName = `$${context.dataName}`
 
@@ -505,7 +509,7 @@ evaluateExpression = (context: any): ExpressionResult => {
         // TODO jirles: `eval()` is not recommended as it can potentially run malicious code.
         //              Consider changing implementations to Function(context.expression)()
         //              To do this we'd need to change the mobile scripts to refer to runtime as
-        //              $$runtime, not this as is the current case
+        //              `$$runtime`, not `this` as is the current case
         // tslint:disable-next-line:no-eval
         const evalResult = eval(context.expression)
         // BUG jirles: COALESCE is a little more strenuous a check than the original coalesce
