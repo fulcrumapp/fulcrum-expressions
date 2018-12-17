@@ -13,7 +13,8 @@
         "member-access": false,
         "unified-signatures": false,
         "ban-types": false,
-        "only-arrow-functions": false
+        "only-arrow-functions": false,
+        "object-literal-sort-keys": false,
     },
     "rulesDirectory": []
 }
