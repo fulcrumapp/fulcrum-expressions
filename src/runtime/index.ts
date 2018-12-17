@@ -144,6 +144,11 @@ export default class Runtime {
 
   results: RuntimeResults = []
 
+  // BUG jirles: Originally this was not a property on runtime, it only appeared in the
+  //             evaluateExpression function below as $$runtime.$$result. Beside that function
+  //             it was only ever called again from GETRESULT(). Assuming this property is populated by
+  //             $$HOST, it's not clear if referring to this property as this.result instead of $$result
+  //             will break anything, right now it's just a potential bug.
   result: any = null
 
   dataNames: { [key: string]: string } = {}
