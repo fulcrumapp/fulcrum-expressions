@@ -11,9 +11,7 @@ import { each,
          toArray,
          without,
 } from "lodash"
-import COALESCE from "../functions/COALESCE"
-import CONFIGURE from "../functions/CONFIGURE"
-import ERROR from "../functions/ERROR"
+import functions from "../functions"
 import {
   HostFormatNumber,
   HostHTTPClient,
@@ -268,17 +266,17 @@ export default class Runtime {
     // setup functions on intialization
     const checkCall = (name: string, func: Function, args: any[]) => {
       if (this.isCalculation && this.specialFunctions[name]) {
-        ERROR(name + " cannot be used in a calculation")
+        functions.ERROR(name + " cannot be used in a calculation")
       }
     }
 
     const exportObject = (exportName: string, ...args: any[]) => {
-      const object = this.functions[exportName]
+      const object = functions[exportName]
 
       const wrapper = () => {
-        if (isFunction(this.functions[exportName])) {
+        if (isFunction(functions[exportName])) {
           checkCall(exportName, object, args)
-          return object.apply(this.functions, args)
+          return object.apply(functions, args)
         } else {
           return object
         }
@@ -289,7 +287,7 @@ export default class Runtime {
       this.global[exportName] = wrapper
     }
 
-    for (const name of Object.keys(this.functions)) {
+    for (const name of Object.keys(functions)) {
       exportObject(name)
     }
   }
@@ -386,7 +384,7 @@ setupValues = (): void => {
 
     // overwrites configuration to be runtime global attributes
     // BUG jirles: converted from CONFIGURE(@, false) in coffeescript
-    CONFIGURE(this, false)
+    functions.CONFIGURE(this, false)
 
     this.initializeScriptIfNecessary()
   }
@@ -520,7 +518,7 @@ evaluateExpression = (context: any): ExpressionResult => {
         // BUG jirles: COALESCE is a little more strenuous a check than the original coalesce
         //             used in the coffeescript version of data-events. OG coalesce only checked
         //             that things were not undefined, COALESCE disregards null, {}, [], and '' as well
-        rawValue = COALESCE(this.result, evalResult)
+        rawValue = functions.COALESCE(this.result, evalResult)
 
         stringValue = formatValue(rawValue)
 
