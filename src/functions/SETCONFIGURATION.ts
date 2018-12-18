@@ -40,7 +40,7 @@ const CONFIGURATION_ATTRIBUTES = [
  * Set form level configuration sttings
  * @param settings key value pair of settings to configure
  */
-const SETCONFIGURATION = (settings: Configuration) =>
+export default function SETCONFIGURATION(settings: Configuration) {
   each(settings, (value, attribute) => {
     if (!includes(CONFIGURATION_ATTRIBUTES, attribute)) { return }
 
@@ -52,5 +52,4 @@ const SETCONFIGURATION = (settings: Configuration) =>
       value: result,
     })
   })
-
-export default SETCONFIGURATION
+}
