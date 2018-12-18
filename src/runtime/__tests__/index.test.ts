@@ -29,6 +29,16 @@ test("it sets up the data-events functions on initialization", () => {
   expect(Object.keys(runtime.functions).length).toEqual(173)
 })
 
+test("it doesn't allow special functions to run during a calculation", () => {
+  const runtime = new Runtime()
+  runtime.isCalculation = true
+  const expectErrorWrapper = () => {
+    // @ts-ignore ALERT will exist once runtime is initialized
+    runtime.global.ALERT("Fail") 
+  }
+  expect(expectErrorWrapper).toThrow("ALERT cannot be used in a calculation")
+})
+
 test("using invokeAsync and finishAsync, it can start the process of a host long running process", () => {
   const runtime = new Runtime()
   runtime.hooksInitialized = true
