@@ -1,4 +1,7 @@
+import ABS from "../../functions/ABS"
+import ACOS from "../../functions/ACOS"
 import ISLOGICAL from "../../functions/ISLOGICAL"
+import NUM from "../../functions/NUM"
 import form from "../../test/fixtures/form"
 import Runtime from "../index"
 
@@ -14,6 +17,16 @@ test("the runtime can be prepared with a form schema", () => {
   expect(runtime.elementsByKey["97ab"].type).toEqual("TextField")
   expect(runtime.elementsByDataName.name.type).toEqual("TextField")
   expect(runtime.dataNames["97ab"]).toEqual("name")
+})
+
+test("it sets up the data-events functions on initialization", () => {
+  const runtime = new Runtime()
+  expect(runtime.functions.ABS).toEqual(ABS)
+  expect(runtime.functions.ACOS).toEqual(ACOS)
+  expect(runtime.functions.NUM).toEqual(NUM)
+  expect(runtime.functions.ISLOGICAL).toEqual(ISLOGICAL)
+  // 171 files imported including two functions for CONFIG.ts, and NO_VALUE = 173 items in functions obj
+  expect(Object.keys(runtime.functions).length).toEqual(173)
 })
 
 test("using invokeAsync and finishAsync, it can start the process of a host long running process", () => {
