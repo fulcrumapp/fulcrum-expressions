@@ -1,4 +1,4 @@
-import { isNumber } from "lodash"
+import { isFinite } from "lodash"
 import NUM from "./NUM"
 
 /**
@@ -13,9 +13,11 @@ import NUM from "./NUM"
 export default function DEGREES(value: number|string): number
 export default function DEGREES(value: undefined|null): number
 export default function DEGREES(): number
+export default function DEGREES(value?: any): number
 export default function DEGREES(value?: any): number {
   value = NUM(value)
-  if (!isNumber(value)) { return NaN }
+  // isFinite excludes NaN, Infinity, and -Infinity
+  if (!isFinite(value)) { return NaN }
 
   return 180.0 * value / Math.PI
 }
