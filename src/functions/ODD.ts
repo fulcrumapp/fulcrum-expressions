@@ -1,4 +1,4 @@
-import { isNumber } from "lodash"
+import { isFinite } from "lodash"
 import NUM from "./NUM"
 
 /**
@@ -14,7 +14,7 @@ export default function ODD(value?: any): number
 export default function ODD(value?: any): number {
   value = NUM(value)
 
-  if (!isNumber(value)) { return NaN }
+  if (!isFinite(value)) { return NaN }
 
   let temp: number = Math.ceil(Math.abs(value))
   temp = temp % 2 ? temp : temp + 1
