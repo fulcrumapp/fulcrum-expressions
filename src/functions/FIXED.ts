@@ -27,8 +27,8 @@ export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator 
   decimals = NUM(decimals)
 
   if (ISNAN(decimals)) { decimals = 2 }
-
-  decimals = MIN(MAX(decimals, 0), 20) || NaN
+  // @ts-ignore IF statement will ensure that a number value is always passed to the line below
+  decimals = MIN(MAX(decimals, 0), 20)
 
   if (ISNAN(num) || ISNAN(decimals)) { return undefined }
 
@@ -38,11 +38,9 @@ export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator 
   // const power: number = Math.pow(10, decimals)
   // const scaled: number = num * power
 
-  const machineDecimalSeparator: string = "."
-
   const machineValue: string = num.toFixed(decimals)
 
-  const index: number = machineValue.indexOf(machineDecimalSeparator)
+  const index: number = machineValue.indexOf(".")
 
   if (index <= -1) { return machineValue }
 
@@ -79,9 +77,5 @@ export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator 
     integerString = parts.reverse().join(groupingSeparator)
   }
 
-  if (decimals < 1) {
-    return integerString
-  } else {
-    return integerString + DECIMALSEPARATOR() + fractionPart.toString()
-  }
+  return integerString + DECIMALSEPARATOR() + fractionPart.toString()
 }
