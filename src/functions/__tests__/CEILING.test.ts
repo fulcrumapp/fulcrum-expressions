@@ -15,8 +15,8 @@ test("accepts numbers as strings", () => {
 })
 
 test("returns NaN if it doesn't receive a number", () => {
-  expect(CEILING("test")).toEqual(NaN)
-  expect(CEILING()).toEqual(NaN)
+  expect(CEILING("test")).toBeNaN()
+  expect(CEILING()).toBeNaN()
 })
 
 test("accepts a second argument, multiple", () => {
@@ -25,4 +25,10 @@ test("accepts a second argument, multiple", () => {
   expect(CEILING(0.31, 0.25)).toEqual(0.5)
   expect(CEILING(-0.13, 0.25)).toEqual(0)
   expect(CEILING(-0.31, 0.25)).toEqual(-0.25)
+})
+
+test("returns 0 if multiple is 0", () => {
+  expect(CEILING(3.13, 0)).toEqual(0)
+  expect(CEILING(0.31, 0)).toEqual(0)
+  expect(CEILING(2.3333333, 0)).toEqual(0)
 })
