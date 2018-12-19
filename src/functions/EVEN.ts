@@ -1,4 +1,4 @@
-import { isNumber } from "lodash"
+import { isFinite } from "lodash"
 import CEILING from "./CEILING"
 import NUM from "./NUM"
 
@@ -16,8 +16,8 @@ export default function EVEN(value: string): number
 export default function EVEN(value: any): number
 export default function EVEN(value: any): number {
   value = NUM(value)
-
-  if (!isNumber(value)) { return NaN }
+  // isFinite excludes NaN, Infinity, and -Infinity
+  if (!isFinite(value)) { return NaN }
 
   return CEILING(value, -2)
 }
