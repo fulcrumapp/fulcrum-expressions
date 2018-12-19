@@ -10,6 +10,7 @@ test("returns the greatest common divisor of two or more integers", () => {
 
 test("it returns NaN for invalid input", () => {
   expect(GCD(-1, -2, -3)).toBeNaN()
+  expect(GCD(1, 2, -3)).toBeNaN()
   expect(GCD()).toBeNaN()
   expect(GCD(undefined)).toBeNaN()
   expect(GCD(null)).toBeNaN()
