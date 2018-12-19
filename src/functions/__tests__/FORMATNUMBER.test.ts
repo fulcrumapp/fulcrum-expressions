@@ -68,5 +68,6 @@ test("minimumSignificantDigits and maximumSignificantDigits are forced to fit th
 })
 
 test("returns 'NaN' if not value is passed in", () => {
+  // @ts-ignore Null passed in for value to test 'NaN' return
   expect(FORMATNUMBER(null, "pt-BR", { style: "currency" })).toEqual("NaN")
 })
