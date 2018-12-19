@@ -11,13 +11,20 @@ test("returns the fixed represention of a number", () => {
   expect(FIXED(1 / 3, 3)).toEqual("0.333")
   expect(FIXED(2 / 3, 3)).toEqual("0.667")
   expect(FIXED(13.371337, 3)).toEqual("13.371")
+  expect(FIXED(13.371337, 0)).toEqual("13")
   expect(FIXED(3 * 3.2, 1)).toEqual("9.6")
-  expect(FIXED(0)).toEqual("0.00")
   expect(FIXED(1, 10)).toEqual("1.0000000000")
   expect(FIXED(100000, 10)).toEqual("100,000.0000000000")
   expect(FIXED(1000000001, 10)).toEqual("1,000,000,001.0000000000")
   expect(FIXED(9999999999, 10)).toEqual("9,999,999,999.0000000000")
   expect(FIXED(9999999999.001, 3)).toEqual("9,999,999,999.001")
+})
+
+test("decimals param defaults to 2", () => {
+  expect(FIXED(0)).toEqual("0.00")
+  expect(FIXED(3000)).toEqual("3,000.00")
+  // @ts-ignore bad typing on purpose to check default value
+  expect(FIXED(0, "two")).toEqual("0.00")
 })
 
 test("it uses configuration settings to customize return values", () => {
