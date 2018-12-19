@@ -8,11 +8,10 @@ test("converts radians to degrees", () => {
 })
 
 test("returns NaN for invalid input", () => {
-  // @ts-ignore Bad input to get NaN
-  expect(DEGREES([])).toBe(NaN)
-  expect(DEGREES(undefined)).toBe(NaN)
-  expect(DEGREES(null)).toBe(NaN)
-  expect(DEGREES(NaN)).toBe(NaN)
-  // @ts-ignore Bad input to get NaN
-  expect(DEGREES(true)).toBe(NaN)
+  expect(DEGREES("test")).toBeNaN()
+  expect(DEGREES([])).toBeNaN()
+  expect(DEGREES(undefined)).toBeNaN()
+  expect(DEGREES(null)).toBeNaN()
+  expect(DEGREES(NaN)).toBeNaN()
+  expect(DEGREES(true)).toBeNaN()
 })
