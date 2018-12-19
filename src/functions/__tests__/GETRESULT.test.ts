@@ -1,5 +1,9 @@
 import GETRESULT from "../GETRESULT"
+import Runtime from "../../runtime";
 
-test("this is a placeholder", () => {
-  expect(true).toEqual(true)
+test("returns result off of runtime", () => {
+  const runtime = new Runtime
+  expect(GETRESULT()).toBeNull()
+  runtime.result = "test"
+  expect(GETRESULT()).toEqual("test")
 })
