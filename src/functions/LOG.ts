@@ -1,4 +1,3 @@
-import { isNaN, isNull, isUndefined } from "lodash"
 import NUM from "./NUM"
 
 /**
@@ -16,8 +15,6 @@ export default function LOG(value: any, base?: any): number
 export default function LOG(value: any, base?: any): number {
   value = NUM(value)
   base = NUM(base) || 10
-
-  if (isUndefined(base) || isNull(base) || isNaN(base)) { return NaN }
 
   return Math.log(value) / Math.log(base)
 }
