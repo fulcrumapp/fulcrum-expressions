@@ -30,8 +30,11 @@ test("calls MESSAGEBOX to prompt the user", () => {
   })
 })
 
-test("must receive a value for title", () => {
-  expect(true).toBe(true)
+test("must receive three parameters", () => {
+  // @ts-ignore Wrong arg number necessary for test
+  expect(() => PROMPT("Confirm", jest.fn())).toThrow("You must pass in a title, a message, and a callback")
+  // @ts-ignore Wrong arg number necessary for test
+  expect(() => PROMPT("Confirm")).toThrow("You must pass in a title, a message, and a callback")
 })
 
 test("callback passed in must be a function", () => {
