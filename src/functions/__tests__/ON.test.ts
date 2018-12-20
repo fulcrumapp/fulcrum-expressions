@@ -79,8 +79,11 @@ test("it validates event params", () => {
   expect(() => ON("click", "child_photo_field", jest.fn())).toThrow("Invalid usage of ON(): \"child_photo_field\" is not a valid field for the \"click\" event")
   expect(() => ON("validate-repeatable", "my_field", jest.fn())).toThrow()
   expect(() => ON("change-geometry", "child_photo_field", jest.fn())).toThrow()
+  // @ts-ignore 
   expect(() => ON("remove-photo", "repeatable", jest.fn())).toThrow()
+  // @ts-ignore
   expect(() => ON("remove-audio", "my_field", jest.fn())).toThrow()
+  // @ts-ignore
   expect(() => ON("remove-video", "child_photo_field", jest.fn())).toThrow()
   expect(() => ON("change", "@project", jest.fn())).not.toThrow()
 })
