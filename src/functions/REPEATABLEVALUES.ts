@@ -18,13 +18,13 @@ export default function REPEATABLEVALUES(repeatableValue: any[], dataName: strin
       const repeatableDataName: string = dataName[0]
       const restOfDataNames: string[] = dataName.slice(1)
       const parentValues = REPEATABLEVALUES(repeatableValue, repeatableDataName)
+      
+      if (isUndefined(parentValues) || isNull(parentValues)) { return }
+    
+      const childValues: any[]|undefined = parentValues.map((item) =>
+      REPEATABLEVALUES(item, restOfDataNames))
 
-      if (isArray(parentValues)) {
-        const childValues: any[]|undefined = parentValues.map((item) =>
-        REPEATABLEVALUES(item, restOfDataNames))
-
-        return flatten(childValues)
-      } else { return }
+      return flatten(childValues)
     }
   }
   const dataElement: FormFields = $$runtime.elementsByDataName[dataName]
