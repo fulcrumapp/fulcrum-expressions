@@ -12,3 +12,7 @@ test("returns the unique values of the parameters", () => {
   expect(UNIQUE({test: 1}, {test: 1}, {test: 2}, (a: any) => a.test)).toEqual([{test: 1}, {test: 2}])
   expect(UNIQUE([{test: 1}, {test: 1}, {test: 2}], (a: any) => a.test)).toEqual([{test: 1}, {test: 2}])
 })
+
+test("returns undefined if no parameters are passed in", () => {
+  expect(UNIQUE()).toBeUndefined()
+})
