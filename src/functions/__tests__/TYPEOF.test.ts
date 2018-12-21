@@ -12,4 +12,6 @@ test("returns the type of a variable", () => {
   expect(TYPEOF(/test/)).toEqual("regexp")
   expect(TYPEOF({})).toEqual("object")
   expect(TYPEOF([])).toEqual("array")
+  // @ts-ignore Need to trigger default case
+  expect(TYPEOF(Symbol("foo"))).toEqual("unknown")
 })
