@@ -72,6 +72,7 @@ describe("converters.DateTimeField", () => {
     expect(dateTimeField( ["2018-04-15"] )).toBeNull()
     expect(dateTimeField("Hello, World")).toBeNull()
     expect(dateTimeField(20180415)).toBeNull()
+    expect(dateTimeField("02.00")).toBeNull()
   })
 })
 
