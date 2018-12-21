@@ -301,7 +301,7 @@ export default class Runtime {
    * const results = $$finishAsync()
    * results.each((result) => ...)
    */
-finishAsync: RuntimeResultCalculator = () => {
+  finishAsync: RuntimeResultCalculator = () => {
     if (!this.callbackID) { return [] }
 
     const id = +this.callbackID
@@ -326,7 +326,7 @@ finishAsync: RuntimeResultCalculator = () => {
    * if (form.script) $$runtime.script = form.script
    * $$prepare()
    */
-prepare = () => {
+  prepare = () => {
     each(get(this.form, "status_field.choices", []), (choice) => {
       this.statusesByValue[choice.value] = choice.label
     })
@@ -345,17 +345,17 @@ prepare = () => {
    * on the same root object. If we create a new `variables` it won't stay the same
    * across executions. This is so the $field variables work in the form-level scripts.
    */
-clearValues = (): void => {
+  clearValues = (): void => {
     for (const prop of Object.keys(this.variables)) {
       delete this.variables[prop]
     }
   }
 
-/**
- * Used to reset values when a form value changes and $$evaluate is called.
- */
+  /**
+   * Used to reset values when a form value changes and $$evaluate is called.
+   */
 
-setupValues = (): void => {
+  setupValues = (): void => {
     this.clearValues()
 
     for (const key of Object.keys(this.dataNames)) {
@@ -473,7 +473,7 @@ setupValues = (): void => {
    * const results = $$evaluate()
    * results.each((result) => ...)
    */
-evaluate: RuntimeResultCalculator = () => {
+  evaluate: RuntimeResultCalculator = () => {
     this.resetResults()
 
     this.setupValues()
@@ -491,7 +491,7 @@ evaluate: RuntimeResultCalculator = () => {
  * @param context required; object that contains a field's dataName, key, and an expression
  * @returns ExpressionResult: { type: 'calculation', key: string, error?: string, value: any }
  */
-evaluateExpression = (context: any): ExpressionResult => {
+  evaluateExpression = (context: any): ExpressionResult => {
     const thisVariableName = `$${context.dataName}`
 
     try {
@@ -551,7 +551,7 @@ evaluateExpression = (context: any): ExpressionResult => {
    * const results = $$trigger()
    * results.each((result) => ...)
    */
-trigger: RuntimeResultCalculator = () => {
+  trigger: RuntimeResultCalculator = () => {
     this.resetResults()
 
     this.setupValues()
@@ -586,7 +586,7 @@ trigger: RuntimeResultCalculator = () => {
    * @param args arguments to pass to the $$HOST function
    * @param callback callback to execute after the $$HOST has completed it's async operation
    */
-invokeAsync(func: HostFunction, args: any[], callback: Function) {
+  invokeAsync(func: HostFunction, args: any[], callback: Function) {
     const id = ++this.asyncCount
     this.asyncCallbacks[id] = callback
     func.apply(this, args.concat([id]))
@@ -598,7 +598,7 @@ invokeAsync(func: HostFunction, args: any[], callback: Function) {
    * @param param field to bind to
    * @param callback callback to execute
    */
-addHook(name: EventNames, param: MaybeString, callback: Function) {
+  addHook(name: EventNames, param: MaybeString, callback: Function) {
     const path = this.pathFor(name, param)
     const callbacks = get(this.events, path, [])
     this.events = set(this.events, path, callbacks.concat([ callback ]))
@@ -610,7 +610,7 @@ addHook(name: EventNames, param: MaybeString, callback: Function) {
    * @param param field to bind to
    * @param callback callback to execute
    */
-removeHook(name: EventNames, param: MaybeString, callback ?: Function) {
+  removeHook(name: EventNames, param: MaybeString, callback ?: Function) {
     const path = this.pathFor(name, param)
 
     if (callback) {
