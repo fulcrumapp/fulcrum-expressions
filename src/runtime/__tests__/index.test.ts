@@ -99,6 +99,20 @@ test("initializes script if necessary", () => {
   expect(runtime.foo).toEqual("bar")
 })
 
+test("does not initialize a script if one has already been run", () => {
+  const runtime = new Runtime()
+  runtime.script = "this.foo = 'bar'"
+  // once initializeScriptIfNecessary is run it sets scriptInitialized to true
+  runtime.initializeScriptIfNecessary()
+  // @ts-ignore foo will exists on runtime after script runs  
+  expect(runtime.foo).toEqual("bar")
+  runtime.script = "this.foo = null"
+  // once initializeScriptIfNecessary is run it sets scriptInitialized to true
+  // so a script can't run a second time
+  // @ts-ignore 
+  expect(runtime.foo).toEqual("bar")
+})
+
 test("clearValues function clears values without resetting previous variable", () => {
   const runtime = new Runtime()
   runtime.variables = { foo: "bar", fizz: "buzz" }
