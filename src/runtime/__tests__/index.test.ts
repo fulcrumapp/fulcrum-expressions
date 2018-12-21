@@ -290,6 +290,19 @@ test("triggers a series of callbacks when a form-level event occurs", () => {
   expect(runtime.results[1]).toEqual({ type: "calculation", key: "1338", error: null, value: 18 })
 })
 
+test("event property has optional field key", () => {
+  const setResult = () => $$runtime.results.push({ type: "calculation", key: "1338", error: null, value: 18 })
+  const runtime = new Runtime()
+  const callback = jest.fn(setResult)
+
+  runtime.addHook("blur", null, callback)
+  runtime.event = { name: "blur" }
+  runtime.trigger()
+  
+  expect(callback).toHaveBeenCalled()
+  expect(runtime.results[0]).toEqual({ type: "calculation", key: "1338", error: null, value: 18 })
+})
+
 test("returns results if a callback is not triggered based on the events table", () => {
   const setResult = () => $$runtime.results.push({ type: "calculation", key: "1338", error: null, value: 18 })
   const runtime = new Runtime()
