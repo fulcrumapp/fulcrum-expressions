@@ -92,11 +92,17 @@ test("Adding one with an event generates an object of callbacks", () => {
 test("initializes script if necessary", () => {
   const runtime = new Runtime()
   runtime.script = "this.foo = 'bar'"
-
+  // initializeScriptIfNecessary will set foo and fizz as properties of runtime
+  runtime.variables = {
+    foo: "not bar",
+    fizz: "buzz"
+  }
   expect(runtime.initializeScriptIfNecessary()).toBeUndefined()
   expect(runtime.scriptInitialized).toEqual(true)
   // @ts-ignore foo will exists on runtime after script runs
   expect(runtime.foo).toEqual("bar")
+  // @ts-ignore fizz will exists on runtime after function runs
+  expect(runtime.fizz).toEqual("buzz")
 })
 
 test("does not initialize a script if one has already been run", () => {
