@@ -560,12 +560,7 @@ export default class Runtime {
 
     const param: string = isUndefined(this.event.field) || isNull(this.event.field) ? NO_PARAM : this.event.field
 
-    let hooks
-    if (param === NO_PARAM) {
-      hooks = get(this.events, [name])
-    } else {
-      hooks = get(this.events, [name, param])
-    }
+    let hooks = get(this.events, [name, param])
 
     if (isUndefined(hooks) || hooks.length === 0) {
       return this.results
