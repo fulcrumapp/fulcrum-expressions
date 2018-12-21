@@ -35,7 +35,7 @@ test("it raises an error if invalid params are passed", () => {
   expect(() => ON("click", {}, jest.fn())).toThrow()
 })
 
-test("it validates event params", () => {
+test("it validates event params to check if ON can be called", () => {
   $$runtime.elementsByDataName = {
     "my_field": {
       data_name: "my_field",
@@ -74,16 +74,47 @@ test("it validates event params", () => {
       hidden: false,
       label: "My Photo Field",
     },
+    "audio_field": { 
+      data_name: "audio_field",
+      key: "98ui",
+      type: "AudioField",
+      required: false,
+      disabled: false,
+      hidden: false,
+      label: "My Audio Field",
+    },
+    "video_field": { 
+      data_name: "video_field",
+      key: "98ui",
+      type: "VideoField",
+      required: false,
+      disabled: false,
+      hidden: false,
+      label: "My Video Field",
+    }
   }
 
   expect(() => ON("click", "child_photo_field", jest.fn())).toThrow("Invalid usage of ON(): \"child_photo_field\" is not a valid field for the \"click\" event")
   expect(() => ON("validate-repeatable", "my_field", jest.fn())).toThrow()
+  // checking change-geometry event validations
   expect(() => ON("change-geometry", "child_photo_field", jest.fn())).toThrow()
+  expect(() => ON("change-geometry", "repeatable", jest.fn())).not.toThrow()
+  // checking change event validations
+  expect(() => ON("change", "@project", jest.fn())).not.toThrow()
+  expect(() => ON("change", "fake_field", jest.fn())).toThrow()
+  // checking PhotoField validations
   // @ts-ignore 
   expect(() => ON("remove-photo", "repeatable", jest.fn())).toThrow()
+  // @ts-ignore 
+  expect(() => ON("remove-photo", "child_photo_field", jest.fn())).not.toThrow()
+  // checking AudioField validations
   // @ts-ignore
   expect(() => ON("remove-audio", "my_field", jest.fn())).toThrow()
+  // @ts-ignore 
+  expect(() => ON("remove-audio", "audio_field", jest.fn())).not.toThrow()
+  // checking VideoField validations
   // @ts-ignore
   expect(() => ON("remove-video", "child_photo_field", jest.fn())).toThrow()
-  expect(() => ON("change", "@project", jest.fn())).not.toThrow()
+  // @ts-ignore 
+  expect(() => ON("remove-video", "video_field", jest.fn())).not.toThrow()
 })
