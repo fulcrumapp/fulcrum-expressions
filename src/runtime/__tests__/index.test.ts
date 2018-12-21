@@ -65,6 +65,11 @@ test("using invokeAsync and finishAsync, it can start the process of a host long
   expect(runtime.isCalculation).toBeFalsy()
 })
 
+test("without a callbackId finishAsync returns an empty array", () => {
+  const runtime = new Runtime()
+  expect(runtime.finishAsync()).toEqual([])
+})
+
 test("Adding a callback without an event generates an array of callbacks", () => {
   const runtime = new Runtime()
   const callback = jest.fn()
@@ -298,7 +303,7 @@ test("event property has optional field key", () => {
   runtime.addHook("blur", null, callback)
   runtime.event = { name: "blur" }
   runtime.trigger()
-  
+
   expect(callback).toHaveBeenCalled()
   expect(runtime.results[0]).toEqual({ type: "calculation", key: "1338", error: null, value: 18 })
 })
