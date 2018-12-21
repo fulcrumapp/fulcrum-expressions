@@ -29,10 +29,24 @@ childItems.parent = repeatableSansElements
 const grandchildCost = childItems.elements[0]
 // @ts-ignore parent key exists in type FormField
 grandchildCost.parent = childItems
+const greatGrandChild = {
+  data_name: "great_grand_child",
+  default_value: null,
+  description: "",
+  disabled: false,
+  hidden: false,
+  key: "45ki",
+  label: "Great Grand Child",
+  required: false,
+  type: "PhotoField",
+  parent: grandchildCost,
+}
+
 
 test("returns the nearest repeatable", () => {
   expect(nearestRepeatable(costField)).toEqual(repeatableSansElements)
   expect(nearestRepeatable(grandchildCost)).toEqual(childItems)
+  expect(nearestRepeatable(greatGrandChild)).toEqual(childItems)
 })
 
 test("returns null if the element does not have a parent repeatable", () => {
