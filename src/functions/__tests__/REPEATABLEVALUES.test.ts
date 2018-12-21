@@ -14,8 +14,8 @@ beforeEach(() => {
   $$runtime.elementsByDataName.cost = cost
 
   const choiceValue = repeatable.elements[1]
-  // @ts-ignore parent is an optional key
-  choiceValue.parent = repeatable
+  // // @ts-ignore parent is an optional key
+  // choiceValue.parent = repeatable
   // @ts-ignore
   $$runtime.elementsByDataName.choice_value = choiceValue
 
@@ -64,4 +64,9 @@ test("returns no value if the data name of the field does not exist", () => {
   const costs = REPEATABLEVALUES(repeatableValue, "does_not_exist")
 
   expect(costs).toBeUndefined()
+})
+
+test("returns undefined if field passed in does not have a parent element", () => {
+  expect(REPEATABLEVALUES(repeatableValue, "choice_value")).toBeUndefined()
+  expect(REPEATABLEVALUES(repeatableValue, ["choice_value", "cost"])).toBeUndefined()
 })
