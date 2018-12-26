@@ -32,3 +32,20 @@ test("if setTimeout is not available on host it returns immediately", () => {
   expect(hostState.nextTimeoutID).toEqual(0)
   expect(hostState.timeouts[1]).toBeUndefined()
 })
+
+
+test("it wraps the callback and adds the wrapper to updates state timeouts by id", () => {
+  const duration = 100
+  const callback = jest.fn()
+  $$runtime.$$setTimeout = jest.fn()
+
+  hostSetTimeout(callback, duration)
+
+  const hostState = state()
+  // immediately call the wrapper function returned from state().timeouts object
+  hostState.timeouts[1]()
+
+  expect(callback).toHaveBeenCalled()
+  // wrapper deletes function from state().timeouts object 
+  expect(hostState.timeouts[1]).toBeUndefined()
+})
