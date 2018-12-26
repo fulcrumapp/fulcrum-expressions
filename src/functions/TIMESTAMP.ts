@@ -3,7 +3,8 @@ import FORMAT from "./FORMAT"
 import LPAD from "./LPAD"
 
 /**
- * Returns a time stamp given a date object.
+ * Returns a time stamp given a date object for display only. As it does not contain a timezone, it should not 
+ * be used to perform calculations such as time deltas.
  * @param date optional; Date object - if nothing is passed in to TIMESTAMP, today's timestamp will be returned
  * @returns a string timestamp in YYYY-MM-DD HH:MM:SS format
  * @example
