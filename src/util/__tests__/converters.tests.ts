@@ -95,12 +95,13 @@ describe("converters.TimeField", () => {
 
   test("returns null if value does not represent a valid time", () => {
     const timeField: Function = converters.TimeField
-
+ 
     expect(timeField("25:30")).toBeNull()
     expect(timeField("13:61")).toBeNull()
-    expect(timeField("1361")).toBeNull()
+    expect(timeField("1301")).toBeNull()
     expect(timeField("13:300")).toBeNull()
     expect(timeField(1316)).toBeNull()
+    expect(timeField("13000")).toBeNull()
     expect(timeField([ "13:61" ])).toBeNull()
   })
 })
