@@ -60,8 +60,21 @@ test("it proxies the length call to the runtime", () => {
   expect(storage.length).toEqual(20)
 })
 
-test("it proxies the key call to the runtime", () => {
-  const mock = $$runtime.$$storageKey = jest.fn()
-  storage.key(1)
-  expect(mock).toHaveBeenNthCalledWith(1, "default", 1)
+describe("Key call", () => {
+  test("it proxies the key call to the runtime", () => {
+    const mock = $$runtime.$$storageKey = jest.fn()
+    storage.key(1)
+    expect(mock).toHaveBeenNthCalledWith(1, "default", 1)
+  })
+
+  test("key will no-op if no index is passed in", () => {
+    // @ts-ignore Null value index to return undefined
+    expect(storage.getItem(null)).toBeUndefined()
+  })
+
+  test("key will no-op if $$storageKey does not exist on runtime", () => {
+    // prepareRuntime does not set up $$storageKey, host does
+    // just calling key here will be sufficient to no-op
+    expect(storage.key(1)).toBeUndefined()
+  })
 })
