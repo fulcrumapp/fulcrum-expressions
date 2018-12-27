@@ -76,9 +76,18 @@ describe("Clear call", () => {
   })
 })
 
-test("it proxies the length call to the runtime", () => {
-  const mock = $$runtime.$$storageLength = jest.fn().mockReturnValue(20)
-  expect(storage.length).toEqual(20)
+describe("Length call", () => {
+  test("it proxies the length call to the runtime", () => {
+    const mock = $$runtime.$$storageLength = jest.fn().mockReturnValue(20)
+    expect(storage.length).toEqual(20)
+    expect(mock).toHaveBeenCalled()
+  })
+
+  test("no-ops if $$storageLength does not exist on runtime", () => {
+    // prepareRuntime does not set up $$storageLength, host does
+    // just calling removeItem here will be sufficient to no-op
+    expect(storage.length).toBeUndefined()
+  })
 })
 
 describe("Key call", () => {
