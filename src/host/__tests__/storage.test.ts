@@ -3,10 +3,23 @@ import storage from "../storage"
 
 beforeEach(prepareRuntime)
 
-test("it proxies the setItem call to the runtime", () => {
-  const mock = $$runtime.$$storageSetItem = jest.fn()
-  storage.setItem("foo", "{ bar: 'baz' }")
-  expect(mock).toHaveBeenNthCalledWith(1, "default", "foo", "{ bar: 'baz' }")
+describe("setItem call", () => {
+  test("it proxies the setItem call to the runtime", () => {
+    const mock = $$runtime.$$storageSetItem = jest.fn()
+    storage.setItem("foo", "{ bar: 'baz' }")
+    expect(mock).toHaveBeenNthCalledWith(1, "default", "foo", "{ bar: 'baz' }")
+  })
+
+  test("setItem will no-op if no key is passed in", () => {
+    // @ts-ignore Null value key to return undefined
+    expect(storage.setItem(null, "some value")).toBeUndefined()
+  })
+
+  test("setItem will no-op if $$storageSetItem does not exist on runtime", () => {
+    // prepareRuntime does not set up $$storageSetItem, host does
+    // just calling setItem here will be sufficient to no-op
+    expect(storage.setItem("foo", "some value")).toBeUndefined()
+  })
 })
 
 test("it proxies the getItem call to the runtime", () => {
