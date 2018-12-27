@@ -46,8 +46,8 @@ describe("getItem call", () => {
 describe("removeItem call", () => {
   test("it proxies the removeItem call to the runtime", () => {
     const mock = $$runtime.$$storageRemoveItem = jest.fn()
-    storage.removeItem("test")
-    expect(mock).toHaveBeenCalled()
+    storage.removeItem("test_key")
+    expect(mock).toHaveBeenNthCalledWith(1, "default", "test_key")
   })
 
   test("removeItem will no-op if no key is passed in", () => {
@@ -66,12 +66,6 @@ test("it proxies the clear call to the runtime", () => {
   const mock = $$runtime.$$storageClear = jest.fn()
   storage.clear()
   expect(mock).toHaveBeenCalled()
-})
-
-test("it proxies the removeItem call to the runtime", () => {
-  const mock = $$runtime.$$storageRemoveItem = jest.fn()
-  storage.removeItem("test_key")
-  expect(mock).toHaveBeenNthCalledWith(1, "default", "test_key")
 })
 
 test("it proxies the length call to the runtime", () => {
