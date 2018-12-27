@@ -99,7 +99,7 @@ describe("Key call", () => {
 
   test("key will no-op if no index is passed in", () => {
     // @ts-ignore Null value index to return undefined
-    expect(storage.getItem(null)).toBeUndefined()
+    expect(storage.key(null)).toBeUndefined()
   })
 
   test("key will no-op if $$storageKey does not exist on runtime", () => {
