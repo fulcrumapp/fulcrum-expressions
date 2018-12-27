@@ -62,10 +62,18 @@ describe("removeItem call", () => {
   })
 })
 
-test("it proxies the clear call to the runtime", () => {
-  const mock = $$runtime.$$storageClear = jest.fn()
-  storage.clear()
-  expect(mock).toHaveBeenCalled()
+describe("Clear call", () => {
+  test("it proxies the clear call to the runtime", () => {
+    const mock = $$runtime.$$storageClear = jest.fn()
+    storage.clear()
+    expect(mock).toHaveBeenCalled()
+  })
+
+  test("no-ops if $$storageClear doesn't exist on runtime", () =>{
+    // prepareRuntime does not set up $$storageClear, host does
+    // just calling removeItem here will be sufficient to no-op
+    expect(storage.clear()).toBeUndefined()
+  })
 })
 
 test("it proxies the length call to the runtime", () => {
