@@ -43,6 +43,25 @@ describe("getItem call", () => {
   })
 })
 
+describe("removeItem call", () => {
+  test("it proxies the removeItem call to the runtime", () => {
+    const mock = $$runtime.$$storageRemoveItem = jest.fn()
+    storage.removeItem("test")
+    expect(mock).toHaveBeenCalled()
+  })
+
+  test("removeItem will no-op if no key is passed in", () => {
+    // @ts-ignore Null value key to return undefined
+    expect(storage.removeItem(null)).toBeUndefined()
+  })
+
+  test("removeItem will no-op if $$storageRemoveItem does not exist on runtime", () => {
+    // prepareRuntime does not set up $$storageremoveItem, host does
+    // just calling removeItem here will be sufficient to no-op
+    expect(storage.removeItem("foo")).toBeUndefined()
+  })
+})
+
 test("it proxies the clear call to the runtime", () => {
   const mock = $$runtime.$$storageClear = jest.fn()
   storage.clear()
