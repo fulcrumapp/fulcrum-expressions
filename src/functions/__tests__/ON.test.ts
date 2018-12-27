@@ -21,9 +21,20 @@ test("it binds a selector based event", () => {
     required: false,
     type: "HyperlinkField",
   }
+  $$runtime.elementsByDataName["name"] = {
+    data_name: "name",
+    disabled: false,
+    hidden: false,
+    key: "3456",
+    label: "Name",
+    required: false,
+    type: "TextField",
+  }
 
   ON("click", "my-field", callback)
+  ON("change", "name", callback)
   expect($$runtime.events.click["my-field"]).toContain(callback)
+  expect($$runtime.events.change["name"]).toContain(callback)
 })
 
 test("it raises an error if invalid params are passed", () => {
