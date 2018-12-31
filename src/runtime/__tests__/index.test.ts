@@ -125,7 +125,9 @@ test("does not initialize a script if one has already been run", () => {
   expect(runtime.foo).toEqual("bar")
   runtime.script = "this.foo = null"
   // once initializeScriptIfNecessary is run it sets scriptInitialized to true
-  // so a script can't run a second time
+  expect(runtime.scriptInitialized).toBe(true)
+  // so a script won't run a second time
+  runtime.initializeScriptIfNecessary()
   // @ts-ignore 
   expect(runtime.foo).toEqual("bar")
 })
