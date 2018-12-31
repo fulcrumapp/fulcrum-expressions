@@ -172,7 +172,11 @@ import YEAR from "./YEAR"
 
 RESETCONFIG()
 
-export default {
+export interface FunctionMap {
+  [functionName: string]: Function|undefined
+}
+
+export const functions: FunctionMap = {
   ABS,
   ACOS,
   ACOSH,
