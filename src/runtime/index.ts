@@ -270,13 +270,13 @@ export default class Runtime {
       }
     }
 
-    const exportObject = (exportName: string, ...args: any[]) => {
+    const exportObject = (exportName: string) => {
       const object = functions[exportName]
 
       const wrapper = () => {
         if (isFunction(functions[exportName])) {
-          checkCall(exportName, object, args)
-          return object.apply(functions, args)
+          checkCall(exportName, object, arguments)
+          return object.apply(functions, arguments)
         } else {
           return object
         }
