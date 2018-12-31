@@ -11,7 +11,7 @@ import { each,
          toArray,
          without,
 } from "lodash"
-import functions from "../functions"
+import { functions, FunctionMap } from "../functions"
 import {
   HostFormatNumber,
   HostHTTPClient,
@@ -159,7 +159,7 @@ export default class Runtime {
 
   statusesByValue: { [key: string]: string } = {}
 
-  functions: { [name: string]: Function } = {}
+  functions: FunctionMap = {}
 
   featureIsNew = true
 
@@ -264,18 +264,19 @@ export default class Runtime {
     this.global.$$finishAsync = this.finishAsync
 
     // setup functions on intialization
-    const checkCall = (name: string, func: Function, args: any[]) => {
+    const checkCall = (name: string) => {
       if (this.isCalculation && this.specialFunctions[name]) {
+        // @ts-ignore ERROR is not undefined
         functions.ERROR(name + " cannot be used in a calculation")
       }
     }
 
     const exportObject = (exportName: string) => {
-      const object = functions[exportName]
+      const object: Function|undefined = functions[exportName]
 
-      const wrapper = () => {
-        if (isFunction(functions[exportName])) {
-          checkCall(exportName, object, arguments)
+      function wrapper() {
+        if (isFunction(object)) {
+          checkCall(exportName)
           return object.apply(functions, arguments)
         } else {
           return object
@@ -384,6 +385,7 @@ export default class Runtime {
 
     // overwrites configuration to be runtime global attributes
     // BUG jirles: converted from CONFIGURE(@, false) in coffeescript
+    // @ts-ignore CONFIGURE is not undefined
     functions.CONFIGURE(this, false)
 
     this.initializeScriptIfNecessary()
@@ -518,6 +520,7 @@ export default class Runtime {
         // BUG jirles: COALESCE is a little more strenuous a check than the original coalesce
         //             used in the coffeescript version of data-events. OG coalesce only checked
         //             that things were not undefined, COALESCE disregards null, {}, [], and '' as well
+        // @ts-ignore COALESCE is not undefined
         rawValue = functions.COALESCE(this.result, evalResult)
 
         stringValue = formatValue(rawValue)
