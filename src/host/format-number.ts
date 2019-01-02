@@ -24,7 +24,7 @@ export interface NumberFormatOptions {
 export default function formatNumber(value: number, locale: string, options: NumberFormatOptions): string {
   if (!isUndefined($$runtime.$$formatNumber)) {
     return $$runtime.$$formatNumber(value, locale, options)
-  } else if (!isUndefined(typeof(Intl))) {
+  } else if (typeof(Intl) !== "undefined") {
     const nf = new Intl.NumberFormat(locale, options)
     return nf.format(value)
   } else {
