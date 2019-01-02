@@ -88,3 +88,21 @@ test("generates a valid payload and executes the callback", () => {
     title: "Confirm",
   })
 })
+
+test("wraps callback in validation wrapper to validate result", () => {
+  const validate = (result: string) => { if (result === "nah") { return "user must choose 'yas'" } }
+  const options = { title: "Confirm", message: "You sure?", buttons: ["yas", "nah"], validate }
+  const callback = jest.fn()
+
+  MESSAGEBOX(options, callback)
+
+  const [payload, callbackID] = messageBoxMock.mock.calls[0]
+
+  $$runtime.callbackArguments = ["nah"]
+
+  finishAsync(callbackID)
+
+  expect(callback).not.toHaveBeenCalled()
+  const resultOptions = JSON.parse(messageBoxMock.mock.calls[1][0])
+  expect(resultOptions.title).toEqual("user must choose 'yas'")
+})
