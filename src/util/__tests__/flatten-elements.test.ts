@@ -16,6 +16,7 @@ test("can assign a parent element to elements in array", () => {
 })
 
 test("won't attempt to recurseively flatten an empty section or repeatable", () => {
+  // @ts-ignore second arg `apply` needed for tests
   const mockedFlatten = jest.spyOn(flattenElements, "apply")
   // add an empty section (not elements key) to repeatable.elements
   repeatable.elements.push({
