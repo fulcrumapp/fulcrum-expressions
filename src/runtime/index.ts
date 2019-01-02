@@ -76,7 +76,7 @@ type HostFunction =
   | HostMessageBox
   | HostFormatNumber
 
-interface WindowWithRuntime extends Window {
+export interface WindowWithRuntime extends Window {
   $$runtime: Runtime
   $$evaluate: RuntimeResultCalculator
   $$trigger: RuntimeResultCalculator
