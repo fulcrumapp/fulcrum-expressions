@@ -3,7 +3,7 @@ import ACOS from "../../functions/ACOS"
 import ISLOGICAL from "../../functions/ISLOGICAL"
 import NUM from "../../functions/NUM"
 import form from "../../test/fixtures/form"
-import Runtime from "../index"
+import Runtime, { WindowWithRuntime } from "../index"
 
 test("the runtime can be prepared with a form schema", () => {
   const runtime = new Runtime()
@@ -332,6 +332,20 @@ test("returns results if a callback is not triggered based on the events table",
   expect(callback).not.toHaveBeenCalled()
   expect(runtime.results.length).toBe(1)
   expect(results[0]).toEqual({ type: "calculation", key: "97ab", error: null, value: "test" })
+})
+
+test("defaults to window on initialization if it cannot get direct access to the global scope", () => {
+  const spy = jest.spyOn(global, "Function")
+  spy.mockReturnValue(undefined)
+  const firstRuntime = new Runtime()
+  expect(spy).toHaveBeenCalled()
+  expect(firstRuntime.global).toEqual(window as WindowWithRuntime)
+  expect(firstRuntime.global.navigator).toBeDefined()
+
+  spy.mockRestore()
+  // checking that spy restored original implementation of Function and reset mock values
+  new Runtime()
+  expect(spy).not.toHaveBeenCalled()
 })
 
 // TODO jirles: Not clear if these tests are needed. Evaluate how $$HOST interacts (if at all)
