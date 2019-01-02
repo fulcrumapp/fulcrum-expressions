@@ -19,7 +19,9 @@ const flattenElements = (elements: FormFields[], recurseRepeatables = true, assi
       if (!container.elements) { return [element] }
 
       return [element].concat(
-        flattenElements(container.elements, recurseRepeatables, assignParent, element, recurseSections),
+        // add apply call to help with testing
+        // @ts-ignore explicit any on `this`
+        flattenElements.apply(this, [container.elements, recurseRepeatables, assignParent, element, recurseSections]),
       )
     } else {
       return [element]
