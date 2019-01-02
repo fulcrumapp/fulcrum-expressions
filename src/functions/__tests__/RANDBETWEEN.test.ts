@@ -8,6 +8,8 @@ test("returns a random integer between low and high", () => {
   expect(RANDBETWEEN(5, 10)).toBeWithinRange(4, 11)
   // @ts-ignore Extended expect to include toBeWithinRange matcher
   expect(RANDBETWEEN("5", "10")).toBeWithinRange(4, 11)
+  // @ts-ignore Extended expect to include toBeWithinRange matcher
+  expect(RANDBETWEEN("3", "5")).not.toBeWithinRange(0, 1)
 })
 
 test("returns NaN for invalid input", () => {
