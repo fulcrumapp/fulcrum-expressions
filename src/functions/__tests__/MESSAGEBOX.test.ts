@@ -96,13 +96,18 @@ test("wraps callback in validation wrapper to validate result", () => {
 
   MESSAGEBOX(options, callback)
 
-  const [payload, callbackID] = messageBoxMock.mock.calls[0]
+  const callbackID = messageBoxMock.mock.calls[0][1]
 
   $$runtime.callbackArguments = ["nah"]
 
   finishAsync(callbackID)
 
   expect(callback).not.toHaveBeenCalled()
-  const resultOptions = JSON.parse(messageBoxMock.mock.calls[1][0])
-  expect(resultOptions.title).toEqual("user must choose 'yas'")
+  const [ newPayload, newCallbackID ] = messageBoxMock.mock.calls[1]
+
+  finishAsync(newCallbackID)
+
+  expect(JSON.parse(newPayload).title).toEqual("user must choose 'yas'")
+  expect(messageBoxMock).toHaveBeenCalledTimes(3)
+
 })
