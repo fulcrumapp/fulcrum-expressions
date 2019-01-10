@@ -59,11 +59,6 @@ declare function ACOSH(value: number): number;
  */
 declare function ACOSH(value: string): number;
 
-interface AlertResult {
-    type: "message";
-    title?: string;
-    message?: string;
-}
 interface ToStringable {
     toString(): string;
 }
@@ -135,6 +130,31 @@ interface Config {
     deviceManufacturer?: string;
     /** Optional: Set to current user's email */
     userEmail?: string;
+    /** Optional: Set to current user's role */
+    userRoleName?: string;
+    /** Optional: Indicates where the current feature is new */
+    featureIsNew?: boolean;
+    /** Optional: Object containing feature geometry */
+    featureGeometry?: FeatureGeometry;
+    /** Optional: current platform name */
+    platform?: string;
+    /** Optional: Current platform version */
+    platformVersion?: string;
+    /** Optional: Current project id */
+    recordProject?: string;
+    /** Optional: Current project name */
+    recordProjectName?: string;
+    /** Optional: Current record's id */
+    recordID?: string;
+    /** Optional: Current repeatables's id */
+    featureID?: string;
+    /** Optional: Current repeatable field's index */
+    featureIndex?: number;
+    /** Optional: Current user's full name */
+    userFullName?: string;
+}
+interface FeatureGeometry {
+    coordinates: string[];
 }
  const DEFAULTS: {
     country: string;
@@ -207,12 +227,13 @@ declare function APPLICATIONVERSION(): string;
 /**
  * Returns the name of the application engine, application platform, and application version
  * on which Fulcrum is running
+ * @param separator optional; character string to separate application information, defaults to ", "
  * @returns name of application engine, application platform, and application version.
  * @example
  * // running Fulcrum Desktop on Chrome Browser
  * APPLICATIONINFO() // returns 'Chrome, 68.43.9.0.1, WebKit'
  */
-declare function APPLICATIONINFO(): string;
+declare function APPLICATIONINFO(separator?: string): string;
 
 interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {
 }
@@ -411,6 +432,19 @@ type GUID = string
 
  type FormFieldValues =
   ChoiceFieldValue
+  | AddressFieldValue
+
+
+interface AddressFieldValue {
+  sub_thoroughfare?: string|null,
+  thoroughfare?: string|null,
+  suite?: string|null,
+  locality?: string|null,
+  sub_admin_area?: string|null, 
+  admin_area?: string|null, 
+  postal_code?: string|null,
+  country?: string|null
+}
 
 interface ChoiceFieldValue {
   choice_values?: string[] | null,
@@ -1005,7 +1039,10 @@ declare function CURRENCYCODE(): string;
  */
 declare function CURRENCYSYMBOL(): string;
 
-declare function CURRENTLOCATION(): void;
+/**
+ * Returns current location from runtime if available, otherwise returns null.
+ */
+declare function CURRENTLOCATION(): string | null;
 
 
  type FormFieldTypes =
@@ -1077,7 +1114,7 @@ interface FormField {
   /** Array of objects containing requirement conditions */
   required_conditions?: FormFieldCondition[]
   /** Parent element of this field if it is in a section or repeatable */
-  parent?: FormField,
+  parent?: FormFields,
 }
 
 interface FormFieldDefaultPreviousValue {
@@ -1610,7 +1647,7 @@ declare function FLOOR(): number;
  * @param day one-two digit number
  * @returns Date object
  * @example
- * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
+ * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
  */
 declare function DATE(year: number, month: number, day: number): Date;
 /**
@@ -1620,7 +1657,7 @@ declare function DATE(year: number, month: number, day: number): Date;
  * @param day one-two digit number
  * @returns Date object
  * @example
- * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
+ * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
  */
 declare function DATE(year: string, month: string, day: string): Date | undefined;
 /**
@@ -1630,7 +1667,7 @@ declare function DATE(year: string, month: string, day: string): Date | undefine
  * @param day one-two digit number
  * @returns Date object
  * @example
- * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
+ * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
  */
 declare function DATE(year?: any, month?: any, day?: any): undefined;
 /**
@@ -1640,7 +1677,7 @@ declare function DATE(year?: any, month?: any, day?: any): undefined;
  * @param day one-two digit number
  * @returns Date object
  * @example
- * DATE(2012, 3, 14) // returns 2012-03-14T00:00:00.000Z
+ * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
  */
 declare function DATE(): undefined;
 
@@ -1811,6 +1848,15 @@ declare function DEGREES(value: undefined | null): number;
  * DEGREES("0.78") // returns 44.69070802020421
  */
 declare function DEGREES(): number;
+/**
+ * Returns degrees for an input of radians.
+ * @param value required; numeric value or string representing a value in radians
+ * @returns numeric value representing degrees
+ * @example
+ * DEGREES(Math.PI) // returns 180
+ * DEGREES("0.78") // returns 44.69070802020421
+ */
+declare function DEGREES(value?: any): number;
 
 /**
  * Returns definition object for a specified field
@@ -1829,13 +1875,20 @@ declare function FIELD(dataName: string): FormField;
  */
 declare function FIELD(dataName: MaybeString): FormField | undefined;
 
+/**
+ * Returns a field's description.
+ * @param dataName required; data_name of desired field
+ * @returns the field's description
+ * @example
+ * DESCRIPTION("operating_hours") // returns "Stores operating hours in 24-hour time format"
+ */
 declare function DESCRIPTION(dataName: MaybeString): string | undefined;
 /**
- * Returns definition object for a specified field
- * @param dataName The data name of the field
+ * Returns a field's description.
+ * @param dataName required; data_name of desired field
+ * @returns the field's description
  * @example
- * FIELD('child_item_cost').label // returns "Child Item Cost"
- * FIELD('child_item_cost').parent.label // returns "Child Items"
+ * DESCRIPTION("operating_hours") // returns "Stores operating hours in 24-hour time format"
  */
 declare function DESCRIPTION(): undefined;
 
@@ -1868,6 +1921,9 @@ declare function DEVICEINFO(separator?: string): string;
  */
 declare function DEVICEINFO(separator?: any): string;
 
+/**
+ * Returns the user's email from the configuration object.
+ */
 declare function EMAIL(): string | undefined;
 
 /**
@@ -1939,6 +1995,38 @@ declare function EXP(x: number): number;
 declare function EXP(x: string): number;
 
 /**
+ * Memoized store for `FACT` function
+ */
+declare function MEMOIZED_FACT(): number[];
+ function RESET_MEMOIZED_FACT(): number[];
+
+/**
+ * Returns factorial of a number, n (n!)
+ * @param value postive integer
+ * @returns factorial of value (value!)
+ * @example
+ * FACT(0) // returns 1
+ * FACT(7) // returns 5040
+ */
+declare function FACT(value: any): number;
+
+/**
+ * Memoized store for `FACTDOUBLE` function
+ */
+declare function MEMOIZED_FACTDOUBLE(): number[];
+ function RESET_MEMOIZED_FACTDOUBLE(): number[];
+
+/**
+ * Returns double factorial of a number, n (n!!)
+ * @param value postive integer
+ * @returns factorial of value (value!!)
+ * @example
+ * FACT(0) // returns 1
+ * FACT(7) // returns 5040
+ */
+declare function FACTDOUBLE(value: any): number;
+
+/**
  * Returns the boolean value `false`.
  * @example
  * FALSE() // returns false
@@ -2008,6 +2096,13 @@ declare function FIELDNAMES(dataName: string, options?: FieldsOptions): string[]
  */
 declare function FIELDNAMES(dataName: string): string[] | undefined;
 
+/**
+ * Returns a field's type.
+ * @param dataName required; data_name of desired field
+ * @returns the field's type
+ * @example
+ * FIELDTYPE("operating_hours") // returns "TimeField"
+ */
 declare function FIELDTYPE(dataName: string): string | undefined;
 
 /**
@@ -2024,24 +2119,14 @@ declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
 declare function FIRST(item: any): any[] | undefined;
 
 /**
- * Formats a string
- * @param template string format. Use %s for strings and %d for numbers.
- * @param variables Value(s) to substitute into the format string
- * @returns formatted string
- * @example
- * // returns "The pole height is 20 meters and has 3 issues detected."
- * FORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)
- * @example
- * // returns "11/11/2015 12:30:30"
- * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
+ * Returns locale-specific symbol to group large numbers - defaults to ','
  */
-declare function FORMAT(template: string, ...variables: any[]): string;
+declare function GROUPINGSEPARATOR(): string;
 
 /**
- * Returns the language value or, if it's not available, the default language
- * from the form configuration object.
+ * Returns locale-specific increment with which to group large numbers - defaults to 3 (thousands)
  */
-declare function LANGUAGE(): string;
+declare function GROUPINGSIZE(): number;
 
 /**
  * Returns max value from a list of values
@@ -2063,39 +2148,952 @@ declare function MAX(...args: any[]): number | undefined;
  */
 declare function MIN(...args: any[]): number | undefined;
 
+/**
+ * Returns fixed represention of a number
+ * @param num required; numeric value to be converted
+ * @param decimals  optional; integer between 0 - 20 indicating total fractional digits, defaults to 2
+ * @param suppressGroupingSeparator optional; boolean, whether to separate numbers with
+ * groupingSeparator character, defaults to false
+ * @returns fixed representation of a number as a string
+ * @example
+ * FIXED(12345678901 / 3, 3) // returns "4,115,226,300.333"
+ * FIXED(12345678901 / 3, 3, true) // returns "4115226300.333"
+ */
+declare function FIXED(num: number, decimals?: number, suppressGroupingSeparator?: boolean): string | undefined;
+/**
+ * Returns fixed represention of a number
+ * @param num required; numeric value to be converted
+ * @param decimals  optional; integer between 0 - 20 indicating total fractional digits, defaults to 2
+ * @param suppressGroupingSeparator optional; boolean, whether to separate numbers with
+ * groupingSeparator character, defaults to false
+ * @returns fixed representation of a number as a string
+ * @example
+ * FIXED(12345678901 / 3, 3) // returns "4,115,226,300.333"
+ * FIXED(12345678901 / 3, 3, true) // returns "4115226300.333"
+ */
+declare function FIXED(num: number, decimals?: number): string | undefined;
+/**
+ * Returns fixed represention of a number
+ * @param num required; numeric value to be converted
+ * @param decimals  optional; integer between 0 - 20 indicating total fractional digits, defaults to 2
+ * @param suppressGroupingSeparator optional; boolean, whether to separate numbers with
+ * groupingSeparator character, defaults to false
+ * @returns fixed representation of a number as a string
+ * @example
+ * FIXED(12345678901 / 3, 3) // returns "4,115,226,300.333"
+ * FIXED(12345678901 / 3, 3, true) // returns "4115226300.333"
+ */
+declare function FIXED(num: any): string | undefined;
+
+/**
+ * Returns the current form object.
+ */
+declare function FORM(): {};
+
+/**
+ * Formats a string
+ * @param template string format. Use %s for strings and %d for numbers.
+ * @param variables Value(s) to substitute into the format string
+ * @returns formatted string
+ * @example
+ * // returns "The pole height is 20 meters and has 3 issues detected."
+ * FORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)
+ * @example
+ * // returns "11/11/2015 12:30:30"
+ * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
+ */
+declare function FORMAT(template: string, ...variables: any[]): string;
+
+/**
+ * Returns a formatted address
+ * @param address required; string, must be valid AddressFieldValue:
+ * { sub_thoroughfare?: string, thoroughfare?: string, suite?: string, locality?: string,
+ * sub_admin_area?: string, admin_area?: string, postal_code?: string, country?: string }
+ * @param lineSeparator optional; string, character to separate address lines, defaults to "\n"
+ * @param partSeparator optional; string, character to separate address parts, defaulst to " "
+ * @returns string, formatted address
+ * @example
+ * const exampleAddress = {
+ *  sub_thoroughfare: "360",
+ *   thoroughfare: "Central Avenue",
+ *   suite: "200",
+ *   locality: "St. Petersburg",
+ *   sub_admin_area: "Pinellas",
+ *   admin_area: "FL",
+ *   postal_code: "33701",
+ *   country: "US",
+ * }
+ * FORMATADDRESS(exampleAddress) // returns "360 Central Avenue #200\nSt. Petersburg FL 33701\nUS"
+ */
+declare function FORMATADDRESS(address: AddressFieldValue, lineSeparator?: string, partSeparator?: string): string | undefined;
+/**
+ * Returns a formatted address
+ * @param address required; string, must be valid AddressFieldValue:
+ * { sub_thoroughfare?: string, thoroughfare?: string, suite?: string, locality?: string,
+ * sub_admin_area?: string, admin_area?: string, postal_code?: string, country?: string }
+ * @param lineSeparator optional; string, character to separate address lines, defaults to "\n"
+ * @param partSeparator optional; string, character to separate address parts, defaulst to " "
+ * @returns string, formatted address
+ * @example
+ * const exampleAddress = {
+ *  sub_thoroughfare: "360",
+ *   thoroughfare: "Central Avenue",
+ *   suite: "200",
+ *   locality: "St. Petersburg",
+ *   sub_admin_area: "Pinellas",
+ *   admin_area: "FL",
+ *   postal_code: "33701",
+ *   country: "US",
+ * }
+ * FORMATADDRESS(exampleAddress) // returns "360 Central Avenue #200\nSt. Petersburg FL 33701\nUS"
+ */
+declare function FORMATADDRESS(address: AddressFieldValue): string | undefined;
+
+/**
+ * Returns the language value or, if it's not available, the default language
+ * from the form configuration object.
+ */
+declare function LANGUAGE(): string;
+
+/**
+ * Returns a number formatted based on the current language and the styling options passed in.
+ * @param value required; number to be formatted
+ * @param langauge optional; languange- and country-specific string, e.g. "en-US", to indicate desired
+ * language formatting. Defaults to device's current langauge setting.
+ * @param options optional; formatting options hash:
+ * {
+ *  localeMatcher: locale string, e.g. "en_US",
+ *  style: "currency" | "percent" | "decimal",
+ *  currency: currency code string, e.g. "USD",
+ *  minimumSignificantDigits: number,
+ *  maximumSignificantDigits: number,
+ *  minimumIntegerDigits: number,
+ *  minimumFractionDigits?: number,
+ *  maximumFractionDigits?: number,
+ *  useGrouping: boolean,
+ * }
+ * @returns formatted number string
+ * @example
+ * FORMATNUMBER(10000 / 3, "pt-BR", { style: "currency", currency: "BRL" }) // returns "R$3.333,33"
+ * FORMATNUMBER(1 / 3, null, { minimumFractionDigits: 5 }) // returns "0.33333"
+ */
 declare function FORMATNUMBER(value: number, language: MaybeString, options: NumberFormatOptions): string;
 /**
- * Returns min value from a list of values
- * @param args a list of numeric values or string number values
- * @returns min value in numeric form
+ * Returns a number formatted based on the current language and the styling options passed in.
+ * @param value required; number to be formatted
+ * @param langauge optional; languange- and country-specific string, e.g. "en-US", to indicate desired
+ * language formatting. Defaults to device's current langauge setting.
+ * @param options optional; formatting options hash:
+ * {
+ *  localeMatcher: locale string, e.g. "en_US",
+ *  style: "currency" | "percent" | "decimal",
+ *  currency: currency code string, e.g. "USD",
+ *  minimumSignificantDigits: number,
+ *  maximumSignificantDigits: number,
+ *  minimumIntegerDigits: number,
+ *  minimumFractionDigits?: number,
+ *  maximumFractionDigits?: number,
+ *  useGrouping: boolean,
+ * }
+ * @returns formatted number string
  * @example
- * MIN(7, 4, 1, 2, 4) // returns 1
- * MIN(["45", "50", "32", "51"]) // returns 32
+ * FORMATNUMBER(10000 / 3, "pt-BR", { style: "currency", currency: "BRL" }) // returns "R$3.333,33"
+ * FORMATNUMBER(1 / 3, null, { minimumFractionDigits: 5 }) // returns "0.33333"
  */
 declare function FORMATNUMBER(value: number, language: MaybeString): string;
 /**
- * Returns min value from a list of values
- * @param args a list of numeric values or string number values
- * @returns min value in numeric form
+ * Returns a number formatted based on the current language and the styling options passed in.
+ * @param value required; number to be formatted
+ * @param langauge optional; languange- and country-specific string, e.g. "en-US", to indicate desired
+ * language formatting. Defaults to device's current langauge setting.
+ * @param options optional; formatting options hash:
+ * {
+ *  localeMatcher: locale string, e.g. "en_US",
+ *  style: "currency" | "percent" | "decimal",
+ *  currency: currency code string, e.g. "USD",
+ *  minimumSignificantDigits: number,
+ *  maximumSignificantDigits: number,
+ *  minimumIntegerDigits: number,
+ *  minimumFractionDigits?: number,
+ *  maximumFractionDigits?: number,
+ *  useGrouping: boolean,
+ * }
+ * @returns formatted number string
  * @example
- * MIN(7, 4, 1, 2, 4) // returns 1
- * MIN(["45", "50", "32", "51"]) // returns 32
+ * FORMATNUMBER(10000 / 3, "pt-BR", { style: "currency", currency: "BRL" }) // returns "R$3.333,33"
+ * FORMATNUMBER(1 / 3, null, { minimumFractionDigits: 5 }) // returns "0.33333"
  */
 declare function FORMATNUMBER(value: number): string;
 
+/**
+ * Returns the greatest common divisor
+ * @param args list of numbers
+ * @returns number; greatest commom divisor
+ * @example
+ * GCD(8, 16, 32, 36) // returns 4
+ */
+declare function GCD(...args: number[]): number;
+/**
+ * Returns the greatest common divisor
+ * @param args list of numbers
+ * @returns number; greatest commom divisor
+ * @example
+ * GCD(8, 16, 32, 36) // returns 4
+ */
+declare function GCD(...args: string[]): number;
+/**
+ * Returns the greatest common divisor
+ * @param args list of numbers
+ * @returns number; greatest commom divisor
+ * @example
+ * GCD(8, 16, 32, 36) // returns 4
+ */
+declare function GCD(...args: any[]): number;
+
+/** Returns result from $$HOST */
+declare function GETRESULT(): any;
 
 /**
- * Memoized store for `FACT` function
+ * Returns values grouped according to a passed in iteratee or according to identity
+ * @param values required; array of values
+ * @param iteratee optional; function to determine value sorting, defaults to identity (`===`)
+ * @returns object of grouped values; keys are determined by the return values of `iteratee`
+ * @example
+ * GROUP([3, 2, 1, 3, 3, 3]) // returns {1: [1], 2: [2], 3: [3, 3, 3, 3]}
+ * GROUP([6.1, 4.2, 6.3], Math.floor) // returns { 4: [4.2], 6: [6.1, 6.3] }
  */
-declare function MEMOIZED_FACT(): [];
- function RESET_MEMOIZED_FACT(): [];
+declare function GROUP(values: number[], iteratee: Function): {} | undefined;
+/**
+ * Returns values grouped according to a passed in iteratee or according to identity
+ * @param values required; array of values
+ * @param iteratee optional; function to determine value sorting, defaults to identity (`===`)
+ * @returns object of grouped values; keys are determined by the return values of `iteratee`
+ * @example
+ * GROUP([3, 2, 1, 3, 3, 3]) // returns {1: [1], 2: [2], 3: [3, 3, 3, 3]}
+ * GROUP([6.1, 4.2, 6.3], Math.floor) // returns { 4: [4.2], 6: [6.1, 6.3] }
+ */
+declare function GROUP(values: any[]): {} | undefined;
+/**
+ * Returns values grouped according to a passed in iteratee or according to identity
+ * @param values required; array of values
+ * @param iteratee optional; function to determine value sorting, defaults to identity (`===`)
+ * @returns object of grouped values; keys are determined by the return values of `iteratee`
+ * @example
+ * GROUP([3, 2, 1, 3, 3, 3]) // returns {1: [1], 2: [2], 3: [3, 3, 3, 3]}
+ * GROUP([6.1, 4.2, 6.3], Math.floor) // returns { 4: [4.2], 6: [6.1, 6.3] }
+ */
+declare function GROUP(values: any[], iteratee?: Function): {} | undefined;
+/**
+ * Returns values grouped according to a passed in iteratee or according to identity
+ * @param values required; array of values
+ * @param iteratee optional; function to determine value sorting, defaults to identity (`===`)
+ * @returns object of grouped values; keys are determined by the return values of `iteratee`
+ * @example
+ * GROUP([3, 2, 1, 3, 3, 3]) // returns {1: [1], 2: [2], 3: [3, 3, 3, 3]}
+ * GROUP([6.1, 4.2, 6.3], Math.floor) // returns { 4: [4.2], 6: [6.1, 6.3] }
+ */
+declare function GROUP(values: any, iteratee?: Function): {} | undefined;
 
 /**
- * Memoized store for `FACTDOUBLE` function
+ * Returns where or not a ChoiceFieldValue has an `other_values` key
+ * @param value ChoiceFieldValue { choice_values?: string[ ], other_values?: string[ ] }
+ * @returns boolean value
+ * @example
+ * const choiceField1 = { choice_values: ["yes", "no"], other_values: ["maybe"] }
+ * const choiceField2 = { choice_values: ["yes", "no"] }
+ * HASOTHER(choiceField1) // returns true
+ * HASOTHER(choiceField2) // returns false
  */
-declare function MEMOIZED_FACTDOUBLE(): [];
- function RESET_MEMOIZED_FACTDOUBLE(): [];
+declare function HASOTHER(value: ChoiceFieldValue): boolean;
+/**
+ * Returns where or not a ChoiceFieldValue has an `other_values` key
+ * @param value ChoiceFieldValue { choice_values?: string[ ], other_values?: string[ ] }
+ * @returns boolean value
+ * @example
+ * const choiceField1 = { choice_values: ["yes", "no"], other_values: ["maybe"] }
+ * const choiceField2 = { choice_values: ["yes", "no"] }
+ * HASOTHER(choiceField1) // returns true
+ * HASOTHER(choiceField2) // returns false
+ */
+declare function HASOTHER(value?: any): boolean;
+/**
+ * Returns where or not a ChoiceFieldValue has an `other_values` key
+ * @param value ChoiceFieldValue { choice_values?: string[ ], other_values?: string[ ] }
+ * @returns boolean value
+ * @example
+ * const choiceField1 = { choice_values: ["yes", "no"], other_values: ["maybe"] }
+ * const choiceField2 = { choice_values: ["yes", "no"] }
+ * HASOTHER(choiceField1) // returns true
+ * HASOTHER(choiceField2) // returns false
+ */
+declare function HASOTHER(): boolean;
 
+/**
+ * Evaluates a conditional expression
+ * @param test required; conditional expression that evaluates to true or false
+ * @param trueValue required; value to be returned in case of true
+ * @param falseValue required; vaue to be returned in case of false
+ * @returns boolean or `trueValue`/`falseValue` if supplied
+ * @example
+ * IF(1 > 0, 10, 20) // returns 10
+ */
+declare function IF(test: any, trueValue: any, falseValue: any): any;
+
+/**
+ * Checks if a value is an instance of an Error or has no value
+ * @param value required; item to be checked
+ * @returns boolean
+ * @example
+ * const badField = FIELD('does_not_exist') // = undefined
+ * ISERR(badField) // returns true
+ */
+declare function ISERR(value: any): boolean;
+
+/**
+ * Evaluates whether a passed in value is an error.
+ * @param value required; value to be evaluated
+ * @param errorValue required; value to be returned in event `value` is an error
+ * @returns `errorValue` in case `value` is an error, otherwise `value`
+ * @example
+ * IFERROR(EVEN(null), "ERR") // returns "ERR"
+ */
+declare function IFERROR(value: any, errorValue: any): any;
+
+/**
+ * Returns a string representation of the passed in parameter
+ * @param value value to be inspected
+ * @returns stringified value
+ * @example
+ * INSPECT({ test: "test_test"}) // returns "{ test: 'test_test' }"
+ */
+declare function INSPECT(value: any): string;
+
+interface AlertResult {
+  /** result type */
+  type: "message",
+  /** title of alert, optional */
+  title?: string,
+  /** short message, optional */
+  message?: string,
+}
+
+interface InvalidResult {
+  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
+   * system generated 4 character codes.
+   */
+  key: string|null,
+  /** message to be displayed with invalidation error */
+  message: string|null,
+  /** result type  */
+  type: "validation"
+}
+
+interface ProgressResult {
+  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
+   * system generated 4 character codes.
+   */
+  title: string|null,
+  /** message to be displayed with invalidation error */
+  message: string|null,
+  /** result type  */
+  type: "progress"
+}
+
+interface ConfigurationResult {
+  /** result type */
+  type: "configure",
+  /** attribute of configuration to be changed */
+  attribute: string,
+  /** value to which configuration attribute will be changed */
+  value: any
+}
+
+interface SetValueResult {
+  /** result type */
+  type: "set-value",
+  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
+   * system generated 4 character codes.
+   */
+  key: string,
+  /** value to which field is to be set */
+  value: string|null
+}
+
+interface ExpressionResult {
+  /** result type */
+  type: "calculation",
+  /** ID for form. Must be unique to the form and lowercase. The Fulcrum app builder uses
+   * system generated 4 character codes.
+   */
+  key: string,
+  /* optional error string */
+  error?: MaybeString,
+  /** value of field */
+  value: any
+}
+/**
+ * Displays an alert and stops a record from being saved
+ * @description
+ * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
+ * It’s a special purpose function that’s intended to only be used within the `validate-record` and
+ * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
+ * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
+ * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
+ * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
+ * @param message required; string detailing the reason for invalidating a record
+ * @param dataName optional; string, data_name of field to be validated
+ * @returns void
+ */
+declare function INVALID(message: string, dataName?: string): void;
+/**
+ * Displays an alert and stops a record from being saved
+ * @description
+ * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
+ * It’s a special purpose function that’s intended to only be used within the `validate-record` and
+ * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
+ * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
+ * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
+ * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
+ * @param message required; string detailing the reason for invalidating a record
+ * @param dataName optional; string, data_name of field to be validated
+ * @returns void
+ */
+declare function INVALID(message: string, dataName?: string): void;
+/**
+ * Displays an alert and stops a record from being saved
+ * @description
+ * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
+ * It’s a special purpose function that’s intended to only be used within the `validate-record` and
+ * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
+ * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
+ * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
+ * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
+ * @param message required; string detailing the reason for invalidating a record
+ * @param dataName optional; string, data_name of field to be validated
+ * @returns void
+ */
+declare function INVALID(message: string): void;
+
+
+/**
+ * Returns whether or not a value is even
+ * @param value required; numeric value to be checked
+ * @returns boolean value
+ * @example
+ * ISEVEN(24) // returns true
+ * ISEVEN(5 * 5) // returns false
+ */
+declare function ISEVEN(value: number): boolean;
+/**
+ * Returns whether or not a value is even
+ * @param value required; numeric value to be checked
+ * @returns boolean value
+ * @example
+ * ISEVEN(24) // returns true
+ * ISEVEN(5 * 5) // returns false
+ */
+declare function ISEVEN(value: string): boolean;
+/**
+ * Returns whether or not a value is even
+ * @param value required; numeric value to be checked
+ * @returns boolean value
+ * @example
+ * ISEVEN(24) // returns true
+ * ISEVEN(5 * 5) // returns false
+ */
+declare function ISEVEN(value: any): boolean;
+
+interface MediaObject {
+    height: number;
+    width: number;
+    orientation?: number;
+}
+/**
+ * Checks whether the media is in portrait mode.
+ * @param media required; media object, height and width attributes must be present
+ * @returns boolean
+ * @example
+ * const mediaObject = { width: 100, height: 200 }
+ * ISPORTRAIT(mediaObject) // returns true
+ */
+declare function ISPORTRAIT(media: MediaObject): boolean;
+/**
+ * Checks whether the media is in portrait mode.
+ * @param media required; media object, height and width attributes must be present
+ * @returns boolean
+ * @example
+ * const mediaObject = { width: 100, height: 200 }
+ * ISPORTRAIT(mediaObject) // returns true
+ */
+declare function ISPORTRAIT(media: any): boolean | undefined;
+/**
+ * Checks whether the media is in portrait mode.
+ * @param media required; media object, height and width attributes must be present
+ * @returns boolean
+ * @example
+ * const mediaObject = { width: 100, height: 200 }
+ * ISPORTRAIT(mediaObject) // returns true
+ */
+declare function ISPORTRAIT(): undefined;
+
+/**
+ * Checks whether the media is in landscape mode.
+ * @param media required; media object, height and width attributes must be present
+ * @returns boolean
+ * @example
+ * const mediaObject = { width: 200, height: 100 }
+ * ISLANDSCAPE(mediaObject) // returns true
+ */
+declare function ISLANDSCAPE(media: MediaObject): boolean;
+/**
+ * Checks whether the media is in landscape mode.
+ * @param media required; media object, height and width attributes must be present
+ * @returns boolean
+ * @example
+ * const mediaObject = { width: 200, height: 100 }
+ * ISLANDSCAPE(mediaObject) // returns true
+ */
+declare function ISLANDSCAPE(media: any): boolean | undefined;
+/**
+ * Checks whether the media is in landscape mode.
+ * @param media required; media object, height and width attributes must be present
+ * @returns boolean
+ * @example
+ * const mediaObject = { width: 200, height: 100 }
+ * ISLANDSCAPE(mediaObject) // returns true
+ */
+declare function ISLANDSCAPE(): undefined;
+
+/**
+ * Checks for a boolean value
+ * @param value required; value to be checked
+ * @returns boolean value
+ * @example
+ * ISLOGICAL(2 > 0) // returns true
+ * ISLOGICAL([ false ]) // returns false
+ */
+declare function ISLOGICAL(value: any): boolean;
+
+/**
+ * Returns a boolean indicating whether the feature is new or an update.
+ */
+declare function ISNEW(): boolean;
+
+/**
+ * Checks if a value is a a non-text value (not a string)
+ * @param value required; value to be checked
+ * @returns boolean
+ * @example
+ * ISNONTEXT("a string") // returns false
+ * ISNONTEXT(["an array"]) // returns true
+ */
+declare function ISNONTEXT(value: any): boolean;
+
+/**
+ * Returns whether or not a value is odd
+ * @param value required; numeric value to be checked
+ * @returns boolean value
+ * @example
+ * ISODD(24) // returns false
+ * ISODD(5 * 5) // returns true
+ */
+declare function ISODD(value: number): boolean;
+/**
+ * Returns whether or not a value is odd
+ * @param value required; numeric value to be checked
+ * @returns boolean value
+ * @example
+ * ISODD(24) // returns false
+ * ISODD(5 * 5) // returns true
+ */
+declare function ISODD(value: string): boolean;
+/**
+ * Returns whether or not a value is odd
+ * @param value required; numeric value to be checked
+ * @returns boolean value
+ * @example
+ * ISODD(24) // returns false
+ * ISODD(5 * 5) // returns true
+ */
+declare function ISODD(value: any): boolean;
+
+/**
+ * Returns the current user's role or, if it's not available, undefined.
+ */
+declare function ROLE(): string | undefined;
+
+/**
+ * Determines whether arguments passed in contain the role of the current user
+ * by comparing it to  userRoleName on the configuration object
+ * @param args required; role(s) to be checked as strings
+ * @returns boolean
+ * @example
+ * // userRoleName = Standard User
+ * ISROLE("Admin") // returns false
+ * ISROLE("Admin", "ReadOnly", "Standard User") // returns true
+ */
+declare function ISROLE(...args: string[]): boolean;
+/**
+ * Determines whether arguments passed in contain the role of the current user
+ * by comparing it to  userRoleName on the configuration object
+ * @param args required; role(s) to be checked as strings
+ * @returns boolean
+ * @example
+ * // userRoleName = Standard User
+ * ISROLE("Admin") // returns false
+ * ISROLE("Admin", "ReadOnly", "Standard User") // returns true
+ */
+declare function ISROLE(...args: any[]): boolean;
+
+/**
+ * Checks to see if a choice is selected
+ * @param value required; ChoiceFieldValues containing possible choices to check against
+ * @param choice required; choice or array of choices to check if they are selected
+ * @returns boolean
+ * @example
+ * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
+ */
+declare function ISSELECTED(value: ChoiceFieldValue, choice: string | string[]): boolean;
+/**
+ * Checks to see if a choice is selected
+ * @param value required; ChoiceFieldValues containing possible choices to check against
+ * @param choice required; choice or array of choices to check if they are selected
+ * @returns boolean
+ * @example
+ * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
+ */
+declare function ISSELECTED(value: ChoiceFieldValue, choice?: string | string[]): boolean;
+/**
+ * Checks to see if a choice is selected
+ * @param value required; ChoiceFieldValues containing possible choices to check against
+ * @param choice required; choice or array of choices to check if they are selected
+ * @returns boolean
+ * @example
+ * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
+ */
+declare function ISSELECTED(value?: any, choice?: any): boolean;
+
+/**
+ * Checks if a value is a text value (string)
+ * @param value required; value to be checked
+ * @returns boolean
+ * @example
+ * ISTEXT("a string") // returns true
+ * ISTEXT(["an array"]) // returns false
+ */
+declare function ISTEXT(value: any): boolean;
+
+/**
+ * Returns a boolean indicating if the feature being edited is an update
+ */
+declare function ISUPDATE(): boolean;
+
+/**
+ * Returns the label of a field
+ * @param dataName required; data_name of a form field (string)
+ * @returns form label, string
+ * @example
+ * LABEL("business_name") // returns "Business Name"
+ */
+declare function LABEL(dataName: string): string | undefined;
+
+/**
+ * Returns the last n items of an array or string.
+ * @param item required; array or string to extract items from
+ * @param n optional; number of items to be extracted
+ * @returns items extracted; if more than one item is extracted an array is returned
+ * @example
+ * LAST([1, 2, 3]) // returns 3
+ * LAST([1 ,2 ,3], 2) // return [2, 3]
+ */
+declare function FIRST(item: any[] | string, n: number): any[] | undefined;
+/**
+ * Returns the last n items of an array or string.
+ * @param item required; array or string to extract items from
+ * @param n optional; number of items to be extracted
+ * @returns items extracted; if more than one item is extracted an array is returned
+ * @example
+ * LAST([1, 2, 3]) // returns 3
+ * LAST([1 ,2 ,3], 2) // return [2, 3]
+ */
+declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
+/**
+ * Returns the last n items of an array or string.
+ * @param item required; array or string to extract items from
+ * @param n optional; number of items to be extracted
+ * @returns items extracted; if more than one item is extracted an array is returned
+ * @example
+ * LAST([1, 2, 3]) // returns 3
+ * LAST([1 ,2 ,3], 2) // return [2, 3]
+ */
+declare function FIRST(item: any): any[] | undefined;
+
+/**
+ * Returns the latitude of the record if it exists.
+ */
+declare function LATITUDE(): number;
+
+/**
+ * Returns the least common multiple of the arguments passed in
+ * @param args numbers or numbers as string values to be evaluated
+ * @returns number; least common multiple
+ * @example
+ * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
+ */
+declare function LCM(...args: number[]): number;
+/**
+ * Returns the least common multiple of the arguments passed in
+ * @param args numbers or numbers as string values to be evaluated
+ * @returns number; least common multiple
+ * @example
+ * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
+ */
+declare function LCM(...args: string[]): number;
+/**
+ * Returns the least common multiple of the arguments passed in
+ * @param args numbers or numbers as string values to be evaluated
+ * @returns number; least common multiple
+ * @example
+ * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
+ */
+declare function LCM(...args: any[]): number;
+
+/**
+ * Returns n left characters of a string.
+ * @param value required; string
+ * @param numberOfCharacters optional; number of characters to be returned. If not specified
+ * one character will be returned
+ * @returns string; number of characters specified
+ * @example
+ * LEFT("Hello, World", 3) // returns "Hel"
+ */
+declare function LEFT(value: string, numberOfCharacters?: number): string | undefined;
+/**
+ * Returns n left characters of a string.
+ * @param value required; string
+ * @param numberOfCharacters optional; number of characters to be returned. If not specified
+ * one character will be returned
+ * @returns string; number of characters specified
+ * @example
+ * LEFT("Hello, World", 3) // returns "Hel"
+ */
+declare function LEFT(value: any, numberOfCharacters?: string): string | undefined;
+/**
+ * Returns n left characters of a string.
+ * @param value required; string
+ * @param numberOfCharacters optional; number of characters to be returned. If not specified
+ * one character will be returned
+ * @returns string; number of characters specified
+ * @example
+ * LEFT("Hello, World", 3) // returns "Hel"
+ */
+declare function LEFT(value: string): string | undefined;
+/**
+ * Returns n left characters of a string.
+ * @param value required; string
+ * @param numberOfCharacters optional; number of characters to be returned. If not specified
+ * one character will be returned
+ * @returns string; number of characters specified
+ * @example
+ * LEFT("Hello, World", 3) // returns "Hel"
+ */
+declare function LEFT(value: any, numberOfCharacters?: any): string | undefined;
+
+/**
+ * Returns the length of a value as a string or an array-like object.
+ * @param value required; item to be measured
+ * @returns number
+ * @example
+ * LEN("test") // returns 4
+ * LEN(["test", "test"]) // returns 2
+ */
+declare function LEN(value: any): number;
+
+/**
+ * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
+ * @param value numeric value specifying radians
+ * @returns numeric value indicating the natural log of a value
+ * @example
+ * LN(12) // returns 2.4849066497880004
+ */
+declare function LN(value: number): number;
+/**
+ * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
+ * @param value numeric value specifying radians
+ * @returns numeric value indicating the natural log of a value
+ * @example
+ * LN(12) // returns 2.4849066497880004
+ */
+declare function LN(value: string): number;
+/**
+ * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
+ * @param value numeric value specifying radians
+ * @returns numeric value indicating the natural log of a value
+ * @example
+ * LN(12) // returns 2.4849066497880004
+ */
+declare function LN(value: any): number;
+
+/**
+ * Returns the locale of a record.
+ */
+declare function LOCALE(): string;
+
+/**
+ * Calculates the log of a value given a base.
+ * @param value required; number to be logged
+ * @param base optional; base with which to calculated the log, defaults to 10
+ * @returns number
+ * @example
+ * LOG(100) // returns 2
+ */
+declare function LOG(value: number, base: number): number;
+/**
+ * Calculates the log of a value given a base.
+ * @param value required; number to be logged
+ * @param base optional; base with which to calculated the log, defaults to 10
+ * @returns number
+ * @example
+ * LOG(100) // returns 2
+ */
+declare function LOG(value: number): number;
+/**
+ * Calculates the log of a value given a base.
+ * @param value required; number to be logged
+ * @param base optional; base with which to calculated the log, defaults to 10
+ * @returns number
+ * @example
+ * LOG(100) // returns 2
+ */
+declare function LOG(value: any, base?: any): number;
+
+/**
+ * Calculates the log10 (common logarithm) of a value.
+ * @param value required; number to be calculated
+ * @returns numeric value
+ * @example
+ * LOG10(100) // returns 2
+ */
+declare function LOG10(value: number): number;
+/**
+ * Calculates the log10 (common logarithm) of a value.
+ * @param value required; number to be calculated
+ * @returns numeric value
+ * @example
+ * LOG10(100) // returns 2
+ */
+declare function LOG10(value: string): number;
+/**
+ * Calculates the log10 (common logarithm) of a value.
+ * @param value required; number to be calculated
+ * @returns numeric value
+ * @example
+ * LOG10(100) // returns 2
+ */
+declare function LOG10(value: any): number;
+
+/**
+ * Returns a record's longitude if it exists.
+ */
+declare function LONGITUDE(): number;
+
+/**
+ * Converts a string value to all lowercase.
+ * @param value required; value to be converted to lowercase
+ * @returns string
+ * @example
+ * LOWER("CASE") // returns "case"
+ */
+declare function LOWER(value: string): string | undefined;
+/**
+ * Converts a string value to all lowercase.
+ * @param value required; value to be converted to lowercase
+ * @returns string
+ * @example
+ * LOWER("CASE") // returns "case"
+ */
+declare function LOWER(value: any): string | undefined;
+
+
+/**
+ * Returns the median value of list of numbers.
+ * @param args required; numeric values to be evaluated
+ * @returns median value
+ * @example
+ * MEDIAN(3, 4, 2, 5, 1) // returns 3
+ */
+declare function MEDIAN(...args: number[]): number;
+/**
+ * Returns the median value of list of numbers.
+ * @param args required; numeric values to be evaluated
+ * @returns median value
+ * @example
+ * MEDIAN(3, 4, 2, 5, 1) // returns 3
+ */
+declare function MEDIAN(...args: any[]): number | undefined;
+
+/**
+ * Returns a specific number of characters from a text string.
+ * @param value required; text string
+ * @param startPosition required; numeric value indicating where in the `value` one should start cutting
+ * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ * @returns string
+ * @example
+ * MID("abcd", 2, 2) // returns "bc"
+ */
+declare function MID(value: string, startPosition: number, numberOfCharacters: number): string | undefined;
+/**
+ * Returns a specific number of characters from a text string.
+ * @param value required; text string
+ * @param startPosition required; numeric value indicating where in the `value` one should start cutting
+ * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ * @returns string
+ * @example
+ * MID("abcd", 2, 2) // returns "bc"
+ */
+declare function MID(value: string, startPosition: string, numberOfCharacters: string): string | undefined;
+/**
+ * Returns a specific number of characters from a text string.
+ * @param value required; text string
+ * @param startPosition required; numeric value indicating where in the `value` one should start cutting
+ * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ * @returns string
+ * @example
+ * MID("abcd", 2, 2) // returns "bc"
+ */
+declare function MID(value?: any, startPosition?: any, numberOfCharacters?: any): string | undefined;
+
+
+/**
+ * Returns the modulus or remainder of a number divided by a divisor.
+ * @param num required; number to be divided
+ * @param divisor required; number doing the dividing
+ * @returns numeric value; remainder of `num / divisor`
+ * @example
+ * MOD(10, 2) // returns 0
+ * MOD(13, 2) // returns 1
+ */
+declare function MOD(num: number, divisor: number): number;
+/**
+ * Returns the modulus or remainder of a number divided by a divisor.
+ * @param num required; number to be divided
+ * @param divisor required; number doing the dividing
+ * @returns numeric value; remainder of `num / divisor`
+ * @example
+ * MOD(10, 2) // returns 0
+ * MOD(13, 2) // returns 1
+ */
+declare function MOD(num: string, divisor: string): number;
+/**
+ * Returns the modulus or remainder of a number divided by a divisor.
+ * @param num required; number to be divided
+ * @param divisor required; number doing the dividing
+ * @returns numeric value; remainder of `num / divisor`
+ * @example
+ * MOD(10, 2) // returns 0
+ * MOD(13, 2) // returns 1
+ */
+declare function MOD(num?: any, divisor?: any): number;
 
 /**
  * Returns a month given a date.
@@ -2124,6 +3122,68 @@ declare function MONTH(date: MaybeString): number;
  * MONTH(new Date("2015/12/16 00:00:00") // returns 12
  */
 declare function MONTH(): void;
+
+/**
+ * Returns a numeric value. If a number if passed in, the same number is returned, otherwise
+ * function returns 1 for a true boolean value, and 0 for all other values.
+ * @param value optional
+ * @returns a numeric value
+ * @example
+ * N(97) // returns 97
+ * N(false) // returns 0
+ */
+declare function N(value: any): number;
+
+/**
+ * Returns the negation of a value, i.e. if a value is falsey NOT() will return true.
+ * @param value parameter of any type
+ * @returns boolean
+ * @example
+ * NOT("test") // returns false
+ */
+declare function NOT(value?: any): boolean;
+
+/**
+ * Maps over arguments passed in and converts each to a number value.
+ * @param args list of values to be mapped to numbers
+ * @returns array of numberic values
+ * @example
+ * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+ */
+declare function NUMS(...args: string[]): number[];
+/**
+ * Maps over arguments passed in and converts each to a number value.
+ * @param args list of values to be mapped to numbers
+ * @returns array of numberic values
+ * @example
+ * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+ */
+declare function NUMS(...args: number[]): number[];
+/**
+ * Maps over arguments passed in and converts each to a number value.
+ * @param args list of values to be mapped to numbers
+ * @returns array of numberic values
+ * @example
+ * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+ */
+declare function NUMS(...args: any[]): number[];
+
+/**
+ * Returns the next odd number.
+ * @param value number to be evaluated
+ * @returns number
+ * @example
+ * ODD(2) // returns 3
+ */
+declare function ODD(value: number): number;
+/**
+ * Returns the next odd number.
+ * @param value number to be evaluated
+ * @returns number
+ * @example
+ * ODD(2) // returns 3
+ */
+declare function ODD(value?: any): number;
 
 
 interface TriggeredEvent {
@@ -2930,6 +3990,281 @@ declare function ON(name: AddAudioEventName, callback: (event: AddAudioEvent) =>
  */
 declare function ON(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void;
 
+/**
+ * Returns the value of pi (π).
+ */
+declare function PI(): number;
+
+/** Returns the platform name from the configuration object */
+declare function PLATFORM(): string;
+
+/** Returns the platform version from the configuration object */
+declare function PLATFORMVERSION(): string;
+
+/**
+ * Returns platform information off the form configuration object including platform name and version.
+ * @param separator optional; separator with which to combine platform name and version - defaults to ", "
+ * @returns string with platform name and version
+ * @example
+ * PLATFORMINFO() // returns "Android, 0.9.3"
+ */
+declare function PLATFORMINFO(separator?: string): string;
+
+/**
+ * Maps over a collection and returns the items based on a property (key).
+ * @param object required; Array-like object to be iterated over\
+ * @param property required; key name being targeted
+ * @returns an array of items that match the `property` param
+ * @example
+ * const users = [ { name: "Daniel" }, { name: "Susie" } ]
+ *
+ * PLUCK(users, "name") // returns [ "Daniel", "Susie" ]
+ */
+declare function PLUCK(object: any[], property: string): any[];
+
+/**
+ * Returns the base number raised to the exponent power.
+ * @param base required; base number to be exponentially multiplied
+ * @param exponent required; number to serve as exponent
+ * @returns number
+ * @example
+ * POWER(3, 4) // returns 81
+ */
+declare function POWER(base: number, power: number): number;
+/**
+ * Returns the base number raised to the exponent power.
+ * @param base required; base number to be exponentially multiplied
+ * @param exponent required; number to serve as exponent
+ * @returns number
+ * @example
+ * POWER(3, 4) // returns 81
+ */
+declare function POWER(base?: any, power?: any): number;
+
+/**
+ * Multiplies all the numbers given as arguments
+ * @param args required; list of numbers to be multiplied
+ * @returns product
+ * @example
+ * PRODUCT(-2, 3, 4) // returns -24
+ */
+declare function PRODUCT(...args: number[]): number;
+/**
+ * Multiplies all the numbers given as arguments
+ * @param args required; list of numbers to be multiplied
+ * @returns product
+ * @example
+ * PRODUCT(-2, 3, 4) // returns -24
+ */
+declare function PRODUCT(...args: any[]): number;
+
+/**
+ * Displays a non-dismissible message that can be used to provide feedback when performing an asynchronous function.
+ * @description While fetching data from an API using REQUEST it might be desirable
+ * to let the user know that the request is in progress. This is an advanced function that requires thorough
+ * testing and error checking in your logic since the message is not dismissible by the user. To dismiss
+ * the progress message, call PROGRESS();.
+ * @param title required; A short title for the progress message
+ * @param message required; The message content for the progress alert
+ * @example
+ * const url: string = 'https://example.com';
+ * // show progress message while request is happening
+ * PROGRESS('Searching for nearby facilities ...');
+ *
+ * REQUEST(url, function(error, response, body) {
+ *  // resets progress message after request finishes
+ *  PROGRESS();
+ *  if (error) {
+ *    ALERT(INSPECT(error));
+ *  } else {
+ *   // do something with the API response
+ *  }
+ * });
+ */
+declare function PROGRESS(title?: null | string, message?: null | string): void;
+
+/**
+ * Returns the project ID off the configuration object.
+ */
+declare function PROJECTID(): string | undefined;
+
+/**
+ * Returns the project name from the configuration object
+ */
+declare function PROJECTNAME(): string | undefined;
+
+/**
+ * Display a text field to get input from the user and a callback to respond to the result.
+ * @param title required; A short title for the alert; pass in `null` for no title
+ * @param message required; The message content for the alert
+ * @param callback required; Function to be invoked when the message box is dismissed
+ * @example
+ * PROMPT('Please enter the current year', function (result) {
+ * if (result.input === new Date().getFullYear()) {
+ *   // Correct
+ * } else {
+ *   // Incorrect
+ * }
+ * });
+ */
+declare function PROMPT(title: string | null, message: string, callback: Function): void;
+
+/**
+ * Capitalizes the first letter in each word of a string.
+ * @param value required; string to be capitalized
+ * @returns string
+ * @example
+ *
+ * PROPER("test test") // returns "Test Test"
+ */
+declare function PROPER(value: string): string | undefined;
+/**
+ * Capitalizes the first letter in each word of a string.
+ * @param value required; string to be capitalized
+ * @returns string
+ * @example
+ *
+ * PROPER("test test") // returns "Test Test"
+ */
+declare function PROPER(value: any): string | undefined;
+
+/**
+ * Returns quotient of numerator and denominator as integer.
+ * @param numerator required; number to be divided
+ * @param denominator required; divisor
+ * @returns integer
+ * @example
+ * QUOTIENT(12, 2) // returns 6
+ * QUOTIENT(12.5, 2) // returns 6
+ */
+declare function QUOTIENT(numerator: number, denominator: number): number;
+/**
+ * Returns quotient of numerator and denominator as integer.
+ * @param numerator required; number to be divided
+ * @param denominator required; divisor
+ * @returns integer
+ * @example
+ * QUOTIENT(12, 2) // returns 6
+ * QUOTIENT(12.5, 2) // returns 6
+ */
+declare function QUOTIENT(numerator: any, denominator: any): number;
+/**
+ * Returns quotient of numerator and denominator as integer.
+ * @param numerator required; number to be divided
+ * @param denominator required; divisor
+ * @returns integer
+ * @example
+ * QUOTIENT(12, 2) // returns 6
+ * QUOTIENT(12.5, 2) // returns 6
+ */
+declare function QUOTIENT(numerator?: any, denominator?: any): number;
+
+/**
+ * Converts degress into radians.
+ * @param degress required; number of degrees
+ * @returns number of radians
+ * @example
+ * RADIANS(45) // returns 0.7853981633974483
+ */
+declare function RADIANS(degrees: number): number;
+/**
+ * Converts degress into radians.
+ * @param degress required; number of degrees
+ * @returns number of radians
+ * @example
+ * RADIANS(45) // returns 0.7853981633974483
+ */
+declare function RADIANS(degrees: any): number;
+
+/**
+ * Returns a random number between 0 and 1.
+ * @example
+ * RAND() // returns 0.45
+ * RAND() // returns 0.91
+ */
+declare function RAND(): number;
+
+/**
+ * Returns a random integer between the high and low values specified.
+ * @param low required; lowest value of desired range
+ * @param high required; highest value of desired range
+ * @returns random integer within specified range
+ * @example
+ * RANDBETWEEN(1, 10) // returns 2
+ * RANDBETWEEN(1, 10) // returns 8
+ */
+declare function RANDBETWEEN(low: number, high: number): number;
+/**
+ * Returns a random integer between the high and low values specified.
+ * @param low required; lowest value of desired range
+ * @param high required; highest value of desired range
+ * @returns random integer within specified range
+ * @example
+ * RANDBETWEEN(1, 10) // returns 2
+ * RANDBETWEEN(1, 10) // returns 8
+ */
+declare function RANDBETWEEN(low: any, high: any): number;
+/**
+ * Returns a random integer between the high and low values specified.
+ * @param low required; lowest value of desired range
+ * @param high required; highest value of desired range
+ * @returns random integer within specified range
+ * @example
+ * RANDBETWEEN(1, 10) // returns 2
+ * RANDBETWEEN(1, 10) // returns 8
+ */
+declare function RANDBETWEEN(low?: any, high?: any): number;
+
+/**
+ * Returns the current record's id from the form configuration obejct.
+ */
+declare function RECORDID(): string | undefined;
+
+/**
+ * Returns a the id of the repeatable being edited.
+ */
+declare function REPEATABLEID(): string | undefined;
+
+/**
+ * Returns human-readable index of current repeatable field. Subtract 1 from returned value for computer index.
+ */
+declare function REPEATABLENUMBER(): number | undefined;
+
+/**
+ * Returns a specific field out of a collection of repeatable items.
+ * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
+ * @param dataName required; data name of desired field or an array of data names
+ * @returns array of values
+ */
+declare function REPEATABLEVALUES(repeatableValue: any[], dataName: string[] | string): any[] | undefined | null;
+
+/**
+ * Returns the sum of its arguments.
+ * @param args required; list of numbers
+ * @returns sum of its arguments
+ * @example
+ *
+ * SUM(1, 2, 3, 4) // returns 10
+ */
+declare function SUM(...args: number[]): number;
+/**
+ * Returns the sum of its arguments.
+ * @param args required; list of numbers
+ * @returns sum of its arguments
+ * @example
+ *
+ * SUM(1, 2, 3, 4) // returns 10
+ */
+declare function SUM(...args: any[]): number;
+
+/**
+ * Returns the sum of all the numeric form values in a repeatable field.
+ * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
+ * @param dataName required; data name of desired field or an array of data names
+ * @returns sum of numeric form values
+ */
+declare function REPEATABLESUM(repeatableValue: any[], dataName: string | string[]): number;
+
 interface RequestOptions {
     /** The url for the request */
     url?: string;
@@ -3062,11 +4397,6 @@ declare function REQUEST(options: RequestOptions, callback: HTTPRequestCallback)
  */
 declare function REQUEST(url: string, callback: HTTPRequestCallback): void;
 
-interface ConfigurationResult {
-    type: "configure";
-    attribute: string;
-    value: any;
-}
 interface Configuration {
     /** When creating a new form, ensure that the location is set. */
     auto_populate_location?: boolean;
@@ -3087,7 +4417,12 @@ interface Configuration {
     /** Enable a warning if the accuracy of the GPS is too low */
     warn_on_location_accuracy?: boolean;
     title?: string;
-} const SETCONFIGURATION: (settings: Configuration) => Configuration;
+}
+/**
+ * Set form level configuration sttings
+ * @param settings key value pair of settings to configure
+ */
+declare function SETCONFIGURATION(settings: Configuration): void;
 
 /**
  * Calls a function after a specified delay.
@@ -3107,6 +4442,16 @@ interface Configuration {
  * });
  */
 declare function SETTIMEOUT(fn: Function, timeout: number): number | undefined;
+
+/**
+ * Sets or clears the value of a field depending on value passed in.
+ * @param dataName required; string, data_name of field to be set
+ * @param value required; value for field, or `null` to clear the field
+ * @example
+ * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
+ * SETVALUE('name', null) // Clears the value of field called 'name'
+ */
+declare function SETVALUE(dataName: string, value: string | ChoiceFieldValue | AddressFieldValue | string[] | number[] | null): void;
 
 /**
  * Returns a storage object for setting and getting local storage items.
@@ -3139,11 +4484,187 @@ declare function SETTIMEOUT(fn: Function, timeout: number): number | undefined;
 declare function STORAGE(): typeof storage | Storage;
 
 /**
+ * Returns the sum of each number squared.
+ * @param args array of numbers
+ * @returns sum of the square of each argument
+ * @example
+ *
+ * SUMSQ(1, 2, 3, 4) // returns 30
+ */
+declare function SUMSQ(...args: number[]): number;
+/**
+ * Returns the sum of each number squared.
+ * @param args array of numbers
+ * @returns sum of the square of each argument
+ * @example
+ *
+ * SUMSQ(1, 2, 3, 4) // returns 30
+ */
+declare function SUMSQ(...args: any[]): number;
+
+/**
+ * Stringifies the value passed in
+ * @param value required; value to be converted to a string
+ * @returns string value
+ * @example
+ *
+ * T(true) // returns "true"
+ */
+declare function T(value: any): string;
+
+/**
+ * Adds specified amount of time to a time string.
+ * @param startTime required; string specifying a start time: XX:XX
+ * @param amount required; number of minutes or hours to be added
+ * @param format required; "hours" or "minutes" indicating where amount idicated is to be added
+ * @returns time string
+ */
+declare function TIMEADD(startTime: string, amount: number, format: string): string | undefined;
+/**
+ * Adds specified amount of time to a time string.
+ * @param startTime required; string specifying a start time: XX:XX
+ * @param amount required; number of minutes or hours to be added
+ * @param format required; "hours" or "minutes" indicating where amount idicated is to be added
+ * @returns time string
+ */
+declare function TIMEADD(startTime: any, amount: any, format?: any): string | undefined;
+
+/**
+ * Returns the difference between two times in minutes or hours. Format defaults to hours if no format is specified.
+ * @param startTime required; string specifying a start time: XX:XX
+ * @param endTime required; string specifying an end time: XX:XX
+ * @param format optional; "hours" or "minutes"
+ * @returns numeric value indicating the difference between two times in either minutes or hours
+ * @example
+ * TIMEDIFF("14:00", "18:00") // returns 4
+ * TIMEDIFF("14:00", "18:00", "minutes") // returns 240
+ */
+declare function TIMEDIFF(startTime: string, endTime: string, format?: string): number | undefined;
+/**
+ * Returns the difference between two times in minutes or hours. Format defaults to hours if no format is specified.
+ * @param startTime required; string specifying a start time: XX:XX
+ * @param endTime required; string specifying an end time: XX:XX
+ * @param format optional; "hours" or "minutes"
+ * @returns numeric value indicating the difference between two times in either minutes or hours
+ * @example
+ * TIMEDIFF("14:00", "18:00") // returns 4
+ * TIMEDIFF("14:00", "18:00", "minutes") // returns 240
+ */
+declare function TIMEDIFF(startTime: any, endTime: any, format?: any): number | undefined;
+
+/**
+ * Returns a time stamp given a date object for display only. As it does not contain a timezone, it should not
+ * be used to perform calculations such as time deltas.
+ * @param date optional; Date object - if nothing is passed in to TIMESTAMP, today's timestamp will be returned
+ * @returns a string timestamp in YYYY-MM-DD HH:MM:SS format
+ * @example
+ * TIMESTAMP("December 16, 1982 03:24:00") // returns "1982-12-16 03:24:00"
+ */
+declare function TIMESTAMP(date: Date): string;
+/**
+ * Returns a time stamp given a date object for display only. As it does not contain a timezone, it should not
+ * be used to perform calculations such as time deltas.
+ * @param date optional; Date object - if nothing is passed in to TIMESTAMP, today's timestamp will be returned
+ * @returns a string timestamp in YYYY-MM-DD HH:MM:SS format
+ * @example
+ * TIMESTAMP("December 16, 1982 03:24:00") // returns "1982-12-16 03:24:00"
+ */
+declare function TIMESTAMP(date?: Date): string;
+
+/**
+ * Returns the current timezone or, if it's not available, the default timezone
+ * from the form configuration object.
+ */
+declare function TIMEZONE(): string;
+
+/**
+ * Trims leading and trailing whitespace from a string.
+ * @param value required; string to be trimmed
+ * @returns trimmed string
+ * @example
+ * TRIM("  test  ") // returns "test"
+ */
+declare function TRIM(value: string): string;
+/**
+ * Trims leading and trailing whitespace from a string.
+ * @param value required; string to be trimmed
+ * @returns trimmed string
+ * @example
+ * TRIM("  test  ") // returns "test"
+ */
+declare function TRIM(value: any): string;
+
+/**
  * Returns the boolean value `true`.
  * @example
  * TRUE() // returns true
  */
 declare function TRUE(): true;
+
+/**
+ * Returns a string describing the type of argument passed in.
+ * @param value required; value to be evaluated
+ * @returns a string indiciating the type of argument passed in
+ * @example
+ * TYPEOF("test") // "string"
+ * TYPEOF(true) // "boolean"
+ * TYPEOF(NaN) // "nan"
+ */
+declare function TYPEOF(value: any): string;
+
+/**
+ * Evaluates an array of items for unqiueness and returns an array devoid of duplicates.
+ * If objects to be compared require an iteratee to extract data, it should be passed in as the last argument.
+ * @param args required; items to be evaluated
+ * @returns an array of unique items
+ * @example
+ * UNIQUE(1, 2, 5, 6, 3, 2, 1) // returns [ 1, 2, 5, 6, 3]
+ * UNIQUE({test: 1}, {test: 1}, {test: 2}, (a: any) => a.test) //     returns [{test: 1}, {test: 2}]
+ */
+declare function UNIQUE(...args: any[]): any[] | undefined;
+
+/**
+ * Returns a string of all uppercase letters
+ * @param value required; value to be converted to uppercase
+ * @returns string of uppercase letters
+ * @example
+ * UPPER("test") // returns "TEST"
+ */
+declare function UPPER(value: string): string | undefined;
+/**
+ * Returns a string of all uppercase letters
+ * @param value required; value to be converted to uppercase
+ * @returns string of uppercase letters
+ * @example
+ * UPPER("test") // returns "TEST"
+ */
+declare function UPPER(value: any): string | undefined;
+
+/**
+ * Returns the current user's full name if it exists in the current configuration.
+ */
+declare function USERFULLNAME(): string | undefined;
+
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: string): string | undefined;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: any): string | undefined;
+
+/**
+ * Returns device, platform, and application information.
+ * @param separator optional; character to separate each item returned - defaults to " ,"
+ * @example
+ * VERSIONINFO() // returns "Apple MQCK2LL/A, iOS 2.0, Chrome 4.2.3.5.2 Webkit"
+ */
+declare function VERSIONINFO(separator?: string): string;
 
 /**
  * Returns a year given a date.
