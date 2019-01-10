@@ -1,6 +1,7 @@
 import form from "../../test/fixtures/form"
 import { prepareRuntime } from "../../test/helpers"
-import SETVALUE, { SetValueResult } from "../SETVALUE"
+import { SetValueResult } from "../../types/results"
+import SETVALUE from "../SETVALUE"
 
 beforeEach(() => {
   prepareRuntime()
