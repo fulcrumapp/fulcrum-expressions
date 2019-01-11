@@ -61,3 +61,10 @@ export interface ExpressionResult {
   /** value of field */
   value: any
 }
+
+export interface UpdateFormAttributesResult {
+  type: "update-element",
+  key: string,
+  attribute: string,
+  value: any,
+}
