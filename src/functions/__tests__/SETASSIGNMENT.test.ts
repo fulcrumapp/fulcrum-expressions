@@ -21,5 +21,6 @@ test("assigns a user to record", () => {
 })
 
 test("throws an error if not passed a user name as a string", () => {
+  // @ts-ignore improper user name passed in to Throw
   expect(() => SETASSIGNMENT(1234)).toThrow("user must be a string")
 })
