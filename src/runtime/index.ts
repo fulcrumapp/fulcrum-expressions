@@ -34,6 +34,7 @@ import {
   InvalidResult,
   ProgressResult,
   SetValueResult,
+  UpdateFormAttributesResult,
         } from "../types/results"
 import flattenElements from "../util/flatten-elements"
 import valueForElement from "../util/value-for-element"
@@ -57,6 +58,7 @@ type RuntimeResults = Array<
   | SetValueResult
   | ProgressResult
   | ExpressionResult
+  | UpdateFormAttributesResult
 >
 
 const NO_PARAM = "__no_param"
