@@ -53,7 +53,7 @@ export default function SETFORMATTRIBUTES(dataName: any, attributes?: any): void
       attribute: attributeName.toString(),
       value: value,
     }
-
+    
     $$runtime.results.push(result)
   }
 }
