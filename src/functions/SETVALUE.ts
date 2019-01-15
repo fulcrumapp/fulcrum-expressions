@@ -3,6 +3,7 @@ import { FormFields, RepeatableField } from "../types/fields"
 import { SetValueResult } from "../types/results"
 import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import { RecordLinkIds } from "../util/converters"
+import { ValidGeometry } from "../util/is-valid-geometry"
 import isSetValueSupported from "../util/is-set-value-supported"
 import makeValue from "../util/make-value"
 import ERROR from "./ERROR"
@@ -19,7 +20,7 @@ import FORMAT from "./FORMAT"
  */
 
 export default function SETVALUE(dataName: string,
-                                 value: string|ChoiceFieldValue|AddressFieldValue|string[]|number[]|null): void {
+                                 value: string|ChoiceFieldValue|AddressFieldValue|ValidGeometry|string[]|number[]|null): void {
 
   const element: FormFields|undefined = FIELD(dataName)
   let convertedValue: string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null = null
