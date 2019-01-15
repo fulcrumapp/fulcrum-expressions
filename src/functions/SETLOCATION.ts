@@ -11,7 +11,7 @@ import SETVALUE from "./SETVALUE"
  */
 
 export default function SETLOCATION(latitude: number, longitude: number): void
-export default function SETLOCATION(latitude: number|null, longitude: number|null): void
+export default function SETLOCATION(latitude: string, longitude: string): void
 export default function SETLOCATION(latitude?: any, longitude?: any): void
 export default function SETLOCATION(latitude?: any, longitude?: any): void {
   if  (isUndefined(latitude) || isUndefined(longitude)) {
@@ -19,7 +19,7 @@ export default function SETLOCATION(latitude?: any, longitude?: any): void {
     longitude = null
   }
 
-  const geometry: ValidGeometry|null = isNull(latitude) || isNull(longitude) ? null : { type: 'Point', coordinates: [ longitude, latitude ] }
+  const geometry: ValidGeometry|null = isNull(latitude) || isNull(longitude) ? null : { type: 'Point', coordinates: [ +longitude, +latitude ] }
 
   if (!isValidGeometry(geometry)) {
     ERROR(FORMAT('Invalid latitude/longitude. SETLOCATION(%s, %s).', latitude, longitude))
