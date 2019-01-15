@@ -1,6 +1,6 @@
 import { isArray, isFinite, isObject, isNull, isUndefined, some } from "lodash"
 
-interface ValidGeometry {
+export interface ValidGeometry {
   type: "Point",
   coordinates: number[]
 }
