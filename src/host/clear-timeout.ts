@@ -1,7 +1,7 @@
 import { state } from "./state"
 
 /**
- * Remove the timeout call from the host
+ * Removes a timeout call from the host queue.
  * @param id id of the setTimeout call
  */
 export default function clearTimeout(id: number) {
