@@ -13,6 +13,7 @@ import { each,
 } from "lodash"
 import { functions, FunctionMap } from "../functions"
 import {
+  HostClearTimeout,
   HostFormatNumber,
   HostHTTPClient,
   HostMessageBox,
@@ -77,6 +78,7 @@ type HostFunction =
   | HostStorageClear
   | HostMessageBox
   | HostFormatNumber
+  | HostClearTimeout
 
 export interface WindowWithRuntime extends Window {
   $$runtime: Runtime
@@ -107,6 +109,7 @@ export default class Runtime {
   $$storageClear?: HostStorageClear
   $$messageBox?: HostMessageBox
   $$formatNumber?: HostFormatNumber
+  $$clearTimeout?: HostClearTimeout
 
   global: WindowWithRuntime
 

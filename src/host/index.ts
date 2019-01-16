@@ -1,5 +1,6 @@
 export type HostHTTPClient = (json: string, callbackID: number) => void
 export type HostSetTimeout = (callback: Function, timeout: number) => (number | undefined)
+export type HostClearTimeout = (id: number) => void
 export type HostStorageLength = (scope: string) => number
 export type HostStorageKey = (scope: string, index: number) => any
 export type HostStorageGetItem = (scope: string, key: string) => any
