@@ -11,6 +11,19 @@ import ARRAY from "./ARRAY"
 import CHOICEVALUES from "./CHOICEVALUES"
 import COMPACT from "./COMPACT"
 
+/**
+ * Returns a single string of stringable values extracted from parameters. 
+ * `null`, `undefined`, `NaN` values are ignored. STRING can be used to extract the following values from objects:
+ * `photo_id`, `video_id`, `audio_id`, `signature_id`, `record_id`, and `id`. STRING will unpack Choice field options
+ * if passed in.
+ * @param args list of values
+ * @returns a string of values separated by commas
+ * @example
+ * 
+ * STRING(1, 2, null, 4) // returns "1, 2, 4"
+ * STRING({ choice_values: ["yes", "no"], other_values: ["maybe"] }) // returns "yes, no, maybe"
+ */
+
 export default function STRING(...args: any[]): string {
   const values: any[] = ARRAY(args)
 
