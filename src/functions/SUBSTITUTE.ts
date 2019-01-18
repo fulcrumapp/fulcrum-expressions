@@ -1,6 +1,19 @@
 import { isArray, isNaN, isString, isUndefined } from "lodash"
 import FLOOR from "./FLOOR"
 
+/**
+ * Searches a string for a pattern and replaces it with a new substring.
+ * @param text required; text to be searched
+ * @param oldText required; pattern to be replaced
+ * @param newText required; substring to replace `oldText`
+ * @param occurrence optional; numeric value indicating at which occurrence of `oldText` should be replaced
+ * @returns string with new substring incorporated
+ * 
+ * @example
+ * 
+ * SUBSTITUTE('abc abc abc', 'abc', 'def', 2) // returns 'abc def abc'
+ */
+
 export default function SUBSTITUTE(text: string, oldText: string, newText: string, occurrence?: number): string|undefined {
   occurrence = isUndefined(occurrence) ? NaN : FLOOR(occurrence)
 

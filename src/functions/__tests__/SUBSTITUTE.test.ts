@@ -10,7 +10,7 @@ test('substitutes text in a text string', () => {
   expect(SUBSTITUTE('abc abc abc', 'abc', 'def', 3)).toEqual('abc abc def')
   expect(SUBSTITUTE('abc abc abc', 'abc', 'def', 4)).toEqual('abc abc abc')
   expect(SUBSTITUTE('def def def', 'abc', 'def', 2)).toEqual('def def def')
-  expect(SUBSTITUTE('777', '7', '8', 2)).toEqual('787')
+  expect(SUBSTITUTE('7777', '7', '8', 2)).toEqual('7877')
 })
 
 test("returns undefined for invalid input", () => {
