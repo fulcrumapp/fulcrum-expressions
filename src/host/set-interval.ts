@@ -4,7 +4,7 @@ import setTimeout from "./set-timeout"
 
 /**
  * The SETINTERVAL function can be used to repeatedly call a function at a specified interval. 
- * It’s nearly identical to the web platform standard setTimeout.
+ * It’s nearly identical to the web platform standard setInterval.
  * @param callback required; function to be called
  * @param interval required; numeric value indicating number of milliseconds between subsequent calls
  * @returns numeric id interval on host
