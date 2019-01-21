@@ -5,10 +5,10 @@ import { state } from "./state"
  * @param callback callback to call
  * @param timeout timeout to call
  */
-export default function setTimeout(callback: Function, timeout: number) {
+export default function setTimeout(callback: Function, timeout: number): number {
   const hostSetTimeout = $$runtime.$$setTimeout
 
-  if (!hostSetTimeout) { return }
+  if (!hostSetTimeout) { return -1 }
 
   const id = ++state().nextTimeoutID
 
