@@ -21,14 +21,14 @@ test("sets a function to be called after a certain duration", () => {
   expect(mock).toHaveBeenCalledWith(duration, 1)
 })
 
-test("if setTimeout is not available on host it returns immediately", () => {
+test("if setTimeout is not available on host it returns -1", () => {
   const duration = 100
   const callback = jest.fn()
   $$runtime.$$setTimeout = undefined
 
   const hostState = state()
 
-  expect(hostSetTimeout(callback, duration)).toBeUndefined()
+  expect(hostSetTimeout(callback, duration)).toBe(-1)
   expect(hostState.nextTimeoutID).toEqual(0)
   expect(hostState.timeouts[1]).toBeUndefined()
 })
