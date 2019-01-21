@@ -21,11 +21,12 @@ test("accepts an array of strings and converts them to an array of objects", () 
   ]
 
   SETCHOICES("choice_value", [ "choice_1", "choice_2"])
+  // @ts-ignore value will exist after SETCHOICES is called
   expect($$runtime.results[0].value).toEqual(JSON.stringify(expectedResult))
 })
 
 test("accepts an array of numbers and converts them to an array of objects", () => {
-  const expectedResult = [ 
+  const expectedResult1 = [ 
     {
       label: "1",
       value: "1"
@@ -36,8 +37,19 @@ test("accepts an array of numbers and converts them to an array of objects", () 
     }
   ]
 
+  const expectedResult2 = [
+    {
+      label: "3",
+      value: "3",
+    }
+  ]
+
   SETCHOICES("choice_value", [ 1, 2 ])
-  expect($$runtime.results[0].value).toEqual(JSON.stringify(expectedResult))
+  SETCHOICES("choice_value", [ 3 ])
+  // @ts-ignore value will exist after SETCHOICES is called
+  expect($$runtime.results[0].value).toEqual(JSON.stringify(expectedResult1))
+  // @ts-ignore value will exist after SETCHOICES is called
+  expect($$runtime.results[1].value).toEqual(JSON.stringify(expectedResult2))
 })
 
 test("accepts an array of arrays and converts them to an array of objects", () => {
@@ -53,6 +65,7 @@ test("accepts an array of arrays and converts them to an array of objects", () =
   ]
 
   SETCHOICES("choice_value", [ ["choice_1", 1],["choice_2", 2] ])
+  // @ts-ignore value will exist after SETCHOICES is called
   expect($$runtime.results[0].value).toEqual(JSON.stringify(expectedResult))
 })
 
@@ -69,11 +82,13 @@ test("accepts an array of objects and converts them to the appropriate shape", (
   ]
 
   SETCHOICES("choice_value", [ { label: "choice_1" }, { label: "choice_2", value: 2 } ])
+  // @ts-ignore value will exist after SETCHOICES is called
   expect($$runtime.results[0].value).toEqual(JSON.stringify(expectedResult))
 })
 
 test("accepts null as a value", () => {
   SETCHOICES("choice_value", null)
+  // @ts-ignore value will exist after SETCHOICES is called
   expect($$runtime.results[0].value).toBeNull()
 })
 
