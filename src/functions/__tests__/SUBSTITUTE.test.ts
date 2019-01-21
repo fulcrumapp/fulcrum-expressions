@@ -13,6 +13,10 @@ test('substitutes text in a text string', () => {
   expect(SUBSTITUTE('7777', '7', '8', 2)).toEqual('7877')
 })
 
+test("returns the text parameter if an array is passed in for it", () => {
+  expect(SUBSTITUTE(['abc abc abc'], 'abc', 'def')).toEqual(['abc abc abc'])
+})
+
 test("returns undefined for invalid input", () => {
   expect(SUBSTITUTE('abc abc abc', 'abc', 'def', -1)).toBeUndefined()
   expect(SUBSTITUTE(null, 'abc', 'def', 1)).toBeUndefined()
