@@ -17,6 +17,9 @@ test("sets a function to be called after a certain duration", () => {
   expect(hostSetInterval(callback, duration)).toBe(1)
   expect(hostState.nextIntervalID).toEqual(1)
   expect(hostState.intervals[1]).toBeDefined()
+  expect(hostState.timeouts[1]).toBeDefined()
+  hostState.timeouts[1]()
+  expect(callback).toHaveBeenCalled()
   expect(mockedAsync).toHaveBeenCalled()
 })
 
