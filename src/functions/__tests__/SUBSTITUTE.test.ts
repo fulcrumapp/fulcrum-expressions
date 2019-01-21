@@ -14,6 +14,7 @@ test('substitutes text in a text string', () => {
 })
 
 test("returns the text parameter if an array is passed in for it", () => {
+  // @ts-ignore type test to test isArray check
   expect(SUBSTITUTE(['abc abc abc'], 'abc', 'def')).toEqual(['abc abc abc'])
 })
 
