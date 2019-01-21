@@ -2,9 +2,14 @@ interface AsyncFunctionSchema {
   [key: number]: Function
 }
 
+interface SetIntervalSchema {
+  // interval values refer to the timeout id generated as it calls setTimeout repeatedly
+  [key: number]: number|undefined
+}
+
 interface HostState {
   timeouts: AsyncFunctionSchema,
-  intervals: AsyncFunctionSchema,
+  intervals: SetIntervalSchema,
   nextTimeoutID: number
   nextIntervalID: number
 }
