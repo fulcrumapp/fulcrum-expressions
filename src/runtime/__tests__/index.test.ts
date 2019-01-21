@@ -26,7 +26,7 @@ test("it sets up the data-events functions on initialization", () => {
   expect(runtime.functions.NUM).toEqual(NUM)
   expect(runtime.functions.ISLOGICAL).toEqual(ISLOGICAL)
   // 172 functions + NO_VALUE = 173 items expected
-  expect(Object.keys(runtime.functions).length).toEqual(173)
+  expect(Object.keys(runtime.functions).length).toEqual(211)
   // @ts-ignore ABS will exist once runtime is initialized
   expect(runtime.global.ABS(-4)).toEqual(4)
   // @ts-ignore NUM will exist once runtime is initialized
