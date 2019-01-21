@@ -20,6 +20,6 @@ import hostSetInterval from "../host/set-timeout"
  *   }, fiveSeconds);
  *  });
  */
-export default function SETINERVAL(fn: Function, timeout: number) {
+export default function SETINTERVAL(fn: Function, timeout: number) {
   return hostSetInterval(fn, timeout)
 }
