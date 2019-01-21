@@ -16,12 +16,12 @@ export default function setInterval(callback: Function, interval: number): numbe
 
     const wrapper = () => {
       if (state().intervals[id]) {
-        state().intervals[id] = () => setTimeout(wrapper, interval)
+        state().intervals[id] = setTimeout(wrapper, interval)
         callback()
       }
     }
 
-    state().intervals[id] = () => setTimeout(wrapper, interval)
+    state().intervals[id] = setTimeout(wrapper, interval)
 
     return id
   }
