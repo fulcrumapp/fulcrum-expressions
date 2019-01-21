@@ -45,7 +45,7 @@ test("accepts an array of numbers and converts them to an array of objects", () 
   ]
 
   SETCHOICES("choice_value", [ 1, 2 ])
-  SETCHOICES("choice_value", [ 3 ])
+  SETCHOICES("choice_value", [[3]])
   // @ts-ignore value will exist after SETCHOICES is called
   expect($$runtime.results[0].value).toEqual(JSON.stringify(expectedResult1))
   // @ts-ignore value will exist after SETCHOICES is called
