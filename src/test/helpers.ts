@@ -1,3 +1,4 @@
+import { map, some } from "lodash"
 import Runtime from "../runtime"
 
 /**
@@ -28,4 +29,30 @@ export const extendToBeWithinRange = () => expect.extend({
       }
     }
   },
+})
+
+export const extendContainAllElements = () => expect.extend({
+  // doesn't work - doesn't ensure that it's only there once, for example
+  toContainAllElements(received, expected) {
+    let pass = false
+    // each element in expected must be present in received
+    const values: boolean[] = map(received, (value: any) => expected.includes(value))
+    const missingValues: boolean = some(values, (value) => value === false)
+
+    // there can be no missing values and both arrays must be of the same length
+    if (!missingValues && received.length === expected.length) { pass = true }
+    if (pass) {
+      return {
+        message: () =>
+          `did not expect all values of ${received} to be present in ${expected}`,
+        pass: true,
+      }
+    } else {
+      return {
+        message: () =>
+          `expected all values of ${received} to be present in ${expected}`,
+        pass: false,
+      }
+    }
+  }
 })
