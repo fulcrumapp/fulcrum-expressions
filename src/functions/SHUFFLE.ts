@@ -1,4 +1,5 @@
-import { shuffle, toArray } from "lodash"
+import { shuffle } from "lodash"
+import ARRAY from "./ARRAY"
 
 /**
  * Randomly shuffles values passed in and returns them as an array.
@@ -10,5 +11,5 @@ import { shuffle, toArray } from "lodash"
  */
 
 export default function SHUFFLE(...values: any[]): any[] {
-  return shuffle(toArray(values))
+  return shuffle(ARRAY(values))
 }
