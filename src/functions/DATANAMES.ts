@@ -2,16 +2,6 @@ import { filter, isUndefined, map } from "lodash"
 import { includes } from "lodash"
 import { FormFieldTypes } from "../types/fields"
 
-/**
- * Returns the data names of the form fields. Also accepts an optional
- * type argument to filter form fields by type.
- * @param type optional; string of a FormFieldType: e.g. "YesNoField"
- * @returns array of datanames
- * @example
- * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
- * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
- */
-
 const FORM_FIELD_TYPES = [ "TextField",
                             "YesNoField",
                             "Label",
@@ -32,6 +22,16 @@ const FORM_FIELD_TYPES = [ "TextField",
                             "CalculatedField",
                             "RecordLinkField",
 ]
+
+/**
+ * Returns the data names of the form fields. Also accepts an optional
+ * type argument to filter form fields by type.
+ * @param type optional; string of a FormFieldType: e.g. "YesNoField"
+ * @returns array of datanames
+ * @example
+ * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
+ * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
+ */
 
 export default function DATANAMES(): any[]
 export default function DATANAMES(type: FormFieldTypes): any[]
