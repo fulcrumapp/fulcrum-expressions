@@ -1345,246 +1345,35 @@ interface RepeatableField extends FormField {
   elements: FormFields[]
 }
 
+/**
+ * Returns the data names of the form fields. Also accepts an optional
+ * type argument to filter form fields by type.
+ * @param type optional; string of a FormFieldType: e.g. "YesNoField"
+ * @returns array of datanames
+ * @example
+ * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
+ * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
+ */
 declare function DATANAMES(): any[];
-  /**
-   * Label/Value for negative choice
-   * @default {"label": "No", "value": "no"}
-   */
-  negative: ChoiceOption
-}
-
-interface ChoiceField extends FormField, FormFieldDefaultPreviousValue {
-  type: "ChoiceField"
-  choices: ChoiceOption[]
-  /** Multiple choice field? */
-  multiple?: boolean
-  /** Allow other values? */
-  alow_other?: boolean
-}
-
-interface ClassificationField extends FormField, FormFieldDefaultPreviousValue {
-  type: "ClassificationField"
-  /** The id of the classification set to reference. */
-  classification_set_id: GUID
-}
-
-interface PhotoField extends FormField {
-  type: "PhotoField"
-  /** Minimum number of photos. */
-  min_length?: number
-  /** Maximum number of photos. */
-  max_length?: number
-}
-
-interface VideoField extends FormField {
-  type: "VideoField"
-  /** GPS track enabled? */
-  track_enabled?: boolean
-  /** Audio enabled? */
-  audio_enabled?: boolean
-  /** Minimum number of videos */
-  min_length?: number
-  /** Maximum number of videos. */
-  max_length?: number
-}
-
-interface AudioField extends FormField {
-  type: "AudioField"
-  /** GPS track enabled? */
-  track_enabled?: boolean
-  /** Minimum number of audio recordings */
-  min_length?: number
-  /** Maximum number of audio recordings. */
-  max_length?: number
-}
-
-interface Section extends FormField {
-  type: "Section"
-  /** Display type for the section */
-  display: "inline" | "drilldown"
-  /** FormField's nested inside of this section */
-  elements: FormFields[]
-}
-
-interface AddressField extends FormField {
-  type: "AddressField"
-  /** Automatically reverse geocode to determine address? */
-  auto_populate?: boolean
-}
-
-interface SignatureField extends FormField {
-  type: "SignatureField"
-  /** The text that appears below the signature line. */
-  agreement_text?: string
-}
-
-interface HyperlinkField extends FormField {
-  type: "HyperlinkField"
-  /** Optional default URL. */
-  default_url?: string
-}
-
-interface CalculatedFieldCurrencyDisplay {
-  style: "currency"
-  currency: string
-}
-
-interface CalculatedField extends FormField, FormFieldDefaultPreviousValue {
-  type: "CalculatedField"
-  /** Calculation display object. If the style is "currnecy" then a local currecy is required. */
-  display: { style: "text" | "number" | "date" } | { style: "currency", currency: string }
-}
-
-type ConditionOperator = "equal_to" | "not_equal_to" | "is_empty" | "is_not_empty"
-
-interface RecordLinkDefaultProperty {
-  /** The key of the source field. */
-  source_field_key: string
-  /** The key of the destination field. */
-  destination_field_key: string
-}
-
-interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
-  type: "RecordLinkField"
-  /** Whether to allow the user to select existing records from the app linked in the record link field. */
-  allow_existing_records: boolean
-  /** Whether to allow the user to create new records in the app that is linked to the record link field. */
-  allow_creating_records: boolean
-  /** Whether to allow the user to update data in existing records in the app linked to the record link field. */
-  allow_updating_records: boolean
-  /** Whether to allow the user to select multiple records to link from the app linked to the record link field. */
-  allow_multiple_records: boolean
-  /** Match all or any of the conditions to filter linked records. */
-  record_conditions_type: FormFieldConditions
-  /** Array of objects containing conditions to filter linked records */
-  record_conditions: FormFieldCondition[]
-  /** Array of objects containing conditions to filter linked records */
-  record_defaults: RecordLinkDefaultProperty[]
-}
-
-interface RepeatableField extends FormField {
-  type: "Repeatable"
-  /** FormField's nested inside of this section */
+/**
+ * Returns the data names of the form fields. Also accepts an optional
+ * type argument to filter form fields by type.
+ * @param type optional; string of a FormFieldType: e.g. "YesNoField"
+ * @returns array of datanames
+ * @example
+ * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
+ * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
+ */
 declare function DATANAMES(type: FormFieldTypes): any[];
-  /**
-   * Label/Value for negative choice
-   * @default {"label": "No", "value": "no"}
-   */
-  negative: ChoiceOption
-}
-
-interface ChoiceField extends FormField, FormFieldDefaultPreviousValue {
-  type: "ChoiceField"
-  choices: ChoiceOption[]
-  /** Multiple choice field? */
-  multiple?: boolean
-  /** Allow other values? */
-  alow_other?: boolean
-}
-
-interface ClassificationField extends FormField, FormFieldDefaultPreviousValue {
-  type: "ClassificationField"
-  /** The id of the classification set to reference. */
-  classification_set_id: GUID
-}
-
-interface PhotoField extends FormField {
-  type: "PhotoField"
-  /** Minimum number of photos. */
-  min_length?: number
-  /** Maximum number of photos. */
-  max_length?: number
-}
-
-interface VideoField extends FormField {
-  type: "VideoField"
-  /** GPS track enabled? */
-  track_enabled?: boolean
-  /** Audio enabled? */
-  audio_enabled?: boolean
-  /** Minimum number of videos */
-  min_length?: number
-  /** Maximum number of videos. */
-  max_length?: number
-}
-
-interface AudioField extends FormField {
-  type: "AudioField"
-  /** GPS track enabled? */
-  track_enabled?: boolean
-  /** Minimum number of audio recordings */
-  min_length?: number
-  /** Maximum number of audio recordings. */
-  max_length?: number
-}
-
-interface Section extends FormField {
-  type: "Section"
-  /** Display type for the section */
-  display: "inline" | "drilldown"
-  /** FormField's nested inside of this section */
-  elements: FormFields[]
-}
-
-interface AddressField extends FormField {
-  type: "AddressField"
-  /** Automatically reverse geocode to determine address? */
-  auto_populate?: boolean
-}
-
-interface SignatureField extends FormField {
-  type: "SignatureField"
-  /** The text that appears below the signature line. */
-  agreement_text?: string
-}
-
-interface HyperlinkField extends FormField {
-  type: "HyperlinkField"
-  /** Optional default URL. */
-  default_url?: string
-}
-
-interface CalculatedFieldCurrencyDisplay {
-  style: "currency"
-  currency: string
-}
-
-interface CalculatedField extends FormField, FormFieldDefaultPreviousValue {
-  type: "CalculatedField"
-  /** Calculation display object. If the style is "currnecy" then a local currecy is required. */
-  display: { style: "text" | "number" | "date" } | { style: "currency", currency: string }
-}
-
-type ConditionOperator = "equal_to" | "not_equal_to" | "is_empty" | "is_not_empty"
-
-interface RecordLinkDefaultProperty {
-  /** The key of the source field. */
-  source_field_key: string
-  /** The key of the destination field. */
-  destination_field_key: string
-}
-
-interface RecordLinkField extends FormField, FormFieldDefaultPreviousValue {
-  type: "RecordLinkField"
-  /** Whether to allow the user to select existing records from the app linked in the record link field. */
-  allow_existing_records: boolean
-  /** Whether to allow the user to create new records in the app that is linked to the record link field. */
-  allow_creating_records: boolean
-  /** Whether to allow the user to update data in existing records in the app linked to the record link field. */
-  allow_updating_records: boolean
-  /** Whether to allow the user to select multiple records to link from the app linked to the record link field. */
-  allow_multiple_records: boolean
-  /** Match all or any of the conditions to filter linked records. */
-  record_conditions_type: FormFieldConditions
-  /** Array of objects containing conditions to filter linked records */
-  record_conditions: FormFieldCondition[]
-  /** Array of objects containing conditions to filter linked records */
-  record_defaults: RecordLinkDefaultProperty[]
-}
-
-interface RepeatableField extends FormField {
-  type: "Repeatable"
-  /** FormField's nested inside of this section */
+/**
+ * Returns the data names of the form fields. Also accepts an optional
+ * type argument to filter form fields by type.
+ * @param type optional; string of a FormFieldType: e.g. "YesNoField"
+ * @returns array of datanames
+ * @example
+ * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
+ * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
+ */
 declare function DATANAMES(type: string): any[];
 
 /**
