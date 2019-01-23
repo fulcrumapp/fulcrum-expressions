@@ -25,8 +25,8 @@ import COMPACT from "./COMPACT"
  */
 
 export default function STRING(...args: any[]): string {
+  // flattens args to a single-level array, otherwise function gets stuck in recursive loop
   const values: any[] = ARRAY(args)
-
   const strings: MaybeString[] = values.map((value: any) => {
     if (isUndefined(value) || isNull(value)) {
       return null
