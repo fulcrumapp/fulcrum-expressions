@@ -142,6 +142,8 @@ interface Config {
     platformVersion?: string;
     /** Optional: Current project id */
     recordProject?: string;
+    /** Optional: Current record status */
+    recordStatus?: string;
     /** Optional: Current project name */
     recordProjectName?: string;
     /** Optional: Current record's id */
@@ -547,6 +549,8 @@ declare function CHOICEVALUE(field: any): MaybeString;
  * CLEAN('test\x00\x1D\x1Etest') // returns 'testtest'
  */
 declare function CLEAN(text: string): string;
+
+
 
 /**
  * Returns first value passed in to function that exists
@@ -2531,6 +2535,13 @@ interface ExpressionResult {
   /** value of field */
   value: any
 }
+
+interface UpdateFormAttributesResult {
+  type: "update-element",
+  key: string,
+  attribute: string,
+  value: any,
+}
 /**
  * Displays an alert and stops a record from being saved
  * @description
@@ -4397,6 +4408,172 @@ declare function REQUEST(options: RequestOptions, callback: HTTPRequestCallback)
  */
 declare function REQUEST(url: string, callback: HTTPRequestCallback): void;
 
+/**
+ * Rounds down a given number to the specified number of digits.
+ * @param num required; numeric value to be round down
+ * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
+ * @example
+ *
+ * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ */
+declare function ROUNDDOWN(num: number, digits?: number): number;
+/**
+ * Rounds down a given number to the specified number of digits.
+ * @param num required; numeric value to be round down
+ * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
+ * @example
+ *
+ * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ */
+declare function ROUNDDOWN(num: string | number, digits?: number): number;
+/**
+ * Rounds down a given number to the specified number of digits.
+ * @param num required; numeric value to be round down
+ * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
+ * @example
+ *
+ * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ */
+declare function ROUNDDOWN(num: any, digits?: any): number;
+
+/**
+ * Rounds up the given number to the specified number of digits.
+ * @param num required; numeric value to be round up
+ * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ * @returns numeric value rounded up to the desired number of digits
+ *
+ * @example
+ *
+ * ROUNDUP(2.6666666, 4) // returns 2.6667
+ */
+declare function ROUNDUP(num: number, digits?: number): number;
+/**
+ * Rounds up the given number to the specified number of digits.
+ * @param num required; numeric value to be round up
+ * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ * @returns numeric value rounded up to the desired number of digits
+ *
+ * @example
+ *
+ * ROUNDUP(2.6666666, 4) // returns 2.6667
+ */
+declare function ROUNDUP(num: string | number, digits?: number): number;
+/**
+ * Rounds up the given number to the specified number of digits.
+ * @param num required; numeric value to be round up
+ * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ * @returns numeric value rounded up to the desired number of digits
+ *
+ * @example
+ *
+ * ROUNDUP(2.6666666, 4) // returns 2.6667
+ */
+declare function ROUNDUP(num: any, digits?: any): number;
+
+/**
+ * Returns a string padded to the right by a desired character.
+ * @param value required; string value to be padded
+ * @param count required; total number of spaces desired in returned value
+ * @param padding optional; character with which the `value` is to be padded; defaults to `" "`
+ * @returns a padded string value
+ *
+ * @example
+ *
+ * RPAD('1', 2, '0') // returns "10"
+ */
+declare function RPAD(value: string, count: number, padding?: string): string;
+/**
+ * Returns a string padded to the right by a desired character.
+ * @param value required; string value to be padded
+ * @param count required; total number of spaces desired in returned value
+ * @param padding optional; character with which the `value` is to be padded; defaults to `" "`
+ * @returns a padded string value
+ *
+ * @example
+ *
+ * RPAD('1', 2, '0') // returns "10"
+ */
+declare function RPAD(value: any, count: any, padding?: any): string | undefined;
+
+/**
+ * Searches a string for a substring and returns a 1-based index.
+ * @param needle required; substring to search for
+ * @param haystack required; string in which to search for `needle` substring
+ * @param startPosition optional; number, 1-based index from which to start searching the `haystack` string
+ * @returns 1-based index indicating where substring is located
+ *
+ * @example
+ * SEARCH('4', '1234') // returns 4
+ * // startPosition = 2 so search begins at second character of string
+ * SEARCH("t", "test", 2) // returns 4
+ */
+declare function SEARCH(needle: string, haystack: string, startPosition?: number): number | undefined;
+/**
+ * Searches a string for a substring and returns a 1-based index.
+ * @param needle required; substring to search for
+ * @param haystack required; string in which to search for `needle` substring
+ * @param startPosition optional; number, 1-based index from which to start searching the `haystack` string
+ * @returns 1-based index indicating where substring is located
+ *
+ * @example
+ * SEARCH('4', '1234') // returns 4
+ * // startPosition = 2 so search begins at second character of string
+ * SEARCH("t", "test", 2) // returns 4
+ */
+declare function SEARCH(needle: any, haystack: any, startPosition?: any): number | undefined;
+
+/**
+ * Sets or clears the value of a field depending on value passed in.
+ * @param dataName required; string, data_name of field to be set
+ * @param value required; value for field, or `null` to clear the field
+ * @example
+ * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
+ * SETVALUE('name', null) // Clears the value of field called 'name'
+ */
+declare function SETVALUE(dataName: string, value: string | ChoiceFieldValue | AddressFieldValue | ValidGeometry | string[] | number[] | null): void;
+
+/**
+ * Assign a user to a record.
+ * @param user required; user's name, must be a string
+ */
+declare function SETASSIGNMENT(user: string): void;
+
+/**
+ * Updates a form's attributes.
+ * @param dataName data name of desired form field to be updated
+ * @param attributes optional; object of attributes to be updated and their corresponding values
+ */
+declare function SETFORMATTRIBUTES(dataName: string, attributes?: any): void;
+/**
+ * Updates a form's attributes.
+ * @param dataName data name of desired form field to be updated
+ * @param attributes optional; object of attributes to be updated and their corresponding values
+ */
+declare function SETFORMATTRIBUTES(dataName: any): void;
+
+/**
+ * Sets a choice filter for a form.
+ * @param dataName required; data name of field to be updated
+ * @param value required; a value or an array of values on which to filter
+ */
+declare function SETCHOICEFILTER(dataName: string, value: any[]): void;
+/**
+ * Sets a choice filter for a form.
+ * @param dataName required; data name of field to be updated
+ * @param value required; a value or an array of values on which to filter
+ */
+declare function SETCHOICEFILTER(dataName: string, value: any): void;
+
+/**
+ * Updates the form choices attribute.
+ * @param dataName required; data name of form field to be updated
+ * @param value required; an array of values; can be `null`
+ */
+declare function SETCHOICES(dataName: string, value: any): void;
+
 interface Configuration {
     /** When creating a new form, ensure that the location is set. */
     auto_populate_location?: boolean;
@@ -4425,6 +4602,222 @@ interface Configuration {
 declare function SETCONFIGURATION(settings: Configuration): void;
 
 /**
+ * Sets the description of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which description should be set
+ */
+declare function SETDESCRIPTION(dataName: string, value: string): void;
+/**
+ * Sets the description of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which description should be set
+ */
+declare function SETDESCRIPTION(dataName: string, value?: any): void;
+
+/**
+ * Sets a field to read only or removes a read only condition.
+ * @param dataName required; data name of the targeted field
+ * @param value boolean value indicating whether to set as read only
+ * @example
+ *
+ * SETREADONLY("role", true) // sets role field to read only
+ */
+declare function SETREADONLY(dataName: string, value: boolean): void;
+/**
+ * Sets a field to read only or removes a read only condition.
+ * @param dataName required; data name of the targeted field
+ * @param value boolean value indicating whether to set as read only
+ * @example
+ *
+ * SETREADONLY("role", true) // sets role field to read only
+ */
+declare function SETREADONLY(dataName: string, value?: boolean): void;
+
+
+/**
+ * Sets geometry values if a valid GeoJSON object is passed in.
+ * @param geometry GeoJSON object containing geometry `type` and lat-long `coordinates`
+ * @example
+ * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]}) // sets geometry to Null Island
+ */
+declare function SETGEOMETRY(geometry: ValidGeometry): void;
+/**
+ * Sets geometry values if a valid GeoJSON object is passed in.
+ * @param geometry GeoJSON object containing geometry `type` and lat-long `coordinates`
+ * @example
+ * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]}) // sets geometry to Null Island
+ */
+declare function SETGEOMETRY(geometry: any): void;
+
+/**
+ * Sets a field to hidden or visible.
+ * @param dataName required; data name of targeted field
+ * @param value boolean value indicating whether to hide field
+ * @example
+ *
+ * SETHIDDEN("choice_field", true) // hide field
+ * SETHIDDEN("choice_field", false) // make field visible
+ */
+declare function SETHIDDEN(dataName: string, value: boolean): void;
+/**
+ * Sets a field to hidden or visible.
+ * @param dataName required; data name of targeted field
+ * @param value boolean value indicating whether to hide field
+ * @example
+ *
+ * SETHIDDEN("choice_field", true) // hide field
+ * SETHIDDEN("choice_field", false) // make field visible
+ */
+declare function SETHIDDEN(dataName: string, value?: boolean): void;
+
+/**
+ * Sets up a function to be called repeatedly after a fixed time delay.
+ * The SETINTERVAL function can be used to repeatedly call a function at a specified interval.
+ * It’s nearly identical to the web platform standard
+ * [setInterval](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval).
+ * @param function The function to execute after interval
+ * @param delay The number of milliseconds to delay (e.g. 1000 is 1 second)
+ * @returns timer ID that can be used to clear the interval with [CLEARINTERVAL](/data-events/reference/clearinterval)
+ * @example
+ * // Set a field label to the current GPS accuracy every 5 seconds
+ * ON('load-record', function(event) {
+ *  var fiveSeconds = 1000 * 5;
+
+ *  SETINTERVAL(function() {
+ *    if (CURRENTLOCATION()) {
+ *      SETLABEL('accuracy', CURRENTLOCATION().accuracy);
+ *    }
+ *   }, fiveSeconds);
+ *  });
+ */
+declare function SETINTERVAL(fn: Function, timeout: number): number;
+
+/**
+ * Sets the label of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which label should be set
+ */
+declare function SETLABEL(dataName: string, value: string): void;
+/**
+ * Sets the label of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which label should be set
+ */
+declare function SETLABEL(dataName: string, value?: any): void;
+
+/**
+ * Sets location geometry given a latitude and longitude value.
+ * @param latitude numeric value fo latitude coordinate
+ * @param longitude number value for longitude coordinate
+ */
+declare function SETLOCATION(latitude: number, longitude: number): void;
+/**
+ * Sets location geometry given a latitude and longitude value.
+ * @param latitude numeric value fo latitude coordinate
+ * @param longitude number value for longitude coordinate
+ */
+declare function SETLOCATION(latitude: string, longitude: string): void;
+/**
+ * Sets location geometry given a latitude and longitude value.
+ * @param latitude numeric value fo latitude coordinate
+ * @param longitude number value for longitude coordinate
+ */
+declare function SETLOCATION(latitude?: any, longitude?: any): void;
+
+/**
+ * Sets the max length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing max length desired
+ */
+declare function SETMAXLENGTH(dataName: string, value: number): void;
+/**
+ * Sets the max length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing max length desired
+ */
+declare function SETMAXLENGTH(dataName: string, value?: any): void;
+
+/**
+ * Sets the minimum length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing min length desired
+ */
+declare function SETMINLENGTH(dataName: string, value: number): void;
+/**
+ * Sets the minimum length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing min length desired
+ */
+declare function SETMINLENGTH(dataName: string, value?: any): void;
+
+/**
+ * Sets project for a record.
+ * @param project project name, string
+ */
+declare function SETPROJECT(project: string): void;
+/**
+ * Sets project for a record.
+ * @param project project name, string
+ */
+declare function SETPROJECT(project: any): void;
+
+/**
+ * Sets a field to required or optional.
+ * @param dataName required; data name of targeted field
+ * @param value boolean value indicating whether to require field
+ * @example
+ *
+ * SETREQUIRED("choice_field", true) // set field to required
+ * SETREQUIRED("choice_field", false) // make field optional
+ */
+declare function SETREQUIRED(dataName: string, value: boolean): void;
+/**
+ * Sets a field to required or optional.
+ * @param dataName required; data name of targeted field
+ * @param value boolean value indicating whether to require field
+ * @example
+ *
+ * SETREQUIRED("choice_field", true) // set field to required
+ * SETREQUIRED("choice_field", false) // make field optional
+ */
+declare function SETREQUIRED(dataName: string, value?: boolean): void;
+
+/**
+ * Sets result variable on runtime.
+ * @param result required; desired result
+ */
+declare function SETRESULT(result: any): void;
+
+/**
+ * Sets record's status.
+ * @param status status value, string
+ */
+declare function SETSTATUS(status: string): void;
+/**
+ * Sets record's status.
+ * @param status status value, string
+ */
+declare function SETSTATUS(status?: any): void;
+
+/**
+ * Set status filter values.
+ * @param value required; array of statuses (strings) or a single status to filter by
+ */
+declare function SETSTATUSFILTER(value: string[] | string): void;
+
+/**
+ * Sets status to hidden or visible.
+ * @param value boolean value indicating whether to hide status
+ */
+declare function SETSTATUSHIDDEN(value: boolean): void;
+
+/**
+ * Sets status to read only or removes a read only condition.
+ * @param value required; boolean value indicating whether status should be read-only
+ */
+declare function SETSTATUSREADONLY(value: boolean): void;
+
+/**
  * Calls a function after a specified delay.
  * The SETTIMEOUT function can be used to delay execution of a function for a specified amount of time. It's
  * nearly identical to the web platform standard
@@ -4441,17 +4834,146 @@ declare function SETCONFIGURATION(settings: Configuration): void;
  *   }, fiveMinutes);
  * });
  */
-declare function SETTIMEOUT(fn: Function, timeout: number): number | undefined;
+declare function SETTIMEOUT(fn: Function, timeout: number): number;
 
 /**
- * Sets or clears the value of a field depending on value passed in.
- * @param dataName required; string, data_name of field to be set
- * @param value required; value for field, or `null` to clear the field
+ * Can toggle between settings to either show errors or not.
+ * @param showErrors optional; boolean value indiciating whether to show errors or not. Defaults to true.
  * @example
- * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
- * SETVALUE('name', null) // Clears the value of field called 'name'
+ * SHOWERRORS() // errors will be shown
+ * SHOWERRORS(false) // errors will not be shown
  */
-declare function SETVALUE(dataName: string, value: string | ChoiceFieldValue | AddressFieldValue | string[] | number[] | null): void;
+declare function SHOWERRORS(showErrors?: boolean): void;
+
+/**
+ * Randomly shuffles values passed in and returns them as an array.
+ * @param values set of values to be shuffled
+ * @returns a shuffled array
+ * @example
+ *
+ * SHUFFLE([1, 2, 3], 4) // returns [4, 2, 3, 1]
+ */
+declare function SHUFFLE(...values: any[]): any[];
+
+/**
+ * Returns the sign of a number.
+ * @param num required; numeric value
+ * @returns sign of a number: 1 for positive numbers, -1 for negative numbers, 0 for 0
+ * @example
+ *
+ * SIGN(9 * -3) // returns -1
+ */
+declare function SIGN(num: number): number;
+/**
+ * Returns the sign of a number.
+ * @param num required; numeric value
+ * @returns sign of a number: 1 for positive numbers, -1 for negative numbers, 0 for 0
+ * @example
+ *
+ * SIGN(9 * -3) // returns -1
+ */
+declare function SIGN(num: any): number;
+
+/**
+ * Returns the sine of the specified angle value, which must be specified in radians.
+ * @param value numeric value specifying radians
+ * @returns numeric value between 1 and -1 indicating the angle's sine
+ * @example
+ * SIN(12) // returns -0.5365729180004349
+ */
+declare function SIN(value: number): number;
+/**
+ * Returns the sine of the specified angle value, which must be specified in radians.
+ * @param value numeric value specifying radians
+ * @returns numeric value between 1 and -1 indicating the angle's sine
+ * @example
+ * SIN(12) // returns -0.5365729180004349
+ */
+declare function SIN(value: string): number;
+
+/**
+ * Returns function returns the hyperbolic sine of a number
+ * @param value numeric value
+ * @returns numeric value of angle's hyperbolic sine
+ * @example
+ * SINH(12) // returns 0.8438539587324921
+ */
+declare function SINH(value: number): number;
+/**
+ * Returns function returns the hyperbolic sine of a number
+ * @param value numeric value
+ * @returns numeric value of angle's hyperbolic sine
+ * @example
+ * SINH(12) // returns 0.8438539587324921
+ */
+declare function SINH(value: string): number;
+/**
+ * Returns function returns the hyperbolic sine of a number
+ * @param value numeric value
+ * @returns numeric value of angle's hyperbolic sine
+ * @example
+ * SINH(12) // returns 0.8438539587324921
+ */
+declare function SINH(value: any): number;
+
+/**
+ * Sorts parameters passed in according to an optional callback. Defaults to basic comparison sort sans callback.
+ * @param args values to be sorted, optional callback must be passed in last
+ * @returns sorted list of values
+ *
+ * @example
+ * SORT(1, 3, 6, 6, 2) // returns [1, 2, 3 , 6, 6]
+ * SORT({test: 2}, {test: 1}, {test: 1}, (a: any, b: any) => a.test) // returns [{test: 1}, {test: 1}, {test: 2}]
+ */
+declare function SORT(...args: any[]): any[] | undefined;
+
+/**
+ * Returns the square root of a number.
+ * @param num number to be evaluated
+ * @returns square root of original value
+ */
+declare function SQRT(num: number): number;
+/**
+ * Returns the square root of a number.
+ * @param num number to be evaluated
+ * @returns square root of original value
+ */
+declare function SQRT(num: string): number;
+/**
+ * Returns the square root of a number.
+ * @param num number to be evaluated
+ * @returns square root of original value
+ */
+declare function SQRT(num: any): number;
+
+/**
+ * Returns the square root of a number times PI.
+ * @param num number to be evaluated
+ * @returns the sqrt of `num` * PI
+ */
+declare function SQRTPI(num: number): number;
+/**
+ * Returns the square root of a number times PI.
+ * @param num number to be evaluated
+ * @returns the sqrt of `num` * PI
+ */
+declare function SQRTPI(num: string): number;
+/**
+ * Returns the square root of a number times PI.
+ * @param num number to be evaluated
+ * @returns the sqrt of `num` * PI
+ */
+declare function SQRTPI(num: any): number;
+
+/**
+ * Returns the record status or undefined if the status is not present.
+ */
+declare function STATUS(): string | undefined;
+
+/**
+ * Returns the status value of a record.
+ */
+declare function STATUSLABEL(): string | undefined;
 
 /**
  * Returns a storage object for setting and getting local storage items.
@@ -4482,6 +5004,34 @@ declare function SETVALUE(dataName: string, value: string | ChoiceFieldValue | A
  * // Removes all items from storage
  */
 declare function STORAGE(): typeof storage | Storage;
+
+/**
+ * Returns a single string of stringable values extracted from parameters.
+ * `null`, `undefined`, `NaN` values are ignored. STRING can be used to extract the following values from objects:
+ * `photo_id`, `video_id`, `audio_id`, `signature_id`, `record_id`, and `id`. STRING will unpack Choice field options
+ * if passed in.
+ * @param args list of values
+ * @returns a string of values separated by commas
+ * @example
+ *
+ * STRING(1, 2, null, 4) // returns "1, 2, 4"
+ * STRING({ choice_values: ["yes", "no"], other_values: ["maybe"] }) // returns "yes, no, maybe"
+ */
+declare function STRING(...args: any[]): string;
+
+/**
+ * Searches a string for a pattern and replaces it with a new substring.
+ * @param text required; text to be searched
+ * @param oldText required; pattern to be replaced
+ * @param newText required; substring to replace `oldText`
+ * @param occurrence optional; numeric value indicating at which occurrence of `oldText` should be replaced
+ * @returns string with new substring incorporated
+ *
+ * @example
+ *
+ * SUBSTITUTE('abc abc abc', 'abc', 'def', 2) // returns 'abc def abc'
+ */
+declare function SUBSTITUTE(text: string, oldText: string, newText: string, occurrence?: number): string | undefined;
 
 /**
  * Returns the sum of each number squared.
