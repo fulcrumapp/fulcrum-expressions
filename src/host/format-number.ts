@@ -1,4 +1,5 @@
 import { isUndefined } from "lodash"
+
 /**
  * options hash to determine number formatting
  */
