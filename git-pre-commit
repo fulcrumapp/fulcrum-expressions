@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-make types -- --git-add
+# before each commit, update functions file and add to commit
+make types && git add editor/functions.d.ts
