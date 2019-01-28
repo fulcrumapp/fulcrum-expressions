@@ -8,7 +8,8 @@
     "url": "git://github.com/fulcrumapp/fulcrum-expressions.git"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "cd .git/hooks && ln -f ../../git-pre-commit pre-commit"
   },
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
   "license": "BSD",
