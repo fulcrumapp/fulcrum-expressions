@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+make types -- --git-add
