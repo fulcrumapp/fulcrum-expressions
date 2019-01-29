@@ -6,13 +6,13 @@ const gitDiff = exec("git diff --cached --name-only --diff-filter=ACM | cat")
 gitDiff.stdout.on("data", (data) => {
   const files = data.trim().split("\n")
 
-  const changedFiles = files.map((file) => {
+  const areChangesInFunctionFiles = files.map((file) => {
     const isChangeInFunctionsDir = /...\/functions\//.test(file)
     const isIndexFile = /...\/functions\/index/.test(file)
     const isTestFile = /...\/functions\/__tests__/.test(file)
     return isChangeInFunctionsDir && !(isIndexFile || isTestFile)
   })
 
-  changedFiles.includes(true) ? exec("make types && git add editor/functions.d.ts")
+  areChangesInFunctionFiles.includes(true) ? exec("make types && git add editor/functions.d.ts")
                               : console.log("No changes detected in functions files\n")
 })
