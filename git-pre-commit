@@ -1,3 +1,23 @@
-#!/usr/bin/env bash
+#!/usr/bin/env node
+const { exec } = require('child_process')
 
-make types && git add editor/functions.d.ts
+const path = process.argv[2]
+console.log(path)
+
+const isChangeInFunctionsDir = /...\/functions\//.test(path)
+const isIndexFile = /...\/functions\/index/.test(path)
+const isTestFile = /...\/functions\/__tests__/.test(path)
+
+if (isChangeInFunctionsDir && !(isIndexFile || isTestFile)) {
+  exec("make types && git add editor/functions.d.ts", (error, stdout, stderr) {
+    if (error) {
+      console.log("Error processing git hook: ", stderr)
+    } else {
+      console.log("functions.d.ts recompiled, added to commit")
+    }
+  })
+} else {
+  console.log("No change detected in a function file")
+}
+
+return 1
