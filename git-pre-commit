@@ -1,23 +1,18 @@
 #!/usr/bin/env node
 const { exec } = require('child_process')
 
-const path = process.argv[2]
-console.log(path)
+const gitDiff = exec("git diff --cached --name-only --diff-filter=ACM | cat")
 
-const isChangeInFunctionsDir = /...\/functions\//.test(path)
-const isIndexFile = /...\/functions\/index/.test(path)
-const isTestFile = /...\/functions\/__tests__/.test(path)
+gitDiff.stdout.on("data", (data) => {
+  const files = data.trim().split("\n")
 
-if (isChangeInFunctionsDir && !(isIndexFile || isTestFile)) {
-  exec("make types && git add editor/functions.d.ts", (error, stdout, stderr) => {
-    if (error) {
-      console.log("Error processing git hook: ", stderr)
-    } else {
-      console.log("functions.d.ts recompiled, added to commit")
-    }
+  const changedFiles = files.map((file) => {
+    const isChangeInFunctionsDir = /...\/functions\//.test(file)
+    const isIndexFile = /...\/functions\/index/.test(file)
+    const isTestFile = /...\/functions\/__tests__/.test(file)
+    return isChangeInFunctionsDir && !(isIndexFile || isTestFile)
   })
-} else {
-  console.log("No change detected in a function file")
-}
 
-return 1
+  changedFiles.includes(true) ? exec("make types && git add editor/functions.d.ts")
+                              : console.log("No changes detected in functions files\n")
+})

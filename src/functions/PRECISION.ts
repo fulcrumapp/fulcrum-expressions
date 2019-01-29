@@ -16,7 +16,6 @@ export default function PRECISION(value: any): number {
 
   if (ISNAN(value)) { return NaN }
 
-  // convert value to string and split at decimal point, if present
   const parts: string[] = value.toString().split(".")
 
   if (parts.length < 2) { return 0 }
