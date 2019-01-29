@@ -4,7 +4,7 @@ TESTS     ?= test/*.coffee
 define docker_run
 	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine bash -l -c "${1}"
 endef
-
+ 
 all: build
 
 build:
