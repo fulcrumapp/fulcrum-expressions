@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "jest",
-    "postinstall": "cd .git/hooks && ln -f ../../git-pre-commit pre-commit"
+    "postinstall": "cd .git/hooks && ln -f ../../git-pre-commit pre-commit && chmod +x pre-commit"
   },
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
   "license": "BSD",
