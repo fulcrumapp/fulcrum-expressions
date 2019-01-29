@@ -9,7 +9,7 @@ const isIndexFile = /...\/functions\/index/.test(path)
 const isTestFile = /...\/functions\/__tests__/.test(path)
 
 if (isChangeInFunctionsDir && !(isIndexFile || isTestFile)) {
-  exec("make types && git add editor/functions.d.ts", (error, stdout, stderr) {
+  exec("make types && git add editor/functions.d.ts", (error, stdout, stderr) => {
     if (error) {
       console.log("Error processing git hook: ", stderr)
     } else {
