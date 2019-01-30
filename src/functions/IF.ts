@@ -1,6 +1,6 @@
 
 /**
- * Evaluates a conditional expression
+ * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
  * @param test required; conditional expression that evaluates to true or false
  * @param trueValue required; value to be returned in case of true
  * @param falseValue required; vaue to be returned in case of false
