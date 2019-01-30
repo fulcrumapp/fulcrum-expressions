@@ -13,6 +13,16 @@ gitDiff.stdout.on("data", (data) => {
     return isChangeInFunctionsDir && !(isIndexFile || isTestFile)
   })
 
-  areChangesInFunctionFiles.includes(true) ? exec("make types && git add editor/functions.d.ts")
-                              : console.log("No changes detected in functions files\n")
+  if (areChangesInFunctionFiles.includes(true)) {
+    console.log("Change detected in function file. Compiling...\n")
+    exec("make types && git add editor/functions.d.ts", (error, stdout, stderr) => {
+      if (error) {
+        console.log("There was an error compiling functions.d.ts:\n", stderr)
+      } else {
+        console.log("functions.d.ts successfully compiled, added to commit.\n")
+      }
+    })
+  } else {
+      console.log("No changes detected in functions files\n")
+  }
 })
