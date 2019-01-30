@@ -19,6 +19,7 @@ gitDiff.stdout.on("data", (data) => {
       if (error) {
         console.log("There was an error compiling functions.d.ts:\n", stderr)
       } else {
+        console.log(stdout)
         console.log("functions.d.ts successfully compiled, added to commit.\n")
       }
     })

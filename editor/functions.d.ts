@@ -2222,7 +2222,7 @@ declare function HASOTHER(value?: any): boolean;
 declare function HASOTHER(): boolean;
 
 /**
- * Evaluates a conditional expression
+ * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
  * @param test required; conditional expression that evaluates to true or false
  * @param trueValue required; value to be returned in case of true
  * @param falseValue required; vaue to be returned in case of false
@@ -4709,7 +4709,6 @@ declare function SINH(value: any): number;
  * Sorts parameters passed in according to an optional callback. Defaults to basic comparison sort sans callback.
  * @param args values to be sorted, optional callback must be passed in last
  * @returns sorted list of values
- *
  * @example
  * SORT(1, 3, 6, 6, 2) // returns [1, 2, 3 , 6, 6]
  * SORT({test: 2}, {test: 1}, {test: 1}, (a: any, b: any) => a.test) // returns [{test: 1}, {test: 1}, {test: 2}]

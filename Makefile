@@ -4,6 +4,10 @@ TESTS     ?= test/*.coffee
 define docker_run
 	docker run -v `pwd`:/app:cached -it spatialnetworks/alpine bash -l -c "${1}"
 endef
+
+define docker_noninteractive
+	docker run -v `pwd`:/app:cached spatialnetworks/alpine bash -l -c "${1}"
+endef
  
 all: build
 
@@ -51,7 +55,7 @@ repl:
 	$(call docker_run, make build && ./console)
 
 types:
-	$(call docker_run, yarn run \
+	$(call docker_noninteractive, yarn run \
 		dts-generator \
 									--project . \
 									--target 0 \
