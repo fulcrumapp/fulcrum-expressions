@@ -264,19 +264,16 @@ exports.DATE = (year, month, day) ->
 
   new Date("#{year}/#{month}/#{day} 00:00:00")
 
-exports.DATEADD = (date, number, type='day') ->
+exports.DATEADD = (date, number) ->
   date = DATEVALUE(date)
   number = INT(number)
 
   return NO_VALUE unless date?
   return NO_VALUE if ISNAN(number)
 
-  return NO_VALUE unless type is 'day'
+  date.setTime(date.getTime() + number)
 
-  time = date.getTime()
-  time += (number * (1000 * 60 * 60 * 24))
-
-  new Date(time)
+  date
 
 exports.DATEVALUE = (dateString, timeString) ->
   if _.isDate(dateString)
