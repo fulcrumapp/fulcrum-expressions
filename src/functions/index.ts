@@ -37,6 +37,7 @@ import CURRENCYSYMBOL from "./CURRENCYSYMBOL"
 import CURRENTLOCATION from "./CURRENTLOCATION"
 import DATANAMES from "./DATANAMES"
 import DATE from "./DATE"
+import DATEADD from "./DATEADD"
 import DATEVALUE from "./DATEVALUE"
 import DAY from "./DAY"
 import DECIMALSEPARATOR from "./DECIMALSEPARATOR"
@@ -254,6 +255,7 @@ export const functions: FunctionMap = {
   CURRENTLOCATION,
   DATANAMES,
   DATE,
+  DATEADD,
   DATEVALUE,
   DAY,
   DECIMALSEPARATOR,
