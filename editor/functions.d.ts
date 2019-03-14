@@ -1474,6 +1474,8 @@ declare function DATE(year?: any, month?: any, day?: any): undefined;
  */
 declare function DATE(): undefined;
 
+declare function DATEADD(date: any, number: any, type?: string): any;
+
 /**
  * Returns the right characters of a string, i.e. the characters starting at index -1
  * @param value required; string
@@ -1541,7 +1543,7 @@ declare function LPAD(): undefined;
 
 /**
  * Returns a date value given a date and optional time string
- * @param dateString required; string representing a date or a Date object
+ * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
  * @param timeString optional; string representing a time
  * @returns Date value
  * @example
@@ -1551,7 +1553,7 @@ declare function LPAD(): undefined;
 declare function DATEVALUE(dateString: Date | MaybeString, timeString?: string): Date;
 /**
  * Returns a date value given a date and optional time string
- * @param dateString required; string representing a date or a Date object
+ * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
  * @param timeString optional; string representing a time
  * @returns Date value
  * @example
@@ -1561,7 +1563,7 @@ declare function DATEVALUE(dateString: Date | MaybeString, timeString?: string):
 declare function DATEVALUE(dateString: string): Date;
 /**
  * Returns a date value given a date and optional time string
- * @param dateString required; string representing a date or a Date object
+ * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
  * @param timeString optional; string representing a time
  * @returns Date value
  * @example
@@ -1571,7 +1573,7 @@ declare function DATEVALUE(dateString: string): Date;
 declare function DATEVALUE(dateString: Date): Date;
 /**
  * Returns a date value given a date and optional time string
- * @param dateString required; string representing a date or a Date object
+ * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
  * @param timeString optional; string representing a time
  * @returns Date value
  * @example

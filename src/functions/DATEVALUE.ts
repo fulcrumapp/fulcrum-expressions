@@ -5,7 +5,7 @@ import LPAD from "./LPAD"
 
 /**
  * Returns a date value given a date and optional time string
- * @param dateString required; string representing a date or a Date object
+ * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
  * @param timeString optional; string representing a time
  * @returns Date value
  * @example
