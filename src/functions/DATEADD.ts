@@ -2,6 +2,7 @@ import { isNull, isUndefined } from "lodash"
 import DATEVALUE from "./DATEVALUE"
 import INT from "./INT"
 import ISNAN from "./ISNAN"
+import { MaybeString } from "../types/primitives"
 
 /**
  * Adds a given number of days to a date.
