@@ -431,7 +431,7 @@ declare function CHAR(value: string): string;
 type GUID = string
  type MaybeString = string | null | undefined
  type MaybeError = Error | null
-
+ type GenericObject = { [k: string]: any }
  type FormFieldValues =
   ChoiceFieldValue
   | AddressFieldValue
@@ -453,6 +453,15 @@ interface ChoiceFieldValue {
   other_values?: string[] | null
 }
 
+interface CurrentLocation {
+  latitude: number | null,
+  longitude: number | null,
+  altitude: number | null,
+  accuracy: number | null,
+  course: number | null,
+  speed: number | null,
+  timestamp: number | null
+}
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
  * Values of null, undefined, and NaN are considered blank and the function will return true.
@@ -1044,9 +1053,11 @@ declare function CURRENCYCODE(): string;
 declare function CURRENCYSYMBOL(): string;
 
 /**
- * Returns current location from runtime if available, otherwise returns null.
+ *  Returns the current device location as an object. This can be used for Q/A purposes or
+ *  other custom processing logic. This is not always the same as the record location.
+ *  location will be different.
  */
-declare function CURRENTLOCATION(): string | null;
+declare function CURRENTLOCATION(): CurrentLocation | null;
 
 
  type FormFieldTypes =
@@ -2485,6 +2496,15 @@ declare function ISLANDSCAPE(): undefined;
  */
 declare function ISLOGICAL(value: any): boolean;
 
+/** Returns the platform name from the configuration object */
+declare function PLATFORM(): string;
+
+/**
+ * Returns true if the record is being edited from the mobile app
+ * @returns boolean value
+ */
+declare function ISMOBILE(): boolean;
+
 /**
  * Returns a boolean indicating whether the feature is new or an update.
  */
@@ -2815,7 +2835,7 @@ declare function LONGITUDE(): number;
  * @example
  * LOWER("CASE") // returns "case"
  */
-declare function LOWER(value: string): string | undefined;
+declare function LOWER(value: string): string;
 /**
  * Converts a string value to all lowercase.
  * @param value required; value to be converted to lowercase
@@ -2823,7 +2843,7 @@ declare function LOWER(value: string): string | undefined;
  * @example
  * LOWER("CASE") // returns "case"
  */
-declare function LOWER(value: any): string | undefined;
+declare function LOWER(value: undefined | null | object | Array<any> | GenericObject): undefined;
 
 
 /**
@@ -3018,6 +3038,7 @@ interface TriggeredEvent {
   | ChangeGeometryEventName
   | AddPhotoEventName
   | RemovePhotoEventName
+  | ReplacePhotoEventName
   | AddVideoEventName
   | RemoveVideoEventName
   | AddAudioEventName
@@ -3055,6 +3076,7 @@ interface TriggeredEvent {
  type ChangeGeometryEventName = "change-geometry"
  type AddPhotoEventName = "add-photo"
  type RemovePhotoEventName = "remove-photo"
+ type ReplacePhotoEventName = "replace-photo"
  type AddVideoEventName = "add-video"
  type RemoveVideoEventName = "remove-video"
  type AddAudioEventName = "add-audio"
@@ -3101,18 +3123,30 @@ interface RepeatableEvent extends EventWithField {
 interface AddPhotoEventValue {
   id: GUID,
   size: number,
-  latitude: number,
-  longitude: number,
-  altitude: number,
-  accuracy: number,
-  orientation: number,
+  latitude: number | null,
+  longitude: number | null,
+  altitude: number | null,
+  accuracy: number | null,
+  direction: number | null,
+  orientation: number | null,
   width: number,
-  height: number
+  height: number,
+  timestamp: string | null
+}
+
+interface ReplacePhotoEventValue extends AddPhotoEventValue {
+  annotated: boolean,
+  replaced: GUID
 }
 
 interface AddPhotoEvent extends EventWithField {
   name: AddPhotoEventName,
   value: AddPhotoEventValue
+}
+
+interface ReplacePhotoEvent extends EventWithField {
+  name: ReplacePhotoEventName,
+  value: ReplacePhotoEventValue
 }
 
 interface RemoveMediaEventValue {
@@ -3131,7 +3165,7 @@ interface AddVideoEventValue {
   id: GUID,
   size: number,
   duration: number,
-  orientation: number,
+  orientation: number | null,
   width: number,
   height: number,
   track: any
@@ -3564,7 +3598,7 @@ declare function ON(name: ChangeGeometryEventName, field: string, callback: (eve
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void;
+declare function ON(name: AddPhotoEventName, field: string, callback: (event: AddPhotoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3611,7 +3645,7 @@ declare function ON(name: AddPhotoEventName, callback: (event: AddPhotoEvent) =>
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void;
+declare function ON(name: ReplacePhotoEventName, field: string, callback: (event: ReplacePhotoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3658,7 +3692,7 @@ declare function ON(name: RemovePhotoEventName, callback: (event: RemoveMediaEve
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void;
+declare function ON(name: RemovePhotoEventName, field: string, callback: (event: RemoveMediaEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3705,7 +3739,7 @@ declare function ON(name: AddVideoEventName, callback: (event: AddVideoEvent) =>
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void;
+declare function ON(name: AddVideoEventName, field: string, callback: (event: AddVideoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3752,7 +3786,7 @@ declare function ON(name: RemoveVideoEventName, callback: (event: RemoveVideoEve
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void;
+declare function ON(name: RemoveVideoEventName, field: string, callback: (event: RemoveVideoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3799,15 +3833,59 @@ declare function ON(name: AddAudioEventName, callback: (event: AddAudioEvent) =>
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void;
+declare function ON(name: AddAudioEventName, field: string, callback: (event: AddAudioEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: RemoveAudioEventName, field: string, callback: (event: RemoveAudioEvent) => void): void;
 
 /**
  * Returns the value of pi (π).
  */
 declare function PI(): number;
-
-/** Returns the platform name from the configuration object */
-declare function PLATFORM(): string;
 
 /** Returns the platform version from the configuration object */
 declare function PLATFORMVERSION(): string;
@@ -4979,7 +5057,7 @@ declare function UNIQUE(...args: any[]): any[] | undefined;
  * @example
  * UPPER("test") // returns "TEST"
  */
-declare function UPPER(value: string): string | undefined;
+declare function UPPER(value: string): string;
 /**
  * Returns a string of all uppercase letters
  * @param value required; value to be converted to uppercase
@@ -4987,7 +5065,7 @@ declare function UPPER(value: string): string | undefined;
  * @example
  * UPPER("test") // returns "TEST"
  */
-declare function UPPER(value: any): string | undefined;
+declare function UPPER(value: undefined | null | object | Array<any> | GenericObject): undefined;
 
 /**
  * Returns the current user's full name if it exists in the current configuration.
@@ -5043,3 +5121,8 @@ declare function YEAR(date: MaybeString): number;
  */
 declare function YEAR(): undefined;
 
+interface Console {
+  log(message?: any, ...optionalParams: any[]): void
+}
+
+ var console: Console

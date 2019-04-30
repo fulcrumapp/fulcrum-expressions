@@ -4,6 +4,8 @@ import {
   AddAudioEventName,
   AddPhotoEvent,
   AddPhotoEventName,
+  ReplacePhotoEvent,
+  ReplacePhotoEventName,
   AddVideoEvent,
   AddVideoEventName,
   ChangeGeometryEventName,
@@ -79,12 +81,13 @@ export default function ON(name: FieldEventNames, field: string, callback: (even
 export default function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
 export default function ON(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void
 export default function ON(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void
-export default function ON(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void
-export default function ON(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void
-export default function ON(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void
-export default function ON(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void
-export default function ON(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void
-export default function ON(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void
+export default function ON(name: AddPhotoEventName, field: string, callback: (event: AddPhotoEvent) => void): void
+export default function ON(name: ReplacePhotoEventName, field: string, callback: (event: ReplacePhotoEvent) => void): void
+export default function ON(name: RemovePhotoEventName, field: string, callback: (event: RemoveMediaEvent) => void): void
+export default function ON(name: AddVideoEventName, field: string, callback: (event: AddVideoEvent) => void): void
+export default function ON(name: RemoveVideoEventName, field: string, callback: (event: RemoveVideoEvent) => void): void
+export default function ON(name: AddAudioEventName, field: string, callback: (event: AddAudioEvent) => void): void
+export default function ON(name: RemoveAudioEventName, field: string, callback: (event: RemoveAudioEvent) => void): void
 export default function ON(name: EventNames, ...args: any[]): void {
   let param: MaybeString = null
   let callback

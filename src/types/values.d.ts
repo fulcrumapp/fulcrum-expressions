@@ -18,3 +18,13 @@ export interface ChoiceFieldValue {
   choice_values?: string[] | null,
   other_values?: string[] | null
 }
+
+export interface CurrentLocation {
+  latitude: number | null,
+  longitude: number | null,
+  altitude: number | null,
+  accuracy: number | null,
+  course: number | null,
+  speed: number | null,
+  timestamp: number | null
+}

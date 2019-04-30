@@ -84,6 +84,7 @@ import ISERROR from "./ISERROR"
 import ISEVEN from "./ISEVEN"
 import ISLANDSCAPE from "./ISLANDSCAPE"
 import ISLOGICAL from "./ISLOGICAL"
+import ISMOBILE from "./ISMOBILE"
 import ISNAN from "./ISNAN"
 import ISNEW from "./ISNEW"
 import ISNONTEXT from "./ISNONTEXT"
@@ -302,6 +303,7 @@ export const functions: FunctionMap = {
   ISEVEN,
   ISLANDSCAPE,
   ISLOGICAL,
+  ISMOBILE,
   ISNAN,
   ISNEW,
   ISNONTEXT,

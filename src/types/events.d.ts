@@ -22,6 +22,7 @@ export type EventNames =
   | ChangeGeometryEventName
   | AddPhotoEventName
   | RemovePhotoEventName
+  | ReplacePhotoEventName
   | AddVideoEventName
   | RemoveVideoEventName
   | AddAudioEventName
@@ -59,6 +60,7 @@ export type FormEventNames =
 export type ChangeGeometryEventName = "change-geometry"
 export type AddPhotoEventName = "add-photo"
 export type RemovePhotoEventName = "remove-photo"
+export type ReplacePhotoEventName = "replace-photo"
 export type AddVideoEventName = "add-video"
 export type RemoveVideoEventName = "remove-video"
 export type AddAudioEventName = "add-audio"
@@ -105,18 +107,30 @@ export interface RepeatableEvent extends EventWithField {
 export interface AddPhotoEventValue {
   id: GUID,
   size: number,
-  latitude: number,
-  longitude: number,
-  altitude: number,
-  accuracy: number,
-  orientation: number,
+  latitude: number | null,
+  longitude: number | null,
+  altitude: number | null,
+  accuracy: number | null,
+  direction: number | null,
+  orientation: number | null,
   width: number,
-  height: number
+  height: number,
+  timestamp: string | null
+}
+
+export interface ReplacePhotoEventValue extends AddPhotoEventValue {
+  annotated: boolean,
+  replaced: GUID
 }
 
 export interface AddPhotoEvent extends EventWithField {
   name: AddPhotoEventName,
   value: AddPhotoEventValue
+}
+
+export interface ReplacePhotoEvent extends EventWithField {
+  name: ReplacePhotoEventName,
+  value: ReplacePhotoEventValue
 }
 
 export interface RemoveMediaEventValue {
@@ -135,7 +149,7 @@ export interface AddVideoEventValue {
   id: GUID,
   size: number,
   duration: number,
-  orientation: number,
+  orientation: number | null,
   width: number,
   height: number,
   track: any
