@@ -1,7 +1,8 @@
 import encodeUrl from "encodeurl"
 import { isEmpty, isFunction, isObject, isString } from "lodash"
 import { stringify } from "query-string"
-import HostHTTPRequest, { HTTPRequestCallback } from "../host/http-request"
+import HostHTTPRequest from "../host/http-request"
+import { HTTPRequestCallback } from "../types/host"
 import ERROR from "./ERROR"
 
 // TODO: This string fallback breaks auto-complete.

@@ -1,4 +1,5 @@
 import SETFORMATTRIBUTES from "./SETFORMATTRIBUTES"
+import { FieldName } from "../types/fields"
 
 /**
  * Sets a field to hidden or visible.
@@ -10,9 +11,9 @@ import SETFORMATTRIBUTES from "./SETFORMATTRIBUTES"
  * SETHIDDEN("choice_field", false) // make field visible
  */
 
-export default function SETHIDDEN(dataName: string, value: boolean): void
-export default function SETHIDDEN(dataName: string, value?: boolean): void
-export default function SETHIDDEN(dataName: string, value?: boolean): void {
+export default function SETHIDDEN(dataName: FieldName, value: boolean): void
+export default function SETHIDDEN(dataName: FieldName, value?: boolean): void
+export default function SETHIDDEN(dataName: FieldName, value?: boolean): void {
   const hidden = value ? !!value : null
   SETFORMATTRIBUTES(dataName, { hidden })
 }

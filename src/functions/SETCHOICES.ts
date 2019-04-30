@@ -1,6 +1,7 @@
 import { isArray, isNull, isNumber, isObject, isString } from "lodash"
 import SETFORMATTRIBUTES from "./SETFORMATTRIBUTES"
 import { isUndefined } from "util";
+import { ChoiceFieldName } from "../types/fields"
 
 interface ChoicesInterface {
   label: string,
@@ -12,7 +13,7 @@ interface ChoicesInterface {
  * @param dataName required; data name of form field to be updated
  * @param value required; an array of values; can be `null`
  */
-export default function SETCHOICES(dataName: string, value: any): void {
+export default function SETCHOICES(dataName: ChoiceFieldName, value: any): void {
   // TODO(zhm) throw some kind of error here if the param is wrong
   if (!(isNull(value) || isArray(value))) { return }
 

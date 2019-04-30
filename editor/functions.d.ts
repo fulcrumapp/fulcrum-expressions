@@ -1060,6 +1060,7 @@ declare function CURRENCYSYMBOL(): string;
 declare function CURRENTLOCATION(): CurrentLocation | null;
 
 
+
  type FormFieldTypes =
   "TextField"
   | "YesNoField"
@@ -1680,15 +1681,7 @@ declare function DEGREES(value?: any): number;
  * FIELD('child_item_cost').label // returns "Child Item Cost"
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
-declare function FIELD(dataName: string): FormField;
-/**
- * Returns definition object for a specified field
- * @param dataName The data name of the field
- * @example
- * FIELD('child_item_cost').label // returns "Child Item Cost"
- * FIELD('child_item_cost').parent.label // returns "Child Items"
- */
-declare function FIELD(dataName: MaybeString): FormField | undefined;
+declare function FIELD(dataName: FieldName): FormField;
 
 /**
  * Returns a field's description.
@@ -1860,7 +1853,7 @@ interface FieldsOptions {
  * @returns array of child fields
  *
  */
-declare function FIELDS(dataName: string): FormFields[];
+declare function FIELDS(dataName: ContainerFieldName): FormFields[];
 /**
  * Returns child fields of a repeatable or section field associated with a given data name
  * @param dataName required; string
@@ -1869,7 +1862,7 @@ declare function FIELDS(dataName: string): FormFields[];
  * @returns array of child fields
  *
  */
-declare function FIELDS(dataName: string, options: FieldsOptions): FormFields[];
+declare function FIELDS(dataName: ContainerFieldName, options: FieldsOptions): FormFields[];
 /**
  * Returns child fields of a repeatable or section field associated with a given data name
  * @param dataName required; string
@@ -1894,7 +1887,7 @@ declare function FIELDS(): undefined;
  * FIELDNAMES('items', { repeatables: false })
  * // returns ['cost', 'choice_value', 'child_items']
  */
-declare function FIELDNAMES(dataName: string, options?: FieldsOptions): string[] | undefined;
+declare function FIELDNAMES(dataName: ContainerFieldName, options?: FieldsOptions): FieldName[] | undefined;
 /**
  * Returns child field names when passed in a parent's dataname
  * @param dataName required; string
@@ -1909,7 +1902,7 @@ declare function FIELDNAMES(dataName: string, options?: FieldsOptions): string[]
  * FIELDNAMES('items', { repeatables: false })
  * // returns ['cost', 'choice_value', 'child_items']
  */
-declare function FIELDNAMES(dataName: string): string[] | undefined;
+declare function FIELDNAMES(dataName: ContainerFieldName): FieldName[] | undefined;
 
 /**
  * Returns a field's type.
@@ -1918,7 +1911,7 @@ declare function FIELDNAMES(dataName: string): string[] | undefined;
  * @example
  * FIELDTYPE("operating_hours") // returns "TimeField"
  */
-declare function FIELDTYPE(dataName: string): string | undefined;
+declare function FIELDTYPE(dataName: FieldName): string | undefined;
 
 /**
  * Returns the first n items of an array or string.
@@ -2626,7 +2619,7 @@ declare function ISUPDATE(): boolean;
  * @example
  * LABEL("business_name") // returns "Business Name"
  */
-declare function LABEL(dataName: string): string | undefined;
+declare function LABEL(dataName: FieldName): string | undefined;
 
 /**
  * Returns the last n items of an array or string.
@@ -3028,7 +3021,7 @@ interface TriggeredEvent {
     | RemoveMediaEventValue
     | null
   ),
-  field: FormFields | null
+  field: FieldName | null
 }
 
  type EventNames =
@@ -3083,7 +3076,7 @@ interface TriggeredEvent {
  type RemoveAudioEventName = "remove-audio"
 
 interface EventWithField {
-  field: string
+  field: FieldName
 }
 
 interface ChoiceFieldValue {
@@ -3101,7 +3094,7 @@ interface FormEvent {
 
 interface FieldEvent extends EventWithField {
   name: FieldEventNames,
-  field: string,
+  field: FieldName,
   value: FieldEventValue
 }
 
@@ -3216,7 +3209,7 @@ declare function OFF(name: FormEventNames, callback: (event: FormEvent) => void)
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void;
+declare function OFF(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3227,7 +3220,7 @@ declare function OFF(name: FieldEventNames, field: string, callback: (event: Fie
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void;
+declare function OFF(name: RepeatableEventNames, field: RepeatableFieldName, callback: (event: RepeatableEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3249,7 +3242,7 @@ declare function OFF(name: ChangeGeometryEventName, callback: (event: GeometryEv
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void;
+declare function OFF(name: ChangeGeometryEventName, field: RepeatableFieldName, callback: (event: GeometryEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3260,7 +3253,7 @@ declare function OFF(name: ChangeGeometryEventName, field: string, callback: (ev
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: AddPhotoEventName, callback: (event: AddPhotoEvent) => void): void;
+declare function OFF(name: AddPhotoEventName, field: PhotoFieldName, callback: (event: AddPhotoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3271,7 +3264,7 @@ declare function OFF(name: AddPhotoEventName, callback: (event: AddPhotoEvent) =
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: RemovePhotoEventName, callback: (event: RemoveMediaEvent) => void): void;
+declare function OFF(name: ReplacePhotoEventName, field: PhotoFieldName, callback: (event: ReplacePhotoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3282,7 +3275,7 @@ declare function OFF(name: RemovePhotoEventName, callback: (event: RemoveMediaEv
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: AddVideoEventName, callback: (event: AddVideoEvent) => void): void;
+declare function OFF(name: RemovePhotoEventName, field: PhotoFieldName, callback: (event: RemoveMediaEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3293,7 +3286,7 @@ declare function OFF(name: AddVideoEventName, callback: (event: AddVideoEvent) =
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: RemoveVideoEventName, callback: (event: RemoveVideoEvent) => void): void;
+declare function OFF(name: AddVideoEventName, field: VideoFieldName, callback: (event: AddVideoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3304,7 +3297,7 @@ declare function OFF(name: RemoveVideoEventName, callback: (event: RemoveVideoEv
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: AddAudioEventName, callback: (event: AddAudioEvent) => void): void;
+declare function OFF(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
  * @param event The event name
@@ -3315,7 +3308,18 @@ declare function OFF(name: AddAudioEventName, callback: (event: AddAudioEvent) =
  * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
  */
-declare function OFF(name: RemoveAudioEventName, callback: (event: RemoveAudioEvent) => void): void;
+declare function OFF(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void;
+/**
+ * Detaches an event handler set by ON.
+ * @param event The event name
+ * @param field The (optional) field the event was bound to
+ * @param callback The function to detach
+ * @example
+ * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
+ * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
+ *
+ */
+declare function OFF(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
 
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
@@ -3410,7 +3414,7 @@ declare function ON(name: FormEventNames, callback: (event: FormEvent) => void):
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void;
+declare function ON(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3457,7 +3461,7 @@ declare function ON(name: FieldEventNames, field: string, callback: (event: Fiel
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void;
+declare function ON(name: RepeatableEventNames, field: RepeatableFieldName, callback: (event: RepeatableEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3551,7 +3555,7 @@ declare function ON(name: ChangeGeometryEventName, callback: (event: GeometryEve
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void;
+declare function ON(name: ChangeGeometryEventName, field: RepeatableFieldName, callback: (event: GeometryEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3598,7 +3602,7 @@ declare function ON(name: ChangeGeometryEventName, field: string, callback: (eve
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: AddPhotoEventName, field: string, callback: (event: AddPhotoEvent) => void): void;
+declare function ON(name: AddPhotoEventName, field: PhotoFieldName, callback: (event: AddPhotoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3645,7 +3649,7 @@ declare function ON(name: AddPhotoEventName, field: string, callback: (event: Ad
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: ReplacePhotoEventName, field: string, callback: (event: ReplacePhotoEvent) => void): void;
+declare function ON(name: ReplacePhotoEventName, field: PhotoFieldName, callback: (event: ReplacePhotoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3692,7 +3696,7 @@ declare function ON(name: ReplacePhotoEventName, field: string, callback: (event
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RemovePhotoEventName, field: string, callback: (event: RemoveMediaEvent) => void): void;
+declare function ON(name: RemovePhotoEventName, field: PhotoFieldName, callback: (event: RemoveMediaEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3739,7 +3743,7 @@ declare function ON(name: RemovePhotoEventName, field: string, callback: (event:
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: AddVideoEventName, field: string, callback: (event: AddVideoEvent) => void): void;
+declare function ON(name: AddVideoEventName, field: VideoFieldName, callback: (event: AddVideoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3786,7 +3790,7 @@ declare function ON(name: AddVideoEventName, field: string, callback: (event: Ad
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RemoveVideoEventName, field: string, callback: (event: RemoveVideoEvent) => void): void;
+declare function ON(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3833,7 +3837,7 @@ declare function ON(name: RemoveVideoEventName, field: string, callback: (event:
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: AddAudioEventName, field: string, callback: (event: AddAudioEvent) => void): void;
+declare function ON(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
  * The ON function is the starting point for most data event scripts. It wires up an
@@ -3880,7 +3884,7 @@ declare function ON(name: AddAudioEventName, field: string, callback: (event: Ad
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: RemoveAudioEventName, field: string, callback: (event: RemoveAudioEvent) => void): void;
+declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
 
 /**
  * Returns the value of pi (π).
@@ -4125,7 +4129,7 @@ declare function REPEATABLENUMBER(): number | undefined;
  * @param dataName required; data name of desired field or an array of data names
  * @returns array of values
  */
-declare function REPEATABLEVALUES(repeatableValue: any[], dataName: string[] | string): any[] | undefined | null;
+declare function REPEATABLEVALUES(repeatableValue: any[], dataName: FieldName[] | FieldName): any[] | undefined | null;
 
 /**
  * Returns the sum of its arguments.
@@ -4152,8 +4156,23 @@ declare function SUM(...args: any[]): number;
  * @param dataName required; data name of desired field or an array of data names
  * @returns sum of numeric form values
  */
-declare function REPEATABLESUM(repeatableValue: any[], dataName: string | string[]): number;
+declare function REPEATABLESUM(repeatableValue: any[], dataName: FieldName | FieldName[]): number;
 
+interface Console {
+  log(message?: any, ...optionalParams: any[]): void
+}
+
+ var console: Console
+
+/**
+ * @param error error object
+ * @param request HTTP request object
+ * @param body the response body
+ */
+interface HTTPRequestCallback {
+  (error: Error, response?: null, body?: null): void
+  (error: null, response: object, body: string): void
+}
 interface RequestOptions {
     /** The url for the request */
     url?: string;
@@ -4411,7 +4430,7 @@ declare function SEARCH(needle: any, haystack: any, startPosition?: any): number
  * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
  * SETVALUE('name', null) // Clears the value of field called 'name'
  */
-declare function SETVALUE(dataName: string, value: string | ChoiceFieldValue | AddressFieldValue | ValidGeometry | string[] | number[] | null): void;
+declare function SETVALUE(dataName: FieldName, value: string | ChoiceFieldValue | AddressFieldValue | ValidGeometry | string[] | number[] | null): void;
 
 /**
  * Assign a user to a record.
@@ -4437,20 +4456,14 @@ declare function SETFORMATTRIBUTES(dataName: any): void;
  * @param dataName required; data name of field to be updated
  * @param value required; a value or an array of values on which to filter
  */
-declare function SETCHOICEFILTER(dataName: string, value: any[]): void;
-/**
- * Sets a choice filter for a form.
- * @param dataName required; data name of field to be updated
- * @param value required; a value or an array of values on which to filter
- */
-declare function SETCHOICEFILTER(dataName: string, value: any): void;
+declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void;
 
 /**
  * Updates the form choices attribute.
  * @param dataName required; data name of form field to be updated
  * @param value required; an array of values; can be `null`
  */
-declare function SETCHOICES(dataName: string, value: any): void;
+declare function SETCHOICES(dataName: ChoiceFieldName, value: any): void;
 
 interface Configuration {
     /** When creating a new form, ensure that the location is set. */
@@ -4484,13 +4497,7 @@ declare function SETCONFIGURATION(settings: Configuration): void;
  * @param dataName required; data name of targeted field
  * @param value value to which description should be set
  */
-declare function SETDESCRIPTION(dataName: string, value: string): void;
-/**
- * Sets the description of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which description should be set
- */
-declare function SETDESCRIPTION(dataName: string, value?: any): void;
+declare function SETDESCRIPTION(dataName: FieldName, value: string): void;
 
 /**
  * Sets a field to read only or removes a read only condition.
@@ -4500,7 +4507,7 @@ declare function SETDESCRIPTION(dataName: string, value?: any): void;
  *
  * SETREADONLY("role", true) // sets role field to read only
  */
-declare function SETREADONLY(dataName: string, value: boolean): void;
+declare function SETREADONLY(dataName: FieldName, value: boolean): void;
 /**
  * Sets a field to read only or removes a read only condition.
  * @param dataName required; data name of the targeted field
@@ -4509,7 +4516,7 @@ declare function SETREADONLY(dataName: string, value: boolean): void;
  *
  * SETREADONLY("role", true) // sets role field to read only
  */
-declare function SETREADONLY(dataName: string, value?: boolean): void;
+declare function SETREADONLY(dataName: FieldName, value?: boolean): void;
 
 
 /**
@@ -4536,7 +4543,7 @@ declare function SETGEOMETRY(geometry: any): void;
  * SETHIDDEN("choice_field", true) // hide field
  * SETHIDDEN("choice_field", false) // make field visible
  */
-declare function SETHIDDEN(dataName: string, value: boolean): void;
+declare function SETHIDDEN(dataName: FieldName, value: boolean): void;
 /**
  * Sets a field to hidden or visible.
  * @param dataName required; data name of targeted field
@@ -4546,7 +4553,7 @@ declare function SETHIDDEN(dataName: string, value: boolean): void;
  * SETHIDDEN("choice_field", true) // hide field
  * SETHIDDEN("choice_field", false) // make field visible
  */
-declare function SETHIDDEN(dataName: string, value?: boolean): void;
+declare function SETHIDDEN(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets up a function to be called repeatedly after a fixed time delay.
@@ -4575,13 +4582,7 @@ declare function SETINTERVAL(fn: Function, timeout: number): number;
  * @param dataName required; data name of targeted field
  * @param value value to which label should be set
  */
-declare function SETLABEL(dataName: string, value: string): void;
-/**
- * Sets the label of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which label should be set
- */
-declare function SETLABEL(dataName: string, value?: any): void;
+declare function SETLABEL(dataName: FieldName, value: string): void;
 
 /**
  * Sets location geometry given a latitude and longitude value.
@@ -4607,26 +4608,14 @@ declare function SETLOCATION(latitude?: any, longitude?: any): void;
  * @param dataName required; data name of the targeted field
  * @param value number representing max length desired
  */
-declare function SETMAXLENGTH(dataName: string, value: number): void;
-/**
- * Sets the max length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing max length desired
- */
-declare function SETMAXLENGTH(dataName: string, value?: any): void;
+declare function SETMAXLENGTH(dataName: FieldName, value: number): void;
 
 /**
  * Sets the minimum length of a field.
  * @param dataName required; data name of the targeted field
  * @param value number representing min length desired
  */
-declare function SETMINLENGTH(dataName: string, value: number): void;
-/**
- * Sets the minimum length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing min length desired
- */
-declare function SETMINLENGTH(dataName: string, value?: any): void;
+declare function SETMINLENGTH(dataName: FieldName, value: number): void;
 
 /**
  * Sets project for a record.
@@ -4648,17 +4637,7 @@ declare function SETPROJECT(project: any): void;
  * SETREQUIRED("choice_field", true) // set field to required
  * SETREQUIRED("choice_field", false) // make field optional
  */
-declare function SETREQUIRED(dataName: string, value: boolean): void;
-/**
- * Sets a field to required or optional.
- * @param dataName required; data name of targeted field
- * @param value boolean value indicating whether to require field
- * @example
- *
- * SETREQUIRED("choice_field", true) // set field to required
- * SETREQUIRED("choice_field", false) // make field optional
- */
-declare function SETREQUIRED(dataName: string, value?: boolean): void;
+declare function SETREQUIRED(dataName: FieldName, value: boolean): void;
 
 /**
  * Sets result variable on runtime.
@@ -5121,8 +5100,3 @@ declare function YEAR(date: MaybeString): number;
  */
 declare function YEAR(): undefined;
 
-interface Console {
-  log(message?: any, ...optionalParams: any[]): void
-}
-
- var console: Console

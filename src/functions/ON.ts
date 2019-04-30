@@ -24,6 +24,7 @@ import {
   RepeatableEvent,
   RepeatableEventNames,
 } from "../types/events"
+import { FieldName, PhotoFieldName, AudioFieldName, VideoFieldName, RepeatableFieldName } from "../types/fields"
 import { MaybeString } from "../types/primitives"
 import ERROR from "./ERROR"
 import FIELD from "./FIELD"
@@ -77,17 +78,17 @@ import FORMAT from "./FORMAT"
  */
 
 export default function ON(name: FormEventNames, callback: (event: FormEvent) => void): void
-export default function ON(name: FieldEventNames, field: string, callback: (event: FieldEvent) => void): void
-export default function ON(name: RepeatableEventNames, field: string, callback: (event: RepeatableEvent) => void): void
+export default function ON(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void
+export default function ON(name: RepeatableEventNames, field: RepeatableFieldName, callback: (event: RepeatableEvent) => void): void
 export default function ON(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void
-export default function ON(name: ChangeGeometryEventName, field: string, callback: (event: GeometryEvent) => void): void
-export default function ON(name: AddPhotoEventName, field: string, callback: (event: AddPhotoEvent) => void): void
-export default function ON(name: ReplacePhotoEventName, field: string, callback: (event: ReplacePhotoEvent) => void): void
-export default function ON(name: RemovePhotoEventName, field: string, callback: (event: RemoveMediaEvent) => void): void
-export default function ON(name: AddVideoEventName, field: string, callback: (event: AddVideoEvent) => void): void
-export default function ON(name: RemoveVideoEventName, field: string, callback: (event: RemoveVideoEvent) => void): void
-export default function ON(name: AddAudioEventName, field: string, callback: (event: AddAudioEvent) => void): void
-export default function ON(name: RemoveAudioEventName, field: string, callback: (event: RemoveAudioEvent) => void): void
+export default function ON(name: ChangeGeometryEventName, field: RepeatableFieldName, callback: (event: GeometryEvent) => void): void
+export default function ON(name: AddPhotoEventName, field: PhotoFieldName, callback: (event: AddPhotoEvent) => void): void
+export default function ON(name: ReplacePhotoEventName, field: PhotoFieldName, callback: (event: ReplacePhotoEvent) => void): void
+export default function ON(name: RemovePhotoEventName, field: PhotoFieldName, callback: (event: RemoveMediaEvent) => void): void
+export default function ON(name: AddVideoEventName, field: VideoFieldName, callback: (event: AddVideoEvent) => void): void
+export default function ON(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void
+export default function ON(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void
+export default function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void
 export default function ON(name: EventNames, ...args: any[]): void {
   let param: MaybeString = null
   let callback

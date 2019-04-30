@@ -1,5 +1,5 @@
 import { flatten, isArray, isNull, isUndefined } from "lodash"
-import { FormFields } from "../types/fields"
+import { FormFields, FieldName } from "../types/fields"
 import nearestRepeatable from "../util/nearest-repeatable"
 import repeatableValues from "../util/repeatable-values"
 
@@ -10,7 +10,7 @@ import repeatableValues from "../util/repeatable-values"
  * @returns array of values
  */
 
-export default function REPEATABLEVALUES(repeatableValue: any[], dataName: string[]|string): any[]|undefined|null {
+export default function REPEATABLEVALUES(repeatableValue: any[], dataName: FieldName[] | FieldName): any[]|undefined|null {
   if (isArray(dataName)) {
     if (dataName.length === 1) {
       dataName = dataName[0]

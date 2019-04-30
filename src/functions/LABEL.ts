@@ -1,5 +1,5 @@
 import { isUndefined } from "lodash"
-import { FormField } from "../types/fields"
+import { FormField, FieldName } from "../types/fields"
 import FIELD from "./FIELD"
 
 /**
@@ -10,7 +10,7 @@ import FIELD from "./FIELD"
  * LABEL("business_name") // returns "Business Name"
  */
 
-export default function LABEL(dataName: string): string|undefined {
+export default function LABEL(dataName: FieldName): string|undefined {
   const field: FormField|undefined = FIELD(dataName)
 
   if (isUndefined(field)) { return }

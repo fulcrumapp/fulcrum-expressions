@@ -1,5 +1,5 @@
 import { isEmpty, isUndefined } from "lodash"
-import { FormFields, RepeatableField, Section } from "../types/fields"
+import { FormFields, RepeatableField, Section, ContainerFieldName } from "../types/fields"
 import flattenElements from "../util/flatten-elements"
 import FIELD from "./FIELD"
 
@@ -17,10 +17,10 @@ export interface FieldsOptions {
  *
  */
 
-export default function FIELDS(dataName: string): FormFields[]
-export default function FIELDS(dataName: string, options: FieldsOptions): FormFields[]
+export default function FIELDS(dataName: ContainerFieldName): FormFields[]
+export default function FIELDS(dataName: ContainerFieldName, options: FieldsOptions): FormFields[]
 export default function FIELDS(): undefined
-export default function FIELDS(dataName?: string, options?: FieldsOptions): FormFields[]|undefined {
+export default function FIELDS(dataName?: ContainerFieldName, options?: FieldsOptions): FormFields[] | undefined {
   // element can be any of these things,
   // but only Repeatables and Sections will get passed to flattenElements
   const element: Section|RepeatableField|FormFields|undefined = FIELD(dataName)

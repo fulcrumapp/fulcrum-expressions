@@ -1,5 +1,6 @@
 import { isUndefined, map } from "lodash"
 import FIELDS, { FieldsOptions } from "./FIELDS"
+import { ContainerFieldName, FieldName } from "../types/fields"
 
 /**
  * Returns child field names when passed in a parent's dataname
@@ -16,10 +17,10 @@ import FIELDS, { FieldsOptions } from "./FIELDS"
  * // returns ['cost', 'choice_value', 'child_items']
  */
 
-export default function FIELDNAMES(dataName: string, options?: FieldsOptions ): string[]|undefined
-export default function FIELDNAMES(dataName: string): string[]|undefined
-export default function FIELDNAMES(dataName: string, options = {}): string[]|undefined {
-  const fields: FormFields[]|undefined = FIELDS(dataName, options)
+export default function FIELDNAMES(dataName: ContainerFieldName, options?: FieldsOptions ): FieldName[] | undefined
+export default function FIELDNAMES(dataName: ContainerFieldName): FieldName[] | undefined
+export default function FIELDNAMES(dataName: ContainerFieldName, options = {}): FieldName[] | undefined {
+  const fields: FormFields[] | undefined = FIELDS(dataName, options)
 
   if (isUndefined(fields)) { return undefined }
 

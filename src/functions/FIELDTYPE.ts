@@ -1,5 +1,5 @@
 import { isUndefined } from "lodash"
-import { FormFields } from "../types/fields"
+import { FormFields, FieldName } from "../types/fields"
 import FIELD from "./FIELD"
 
 /**
@@ -10,7 +10,7 @@ import FIELD from "./FIELD"
  * FIELDTYPE("operating_hours") // returns "TimeField"
  */
 
-export default function FIELDTYPE(dataName: string): string|undefined {
+export default function FIELDTYPE(dataName: FieldName): string|undefined {
   const field: FormFields|undefined = FIELD(dataName)
 
   if (isUndefined(field)) { return undefined }

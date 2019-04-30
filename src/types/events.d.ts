@@ -1,5 +1,5 @@
 import { GUID } from "./primitives"
-import { FormFields } from "./fields";
+import { FormFields, FieldName } from "./fields";
 
 export interface TriggeredEvent {
   name: EventNames,
@@ -12,7 +12,7 @@ export interface TriggeredEvent {
     | RemoveMediaEventValue
     | null
   ),
-  field: FormFields | null
+  field: FieldName | null
 }
 
 export type EventNames =
@@ -67,7 +67,7 @@ export type AddAudioEventName = "add-audio"
 export type RemoveAudioEventName = "remove-audio"
 
 export interface EventWithField {
-  field: string
+  field: FieldName
 }
 
 export interface ChoiceFieldValue {
@@ -85,7 +85,7 @@ export type FieldEventValue = string | ChoiceFieldValue
 
 export interface FieldEvent extends EventWithField {
   name: FieldEventNames,
-  field: string,
+  field: FieldName,
   value: FieldEventValue
 }
 

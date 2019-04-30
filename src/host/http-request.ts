@@ -1,12 +1,4 @@
-/**
- * @param error error object
- * @param request HTTP request object
- * @param body the response body
- */
-export interface HTTPRequestCallback {
-  (error: Error, response?: null, body?: null): void
-  (error: null, response: object, body: string): void
-}
+import { HTTPRequestCallback } from "../types/host"
 
 /**
  * Dispatch a HTTP request on the host if it exists

@@ -1,4 +1,4 @@
-import { FormFields as FormField } from "../types/fields"
+import { FormFields as FormField, FieldName } from "../types/fields"
 import { MaybeString } from "../types/primitives"
 
 /**
@@ -8,9 +8,8 @@ import { MaybeString } from "../types/primitives"
  * FIELD('child_item_cost').label // returns "Child Item Cost"
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
-export default function FIELD(dataName: string): FormField
-export default function FIELD(dataName: MaybeString): FormField | undefined
-export default function FIELD(dataName: MaybeString): FormField | undefined {
+export default function FIELD(dataName: FieldName): FormField
+export default function FIELD(dataName: FieldName | null | undefined): FormField | undefined {
   if (!dataName) { return }
   return $$runtime.elementsByDataName[dataName]
 }

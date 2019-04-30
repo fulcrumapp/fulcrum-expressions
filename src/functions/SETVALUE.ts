@@ -1,5 +1,5 @@
 import { isNull, isUndefined } from "lodash"
-import { FormFields, RepeatableField } from "../types/fields"
+import { FormFields, RepeatableField, FieldName } from "../types/fields"
 import { SetValueResult } from "../types/results"
 import { AddressFieldValue, ChoiceFieldValue } from "../types/values"
 import { RecordLinkIds } from "../util/converters"
@@ -19,7 +19,7 @@ import FORMAT from "./FORMAT"
  * SETVALUE('name', null) // Clears the value of field called 'name'
  */
 
-export default function SETVALUE(dataName: string,
+export default function SETVALUE(dataName: FieldName,
                                  value: string|ChoiceFieldValue|AddressFieldValue|ValidGeometry|string[]|number[]|null): void {
 
   const element: FormFields|undefined = FIELD(dataName)

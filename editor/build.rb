@@ -31,6 +31,7 @@ File.readlines(OUT_FILE).each do |line|
   next if line.include?('import')
   next if line.include?('export {}')
   next if line.include?('export default') && !line.include?('function')
+  next if line.include?('/* noexport */')
 
   if line =~ MANGLED_LINE
     functions = line.split('}').last.split(';').map(&:strip).map { |l| clean(" " + l) }
