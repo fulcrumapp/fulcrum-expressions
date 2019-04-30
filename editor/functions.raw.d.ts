@@ -447,13 +447,11 @@ declare module 'src/functions/CLEAN' {
 
 }
 declare module 'src/functions/CLEARINTERVAL' {
-	import clearInterval from 'src/host/clear-interval';
-	export default clearInterval;
+	export default function CLEARINTERVAL(id: number): void;
 
 }
 declare module 'src/functions/CLEARTIMEOUT' {
-	import clearTimeout from 'src/host/clear-timeout';
-	export default clearTimeout;
+	export default function CLEARTIMEOUT(id: number): void;
 
 }
 declare module 'src/functions/COALESCE' {
@@ -1945,9 +1943,9 @@ declare module 'src/functions/LAST' {
 	 * LAST([1, 2, 3]) // returns 3
 	 * LAST([1 ,2 ,3], 2) // return [2, 3]
 	 */
-	export default function FIRST(item: any[] | string, n: number): any[] | undefined;
-	export default function FIRST(item: any[] | string, n?: number): any[] | undefined;
-	export default function FIRST(item: any): any[] | undefined;
+	export default function LAST(item: any[] | string, n: number): any[] | undefined;
+	export default function LAST(item: any[] | string, n?: number): any[] | undefined;
+	export default function LAST(item: any): any[] | undefined;
 
 }
 declare module 'src/functions/LATITUDE' {
@@ -2396,7 +2394,7 @@ declare module 'src/functions/OFF' {
 
 }
 declare module 'src/functions/ON' {
-	import { AddAudioEvent, AddAudioEventName, AddPhotoEvent, AddPhotoEventName, ReplacePhotoEvent, ReplacePhotoEventName, AddVideoEvent, AddVideoEventName, ChangeGeometryEventName, EventNames, FieldEvent, FieldEventNames, FormEvent, FormEventNames, GeometryEvent, RemoveAudioEvent, RemoveAudioEventName, RemoveMediaEvent, RemovePhotoEventName, RemoveVideoEvent, RemoveVideoEventName, RepeatableEvent, RepeatableEventNames } from 'src/types/events';
+	import { Event, AddAudioEvent, AddAudioEventName, AddPhotoEvent, AddPhotoEventName, ReplacePhotoEvent, ReplacePhotoEventName, AddVideoEvent, AddVideoEventName, ChangeGeometryEventName, EventNames, FieldEvent, FieldEventNames, FormEvent, FormEventNames, GeometryEvent, RemoveAudioEvent, RemoveAudioEventName, RemoveMediaEvent, RemovePhotoEventName, RemoveVideoEvent, RemoveVideoEventName, RepeatableEvent, RepeatableEventNames } from 'src/types/events';
 	import { FieldName, PhotoFieldName, AudioFieldName, VideoFieldName, RepeatableFieldName } from 'src/types/fields';
 	/**
 	 * Attaches an event handler that listens for record, repeatable, or field events.
@@ -2456,7 +2454,7 @@ declare module 'src/functions/ON' {
 	export default function ON(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void;
 	export default function ON(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void;
 	export default function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
-	export default function ON(name: EventNames, fieldOrCallback: FieldName | ((event: FormEvent) => void), callback?: ((event: FormEvent) => void)): void;
+	export default function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 
 }
 declare module 'src/functions/PI' {

@@ -552,7 +552,9 @@ declare function CHOICEVALUE(field: any): MaybeString;
  */
 declare function CLEAN(text: string): string;
 
+declare function CLEARINTERVAL(id: number): void;
 
+declare function CLEARTIMEOUT(id: number): void;
 
 /**
  * Returns first value passed in to function that exists
@@ -2631,7 +2633,7 @@ declare function LABEL(dataName: FieldName): string | undefined;
  * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
-declare function FIRST(item: any[] | string, n: number): any[] | undefined;
+declare function LAST(item: any[] | string, n: number): any[] | undefined;
 /**
  * Returns the last n items of an array or string.
  * @param item required; array or string to extract items from
@@ -2641,7 +2643,7 @@ declare function FIRST(item: any[] | string, n: number): any[] | undefined;
  * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
-declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
+declare function LAST(item: any[] | string, n?: number): any[] | undefined;
 /**
  * Returns the last n items of an array or string.
  * @param item required; array or string to extract items from
@@ -2651,7 +2653,7 @@ declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
  * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
-declare function FIRST(item: any): any[] | undefined;
+declare function LAST(item: any): any[] | undefined;
 
 /**
  * Returns the latitude of the record if it exists.
@@ -3936,7 +3938,7 @@ declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback:
  * // Listens for changes to a repeatable item's geometry and executes callback
  * ON('change-geometry', 'repeatable_item', callback);
  */
-declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: FormEvent) => void), callback?: ((event: FormEvent) => void)): void;
+declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 
 /**
  * Returns the value of pi (π).

@@ -1,4 +1,5 @@
 import clearTimeout from "../host/clear-timeout"
 
-// alias of clearTimeout
-export default clearTimeout
+export default function CLEARTIMEOUT(id: number): void {
+  clearTimeout(id)
+}
