@@ -1,5 +1,6 @@
 import { GUID } from "./primitives"
 import { FormFields, FieldName } from "./fields";
+import { ChoiceFieldValue } from "./values"
 
 export interface TriggeredEvent {
   name: EventNames,
@@ -72,11 +73,6 @@ export interface Event {
 
 export interface EventWithField extends Event {
   field: FieldName
-}
-
-export interface ChoiceFieldValue {
-  choice_values: string[],
-  other_values: string[]
 }
 
 export interface FormEvent extends Event {

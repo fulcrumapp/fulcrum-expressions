@@ -447,13 +447,13 @@ interface ChoiceFieldValue {
 }
 
 interface CurrentLocation {
-  latitude: number | null,
-  longitude: number | null,
+  latitude: number,
+  longitude: number,
   altitude: number | null,
-  accuracy: number | null,
+  accuracy: number,
   course: number | null,
   speed: number | null,
-  timestamp: number | null
+  timestamp: number
 }
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
@@ -1361,7 +1361,7 @@ interface RepeatableField extends FormField {
  * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
-declare function DATANAMES(): any[];
+declare function DATANAMES(): FieldName[];
 /**
  * Returns the data names of the form fields. Also accepts an optional
  * type argument to filter form fields by type.
@@ -1371,7 +1371,7 @@ declare function DATANAMES(): any[];
  * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
-declare function DATANAMES(type: FormFieldTypes): any[];
+declare function DATANAMES(type: FormFieldTypes): FieldName[];
 /**
  * Returns the data names of the form fields. Also accepts an optional
  * type argument to filter form fields by type.
@@ -1381,7 +1381,7 @@ declare function DATANAMES(type: FormFieldTypes): any[];
  * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
-declare function DATANAMES(type: string): any[];
+declare function DATANAMES(type: string): FieldName[];
 
 /**
  * Returns number rounded down, away from zero, to the nearest multiple
@@ -1785,6 +1785,15 @@ declare function EXACT(value1: any, value2: any): boolean;
  * EXISTS(1, null, 7, 0) // returns false
  */
 declare function EXISTS(arg: any, ...args: any[]): arg is number | boolean | string | object;
+/**
+ * Checks whether all values passed in exist.
+ * @param args list of items to check
+ * @returns boolean value indicating whether all values exist
+ * @example
+ * EXISTS(1, 3, 7, 0) // returns true
+ * EXISTS(1, null, 7, 0) // returns false
+ */
+declare function EXISTS(...args: any[]): boolean;
 
 /**
  * Returns e^x, where `x` is the argument, and `e` is Euler's number, the base of the natural logarithms.
@@ -3084,11 +3093,6 @@ interface Event {
 
 interface EventWithField extends Event {
   field: FieldName
-}
-
-interface ChoiceFieldValue {
-  choice_values: string[],
-  other_values: string[]
 }
 
 interface FormEvent extends Event {
@@ -4511,6 +4515,12 @@ declare function SETFORMATTRIBUTES(dataName: any): void;
  * @param value required; a value or an array of values on which to filter
  */
 declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void;
+/**
+ * Sets a choice filter for a form.
+ * @param dataName required; data name of field to be updated
+ * @param value required; a value or an array of values on which to filter
+ */
+declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any): void;
 
 /**
  * Updates the form choices attribute.
@@ -4552,6 +4562,12 @@ declare function SETCONFIGURATION(settings: Configuration): void;
  * @param value value to which description should be set
  */
 declare function SETDESCRIPTION(dataName: FieldName, value: string): void;
+/**
+ * Sets the description of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which description should be set
+ */
+declare function SETDESCRIPTION(dataName: FieldName, value?: any): void;
 
 /**
  * Sets a field to read only or removes a read only condition.
@@ -4572,6 +4588,16 @@ declare function SETREADONLY(dataName: FieldName, value: boolean): void;
  */
 declare function SETREADONLY(dataName: FieldName, value?: boolean): void;
 
+declare function SETDISABLED(dataName: FieldName, value: boolean): void;
+/**
+ * Sets a field to read only or removes a read only condition.
+ * @param dataName required; data name of the targeted field
+ * @param value boolean value indicating whether to set as read only
+ * @example
+ *
+ * SETREADONLY("role", true) // sets role field to read only
+ */
+declare function SETDISABLED(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets geometry values if a valid GeoJSON object is passed in.
@@ -4637,6 +4663,12 @@ declare function SETINTERVAL(fn: Function, timeout: number): number;
  * @param value value to which label should be set
  */
 declare function SETLABEL(dataName: FieldName, value: string): void;
+/**
+ * Sets the label of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which label should be set
+ */
+declare function SETLABEL(dataName: FieldName, value?: any): void;
 
 /**
  * Sets location geometry given a latitude and longitude value.
@@ -4663,6 +4695,12 @@ declare function SETLOCATION(latitude?: any, longitude?: any): void;
  * @param value number representing max length desired
  */
 declare function SETMAXLENGTH(dataName: FieldName, value: number): void;
+/**
+ * Sets the max length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing max length desired
+ */
+declare function SETMAXLENGTH(dataName: FieldName, value?: any): void;
 
 /**
  * Sets the minimum length of a field.
@@ -4670,6 +4708,12 @@ declare function SETMAXLENGTH(dataName: FieldName, value: number): void;
  * @param value number representing min length desired
  */
 declare function SETMINLENGTH(dataName: FieldName, value: number): void;
+/**
+ * Sets the minimum length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing min length desired
+ */
+declare function SETMINLENGTH(dataName: FieldName, value?: any): void;
 
 /**
  * Sets project for a record.
@@ -4692,6 +4736,16 @@ declare function SETPROJECT(project: any): void;
  * SETREQUIRED("choice_field", false) // make field optional
  */
 declare function SETREQUIRED(dataName: FieldName, value: boolean): void;
+/**
+ * Sets a field to required or optional.
+ * @param dataName required; data name of targeted field
+ * @param value boolean value indicating whether to require field
+ * @example
+ *
+ * SETREQUIRED("choice_field", true) // set field to required
+ * SETREQUIRED("choice_field", false) // make field optional
+ */
+declare function SETREQUIRED(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets result variable on runtime.

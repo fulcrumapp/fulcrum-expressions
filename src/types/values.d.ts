@@ -20,11 +20,11 @@ export interface ChoiceFieldValue {
 }
 
 export interface CurrentLocation {
-  latitude: number | null,
-  longitude: number | null,
+  latitude: number,
+  longitude: number,
   altitude: number | null,
-  accuracy: number | null,
+  accuracy: number,
   course: number | null,
   speed: number | null,
-  timestamp: number | null
+  timestamp: number
 }

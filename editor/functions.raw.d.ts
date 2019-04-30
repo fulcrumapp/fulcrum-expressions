@@ -377,13 +377,13 @@ declare module 'src/types/values' {
 	}
 
 	export interface CurrentLocation {
-	  latitude: number | null,
-	  longitude: number | null,
+	  latitude: number,
+	  longitude: number,
 	  altitude: number | null,
-	  accuracy: number | null,
+	  accuracy: number,
 	  course: number | null,
 	  speed: number | null,
-	  timestamp: number | null
+	  timestamp: number
 	}
 }
 declare module 'src/functions/ISBLANK' {
@@ -1043,7 +1043,7 @@ declare module 'src/types/fields' {
 
 }
 declare module 'src/functions/DATANAMES' {
-	import { FormFieldTypes } from 'src/types/fields';
+	import { FormFieldTypes, FieldName } from 'src/types/fields';
 	/**
 	 * Returns the data names of the form fields. Also accepts an optional
 	 * type argument to filter form fields by type.
@@ -1053,9 +1053,9 @@ declare module 'src/functions/DATANAMES' {
 	 * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
 	 * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
 	 */
-	export default function DATANAMES(): any[];
-	export default function DATANAMES(type: FormFieldTypes): any[];
-	export default function DATANAMES(type: string): any[];
+	export default function DATANAMES(): FieldName[];
+	export default function DATANAMES(type: FormFieldTypes): FieldName[];
+	export default function DATANAMES(type: string): FieldName[];
 
 }
 declare module 'src/functions/FLOOR' {
@@ -1296,6 +1296,7 @@ declare module 'src/functions/EXISTS' {
 	 * EXISTS(1, null, 7, 0) // returns false
 	 */
 	export default function EXISTS(arg: any, ...args: any[]): arg is number | boolean | string | object;
+	export default function EXISTS(...args: any[]): boolean;
 
 }
 declare module 'src/functions/EXP' {
@@ -2182,6 +2183,7 @@ declare module 'src/functions/ODD' {
 declare module 'src/types/events' {
 	import { GUID } from 'src/types/primitives'
 	import { FormFields, FieldName } from 'src/types/fields';
+	import { ChoiceFieldValue } from 'src/types/values'
 
 	export interface TriggeredEvent {
 	  name: EventNames,
@@ -2254,11 +2256,6 @@ declare module 'src/types/events' {
 
 	export interface EventWithField extends Event {
 	  field: FieldName
-	}
-
-	export interface ChoiceFieldValue {
-	  choice_values: string[],
-	  other_values: string[]
 	}
 
 	export interface FormEvent extends Event {
@@ -2906,6 +2903,7 @@ declare module 'src/functions/SETCHOICEFILTER' {
 	 * @param value required; a value or an array of values on which to filter
 	 */
 	export default function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void;
+	export default function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any): void;
 
 }
 declare module 'src/functions/SETCHOICES' {
@@ -2956,6 +2954,7 @@ declare module 'src/functions/SETDESCRIPTION' {
 	 * @param value value to which description should be set
 	 */
 	export default function SETDESCRIPTION(dataName: FieldName, value: string): void;
+	export default function SETDESCRIPTION(dataName: FieldName, value?: any): void;
 
 }
 declare module 'src/functions/SETREADONLY' {
@@ -2973,8 +2972,9 @@ declare module 'src/functions/SETREADONLY' {
 
 }
 declare module 'src/functions/SETDISABLED' {
-	import SETREADONLY from 'src/functions/SETREADONLY';
-	export default SETREADONLY;
+	import { FieldName } from 'src/types/fields';
+	export default function SETDISABLED(dataName: FieldName, value: boolean): void;
+	export default function SETDISABLED(dataName: FieldName, value?: boolean): void;
 
 }
 declare module 'src/functions/SETGEOMETRY' {
@@ -3036,6 +3036,7 @@ declare module 'src/functions/SETLABEL' {
 	 * @param value value to which label should be set
 	 */
 	export default function SETLABEL(dataName: FieldName, value: string): void;
+	export default function SETLABEL(dataName: FieldName, value?: any): void;
 
 }
 declare module 'src/functions/SETLOCATION' {
@@ -3057,6 +3058,7 @@ declare module 'src/functions/SETMAXLENGTH' {
 	 * @param value number representing max length desired
 	 */
 	export default function SETMAXLENGTH(dataName: FieldName, value: number): void;
+	export default function SETMAXLENGTH(dataName: FieldName, value?: any): void;
 
 }
 declare module 'src/functions/SETMINLENGTH' {
@@ -3067,6 +3069,7 @@ declare module 'src/functions/SETMINLENGTH' {
 	 * @param value number representing min length desired
 	 */
 	export default function SETMINLENGTH(dataName: FieldName, value: number): void;
+	export default function SETMINLENGTH(dataName: FieldName, value?: any): void;
 
 }
 declare module 'src/functions/SETPROJECT' {
@@ -3090,6 +3093,7 @@ declare module 'src/functions/SETREQUIRED' {
 	 * SETREQUIRED("choice_field", false) // make field optional
 	 */
 	export default function SETREQUIRED(dataName: FieldName, value: boolean): void;
+	export default function SETREQUIRED(dataName: FieldName, value?: boolean): void;
 
 }
 declare module 'src/functions/SETRESULT' {

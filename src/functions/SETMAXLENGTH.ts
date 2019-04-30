@@ -9,6 +9,7 @@ import { FieldName } from "../types/fields"
  */
 
 export default function SETMAXLENGTH(dataName: FieldName, value: number): void
+export default function SETMAXLENGTH(dataName: FieldName, value?: any): void
 export default function SETMAXLENGTH(dataName: FieldName, value?: any): void {
   const max_length = isUndefined(value) || isNull(value) ? null : +value
   SETFORMATTRIBUTES(dataName, { max_length })

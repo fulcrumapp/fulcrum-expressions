@@ -9,6 +9,7 @@ import { FieldName } from "../types/fields"
  */
 
 export default function SETDESCRIPTION(dataName: FieldName, value: string): void
+export default function SETDESCRIPTION(dataName: FieldName, value?: any): void
 export default function SETDESCRIPTION(dataName: FieldName, value?: any): void {
   const description = isNull(value) || isUndefined(value) ? null : value.toString()
   SETFORMATTRIBUTES(dataName, { description } )
