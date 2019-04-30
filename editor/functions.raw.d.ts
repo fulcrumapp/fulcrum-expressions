@@ -359,14 +359,19 @@ declare module 'src/types/values' {
 	  ChoiceFieldValue
 	  | AddressFieldValue
 
+	export type TextFieldValue = string | null | undefined
+
+	export type YesNoFieldValue = string | null | undefined
+
+	export type NumericFieldValue = number | null | undefined
 
 	export interface AddressFieldValue {
 	  sub_thoroughfare?: string|null,
 	  thoroughfare?: string|null,
 	  suite?: string|null,
 	  locality?: string|null,
-	  sub_admin_area?: string|null, 
-	  admin_area?: string|null, 
+	  sub_admin_area?: string|null,
+	  admin_area?: string|null,
 	  postal_code?: string|null,
 	  country?: string|null
 	}
@@ -375,6 +380,47 @@ declare module 'src/types/values' {
 	  choice_values?: string[] | null,
 	  other_values?: string[] | null
 	}
+
+	export interface ClassificationFieldValue extends ChoiceFieldValue {}
+
+	export interface PhotoFieldItem {
+	  photo_id: string,
+	  caption: string
+	}
+
+	export type PhotoFieldValue = Array<PhotoFieldItem> | null | undefined
+
+	export interface VideoFieldItem {
+	  video_id: string,
+	  caption: string
+	}
+
+	export type VideoFieldValue = Array<VideoFieldItem> | null | undefined
+
+	export interface AudioFieldItem {
+	  audio_id: string,
+	  caption: string
+	}
+
+	export type AudioFieldValue = Array<AudioFieldItem> | null | undefined
+
+	export interface SignatureFieldValue {
+	  signature_id: string,
+	  timestamp: string
+	}
+
+	export interface RecordLinkItem {
+	  record_id: string
+	}
+
+	export type RecordLinkFieldValue = Array<RecordLinkItem> | null | undefined
+
+	export interface RepeatableItem {
+	  id: string,
+	  form_values: object
+	}
+
+	export type RepeatableFieldValue = Array<RepeatableItem> | null | undefined
 
 	export interface CurrentLocation {
 	  latitude: number,
@@ -738,12 +784,19 @@ declare module 'src/types/fields' {
 	import { GUID } from 'src/types/primitives'
 
 	export type FieldName = string /* noexport */
+	export type NumericFieldName = string /* noexport */
+	export type TextFieldName = string /* noexport */
+	export type YesNoFieldName = string /* noexport */
 	export type ChoiceFieldName = string /* noexport */
+	export type ClassificationFieldName = string /* noexport */
 	export type RepeatableFieldName = string /* noexport */
 	export type ContainerFieldName = string /* noexport */
 	export type PhotoFieldName = string /* noexport */
 	export type AudioFieldName = string /* noexport */
 	export type VideoFieldName = string /* noexport */
+	export type SignatureFieldName = string /* noexport */
+	export type RecordLinkFieldName = string /* noexport */
+	export type AddressFieldName = string /* noexport */
 
 	export type FormFieldTypes =
 	  "TextField"
@@ -3473,13 +3526,26 @@ declare module 'src/functions/USERFULLNAME' {
 
 }
 declare module 'src/functions/VALUE' {
+	import { FieldName, TextFieldName, NumericFieldName, YesNoFieldName, PhotoFieldName, VideoFieldName, AudioFieldName, ChoiceFieldName, RepeatableFieldName, SignatureFieldName, RecordLinkFieldName } from 'src/types/fields';
+	import { TextFieldValue, NumericFieldValue, YesNoFieldValue, PhotoFieldValue, VideoFieldValue, AudioFieldValue, ChoiceFieldValue, RepeatableFieldValue, SignatureFieldValue, RecordLinkFieldValue } from 'src/types/values';
 	/**
 	 * Returns a data value when given the field's data name.
 	 * @param dataName required; data name of the desired field
 	 * @returns a form field value
 	 */
+	export default function VALUE(dataName: NumericFieldName): NumericFieldValue;
+	export default function VALUE(dataName: TextFieldName): TextFieldValue;
+	export default function VALUE(dataName: YesNoFieldName): YesNoFieldValue;
+	export default function VALUE(dataName: PhotoFieldName): PhotoFieldValue;
+	export default function VALUE(dataName: VideoFieldName): VideoFieldValue;
+	export default function VALUE(dataName: AudioFieldName): AudioFieldValue;
+	export default function VALUE(dataName: ChoiceFieldName): ChoiceFieldValue;
+	export default function VALUE(dataName: RepeatableFieldName): RepeatableFieldValue;
+	export default function VALUE(dataName: SignatureFieldName): SignatureFieldValue;
+	export default function VALUE(dataName: RecordLinkFieldName): RecordLinkFieldValue;
+	export default function VALUE(dataName: FieldName): string | undefined;
 	export default function VALUE(dataName: string): string | undefined;
-	export default function VALUE(dataName: any): string | undefined;
+	export default function VALUE(dataName: any): any;
 
 }
 declare module 'src/functions/VERSIONINFO' {

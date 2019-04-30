@@ -429,14 +429,19 @@ type GUID = string
   ChoiceFieldValue
   | AddressFieldValue
 
+ type TextFieldValue = string | null | undefined
+
+ type YesNoFieldValue = string | null | undefined
+
+ type NumericFieldValue = number | null | undefined
 
 interface AddressFieldValue {
   sub_thoroughfare?: string|null,
   thoroughfare?: string|null,
   suite?: string|null,
   locality?: string|null,
-  sub_admin_area?: string|null, 
-  admin_area?: string|null, 
+  sub_admin_area?: string|null,
+  admin_area?: string|null,
   postal_code?: string|null,
   country?: string|null
 }
@@ -445,6 +450,47 @@ interface ChoiceFieldValue {
   choice_values?: string[] | null,
   other_values?: string[] | null
 }
+
+interface ClassificationFieldValue extends ChoiceFieldValue {}
+
+interface PhotoFieldItem {
+  photo_id: string,
+  caption: string
+}
+
+ type PhotoFieldValue = Array<PhotoFieldItem> | null | undefined
+
+interface VideoFieldItem {
+  video_id: string,
+  caption: string
+}
+
+ type VideoFieldValue = Array<VideoFieldItem> | null | undefined
+
+interface AudioFieldItem {
+  audio_id: string,
+  caption: string
+}
+
+ type AudioFieldValue = Array<AudioFieldItem> | null | undefined
+
+interface SignatureFieldValue {
+  signature_id: string,
+  timestamp: string
+}
+
+interface RecordLinkItem {
+  record_id: string
+}
+
+ type RecordLinkFieldValue = Array<RecordLinkItem> | null | undefined
+
+interface RepeatableItem {
+  id: string,
+  form_values: object
+}
+
+ type RepeatableFieldValue = Array<RepeatableItem> | null | undefined
 
 interface CurrentLocation {
   latitude: number,
@@ -5164,13 +5210,79 @@ declare function USERFULLNAME(): string | undefined;
  * @param dataName required; data name of the desired field
  * @returns a form field value
  */
+declare function VALUE(dataName: NumericFieldName): NumericFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: TextFieldName): TextFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: YesNoFieldName): YesNoFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: PhotoFieldName): PhotoFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: VideoFieldName): VideoFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: AudioFieldName): AudioFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: ChoiceFieldName): ChoiceFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: RepeatableFieldName): RepeatableFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: SignatureFieldName): SignatureFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: RecordLinkFieldName): RecordLinkFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: FieldName): string | undefined;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
 declare function VALUE(dataName: string): string | undefined;
 /**
  * Returns a data value when given the field's data name.
  * @param dataName required; data name of the desired field
  * @returns a form field value
  */
-declare function VALUE(dataName: any): string | undefined;
+declare function VALUE(dataName: any): any;
 
 /**
  * Returns device, platform, and application information.
