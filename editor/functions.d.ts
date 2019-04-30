@@ -246,13 +246,6 @@ interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {
  * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
  */
 declare function FLATTEN(value: RecursiveArray<any>): any[];
-/**
- * Accepts a nested array and returns an array flattened to one level deep
- * @returns a flattened array
- * @example
- * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
- */
-declare function FLATTEN(value: any): any[];
 
 /**
  * Accepts any number of arguments and returns them as an array
@@ -1681,7 +1674,7 @@ declare function DEGREES(value?: any): number;
  * FIELD('child_item_cost').label // returns "Child Item Cost"
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
-declare function FIELD(dataName: FieldName): FormField;
+declare function FIELD(dataName: FieldName | string | null | undefined): FormField | undefined;
 
 /**
  * Returns a field's description.
