@@ -7,6 +7,8 @@ import { FormFields as FormField, FieldName } from "../types/fields"
  * FIELD('child_item_cost').label // returns "Child Item Cost"
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
+export default function FIELD(dataName: FieldName): FormField
+export default function FIELD(dataName: FieldName | string | null | undefined): FormField | undefined
 export default function FIELD(dataName: FieldName | string | null | undefined): FormField | undefined {
   if (!dataName) { return }
   return $$runtime.elementsByDataName[dataName]

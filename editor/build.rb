@@ -5,6 +5,7 @@
 #   seaprate interfaces and inserts the relevant documentation inside of there.
 #
 
+IN_FILE = 'editor/functions.raw.d.ts'.freeze
 OUT_FILE = 'editor/functions.d.ts'.freeze
 
 filtered_lines = []
@@ -25,7 +26,7 @@ end
 # ensure that everything from the functions directory ends up as globals in this
 # d.ts file.
 #
-File.readlines(OUT_FILE).each do |line|
+File.readlines(IN_FILE).each do |line|
   next if line == "\t"
   next if %w[d }].include? line[0]
   next if line.include?('import')
@@ -87,10 +88,6 @@ filtered_lines.each_with_index do |current_line, index|
 
   final_lines.push(current_line)
 end
-
-# File.open("filtered.txt", "w+") do |f|
-#   filtered_lines.each { |line| f.write("#{line}\n") }
-# end
 
 # File.open("final.txt", "w+") do |f|
 #   final_lines.each { |line| f.write("#{line}\n") }
