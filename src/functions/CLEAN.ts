@@ -3,7 +3,9 @@ const CLEAN_REGEX = /[\x00\x08\x0B\x0C\x0E-\x1F]/g
 
 /**
  * Removes non-printable characters from a string
- * @param text string to be cleaned
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/clean/
+ * @param text (String, required): text to be cleaned
  * @returns cleaned string
  * @example
  * CLEAN('test\x00\x1D\x1Etest') // returns 'testtest'

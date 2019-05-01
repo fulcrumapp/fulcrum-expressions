@@ -3,13 +3,14 @@ import { MaybeString } from "../types/primitives"
 
 /**
  * Checks that a value is present in a string or array
- * @param haystack required; collection, either a string or an array, to be iterated over
- * @param needle required; value one is looking for
- * @param fromIndex optional; numeric index from which to start looking for a value
- * @returns boolean: true if value is found, else false
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/contains/
+ * @param haystack (String|Array, required): collectio to be iterated over
+ * @param needle (String|Number, required): value one is looking for
+ * @param fromIndex (Number, optional): numeric index from which to start looking
+ * @returns boolean, true if value is found, else false
  * @example
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
- * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
 
 export default function CONTAINS(haystack: string|any[], needle: MaybeString|number): boolean

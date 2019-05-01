@@ -5,6 +5,8 @@ import { CurrentLocation } from "../types/values"
  *  other custom processing logic. This is not always the same as the record location.
  *  For example, if editing an imported record or previously created record, the current
  *  location will be different.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/currentlocation/
  */
 
 export default function CURRENTLOCATION(): CurrentLocation | null {

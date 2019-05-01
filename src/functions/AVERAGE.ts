@@ -6,11 +6,12 @@ type AverageValues = Array<number | RecursiveArray<number>>
 
 /**
  * Accepts a list of numbers and returns their average (mean)
- * @param multiple integers or floats
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/average/
+ * @param values (Number|Array, required): integers or floats
  * @returns integer or float
  * @example
  * AVERAGE(3, 5) // returns 4
- * AVERAGE(1, 1.5, 3.75) // returns 2.0833333333333335
  */
 export default function AVERAGE(...values: AverageValues): number {
   values = ARRAY(values)

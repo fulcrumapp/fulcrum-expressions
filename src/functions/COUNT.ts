@@ -6,8 +6,9 @@ import NUM from "./NUM"
 /**
  * Returns the count of the numeric values in an array.
  * Will coerce numeric strings (`"1"`) into a numeric value (`1`).
- *
- * @param value array of items to be counted
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/count/
+ * @param value (Number|String|Array, required): items to be counted
  * @returns number
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3

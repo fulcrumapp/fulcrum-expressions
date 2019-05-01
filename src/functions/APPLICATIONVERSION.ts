@@ -4,8 +4,7 @@ import { CONFIG } from "./CONFIG"
  * Returns application version
  * @returns application version
  * @example
- * APPLICATIONVERSION()
- * // if called with
+ * APPLICATIONVERSION() // returns 66.0
  */
 
 export default function APPLICATIONVERSION(): string {

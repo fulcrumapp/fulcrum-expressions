@@ -2,7 +2,9 @@ import NUM from "./NUM"
 
 /**
  * Returns the character of a given char code
- * @param value integer (character code)
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/char/
+ * @param value (Number, required): integer (character code)
  * @returns a character as a string
  * @example
  * CHAR(65) // returns 'A'

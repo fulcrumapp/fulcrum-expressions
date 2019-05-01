@@ -2,8 +2,10 @@ import NUM from "./NUM"
 
 /**
  * Returns function returns the hyperbolic cosine of a number
- * @param value numeric value
- * @returns numeric value between 1 and -1 indicating the angle's cosine
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/cosh/
+ * @param value (Number, required)
+ * @returns number, value between 1 and -1 indicating the angle's cosine
  * @example
  * COSH(12) // returns 0.8438539587324921
  */

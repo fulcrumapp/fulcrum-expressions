@@ -4,10 +4,12 @@ import ISBLANK from "./ISBLANK"
 
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
- * @param field ChoiceFieldValue: {choice_values: [ ... ], other_values: [ ... ]}
- * @returns array
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalues/
+ * @param field (ChoiceFieldValue, required)
+ * @returns array of choice values
  * @example
- * CHOICEVALUES({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns [ 'a', 'b', 'c', 'd' ]
+ * CHOICEVALUES($choice_field) // returns [ 'a', 'b', 'c', 'd' ]
  */
 export default function CHOICEVALUES(field: ChoiceFieldValue): string[]
 export default function CHOICEVALUES(field: any): any[]

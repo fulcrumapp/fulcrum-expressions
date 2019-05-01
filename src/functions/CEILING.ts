@@ -8,8 +8,10 @@ import ROUND from "./ROUND"
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
  * If a multiple is not specified, number will be rounded to next highest integer (multiple of 1)
- * @param number numeric value to be rounded
- * @param multiple optional, multiple to which a number will be rounded
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ceiling/
+ * @param value (Number, required): value to be rounded
+ * @param multiple (Number, optional): multiple to which `value` will be rounded
  * @returns number rounded to nearest multiple
  * @example
  * CEILING(3.45) // returns 4

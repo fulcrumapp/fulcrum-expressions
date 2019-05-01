@@ -4,7 +4,9 @@ import ISBLANK from "./ISBLANK"
 
 /**
  * Returns a count of the items in a list that are not null, undefined, or blank
- * @param value array of items
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/counta/
+ * @param value (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTA(["orange", "lemon", null, "grape"]) // returns 3

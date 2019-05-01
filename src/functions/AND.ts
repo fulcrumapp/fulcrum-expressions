@@ -2,11 +2,12 @@ import { find } from "lodash"
 
 /**
  * Accepts an array of expressions and returns true if both are true, and false if both or one is false
- * @param args list of items of any type
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/and/
+ * @param args (Any|Array required): array/list of items of any type
  * @returns boolean value
  * @example
  * AND('this' === 'that', 4 > 2) // returns false
- * AND('this' === 'this', 4 > 2) // returns true
  */
 
 export default function AND(...args: any[]): boolean | null {

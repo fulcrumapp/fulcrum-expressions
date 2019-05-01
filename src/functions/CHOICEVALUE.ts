@@ -5,10 +5,12 @@ import CHOICEVALUES from "./CHOICEVALUES"
 
 /**
  * Returns the first choice value in the choice field value passed to the function
- * @param field Choice field value, e.g. `{choice_values: ['a', 'b'], other_values" ['c', 'd']}`
- * @returns string value, first choice in a list of choice field values
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalue/
+ * @param field (ChoiceField value, required): `{choice_values: ['a', 'b'], other_values" ['c', 'd']}`
+ * @returns string, first choice in a list of choice field values
  * @example
- * CHOICEVALUE({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns 'a'
+ * CHOICEVALUE($choice_field) // returns "Red"
  */
 
 export default function CHOICEVALUE(field: ChoiceFieldValue): MaybeString

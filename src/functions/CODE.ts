@@ -3,12 +3,12 @@ import { MaybeString } from "../types/primitives"
 
 /**
  * Returns numeric code for first character in passed in string
- * @param str string
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/code/
+ * @param str (String, required): character to be evaluated
  * @returns numeric code
  * @example
  * CODE("A") // returns 65
- * CODE("apple") // returns 97
- * CODE(9) // returns 57
  */
 
 export default function CODE(str: MaybeString): number

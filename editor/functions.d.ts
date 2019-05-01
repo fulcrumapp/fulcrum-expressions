@@ -10,35 +10,41 @@ declare function NUM(value: any): number;
 
 /**
  * Returns the absolute value of a number.
- * @param value The number of which to return the absolute value.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/abs/
+ * @param value (Number, required): number to be evaluated
  * @returns the absolute value of the `value` parameter
  * @example
  * ABS(-1) // returns 1
- * ABS(42) // returns 42
  */
 declare function ABS(value: number): number;
 /**
  * Returns the absolute value of a number.
- * @param value The number of which to return the absolute value.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/abs/
+ * @param value (Number, required): number to be evaluated
  * @returns the absolute value of the `value` parameter
  * @example
  * ABS(-1) // returns 1
- * ABS(42) // returns 42
  */
 declare function ABS(value: string): number;
 
 /**
  * Returns the inverse cosine of a value, in radians.
- * @param value The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.
- * @returns
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/acos/
+ * @param value (Number, required): number to calculate the inverse cosine. Must be between -1 and 1, inclusive.
+ * @returns inverse cosine of `value` parameter
  * @example
  * ACOS(0.8) // returns 0.6435011087932843
  */
 declare function ACOS(value: number): number;
 /**
  * Returns the inverse cosine of a value, in radians.
- * @param value The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.
- * @returns
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/acos/
+ * @param value (Number, required): number to calculate the inverse cosine. Must be between -1 and 1, inclusive.
+ * @returns inverse cosine of `value` parameter
  * @example
  * ACOS(0.8) // returns 0.6435011087932843
  */
@@ -46,14 +52,18 @@ declare function ACOS(value: string): number;
 
 /**
  * Returns the inverse hyperbolic cosine of a number.
- * @param value The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/acosh/
+ * @param value (Number, required): value to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
  * @example
  * ACOSH(7) // returns 2.6339157938496336
  */
 declare function ACOSH(value: number): number;
 /**
  * Returns the inverse hyperbolic cosine of a number.
- * @param value The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/acosh/
+ * @param value (Number, required): value to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.
  * @example
  * ACOSH(7) // returns 2.6339157938496336
  */
@@ -63,35 +73,19 @@ interface ToStringable {
     toString(): string;
 }
 /**
- * Display a message as an alert.
- * ALERT displays a message to the user. You can provide both the title and message of the alert box.
- * @example
- * ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?');
+ * Display a message as an alert. You can provide both the title and message of the alert box.
  *
- * // Displays an alert that looks like
- * // +-------------------------------------------+
- * // | Warning!                                  |
- * // +-------------------------------------------|
- * // |                                           |
- * // | A depth of 98 feet is high. Are you sure? |
- * // |                                           |
- * // +-------------------------------------------+
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/alert/
+ * @param title (String, required): short title for alert
+ * @param message (String, required): message to display
  */
 declare function ALERT(message: ToStringable): void;
 /**
- * Display a message as an alert.
- * ALERT displays a message to the user. You can provide both the title and message of the alert box.
- * @example
- * ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?');
+ * Display a message as an alert. You can provide both the title and message of the alert box.
  *
- * // Displays an alert that looks like
- * // +-------------------------------------------+
- * // | Warning!                                  |
- * // +-------------------------------------------|
- * // |                                           |
- * // | A depth of 98 feet is high. Are you sure? |
- * // |                                           |
- * // +-------------------------------------------+
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/alert/
+ * @param title (String, required): short title for alert
+ * @param message (String, required): message to display
  */
 declare function ALERT(title: ToStringable, message: ToStringable): void;
 
@@ -186,16 +180,19 @@ interface FeatureGeometry {
 
 /**
  * Returns the altitude from the records geometry.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/altitude/
  */
 declare function ALTITUDE(): number;
 
 /**
  * Accepts an array of expressions and returns true if both are true, and false if both or one is false
- * @param args list of items of any type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/and/
+ * @param args (Any|Array required): array/list of items of any type
  * @returns boolean value
  * @example
  * AND('this' === 'that', 4 > 2) // returns false
- * AND('this' === 'this', 4 > 2) // returns true
  */
 declare function AND(...args: any[]): boolean | null;
 
@@ -221,8 +218,7 @@ declare function APPLICATIONBUILD(): string;
  * Returns application version
  * @returns application version
  * @example
- * APPLICATIONVERSION()
- * // if called with
+ * APPLICATIONVERSION() // returns 66.0
  */
 declare function APPLICATIONVERSION(): string;
 
@@ -249,21 +245,23 @@ declare function FLATTEN(value: RecursiveArray<any>): any[];
 
 /**
  * Accepts any number of arguments and returns them as an array
- * @param args list of items of any type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/array/
+ * @param args (Any|Array, required): list of items of any type
  * @returns an array flattened to on level deep
  * @example
- * ARRAY(1, 2, 3) // returns [1, 2, 3]
  * ARRAY([1, 2], '3', [4, 5]) // returns [1, 2, '3', 4, 5]
  */
 declare function ARRAY(...args: any[]): any[];
 
 /**
  * Accepts a list of numbers and returns their average (mean)
- * @param multiple integers or floats
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/average/
+ * @param values (Number|Array, required): integers or floats
  * @returns integer or float
  * @example
  * AVERAGE(3, 5) // returns 4
- * AVERAGE(1, 1.5, 3.75) // returns 2.0833333333333335
  */
 declare function AVERAGE(...values: AverageValues): number;
 
@@ -351,8 +349,10 @@ declare function ROUND(value: string, scale: number): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
  * If a multiple is not specified, number will be rounded to next highest integer (multiple of 1)
- * @param number numeric value to be rounded
- * @param multiple optional, multiple to which a number will be rounded
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ceiling/
+ * @param value (Number, required): value to be rounded
+ * @param multiple (Number, optional): multiple to which `value` will be rounded
  * @returns number rounded to nearest multiple
  * @example
  * CEILING(3.45) // returns 4
@@ -362,8 +362,10 @@ declare function CEILING(value: number): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
  * If a multiple is not specified, number will be rounded to next highest integer (multiple of 1)
- * @param number numeric value to be rounded
- * @param multiple optional, multiple to which a number will be rounded
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ceiling/
+ * @param value (Number, required): value to be rounded
+ * @param multiple (Number, optional): multiple to which `value` will be rounded
  * @returns number rounded to nearest multiple
  * @example
  * CEILING(3.45) // returns 4
@@ -373,8 +375,10 @@ declare function CEILING(value: number, multiple: number): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
  * If a multiple is not specified, number will be rounded to next highest integer (multiple of 1)
- * @param number numeric value to be rounded
- * @param multiple optional, multiple to which a number will be rounded
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ceiling/
+ * @param value (Number, required): value to be rounded
+ * @param multiple (Number, optional): multiple to which `value` will be rounded
  * @returns number rounded to nearest multiple
  * @example
  * CEILING(3.45) // returns 4
@@ -384,8 +388,10 @@ declare function CEILING(value: string): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
  * If a multiple is not specified, number will be rounded to next highest integer (multiple of 1)
- * @param number numeric value to be rounded
- * @param multiple optional, multiple to which a number will be rounded
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ceiling/
+ * @param value (Number, required): value to be rounded
+ * @param multiple (Number, optional): multiple to which `value` will be rounded
  * @returns number rounded to nearest multiple
  * @example
  * CEILING(3.45) // returns 4
@@ -395,8 +401,10 @@ declare function CEILING(value: string, multiple: number): number;
 /**
  * Returns number rounded up, away from zero, to the nearest multiple
  * If a multiple is not specified, number will be rounded to next highest integer (multiple of 1)
- * @param number numeric value to be rounded
- * @param multiple optional, multiple to which a number will be rounded
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ceiling/
+ * @param value (Number, required): value to be rounded
+ * @param multiple (Number, optional): multiple to which `value` will be rounded
  * @returns number rounded to nearest multiple
  * @example
  * CEILING(3.45) // returns 4
@@ -406,7 +414,9 @@ declare function CEILING(): number;
 
 /**
  * Returns the character of a given char code
- * @param value integer (character code)
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/char/
+ * @param value (Number, required): integer (character code)
  * @returns a character as a string
  * @example
  * CHAR(65) // returns 'A'
@@ -414,7 +424,9 @@ declare function CEILING(): number;
 declare function CHAR(value: number): string;
 /**
  * Returns the character of a given char code
- * @param value integer (character code)
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/char/
+ * @param value (Number, required): integer (character code)
  * @returns a character as a string
  * @example
  * CHAR(65) // returns 'A'
@@ -549,134 +561,162 @@ declare function ISBLANK(): boolean;
 
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
- * @param field ChoiceFieldValue: {choice_values: [ ... ], other_values: [ ... ]}
- * @returns array
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalues/
+ * @param field (ChoiceFieldValue, required)
+ * @returns array of choice values
  * @example
- * CHOICEVALUES({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns [ 'a', 'b', 'c', 'd' ]
+ * CHOICEVALUES($choice_field) // returns [ 'a', 'b', 'c', 'd' ]
  */
 declare function CHOICEVALUES(field: ChoiceFieldValue): string[];
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
- * @param field ChoiceFieldValue: {choice_values: [ ... ], other_values: [ ... ]}
- * @returns array
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalues/
+ * @param field (ChoiceFieldValue, required)
+ * @returns array of choice values
  * @example
- * CHOICEVALUES({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns [ 'a', 'b', 'c', 'd' ]
+ * CHOICEVALUES($choice_field) // returns [ 'a', 'b', 'c', 'd' ]
  */
 declare function CHOICEVALUES(field: any): any[];
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
- * @param field ChoiceFieldValue: {choice_values: [ ... ], other_values: [ ... ]}
- * @returns array
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalues/
+ * @param field (ChoiceFieldValue, required)
+ * @returns array of choice values
  * @example
- * CHOICEVALUES({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns [ 'a', 'b', 'c', 'd' ]
+ * CHOICEVALUES($choice_field) // returns [ 'a', 'b', 'c', 'd' ]
  */
 declare function CHOICEVALUES(): undefined;
 
 /**
  * Returns the first choice value in the choice field value passed to the function
- * @param field Choice field value, e.g. `{choice_values: ['a', 'b'], other_values" ['c', 'd']}`
- * @returns string value, first choice in a list of choice field values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalue/
+ * @param field (ChoiceField value, required): `{choice_values: ['a', 'b'], other_values" ['c', 'd']}`
+ * @returns string, first choice in a list of choice field values
  * @example
- * CHOICEVALUE({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns 'a'
+ * CHOICEVALUE($choice_field) // returns "Red"
  */
 declare function CHOICEVALUE(field: ChoiceFieldValue): MaybeString;
 /**
  * Returns the first choice value in the choice field value passed to the function
- * @param field Choice field value, e.g. `{choice_values: ['a', 'b'], other_values" ['c', 'd']}`
- * @returns string value, first choice in a list of choice field values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/choicevalue/
+ * @param field (ChoiceField value, required): `{choice_values: ['a', 'b'], other_values" ['c', 'd']}`
+ * @returns string, first choice in a list of choice field values
  * @example
- * CHOICEVALUE({choice_values: ['a', 'b'], other_values: ['c', 'd']}) // returns 'a'
+ * CHOICEVALUE($choice_field) // returns "Red"
  */
 declare function CHOICEVALUE(field: any): MaybeString;
 
 /**
  * Removes non-printable characters from a string
- * @param text string to be cleaned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/clean/
+ * @param text (String, required): text to be cleaned
  * @returns cleaned string
  * @example
  * CLEAN('test\x00\x1D\x1Etest') // returns 'testtest'
  */
 declare function CLEAN(text: string): string;
 
+/**
+ * Clears an interval that was previously started with `SETINTERVAL`.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/clearinterval/
+ * @param id (Number, required): interval ID to clear
+ */
 declare function CLEARINTERVAL(id: number): void;
 
+/**
+ * Clears a timeout that was previously started with `SETTIMEOUT`.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/cleartimeout/
+ * @param id (Number, required): id of timeout to clear
+ */
 declare function CLEARTIMEOUT(id: number): void;
 
 /**
  * Returns first value passed in to function that exists
  * NaN, undefined, null, and empty strings, objects, and arrays are not recognized
- * @param args array of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/coalesce/
+ * @param args (Any|Array, required): array of values
  * @returns first value passed into function
  * @example
- * COALESCE([[2, 3], [3, 6, [5]]]) // returns 2
- * COALESCE([{}, {}, {foo: "bar"}]) // returns {foo: "bar"}
+ * COALESCE([], null, [3, 6, [5]]) // returns 3
  */
 declare function COALESCE(...args: any[]): string | number | undefined;
 /**
  * Returns first value passed in to function that exists
  * NaN, undefined, null, and empty strings, objects, and arrays are not recognized
- * @param args array of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/coalesce/
+ * @param args (Any|Array, required): array of values
  * @returns first value passed into function
  * @example
- * COALESCE([[2, 3], [3, 6, [5]]]) // returns 2
- * COALESCE([{}, {}, {foo: "bar"}]) // returns {foo: "bar"}
+ * COALESCE([], null, [3, 6, [5]]) // returns 3
  */
 declare function COALESCE(): undefined;
 
 /**
  * Returns numeric code for first character in passed in string
- * @param str string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/code/
+ * @param str (String, required): character to be evaluated
  * @returns numeric code
  * @example
  * CODE("A") // returns 65
- * CODE("apple") // returns 97
- * CODE(9) // returns 57
  */
 declare function CODE(str: MaybeString): number;
 /**
  * Returns numeric code for first character in passed in string
- * @param str string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/code/
+ * @param str (String, required): character to be evaluated
  * @returns numeric code
  * @example
  * CODE("A") // returns 65
- * CODE("apple") // returns 97
- * CODE(9) // returns 57
  */
 declare function CODE(str: number): number;
 /**
  * Returns numeric code for first character in passed in string
- * @param str string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/code/
+ * @param str (String, required): character to be evaluated
  * @returns numeric code
  * @example
  * CODE("A") // returns 65
- * CODE("apple") // returns 97
- * CODE(9) // returns 57
  */
 declare function CODE(str: Object): number;
 /**
  * Returns numeric code for first character in passed in string
- * @param str string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/code/
+ * @param str (String, required): character to be evaluated
  * @returns numeric code
  * @example
  * CODE("A") // returns 65
- * CODE("apple") // returns 97
- * CODE(9) // returns 57
  */
 declare function CODE(str: any[]): number;
 /**
  * Returns numeric code for first character in passed in string
- * @param str string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/code/
+ * @param str (String, required): character to be evaluated
  * @returns numeric code
  * @example
  * CODE("A") // returns 65
- * CODE("apple") // returns 97
- * CODE(9) // returns 57
  */
 declare function CODE(): number;
 
 /**
  * Returns a compacted array without null or undefined values.
- * @param value array of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/compact/
+ * @param value (Array, required): array to compact
  * @returns a compacted array with null and undefined values removed
  * @example
  * COMPACT(['a', 'b', null, 'c']) // returns ['a', 'b', 'c']
@@ -684,7 +724,9 @@ declare function CODE(): number;
 declare function COMPACT(value: any[]): any[] | undefined;
 /**
  * Returns a compacted array without null or undefined values.
- * @param value array of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/compact/
+ * @param value (Array, required): array to compact
  * @returns a compacted array with null and undefined values removed
  * @example
  * COMPACT(['a', 'b', null, 'c']) // returns ['a', 'b', 'c']
@@ -692,7 +734,9 @@ declare function COMPACT(value: any[]): any[] | undefined;
 declare function COMPACT(value: any): undefined;
 /**
  * Returns a compacted array without null or undefined values.
- * @param value array of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/compact/
+ * @param value (Array, required): array to compact
  * @returns a compacted array with null and undefined values removed
  * @example
  * COMPACT(['a', 'b', null, 'c']) // returns ['a', 'b', 'c']
@@ -701,20 +745,22 @@ declare function COMPACT(): undefined;
 
 /**
  * Returns a concatenated string
- * @param strings strings to be concatenated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/concatenate/
+ * @param strings (String|Array, required): strings to be concatenated
  * @returns a single concatenated string
  * @example
  * CONCATENATE('hello', 'world') // returns 'helloworld'
- * CONCATENATE(['a', 'b', null, 'c']) // returns 'abc'
  */
 declare function CONCATENATE(...strings: any[]): string;
 /**
  * Returns a concatenated string
- * @param strings strings to be concatenated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/concatenate/
+ * @param strings (String|Array, required): strings to be concatenated
  * @returns a single concatenated string
  * @example
  * CONCATENATE('hello', 'world') // returns 'helloworld'
- * CONCATENATE(['a', 'b', null, 'c']) // returns 'abc'
  */
 declare function CONCATENATE(): string;
 
@@ -875,99 +921,89 @@ declare function MESSAGEBOX(options: MessageBoxPayload, callback: Function): voi
 /**
  * CONFIRM displays a message to the user and allows a callback function
  * that will be invoked to respond to the result of the question.
- * @param title short title for popup box
- * @param message message to display to the user
- * @param callback callback to invoke upon closing the popup box
- * @example
- * CONFIRM('Confirm',
- * 'You have selected a critical safety violation. Are you sure?',
- * function (result) {
- * if (result.value === 'Okay') {
- *  // Selected Okay
- * } else {
- *  // Selected Cancel
- * }
- * });
- * )
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/confirm/
+ * @param title (String, required): short title for popup box
+ * @param message (String, required): message to display to the user
+ * @param callback (Function, required): to be invoked upon closing the popup box
  */
 declare function CONFIRM(title: string, message: string, callback: Function): void;
 /**
  * CONFIRM displays a message to the user and allows a callback function
  * that will be invoked to respond to the result of the question.
- * @param title short title for popup box
- * @param message message to display to the user
- * @param callback callback to invoke upon closing the popup box
- * @example
- * CONFIRM('Confirm',
- * 'You have selected a critical safety violation. Are you sure?',
- * function (result) {
- * if (result.value === 'Okay') {
- *  // Selected Okay
- * } else {
- *  // Selected Cancel
- * }
- * });
- * )
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/confirm/
+ * @param title (String, required): short title for popup box
+ * @param message (String, required): message to display to the user
+ * @param callback (Function, required): to be invoked upon closing the popup box
  */
 declare function CONFIRM(message: string, callback: Function): void;
 
 /**
  * Checks that a value is present in a string or array
- * @param haystack required; collection, either a string or an array, to be iterated over
- * @param needle required; value one is looking for
- * @param fromIndex optional; numeric index from which to start looking for a value
- * @returns boolean: true if value is found, else false
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/contains/
+ * @param haystack (String|Array, required): collectio to be iterated over
+ * @param needle (String|Number, required): value one is looking for
+ * @param fromIndex (Number, optional): numeric index from which to start looking
+ * @returns boolean, true if value is found, else false
  * @example
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
- * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
 declare function CONTAINS(haystack: string | any[], needle: MaybeString | number): boolean;
 /**
  * Checks that a value is present in a string or array
- * @param haystack required; collection, either a string or an array, to be iterated over
- * @param needle required; value one is looking for
- * @param fromIndex optional; numeric index from which to start looking for a value
- * @returns boolean: true if value is found, else false
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/contains/
+ * @param haystack (String|Array, required): collectio to be iterated over
+ * @param needle (String|Number, required): value one is looking for
+ * @param fromIndex (Number, optional): numeric index from which to start looking
+ * @returns boolean, true if value is found, else false
  * @example
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
- * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
 declare function CONTAINS(haystack: string | any[], needle: MaybeString | number, fromIndex?: number): boolean;
 /**
  * Checks that a value is present in a string or array
- * @param haystack required; collection, either a string or an array, to be iterated over
- * @param needle required; value one is looking for
- * @param fromIndex optional; numeric index from which to start looking for a value
- * @returns boolean: true if value is found, else false
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/contains/
+ * @param haystack (String|Array, required): collectio to be iterated over
+ * @param needle (String|Number, required): value one is looking for
+ * @param fromIndex (Number, optional): numeric index from which to start looking
+ * @returns boolean, true if value is found, else false
  * @example
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
- * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
 declare function CONTAINS(haystack: string | any[], needle: MaybeString | number, fromIndex?: any): boolean;
 /**
  * Checks that a value is present in a string or array
- * @param haystack required; collection, either a string or an array, to be iterated over
- * @param needle required; value one is looking for
- * @param fromIndex optional; numeric index from which to start looking for a value
- * @returns boolean: true if value is found, else false
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/contains/
+ * @param haystack (String|Array, required): collectio to be iterated over
+ * @param needle (String|Number, required): value one is looking for
+ * @param fromIndex (Number, optional): numeric index from which to start looking
+ * @returns boolean, true if value is found, else false
  * @example
  * CONTAINS(["apple", "orange", "lemon"], "orange") // returns true
- * CONTAINS(["apple", "orange", "lemon"], "apple", 1) // returns false
  */
 declare function CONTAINS(haystack: any, needle: MaybeString | number): boolean;
 
 /**
  * Returns the cosine of the specified angle value, which must be specified in radians.
- * @param value numeric value specifying radians
- * @returns numeric value between 1 and -1 indicating the angle's cosine
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/cos/
+ * @param value (Number, required): value specifying radians
+ * @returns number, value between 1 and -1 indicating the angle's cosine
  * @example
  * COS(12) // returns 0.8438539587324921
  */
 declare function COS(value: number): number;
 /**
  * Returns the cosine of the specified angle value, which must be specified in radians.
- * @param value numeric value specifying radians
- * @returns numeric value between 1 and -1 indicating the angle's cosine
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/cos/
+ * @param value (Number, required): value specifying radians
+ * @returns number, value between 1 and -1 indicating the angle's cosine
  * @example
  * COS(12) // returns 0.8438539587324921
  */
@@ -975,16 +1011,20 @@ declare function COS(value: string): number;
 
 /**
  * Returns function returns the hyperbolic cosine of a number
- * @param value numeric value
- * @returns numeric value between 1 and -1 indicating the angle's cosine
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/cosh/
+ * @param value (Number, required)
+ * @returns number, value between 1 and -1 indicating the angle's cosine
  * @example
  * COSH(12) // returns 0.8438539587324921
  */
 declare function COSH(value: number): number;
 /**
  * Returns function returns the hyperbolic cosine of a number
- * @param value numeric value
- * @returns numeric value between 1 and -1 indicating the angle's cosine
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/cosh/
+ * @param value (Number, required)
+ * @returns number, value between 1 and -1 indicating the angle's cosine
  * @example
  * COSH(12) // returns 0.8438539587324921
  */
@@ -994,7 +1034,8 @@ declare function COSH(value: string): number;
  * Returns the count of the numeric values in an array.
  * Will coerce numeric strings (`"1"`) into a numeric value (`1`).
  *
- * @param value array of items to be counted
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/count/
+ * @param value (Number|String|Array, required): items to be counted
  * @returns number
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
@@ -1004,7 +1045,8 @@ declare function COUNT(value: number[]): number;
  * Returns the count of the numeric values in an array.
  * Will coerce numeric strings (`"1"`) into a numeric value (`1`).
  *
- * @param value array of items to be counted
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/count/
+ * @param value (Number|String|Array, required): items to be counted
  * @returns number
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
@@ -1014,7 +1056,8 @@ declare function COUNT(value: string[]): number;
  * Returns the count of the numeric values in an array.
  * Will coerce numeric strings (`"1"`) into a numeric value (`1`).
  *
- * @param value array of items to be counted
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/count/
+ * @param value (Number|String|Array, required): items to be counted
  * @returns number
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
@@ -1024,7 +1067,8 @@ declare function COUNT(): undefined;
  * Returns the count of the numeric values in an array.
  * Will coerce numeric strings (`"1"`) into a numeric value (`1`).
  *
- * @param value array of items to be counted
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/count/
+ * @param value (Number|String|Array, required): items to be counted
  * @returns number
  * @example
  * COUNT([1, "2", null, 3, null]) // returns 3
@@ -1033,7 +1077,9 @@ declare function COUNT(value: any): number | undefined;
 
 /**
  * Returns a count of the items in a list that are not null, undefined, or blank
- * @param value array of items
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/counta/
+ * @param value (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTA(["orange", "lemon", null, "grape"]) // returns 3
@@ -1041,7 +1087,9 @@ declare function COUNT(value: any): number | undefined;
 declare function COUNTA(value: any[]): number;
 /**
  * Returns a count of the items in a list that are not null, undefined, or blank
- * @param value array of items
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/counta/
+ * @param value (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTA(["orange", "lemon", null, "grape"]) // returns 3
@@ -1049,7 +1097,9 @@ declare function COUNTA(value: any[]): number;
 declare function COUNTA(value: any): number;
 /**
  * Returns a count of the items in a list that are not null, undefined, or blank
- * @param value array of items
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/counta/
+ * @param value (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTA(["orange", "lemon", null, "grape"]) // returns 3
@@ -1059,7 +1109,9 @@ declare function COUNTA(): number;
 /**
  * Returns a count of the number of blank items.
  * Items considered blank include `null`, `undefined`, `[]`, `{}`, and `""`.
- * @param args list of items
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/countblank/
+ * @param args (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTBLANK([1, 2, null, 3]) // returns 1
@@ -1068,7 +1120,9 @@ declare function COUNTBLANK(...args: any[]): number;
 /**
  * Returns a count of the number of blank items.
  * Items considered blank include `null`, `undefined`, `[]`, `{}`, and `""`.
- * @param args list of items
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/countblank/
+ * @param args (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTBLANK([1, 2, null, 3]) // returns 1
@@ -1097,6 +1151,8 @@ declare function CURRENCYSYMBOL(): string;
  *  Returns the current device location as an object. This can be used for Q/A purposes or
  *  other custom processing logic. This is not always the same as the record location.
  *  location will be different.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/currentlocation/
  */
 declare function CURRENTLOCATION(): CurrentLocation | null;
 
@@ -3999,7 +4055,8 @@ declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Even
 
 /**
  * Open a URL for a website or mobile app.
- * {@link https://learn.fulcrumapp.com/dev/data-events/reference/openurl/ | View Documentation}
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
  * @param url (String, required): url to open
  */
 declare function OPENURL(url: string): void;

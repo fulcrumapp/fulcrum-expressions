@@ -7,12 +7,13 @@ import {
          isUndefined,
         } from "lodash"
 import ARRAY from "./ARRAY"
-import ISBLANK from "./ISBLANK"
 
 /**
  * Returns a count of the number of blank items.
  * Items considered blank include `null`, `undefined`, `[]`, `{}`, and `""`.
- * @param args list of items
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/countblank/
+ * @param args (Any|Array, required): items to be counted
  * @returns number
  * @example
  * COUNTBLANK([1, 2, null, 3]) // returns 1

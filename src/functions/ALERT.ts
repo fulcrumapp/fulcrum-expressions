@@ -4,19 +4,11 @@ interface ToStringable {
 }
 
 /**
- * Display a message as an alert.
- * ALERT displays a message to the user. You can provide both the title and message of the alert box.
- * @example
- * ALERT('Warning!', 'A depth of 98 feet is high. Are you sure?');
- *
- * // Displays an alert that looks like
- * // +-------------------------------------------+
- * // | Warning!                                  |
- * // +-------------------------------------------|
- * // |                                           |
- * // | A depth of 98 feet is high. Are you sure? |
- * // |                                           |
- * // +-------------------------------------------+
+ * Display a message as an alert. You can provide both the title and message of the alert box.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/alert/
+ * @param title (String, required): short title for alert
+ * @param message (String, required): message to display
  */
 export default function ALERT(message: ToStringable): void
 export default function ALERT(title: ToStringable, message: ToStringable): void

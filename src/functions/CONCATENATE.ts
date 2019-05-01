@@ -3,11 +3,12 @@ import ARRAY from "./ARRAY"
 
 /**
  * Returns a concatenated string
- * @param strings strings to be concatenated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/concatenate/
+ * @param strings (String|Array, required): strings to be concatenated
  * @returns a single concatenated string
  * @example
  * CONCATENATE('hello', 'world') // returns 'helloworld'
- * CONCATENATE(['a', 'b', null, 'c']) // returns 'abc'
  */
 
 export default function CONCATENATE(...strings: any[]): string

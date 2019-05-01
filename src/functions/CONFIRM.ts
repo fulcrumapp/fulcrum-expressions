@@ -5,20 +5,11 @@ import MESSAGEBOX, { MessageBoxPayload } from "./MESSAGEBOX"
 /**
  * CONFIRM displays a message to the user and allows a callback function
  * that will be invoked to respond to the result of the question.
- * @param title short title for popup box
- * @param message message to display to the user
- * @param callback callback to invoke upon closing the popup box
- * @example
- * CONFIRM('Confirm',
- * 'You have selected a critical safety violation. Are you sure?',
- * function (result) {
- * if (result.value === 'Okay') {
- *  // Selected Okay
- * } else {
- *  // Selected Cancel
- * }
- * });
- * )
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/confirm/
+ * @param title (String, required): short title for popup box
+ * @param message (String, required): message to display to the user
+ * @param callback (Function, required): to be invoked upon closing the popup box
  */
 export default function CONFIRM(title: string, message: string, callback: Function): void
 export default function CONFIRM(message: string, callback: Function): void
