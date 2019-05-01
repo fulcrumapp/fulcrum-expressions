@@ -1,9 +1,8 @@
 import { isString } from "lodash"
 /**
  * Open a URL for a website or mobile app.
+ * https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
  * @param url (String, required): url to open
- * @external
- * OPENURL documentation: https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
  */
 export default function OPENURL(url: string): void {
   if (!isString(url)) { return }
