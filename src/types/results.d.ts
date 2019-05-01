@@ -68,3 +68,10 @@ export interface UpdateFormAttributesResult {
   attribute: string,
   value: any,
 }
+
+export interface OpenURLResult {
+  /** result type */
+  type:"open",
+  /** stringified value */
+  value: string
+}

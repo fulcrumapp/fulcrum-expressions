@@ -2269,10 +2269,10 @@ declare function IFERROR(value: any, errorValue: any): any;
 
 /**
  * Returns a string representation of the passed in parameter
- * @param value value to be inspected
+ * @param VALUE Number (required); value to inspect
  * @returns stringified value
  * @example
- * INSPECT({ test: "test_test"}) // returns "{ test: 'test_test' }"
+ * [INSPECT documentation]{`https://learn.fulcrumapp.com/dev/expressions/reference/inspect\/`}
  */
 declare function INSPECT(value: any): string;
 
@@ -2345,6 +2345,13 @@ interface UpdateFormAttributesResult {
   key: string,
   attribute: string,
   value: any,
+}
+
+interface OpenURLResult {
+  /** result type */
+  type:"open",
+  /** stringified value */
+  value: string
 }
 /**
  * Displays an alert and stops a record from being saved
@@ -3885,6 +3892,14 @@ declare function ON(name: AddAudioEventName, field: AudioFieldName, callback: (e
  * ON('change-geometry', 'repeatable_item', callback);
  */
 declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
+
+/**
+ * Open a URL for a website or mobile app.
+ * @param URL String (required) - url to open
+ * @description
+ * [OPENURL documentation]{https://learn.fulcrumapp.com/dev/data-events/reference/openurl/}
+ */
+declare function OPENURL(url: string): void;
 
 /**
  * Returns the value of pi (π).

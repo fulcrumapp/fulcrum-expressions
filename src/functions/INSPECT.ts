@@ -1,10 +1,10 @@
 import { inspect } from "util"
 /**
  * Returns a string representation of the passed in parameter
- * @param value value to be inspected
+ * @param VALUE Number (required); value to inspect
  * @returns stringified value
  * @example
- * INSPECT({ test: "test_test"}) // returns "{ test: 'test_test' }"
+ * [INSPECT documentation]{`https://learn.fulcrumapp.com/dev/expressions/reference/inspect\/`}
  */
 export default function INSPECT(value: any): string {
   return inspect(value)

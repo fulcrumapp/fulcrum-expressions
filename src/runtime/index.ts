@@ -34,6 +34,7 @@ import {
   ExpressionResult,
   InvalidResult,
   ProgressResult,
+  OpenURLResult,
   SetValueResult,
   UpdateFormAttributesResult,
         } from "../types/results"
@@ -60,6 +61,7 @@ type RuntimeResults = Array<
   | ProgressResult
   | ExpressionResult
   | UpdateFormAttributesResult
+  | OpenURLResult
 >
 
 const NO_PARAM = "__no_param"
