@@ -12,6 +12,7 @@ import { FieldName } from "../types/fields"
  */
 
 export default function SETREQUIRED(dataName: FieldName, value: boolean): void
+export default function SETREQUIRED(dataName: FieldName, value?: boolean): void
 export default function SETREQUIRED(dataName: FieldName, value?: boolean): void {
   const required = value ? !!value : null
   SETFORMATTRIBUTES(dataName, { required })

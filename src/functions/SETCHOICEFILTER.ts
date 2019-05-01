@@ -9,6 +9,7 @@ import { ChoiceFieldName } from "../types/fields"
  */
 
 export default function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void
+export default function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any): void
 export default function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any): void {
   const filterValue = isUndefined(value) || isNull(value) ? null : chain([value]).flatten().compact().map(String).value()
 

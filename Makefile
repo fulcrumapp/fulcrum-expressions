@@ -69,7 +69,7 @@ types:
 									--exclude src/functions/index.ts \
 									--exclude src/types/globals.d.ts \
 									--exclude src/types/node_modules.d.ts \
-									--out editor/functions.d.ts \
+									--out editor/functions.raw.d.ts \
 		&& ruby editor/build.rb)
 
 test:

@@ -11,6 +11,7 @@ import ISBLANK from "./ISBLANK"
  */
 
 export default function EXISTS(arg: any, ...args: any[]): arg is number | boolean | string | object
+export default function EXISTS(...args: any[]): boolean
 export default function EXISTS(...args: any[]): boolean {
   const valuesAreBlank: boolean[] = toArray(args).map(ISBLANK)
   const totalBlankValues: boolean[] = filter(valuesAreBlank)

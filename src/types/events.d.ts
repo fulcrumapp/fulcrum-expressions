@@ -1,5 +1,6 @@
 import { GUID } from "./primitives"
 import { FormFields, FieldName } from "./fields";
+import { ChoiceFieldValue } from "./values"
 
 export interface TriggeredEvent {
   name: EventNames,
@@ -66,16 +67,15 @@ export type RemoveVideoEventName = "remove-video"
 export type AddAudioEventName = "add-audio"
 export type RemoveAudioEventName = "remove-audio"
 
-export interface EventWithField {
+export interface Event {
+  name: EventNames
+}
+
+export interface EventWithField extends Event {
   field: FieldName
 }
 
-export interface ChoiceFieldValue {
-  choice_values: string[],
-  other_values: string[]
-}
-
-export interface FormEvent {
+export interface FormEvent extends Event {
   name: FormEventNames
   field: null,
   value?: string
@@ -94,7 +94,7 @@ export interface GeometryEventValue {
   type: "Point"
 }
 
-export interface GeometryEvent {
+export interface GeometryEvent extends Event {
   field?: string
   name: ChangeGeometryEventName
   value: GeometryEventValue

@@ -1,12 +1,19 @@
 import { GUID } from "./primitives"
 
 export type FieldName = string /* noexport */
+export type NumericFieldName = string /* noexport */
+export type TextFieldName = string /* noexport */
+export type YesNoFieldName = string /* noexport */
 export type ChoiceFieldName = string /* noexport */
+export type ClassificationFieldName = string /* noexport */
 export type RepeatableFieldName = string /* noexport */
 export type ContainerFieldName = string /* noexport */
 export type PhotoFieldName = string /* noexport */
 export type AudioFieldName = string /* noexport */
 export type VideoFieldName = string /* noexport */
+export type SignatureFieldName = string /* noexport */
+export type RecordLinkFieldName = string /* noexport */
+export type AddressFieldName = string /* noexport */
 
 export type FormFieldTypes =
   "TextField"

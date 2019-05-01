@@ -246,13 +246,6 @@ interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {
  * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
  */
 declare function FLATTEN(value: RecursiveArray<any>): any[];
-/**
- * Accepts a nested array and returns an array flattened to one level deep
- * @returns a flattened array
- * @example
- * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
- */
-declare function FLATTEN(value: any): any[];
 
 /**
  * Accepts any number of arguments and returns them as an array
@@ -436,14 +429,19 @@ type GUID = string
   ChoiceFieldValue
   | AddressFieldValue
 
+ type TextFieldValue = string | null | undefined
+
+ type YesNoFieldValue = string | null | undefined
+
+ type NumericFieldValue = number | null | undefined
 
 interface AddressFieldValue {
   sub_thoroughfare?: string|null,
   thoroughfare?: string|null,
   suite?: string|null,
   locality?: string|null,
-  sub_admin_area?: string|null, 
-  admin_area?: string|null, 
+  sub_admin_area?: string|null,
+  admin_area?: string|null,
   postal_code?: string|null,
   country?: string|null
 }
@@ -453,14 +451,55 @@ interface ChoiceFieldValue {
   other_values?: string[] | null
 }
 
+interface ClassificationFieldValue extends ChoiceFieldValue {}
+
+interface PhotoFieldItem {
+  photo_id: string,
+  caption: string
+}
+
+ type PhotoFieldValue = Array<PhotoFieldItem> | null | undefined
+
+interface VideoFieldItem {
+  video_id: string,
+  caption: string
+}
+
+ type VideoFieldValue = Array<VideoFieldItem> | null | undefined
+
+interface AudioFieldItem {
+  audio_id: string,
+  caption: string
+}
+
+ type AudioFieldValue = Array<AudioFieldItem> | null | undefined
+
+interface SignatureFieldValue {
+  signature_id: string,
+  timestamp: string
+}
+
+interface RecordLinkItem {
+  record_id: string
+}
+
+ type RecordLinkFieldValue = Array<RecordLinkItem> | null | undefined
+
+interface RepeatableItem {
+  id: string,
+  form_values: object
+}
+
+ type RepeatableFieldValue = Array<RepeatableItem> | null | undefined
+
 interface CurrentLocation {
-  latitude: number | null,
-  longitude: number | null,
+  latitude: number,
+  longitude: number,
   altitude: number | null,
-  accuracy: number | null,
+  accuracy: number,
   course: number | null,
   speed: number | null,
-  timestamp: number | null
+  timestamp: number
 }
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
@@ -559,7 +598,9 @@ declare function CHOICEVALUE(field: any): MaybeString;
  */
 declare function CLEAN(text: string): string;
 
+declare function CLEARINTERVAL(id: number): void;
 
+declare function CLEARTIMEOUT(id: number): void;
 
 /**
  * Returns first value passed in to function that exists
@@ -1366,7 +1407,7 @@ interface RepeatableField extends FormField {
  * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
-declare function DATANAMES(): any[];
+declare function DATANAMES(): FieldName[];
 /**
  * Returns the data names of the form fields. Also accepts an optional
  * type argument to filter form fields by type.
@@ -1376,7 +1417,7 @@ declare function DATANAMES(): any[];
  * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
-declare function DATANAMES(type: FormFieldTypes): any[];
+declare function DATANAMES(type: FormFieldTypes): FieldName[];
 /**
  * Returns the data names of the form fields. Also accepts an optional
  * type argument to filter form fields by type.
@@ -1386,7 +1427,7 @@ declare function DATANAMES(type: FormFieldTypes): any[];
  * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
-declare function DATANAMES(type: string): any[];
+declare function DATANAMES(type: string): FieldName[];
 
 /**
  * Returns number rounded down, away from zero, to the nearest multiple
@@ -1682,6 +1723,14 @@ declare function DEGREES(value?: any): number;
  * FIELD('child_item_cost').parent.label // returns "Child Items"
  */
 declare function FIELD(dataName: FieldName): FormField;
+/**
+ * Returns definition object for a specified field
+ * @param dataName The data name of the field
+ * @example
+ * FIELD('child_item_cost').label // returns "Child Item Cost"
+ * FIELD('child_item_cost').parent.label // returns "Child Items"
+ */
+declare function FIELD(dataName: FieldName | string | null | undefined): FormField | undefined;
 
 /**
  * Returns a field's description.
@@ -1782,6 +1831,15 @@ declare function EXACT(value1: any, value2: any): boolean;
  * EXISTS(1, null, 7, 0) // returns false
  */
 declare function EXISTS(arg: any, ...args: any[]): arg is number | boolean | string | object;
+/**
+ * Checks whether all values passed in exist.
+ * @param args list of items to check
+ * @returns boolean value indicating whether all values exist
+ * @example
+ * EXISTS(1, 3, 7, 0) // returns true
+ * EXISTS(1, null, 7, 0) // returns false
+ */
+declare function EXISTS(...args: any[]): boolean;
 
 /**
  * Returns e^x, where `x` is the argument, and `e` is Euler's number, the base of the natural logarithms.
@@ -2637,7 +2695,7 @@ declare function LABEL(dataName: FieldName): string | undefined;
  * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
-declare function FIRST(item: any[] | string, n: number): any[] | undefined;
+declare function LAST(item: any[] | string, n: number): any[] | undefined;
 /**
  * Returns the last n items of an array or string.
  * @param item required; array or string to extract items from
@@ -2647,7 +2705,7 @@ declare function FIRST(item: any[] | string, n: number): any[] | undefined;
  * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
-declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
+declare function LAST(item: any[] | string, n?: number): any[] | undefined;
 /**
  * Returns the last n items of an array or string.
  * @param item required; array or string to extract items from
@@ -2657,7 +2715,7 @@ declare function FIRST(item: any[] | string, n?: number): any[] | undefined;
  * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
-declare function FIRST(item: any): any[] | undefined;
+declare function LAST(item: any): any[] | undefined;
 
 /**
  * Returns the latitude of the record if it exists.
@@ -3082,16 +3140,15 @@ interface TriggeredEvent {
  type AddAudioEventName = "add-audio"
  type RemoveAudioEventName = "remove-audio"
 
-interface EventWithField {
+interface Event {
+  name: EventNames
+}
+
+interface EventWithField extends Event {
   field: FieldName
 }
 
-interface ChoiceFieldValue {
-  choice_values: string[],
-  other_values: string[]
-}
-
-interface FormEvent {
+interface FormEvent extends Event {
   name: FormEventNames
   field: null,
   value?: string
@@ -3110,7 +3167,7 @@ interface GeometryEventValue {
   type: "Point"
 }
 
-interface GeometryEvent {
+interface GeometryEvent extends Event {
   field?: string
   name: ChangeGeometryEventName
   value: GeometryEventValue
@@ -3892,6 +3949,53 @@ declare function ON(name: AddAudioEventName, field: AudioFieldName, callback: (e
  * ON('change-geometry', 'repeatable_item', callback);
  */
 declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
+/**
+ * Attaches an event handler that listens for record, repeatable, or field events.
+ * The ON function is the starting point for most data event scripts. It wires up an
+ * event to a function that gets called when that event happens. Events are things like
+ * a record being opened, edited, saved, validated, a field changing, or the record
+ * location changing. Using the `ON` function you can add custom logic to be performed
+ * when the events happen. The `ON` function by itself is not useful unless it's combined
+ * with the other data event functions to manipulate the record data and perform other
+ * actions like custom alerts and validations.
+ * @param event event name
+ * @param target (optional) field to bind the event to
+ * @param callback function called when the specified event is triggered
+ * @example
+ * var callback = function () {
+ *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
+ *     INVALID('Latitude must be between 40 and 41.');
+ *   }
+ * };
+ *
+ * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
+ * ON('validate-record', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the new $weather_summary values
+ * };
+ *
+ * // Listens for changes to the weather summary field and executes callback
+ * ON('change', 'weather_summary', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a record's geometry (location) and executes callback
+ * ON('change-geometry', callback);
+ *
+ * @example
+ * var callback = function () {
+ *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
+ * };
+ *
+ * // Listens for changes to a repeatable item's geometry and executes callback
+ * ON('change-geometry', 'repeatable_item', callback);
+ */
+declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 
 /**
  * Open a URL for a website or mobile app.
@@ -4472,6 +4576,12 @@ declare function SETFORMATTRIBUTES(dataName: any): void;
  * @param value required; a value or an array of values on which to filter
  */
 declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void;
+/**
+ * Sets a choice filter for a form.
+ * @param dataName required; data name of field to be updated
+ * @param value required; a value or an array of values on which to filter
+ */
+declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any): void;
 
 /**
  * Updates the form choices attribute.
@@ -4513,6 +4623,12 @@ declare function SETCONFIGURATION(settings: Configuration): void;
  * @param value value to which description should be set
  */
 declare function SETDESCRIPTION(dataName: FieldName, value: string): void;
+/**
+ * Sets the description of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which description should be set
+ */
+declare function SETDESCRIPTION(dataName: FieldName, value?: any): void;
 
 /**
  * Sets a field to read only or removes a read only condition.
@@ -4533,6 +4649,16 @@ declare function SETREADONLY(dataName: FieldName, value: boolean): void;
  */
 declare function SETREADONLY(dataName: FieldName, value?: boolean): void;
 
+declare function SETDISABLED(dataName: FieldName, value: boolean): void;
+/**
+ * Sets a field to read only or removes a read only condition.
+ * @param dataName required; data name of the targeted field
+ * @param value boolean value indicating whether to set as read only
+ * @example
+ *
+ * SETREADONLY("role", true) // sets role field to read only
+ */
+declare function SETDISABLED(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets geometry values if a valid GeoJSON object is passed in.
@@ -4598,6 +4724,12 @@ declare function SETINTERVAL(fn: Function, timeout: number): number;
  * @param value value to which label should be set
  */
 declare function SETLABEL(dataName: FieldName, value: string): void;
+/**
+ * Sets the label of a field.
+ * @param dataName required; data name of targeted field
+ * @param value value to which label should be set
+ */
+declare function SETLABEL(dataName: FieldName, value?: any): void;
 
 /**
  * Sets location geometry given a latitude and longitude value.
@@ -4624,6 +4756,12 @@ declare function SETLOCATION(latitude?: any, longitude?: any): void;
  * @param value number representing max length desired
  */
 declare function SETMAXLENGTH(dataName: FieldName, value: number): void;
+/**
+ * Sets the max length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing max length desired
+ */
+declare function SETMAXLENGTH(dataName: FieldName, value?: any): void;
 
 /**
  * Sets the minimum length of a field.
@@ -4631,6 +4769,12 @@ declare function SETMAXLENGTH(dataName: FieldName, value: number): void;
  * @param value number representing min length desired
  */
 declare function SETMINLENGTH(dataName: FieldName, value: number): void;
+/**
+ * Sets the minimum length of a field.
+ * @param dataName required; data name of the targeted field
+ * @param value number representing min length desired
+ */
+declare function SETMINLENGTH(dataName: FieldName, value?: any): void;
 
 /**
  * Sets project for a record.
@@ -4653,6 +4797,16 @@ declare function SETPROJECT(project: any): void;
  * SETREQUIRED("choice_field", false) // make field optional
  */
 declare function SETREQUIRED(dataName: FieldName, value: boolean): void;
+/**
+ * Sets a field to required or optional.
+ * @param dataName required; data name of targeted field
+ * @param value boolean value indicating whether to require field
+ * @example
+ *
+ * SETREQUIRED("choice_field", true) // set field to required
+ * SETREQUIRED("choice_field", false) // make field optional
+ */
+declare function SETREQUIRED(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets result variable on runtime.
@@ -5071,13 +5225,79 @@ declare function USERFULLNAME(): string | undefined;
  * @param dataName required; data name of the desired field
  * @returns a form field value
  */
+declare function VALUE(dataName: NumericFieldName): NumericFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: TextFieldName): TextFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: YesNoFieldName): YesNoFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: PhotoFieldName): PhotoFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: VideoFieldName): VideoFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: AudioFieldName): AudioFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: ChoiceFieldName): ChoiceFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: RepeatableFieldName): RepeatableFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: SignatureFieldName): SignatureFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: RecordLinkFieldName): RecordLinkFieldValue;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
+declare function VALUE(dataName: FieldName): string | undefined;
+/**
+ * Returns a data value when given the field's data name.
+ * @param dataName required; data name of the desired field
+ * @returns a form field value
+ */
 declare function VALUE(dataName: string): string | undefined;
 /**
  * Returns a data value when given the field's data name.
  * @param dataName required; data name of the desired field
  * @returns a form field value
  */
-declare function VALUE(dataName: any): string | undefined;
+declare function VALUE(dataName: any): any;
 
 /**
  * Returns device, platform, and application information.

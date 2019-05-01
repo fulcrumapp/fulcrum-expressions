@@ -9,6 +9,7 @@ import { FieldName } from "../types/fields"
  */
 
 export default function SETLABEL(dataName: FieldName, value: string): void
+export default function SETLABEL(dataName: FieldName, value?: any): void
 export default function SETLABEL(dataName: FieldName, value?: any): void {
   const label = isNull(value) || isUndefined(value) ? null : value.toString()
   SETFORMATTRIBUTES(dataName, { label } )

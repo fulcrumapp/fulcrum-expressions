@@ -1,5 +1,6 @@
 import { includes, isFunction, isString } from "lodash"
 import {
+  Event,
   AddAudioEvent,
   AddAudioEventName,
   AddPhotoEvent,
@@ -89,6 +90,7 @@ export default function ON(name: AddVideoEventName, field: VideoFieldName, callb
 export default function ON(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void
 export default function ON(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void
 export default function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void
+export default function ON(name: EventNames, fieldOrCallback: FieldName|((event: Event) => void), callback?: ((event: Event) => void)): void
 export default function ON(name: EventNames, ...args: any[]): void {
   let param: MaybeString = null
   let callback

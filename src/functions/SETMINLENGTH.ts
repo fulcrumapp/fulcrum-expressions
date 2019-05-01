@@ -9,6 +9,7 @@ import { FieldName } from "../types/fields"
  */
 
 export default function SETMINLENGTH(dataName: FieldName, value: number): void
+export default function SETMINLENGTH(dataName: FieldName, value?: any): void
 export default function SETMINLENGTH(dataName: FieldName, value?: any): void {
   const min_length = isUndefined(value) || isNull(value) ? null : +value
   SETFORMATTRIBUTES(dataName, { min_length })
