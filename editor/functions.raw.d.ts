@@ -2517,7 +2517,7 @@ declare module 'src/functions/ON' {
 declare module 'src/functions/OPENURL' {
 	/**
 	 * Open a URL for a website or mobile app.
-	 * https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
+	 * {@link https://learn.fulcrumapp.com/dev/data-events/reference/openurl/ | View Documentation}
 	 * @param url (String, required): url to open
 	 */
 	export default function OPENURL(url: string): void;
