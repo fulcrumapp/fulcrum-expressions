@@ -3999,9 +3999,9 @@ declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Even
 
 /**
  * Open a URL for a website or mobile app.
- * @param URL String (required) - url to open
- * @description
- * [OPENURL documentation]{https://learn.fulcrumapp.com/dev/data-events/reference/openurl/}
+ * @param url (String, required): url to open
+ * @example
+ * OPENURL documentation: https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
  */
 declare function OPENURL(url: string): void;
 
