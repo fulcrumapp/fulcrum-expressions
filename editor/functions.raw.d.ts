@@ -1709,10 +1709,10 @@ declare module 'src/functions/IFERROR' {
 declare module 'src/functions/INSPECT' {
 	/**
 	 * Returns a string representation of the passed in parameter
-	 * @param value value to be inspected
+	 * @param VALUE Number (required); value to inspect
 	 * @returns stringified value
 	 * @example
-	 * INSPECT({ test: "test_test"}) // returns "{ test: 'test_test' }"
+	 * [INSPECT documentation]{`https://learn.fulcrumapp.com/dev/expressions/reference/inspect\/`}
 	 */
 	export default function INSPECT(value: any): string;
 
@@ -1787,6 +1787,13 @@ declare module 'src/types/results' {
 	  key: string,
 	  attribute: string,
 	  value: any,
+	}
+
+	export interface OpenURLResult {
+	  /** result type */
+	  type:"open",
+	  /** stringified value */
+	  value: string
 	}
 }
 declare module 'src/functions/INVALID' {
@@ -2505,6 +2512,16 @@ declare module 'src/functions/ON' {
 	export default function ON(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void;
 	export default function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
 	export default function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
+
+}
+declare module 'src/functions/OPENURL' {
+	/**
+	 * Open a URL for a website or mobile app.
+	 * @param url (String, required): url to open
+	 * @external
+	 * OPENURL documentation: https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
+	 */
+	export default function OPENURL(url: string): void;
 
 }
 declare module 'src/functions/PI' {
