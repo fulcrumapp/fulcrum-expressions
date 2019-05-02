@@ -3,7 +3,7 @@ import { isNumber } from "lodash"
 /**
  * Returns a numeric value. If a number if passed in, the same number is returned, otherwise
  * function returns 1 for a true boolean value, and 0 for all other values.
- * @param value optional
+ * @param value (Number|Any, required): value to be evaluated
  * @returns a numeric value
  * @example
  * N(97) // returns 97

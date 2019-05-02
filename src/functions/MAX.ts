@@ -4,13 +4,16 @@ import NUM from "./NUM"
 
 /**
  * Returns max value from a list of values
- * @param args a list of numeric values or string number values
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/max/
+ * @param args (Number|Array, required): list of numeric values
  * @returns max value in numeric form
  * @example
  * MAX(1, 4, 7, 2, 4) // returns 7
- * MAX(["45", "50", "32", "51"]) // returns 51
  */
 
+export default function MAX(...args: number[]): number|undefined
+export default function MAX(...args: any[]): number|undefined
 export default function MAX(...args: any[]): number|undefined {
   let numbers: any[] = ARRAY(args)
   numbers = map(numbers, NUM)

@@ -1,10 +1,11 @@
 /**
  * Parses the passed in value as a numeric value
- * @param value any type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/num/
+ * @param value (Number|String, required): value to be coerced to a numeric value
  * @returns a numeric value
  * @example
  * NUM('1') // returns 1
- * NUM('a') // returns NaN
  */
 declare function NUM(value: any): number;
 
@@ -270,22 +271,23 @@ declare function AVERAGE(...values: AverageValues): number;
 
 /**
  * Returns a boolean value indicating if value passed in is a numeric value
- * @param value any type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnumber/
+ * @param value (Any, required): value to be checked
  * @returns boolean
  * @example
  * ISNUMBER(8) // returns true
- * ISNUMBER(3.78) // returns true
- * ISNUMBER('3.67') // returns false
  */
 declare function ISNUMBER(value: any): boolean;
 
 /**
  * Returns a boolean value indicating if the passed in value is not a number
- * @param value value of any type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnan/
+ * @param value (Any, required): value to be checked
  * @returns boolean value
  * @example
- * ISNAN(9) // returns false
- * ISNAN('a7') // returns true
+ * ISNAN("a7") // returns true
  */
 declare function ISNAN(value: any): boolean;
 
@@ -520,45 +522,33 @@ interface CurrentLocation {
  * Returns a boolean value indiciating whether the object is blank/empty.
  * Values of null, undefined, and NaN are considered blank and the function will return true.
  *
- * @param value item or Choice Field value to be checked for blankness or emptiness;
- * Example: ISBLANK( { choice_values: null, other_values: ['a', 'b'] } )
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isblank/
+ * @param value (ChoiceFieldValue|Any, required) item to be checked for blankness or emptiness;
  * @returns boolean value
- *
  * @example
  * ISBLANK('') // returns true
- * ISBLANK(NaN) // returns true
- * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
- * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
 declare function ISBLANK(value: ChoiceFieldValue): boolean;
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
  * Values of null, undefined, and NaN are considered blank and the function will return true.
  *
- * @param value item or Choice Field value to be checked for blankness or emptiness;
- * Example: ISBLANK( { choice_values: null, other_values: ['a', 'b'] } )
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isblank/
+ * @param value (ChoiceFieldValue|Any, required) item to be checked for blankness or emptiness;
  * @returns boolean value
- *
  * @example
  * ISBLANK('') // returns true
- * ISBLANK(NaN) // returns true
- * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
- * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
 declare function ISBLANK(value: any): boolean;
 /**
  * Returns a boolean value indiciating whether the object is blank/empty.
  * Values of null, undefined, and NaN are considered blank and the function will return true.
  *
- * @param value item or Choice Field value to be checked for blankness or emptiness;
- * Example: ISBLANK( { choice_values: null, other_values: ['a', 'b'] } )
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isblank/
+ * @param value (ChoiceFieldValue|Any, required) item to be checked for blankness or emptiness;
  * @returns boolean value
- *
  * @example
  * ISBLANK('') // returns true
- * ISBLANK(NaN) // returns true
- * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
- * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
 declare function ISBLANK(): boolean;
 
@@ -846,78 +836,30 @@ interface MessageBoxPayload {
     default?: any[] | null;
 }
 /**
- * MESSAGEBOX displays a message to the user.
- * You can provide both the title and message of the alert box.
- * Using the buttons parameter you can specify the button titles that are displayed in the message box.
- * @param options Object(required) - options for the message box
- * @param callback function(required) - invoked when message box is dismissed
+ * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/messagebox/
+ * @param options (MessageBoxPayload, required): options for the message box
+ * @param callback (Function, required): invoked when message box is dismissed
  * @returns invokes callback or returns an options Object
- * @example
- * const options = {
- * title: 'Confirm',
- * message: 'You selected a safety violation: Are you sure?',
- * buttons: ['Yes', 'No']
- * }
- *
- * const callback = function (result) {
- *               if (result.value === 'Yes') {
- *                  // Selected Yes
- *               } else {
- *                 // Selected No
- *               }
- *            }
- *
- * MESSAGEBOX(options, callback);
  */
 declare function MESSAGEBOX(options: MessageBoxPayload, callback: Function): void;
 /**
- * MESSAGEBOX displays a message to the user.
- * You can provide both the title and message of the alert box.
- * Using the buttons parameter you can specify the button titles that are displayed in the message box.
- * @param options Object(required) - options for the message box
- * @param callback function(required) - invoked when message box is dismissed
+ * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/messagebox/
+ * @param options (MessageBoxPayload, required): options for the message box
+ * @param callback (Function, required): invoked when message box is dismissed
  * @returns invokes callback or returns an options Object
- * @example
- * const options = {
- * title: 'Confirm',
- * message: 'You selected a safety violation: Are you sure?',
- * buttons: ['Yes', 'No']
- * }
- *
- * const callback = function (result) {
- *               if (result.value === 'Yes') {
- *                  // Selected Yes
- *               } else {
- *                 // Selected No
- *               }
- *            }
- *
- * MESSAGEBOX(options, callback);
  */
 declare function MESSAGEBOX(options: MessageBoxPayload): void;
 /**
- * MESSAGEBOX displays a message to the user.
- * You can provide both the title and message of the alert box.
- * Using the buttons parameter you can specify the button titles that are displayed in the message box.
- * @param options Object(required) - options for the message box
- * @param callback function(required) - invoked when message box is dismissed
+ * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/messagebox/
+ * @param options (MessageBoxPayload, required): options for the message box
+ * @param callback (Function, required): invoked when message box is dismissed
  * @returns invokes callback or returns an options Object
- * @example
- * const options = {
- * title: 'Confirm',
- * message: 'You selected a safety violation: Are you sure?',
- * buttons: ['Yes', 'No']
- * }
- *
- * const callback = function (result) {
- *               if (result.value === 'Yes') {
- *                  // Selected Yes
- *               } else {
- *                 // Selected No
- *               }
- *            }
- *
- * MESSAGEBOX(options, callback);
  */
 declare function MESSAGEBOX(options: MessageBoxPayload, callback: Function): void;
 
@@ -1552,6 +1494,17 @@ declare function FLOOR(value: string, multiple: number): number;
  */
 declare function FLOOR(): number;
 
+/**
+ * Returns number rounded down, away from zero, to the nearest interger
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/int/
+ * @param number (Number, required): value to be converted
+ * @param multiple (Number, optional): multiple to which a `number` will be converted
+ * @returns number converted to an int, rounded to nearest multiple
+ * @example
+ * INT(3.45) // returns 3
+ */
+declare function INT(number: number, multiple?: number): number;
 
 /**
  * Returns a new Date object given a year, month, and day.
@@ -1627,35 +1580,38 @@ declare function RIGHT(): undefined;
 
 /**
  * Returns a string padded to the left with a character of choice.
- * @param value required; string to be padded
- * @param count required; integer indicating the total length of the desired string
- * @param padding option; string, character to use for padding, defaults to " "
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lpad/
+ * @param value (String, required): string to be padded
+ * @param count (Number, required): integer indicating the total length of the desired string
+ * @param padding (String, option): character to use for padding, defaults to " "
  * @returns a padded string
  * @example
  * LPAD("abc", 5) // returns "  abc"
- * LPAD("abc", 5, "0") // returns "00abc"
  */
 declare function LPAD(value: string, count: number, padding?: string): MaybeString;
 /**
  * Returns a string padded to the left with a character of choice.
- * @param value required; string to be padded
- * @param count required; integer indicating the total length of the desired string
- * @param padding option; string, character to use for padding, defaults to " "
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lpad/
+ * @param value (String, required): string to be padded
+ * @param count (Number, required): integer indicating the total length of the desired string
+ * @param padding (String, option): character to use for padding, defaults to " "
  * @returns a padded string
  * @example
  * LPAD("abc", 5) // returns "  abc"
- * LPAD("abc", 5, "0") // returns "00abc"
  */
 declare function LPAD(value: any, count: any, padding?: any): MaybeString;
 /**
  * Returns a string padded to the left with a character of choice.
- * @param value required; string to be padded
- * @param count required; integer indicating the total length of the desired string
- * @param padding option; string, character to use for padding, defaults to " "
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lpad/
+ * @param value (String, required): string to be padded
+ * @param count (Number, required): integer indicating the total length of the desired string
+ * @param padding (String, option): character to use for padding, defaults to " "
  * @returns a padded string
  * @example
  * LPAD("abc", 5) // returns "  abc"
- * LPAD("abc", 5, "0") // returns "00abc"
  */
 declare function LPAD(): undefined;
 
@@ -2087,21 +2043,33 @@ declare function GROUPINGSIZE(): number;
 
 /**
  * Returns max value from a list of values
- * @param args a list of numeric values or string number values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/max/
+ * @param args (Number|Array, required): list of numeric values
  * @returns max value in numeric form
  * @example
  * MAX(1, 4, 7, 2, 4) // returns 7
- * MAX(["45", "50", "32", "51"]) // returns 51
+ */
+declare function MAX(...args: number[]): number | undefined;
+/**
+ * Returns max value from a list of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/max/
+ * @param args (Number|Array, required): list of numeric values
+ * @returns max value in numeric form
+ * @example
+ * MAX(1, 4, 7, 2, 4) // returns 7
  */
 declare function MAX(...args: any[]): number | undefined;
 
 /**
  * Returns min value from a list of values
- * @param args a list of numeric values or string number values
- * @returns min value in numeric form
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/min/
+ * @param args (Number|Array, required): list of numeric values
+ * @returns min numberic value among parameters
  * @example
  * MIN(7, 4, 1, 2, 4) // returns 1
- * MIN(["45", "50", "32", "51"]) // returns 32
  */
 declare function MIN(...args: any[]): number | undefined;
 
@@ -2318,10 +2286,12 @@ declare function HASOTHER(): boolean;
 
 /**
  * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
- * @param test required; conditional expression that evaluates to true or false
- * @param trueValue required; value to be returned in case of true
- * @param falseValue required; vaue to be returned in case of false
- * @returns boolean or `trueValue`/`falseValue` if supplied
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/if/
+ * @param test (Expression, required): conditional expression that evaluates to true or false
+ * @param trueValue (Any,required): value to be returned in case of true
+ * @param falseValue (Any, required): vaue to be returned in case of false
+ * @returns`trueValue`/`falseValue` if supplied, else boolean
  * @example
  * IF(1 > 0, 10, 20) // returns 10
  */
@@ -2329,7 +2299,7 @@ declare function IF(test: any, trueValue: any, falseValue: any): any;
 
 /**
  * Checks if a value is an instance of an Error or has no value
- * @param value required; item to be checked
+ * @param value (Error|Any, required): item to be checked
  * @returns boolean
  * @example
  * const badField = FIELD('does_not_exist') // = undefined
@@ -2339,8 +2309,8 @@ declare function ISERR(value: any): boolean;
 
 /**
  * Evaluates whether a passed in value is an error.
- * @param value required; value to be evaluated
- * @param errorValue required; value to be returned in event `value` is an error
+ * @param value (Error|Any, required): value to be evaluated
+ * @param errorValue (Any, required): value to be returned in event `value` is an error
  * @returns `errorValue` in case `value` is an error, otherwise `value`
  * @example
  * IFERROR(EVEN(null), "ERR") // returns "ERR"
@@ -2349,10 +2319,10 @@ declare function IFERROR(value: any, errorValue: any): any;
 
 /**
  * Returns a string representation of the passed in parameter
- * @param VALUE Number (required); value to inspect
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/inspect/
+ * @param value (Number, required): value to inspect
  * @returns stringified value
- * @example
- * [INSPECT documentation]{`https://learn.fulcrumapp.com/dev/expressions/reference/inspect\/`}
  */
 declare function INSPECT(value: any): string;
 
@@ -2435,72 +2405,66 @@ interface OpenURLResult {
 }
 /**
  * Displays an alert and stops a record from being saved
- * @description
- * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
- * It’s a special purpose function that’s intended to only be used within the `validate-record` and
- * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
- * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
- * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
- * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
- * @param message required; string detailing the reason for invalidating a record
- * @param dataName optional; string, data_name of field to be validated
- * @returns void
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/invalid/
+ * @param message (String, required): reason for invalidating a record
+ * @param dataName (String, optional): data name of field to be validated
  */
 declare function INVALID(message: string, dataName?: string): void;
 /**
  * Displays an alert and stops a record from being saved
- * @description
- * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
- * It’s a special purpose function that’s intended to only be used within the `validate-record` and
- * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
- * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
- * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
- * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
- * @param message required; string detailing the reason for invalidating a record
- * @param dataName optional; string, data_name of field to be validated
- * @returns void
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/invalid/
+ * @param message (String, required): reason for invalidating a record
+ * @param dataName (String, optional): data name of field to be validated
  */
 declare function INVALID(message: string, dataName?: string): void;
 /**
  * Displays an alert and stops a record from being saved
- * @description
- * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
- * It’s a special purpose function that’s intended to only be used within the `validate-record` and
- * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
- * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
- * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
- * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
- * @param message required; string detailing the reason for invalidating a record
- * @param dataName optional; string, data_name of field to be validated
- * @returns void
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/invalid/
+ * @param message (String, required): reason for invalidating a record
+ * @param dataName (String, optional): data name of field to be validated
  */
 declare function INVALID(message: string): void;
 
+/**
+ * Checks if a value is an instance of an Error or has no value
+ * @param value (Error|Any, required): item to be checked
+ * @returns boolean
+ * @example
+ * const badField = FIELD('does_not_exist') // = undefined
+ * ISERROR(badField) // returns true
+ */
+declare function ISERROR(value: any): boolean;
 
 /**
  * Returns whether or not a value is even
- * @param value required; numeric value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/iseven/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISEVEN(24) // returns true
  * ISEVEN(5 * 5) // returns false
  */
 declare function ISEVEN(value: number): boolean;
 /**
  * Returns whether or not a value is even
- * @param value required; numeric value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/iseven/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISEVEN(24) // returns true
  * ISEVEN(5 * 5) // returns false
  */
 declare function ISEVEN(value: string): boolean;
 /**
  * Returns whether or not a value is even
- * @param value required; numeric value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/iseven/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISEVEN(24) // returns true
  * ISEVEN(5 * 5) // returns false
  */
 declare function ISEVEN(value: any): boolean;
@@ -2512,7 +2476,9 @@ interface MediaObject {
 }
 /**
  * Checks whether the media is in portrait mode.
- * @param media required; media object, height and width attributes must be present
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/isportrait/
+ * @param media (MediaObject, required): media object, height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 100, height: 200 }
@@ -2521,7 +2487,9 @@ interface MediaObject {
 declare function ISPORTRAIT(media: MediaObject): boolean;
 /**
  * Checks whether the media is in portrait mode.
- * @param media required; media object, height and width attributes must be present
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/isportrait/
+ * @param media (MediaObject, required): media object, height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 100, height: 200 }
@@ -2530,7 +2498,9 @@ declare function ISPORTRAIT(media: MediaObject): boolean;
 declare function ISPORTRAIT(media: any): boolean | undefined;
 /**
  * Checks whether the media is in portrait mode.
- * @param media required; media object, height and width attributes must be present
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/isportrait/
+ * @param media (MediaObject, required): media object, height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 100, height: 200 }
@@ -2540,7 +2510,9 @@ declare function ISPORTRAIT(): undefined;
 
 /**
  * Checks whether the media is in landscape mode.
- * @param media required; media object, height and width attributes must be present
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/islandscape/
+ * @param media (MediaObject, required): height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 200, height: 100 }
@@ -2549,7 +2521,9 @@ declare function ISPORTRAIT(): undefined;
 declare function ISLANDSCAPE(media: MediaObject): boolean;
 /**
  * Checks whether the media is in landscape mode.
- * @param media required; media object, height and width attributes must be present
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/islandscape/
+ * @param media (MediaObject, required): height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 200, height: 100 }
@@ -2558,7 +2532,9 @@ declare function ISLANDSCAPE(media: MediaObject): boolean;
 declare function ISLANDSCAPE(media: any): boolean | undefined;
 /**
  * Checks whether the media is in landscape mode.
- * @param media required; media object, height and width attributes must be present
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/islandscape/
+ * @param media (MediaObject, required): height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 200, height: 100 }
@@ -2568,11 +2544,12 @@ declare function ISLANDSCAPE(): undefined;
 
 /**
  * Checks for a boolean value
- * @param value required; value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/islogical/
+ * @param value (Any, required): value to be checked
  * @returns boolean value
  * @example
  * ISLOGICAL(2 > 0) // returns true
- * ISLOGICAL([ false ]) // returns false
  */
 declare function ISLOGICAL(value: any): boolean;
 
@@ -2581,49 +2558,58 @@ declare function PLATFORM(): string;
 
 /**
  * Returns true if the record is being edited from the mobile app
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ismobile/
  * @returns boolean value
  */
 declare function ISMOBILE(): boolean;
 
 /**
  * Returns a boolean indicating whether the feature is new or an update.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnew/
+ * @returns boolean
  */
 declare function ISNEW(): boolean;
 
 /**
  * Checks if a value is a a non-text value (not a string)
- * @param value required; value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnontext/
+ * @param value (Any, required): value to be checked
  * @returns boolean
  * @example
- * ISNONTEXT("a string") // returns false
- * ISNONTEXT(["an array"]) // returns true
+ * ISNONTEXT(["a string"]) // returns true
  */
 declare function ISNONTEXT(value: any): boolean;
 
 /**
  * Returns whether or not a value is odd
- * @param value required; numeric value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isodd/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISODD(24) // returns false
  * ISODD(5 * 5) // returns true
  */
 declare function ISODD(value: number): boolean;
 /**
  * Returns whether or not a value is odd
- * @param value required; numeric value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isodd/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISODD(24) // returns false
  * ISODD(5 * 5) // returns true
  */
 declare function ISODD(value: string): boolean;
 /**
  * Returns whether or not a value is odd
- * @param value required; numeric value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isodd/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISODD(24) // returns false
  * ISODD(5 * 5) // returns true
  */
 declare function ISODD(value: any): boolean;
@@ -2636,72 +2622,74 @@ declare function ROLE(): string | undefined;
 /**
  * Determines whether arguments passed in contain the role of the current user
  * by comparing it to  userRoleName on the configuration object
- * @param args required; role(s) to be checked as strings
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isrole/
+ * @param args (String|Array, required): role(s) to be checked
  * @returns boolean
- * @example
- * // userRoleName = Standard User
- * ISROLE("Admin") // returns false
- * ISROLE("Admin", "ReadOnly", "Standard User") // returns true
  */
 declare function ISROLE(...args: string[]): boolean;
 /**
  * Determines whether arguments passed in contain the role of the current user
  * by comparing it to  userRoleName on the configuration object
- * @param args required; role(s) to be checked as strings
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isrole/
+ * @param args (String|Array, required): role(s) to be checked
  * @returns boolean
- * @example
- * // userRoleName = Standard User
- * ISROLE("Admin") // returns false
- * ISROLE("Admin", "ReadOnly", "Standard User") // returns true
  */
 declare function ISROLE(...args: any[]): boolean;
 
 /**
  * Checks to see if a choice is selected
- * @param value required; ChoiceFieldValues containing possible choices to check against
- * @param choice required; choice or array of choices to check if they are selected
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isselected/
+ * @param value (ChoiceFieldValue, required): field object containing possible choices to check against
+ * @param choice (Any|Array, required): choice or array of choices to check if they are selected
  * @returns boolean
- * @example
- * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
  */
 declare function ISSELECTED(value: ChoiceFieldValue, choice: string | string[]): boolean;
 /**
  * Checks to see if a choice is selected
- * @param value required; ChoiceFieldValues containing possible choices to check against
- * @param choice required; choice or array of choices to check if they are selected
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isselected/
+ * @param value (ChoiceFieldValue, required): field object containing possible choices to check against
+ * @param choice (Any|Array, required): choice or array of choices to check if they are selected
  * @returns boolean
- * @example
- * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
  */
 declare function ISSELECTED(value: ChoiceFieldValue, choice?: string | string[]): boolean;
 /**
  * Checks to see if a choice is selected
- * @param value required; ChoiceFieldValues containing possible choices to check against
- * @param choice required; choice or array of choices to check if they are selected
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isselected/
+ * @param value (ChoiceFieldValue, required): field object containing possible choices to check against
+ * @param choice (Any|Array, required): choice or array of choices to check if they are selected
  * @returns boolean
- * @example
- * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
  */
 declare function ISSELECTED(value?: any, choice?: any): boolean;
 
 /**
  * Checks if a value is a text value (string)
- * @param value required; value to be checked
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/istext/
+ * @param value (Any, required): value to be checked
  * @returns boolean
  * @example
  * ISTEXT("a string") // returns true
- * ISTEXT(["an array"]) // returns false
  */
 declare function ISTEXT(value: any): boolean;
 
 /**
  * Returns a boolean indicating if the feature being edited is an update
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isupdate/
+ * @returns boolean
  */
 declare function ISUPDATE(): boolean;
 
 /**
  * Returns the label of a field
- * @param dataName required; data_name of a form field (string)
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/label/
+ * @param dataName (String, required): data name of desired field
  * @returns form label, string
  * @example
  * LABEL("business_name") // returns "Business Name"
@@ -2710,60 +2698,72 @@ declare function LABEL(dataName: FieldName): string | undefined;
 
 /**
  * Returns the last n items of an array or string.
- * @param item required; array or string to extract items from
- * @param n optional; number of items to be extracted
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/last/
+ * @param item (Array|String, required): array or string to extract items from
+ * @param n (Number, optional): number of items to be extracted
  * @returns items extracted; if more than one item is extracted an array is returned
  * @example
- * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
 declare function LAST(item: any[] | string, n: number): any[] | undefined;
 /**
  * Returns the last n items of an array or string.
- * @param item required; array or string to extract items from
- * @param n optional; number of items to be extracted
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/last/
+ * @param item (Array|String, required): array or string to extract items from
+ * @param n (Number, optional): number of items to be extracted
  * @returns items extracted; if more than one item is extracted an array is returned
  * @example
- * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
 declare function LAST(item: any[] | string, n?: number): any[] | undefined;
 /**
  * Returns the last n items of an array or string.
- * @param item required; array or string to extract items from
- * @param n optional; number of items to be extracted
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/last/
+ * @param item (Array|String, required): array or string to extract items from
+ * @param n (Number, optional): number of items to be extracted
  * @returns items extracted; if more than one item is extracted an array is returned
  * @example
- * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
 declare function LAST(item: any): any[] | undefined;
 
 /**
  * Returns the latitude of the record if it exists.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/latitude/
+ * @returns numeric value
  */
 declare function LATITUDE(): number;
 
 /**
  * Returns the least common multiple of the arguments passed in
- * @param args numbers or numbers as string values to be evaluated
- * @returns number; least common multiple
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lcm/
+ * @param args (Number|Array) list of numbers to be evaluated
+ * @returns number, least common multiple
  * @example
  * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
  */
 declare function LCM(...args: number[]): number;
 /**
  * Returns the least common multiple of the arguments passed in
- * @param args numbers or numbers as string values to be evaluated
- * @returns number; least common multiple
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lcm/
+ * @param args (Number|Array) list of numbers to be evaluated
+ * @returns number, least common multiple
  * @example
  * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
  */
 declare function LCM(...args: string[]): number;
 /**
  * Returns the least common multiple of the arguments passed in
- * @param args numbers or numbers as string values to be evaluated
- * @returns number; least common multiple
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lcm/
+ * @param args (Number|Array) list of numbers to be evaluated
+ * @returns number, least common multiple
  * @example
  * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
  */
@@ -2771,40 +2771,44 @@ declare function LCM(...args: any[]): number;
 
 /**
  * Returns n left characters of a string.
- * @param value required; string
- * @param numberOfCharacters optional; number of characters to be returned. If not specified
- * one character will be returned
- * @returns string; number of characters specified
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/left/
+ * @param value (String, required) string to be parsed
+ * @param numberOfCharacters (Number, optional) number of characters to be returned, defaults to 1
+ * @returns string, number of characters specified
  * @example
  * LEFT("Hello, World", 3) // returns "Hel"
  */
 declare function LEFT(value: string, numberOfCharacters?: number): string | undefined;
 /**
  * Returns n left characters of a string.
- * @param value required; string
- * @param numberOfCharacters optional; number of characters to be returned. If not specified
- * one character will be returned
- * @returns string; number of characters specified
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/left/
+ * @param value (String, required) string to be parsed
+ * @param numberOfCharacters (Number, optional) number of characters to be returned, defaults to 1
+ * @returns string, number of characters specified
  * @example
  * LEFT("Hello, World", 3) // returns "Hel"
  */
 declare function LEFT(value: any, numberOfCharacters?: string): string | undefined;
 /**
  * Returns n left characters of a string.
- * @param value required; string
- * @param numberOfCharacters optional; number of characters to be returned. If not specified
- * one character will be returned
- * @returns string; number of characters specified
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/left/
+ * @param value (String, required) string to be parsed
+ * @param numberOfCharacters (Number, optional) number of characters to be returned, defaults to 1
+ * @returns string, number of characters specified
  * @example
  * LEFT("Hello, World", 3) // returns "Hel"
  */
 declare function LEFT(value: string): string | undefined;
 /**
  * Returns n left characters of a string.
- * @param value required; string
- * @param numberOfCharacters optional; number of characters to be returned. If not specified
- * one character will be returned
- * @returns string; number of characters specified
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/left/
+ * @param value (String, required) string to be parsed
+ * @param numberOfCharacters (Number, optional) number of characters to be returned, defaults to 1
+ * @returns string, number of characters specified
  * @example
  * LEFT("Hello, World", 3) // returns "Hel"
  */
@@ -2812,33 +2816,40 @@ declare function LEFT(value: any, numberOfCharacters?: any): string | undefined;
 
 /**
  * Returns the length of a value as a string or an array-like object.
- * @param value required; item to be measured
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/len/
+ * @param value (Any, required): item to be measured
  * @returns number
  * @example
  * LEN("test") // returns 4
- * LEN(["test", "test"]) // returns 2
  */
 declare function LEN(value: any): number;
 
 /**
- * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
- * @param value numeric value specifying radians
+ * Returns the natural logarithm of a value; equivalent to _ln(x)_.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ln/
+ * @param value (Number, required): positive number for which to calculate the logarithm, base `e`
  * @returns numeric value indicating the natural log of a value
  * @example
  * LN(12) // returns 2.4849066497880004
  */
 declare function LN(value: number): number;
 /**
- * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
- * @param value numeric value specifying radians
+ * Returns the natural logarithm of a value; equivalent to _ln(x)_.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ln/
+ * @param value (Number, required): positive number for which to calculate the logarithm, base `e`
  * @returns numeric value indicating the natural log of a value
  * @example
  * LN(12) // returns 2.4849066497880004
  */
 declare function LN(value: string): number;
 /**
- * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
- * @param value numeric value specifying radians
+ * Returns the natural logarithm of a value; equivalent to _ln(x)_.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ln/
+ * @param value (Number, required): positive number for which to calculate the logarithm, base `e`
  * @returns numeric value indicating the natural log of a value
  * @example
  * LN(12) // returns 2.4849066497880004
@@ -2852,8 +2863,10 @@ declare function LOCALE(): string;
 
 /**
  * Calculates the log of a value given a base.
- * @param value required; number to be logged
- * @param base optional; base with which to calculated the log, defaults to 10
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log/
+ * @param value (Number, required) number to be logged
+ * @param base (Number, optional): logarithmic base, defaults to 10
  * @returns number
  * @example
  * LOG(100) // returns 2
@@ -2861,8 +2874,10 @@ declare function LOCALE(): string;
 declare function LOG(value: number, base: number): number;
 /**
  * Calculates the log of a value given a base.
- * @param value required; number to be logged
- * @param base optional; base with which to calculated the log, defaults to 10
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log/
+ * @param value (Number, required) number to be logged
+ * @param base (Number, optional): logarithmic base, defaults to 10
  * @returns number
  * @example
  * LOG(100) // returns 2
@@ -2870,8 +2885,10 @@ declare function LOG(value: number, base: number): number;
 declare function LOG(value: number): number;
 /**
  * Calculates the log of a value given a base.
- * @param value required; number to be logged
- * @param base optional; base with which to calculated the log, defaults to 10
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log/
+ * @param value (Number, required) number to be logged
+ * @param base (Number, optional): logarithmic base, defaults to 10
  * @returns number
  * @example
  * LOG(100) // returns 2
@@ -2880,7 +2897,9 @@ declare function LOG(value: any, base?: any): number;
 
 /**
  * Calculates the log10 (common logarithm) of a value.
- * @param value required; number to be calculated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log10/
+ * @param value (Number, required): number to be calculated
  * @returns numeric value
  * @example
  * LOG10(100) // returns 2
@@ -2888,7 +2907,9 @@ declare function LOG(value: any, base?: any): number;
 declare function LOG10(value: number): number;
 /**
  * Calculates the log10 (common logarithm) of a value.
- * @param value required; number to be calculated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log10/
+ * @param value (Number, required): number to be calculated
  * @returns numeric value
  * @example
  * LOG10(100) // returns 2
@@ -2896,7 +2917,9 @@ declare function LOG10(value: number): number;
 declare function LOG10(value: string): number;
 /**
  * Calculates the log10 (common logarithm) of a value.
- * @param value required; number to be calculated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log10/
+ * @param value (Number, required): number to be calculated
  * @returns numeric value
  * @example
  * LOG10(100) // returns 2
@@ -2905,12 +2928,17 @@ declare function LOG10(value: any): number;
 
 /**
  * Returns a record's longitude if it exists.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/longitude/
+ * @returns number
  */
 declare function LONGITUDE(): number;
 
 /**
  * Converts a string value to all lowercase.
- * @param value required; value to be converted to lowercase
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lower/
+ * @param value (String, required): value to be converted to lowercase
  * @returns string
  * @example
  * LOWER("CASE") // returns "case"
@@ -2918,17 +2946,31 @@ declare function LONGITUDE(): number;
 declare function LOWER(value: string): string;
 /**
  * Converts a string value to all lowercase.
- * @param value required; value to be converted to lowercase
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lower/
+ * @param value (String, required): value to be converted to lowercase
  * @returns string
  * @example
  * LOWER("CASE") // returns "case"
  */
 declare function LOWER(value: undefined | null | object | Array<any> | GenericObject): undefined;
 
+/**
+ * Returns max value from a list of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/maxa/
+ * @param args (Number|Array, required): list of numeric values
+ * @returns max value in numeric form
+ * @example
+ * MAXA(1, 4, 7, 2, 4) // returns 7
+ */
+declare function MAXA(...args: number[]): number | undefined;
 
 /**
  * Returns the median value of list of numbers.
- * @param args required; numeric values to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/median/
+ * @param args (Number|Array, required): numeric values to be evaluated
  * @returns median value
  * @example
  * MEDIAN(3, 4, 2, 5, 1) // returns 3
@@ -2936,7 +2978,9 @@ declare function LOWER(value: undefined | null | object | Array<any> | GenericOb
 declare function MEDIAN(...args: number[]): number;
 /**
  * Returns the median value of list of numbers.
- * @param args required; numeric values to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/median/
+ * @param args (Number|Array, required): numeric values to be evaluated
  * @returns median value
  * @example
  * MEDIAN(3, 4, 2, 5, 1) // returns 3
@@ -2945,9 +2989,11 @@ declare function MEDIAN(...args: any[]): number | undefined;
 
 /**
  * Returns a specific number of characters from a text string.
- * @param value required; text string
- * @param startPosition required; numeric value indicating where in the `value` one should start cutting
- * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mid/
+ * @param value (String, required): text to be parsed
+ * @param startPosition (Number, required): numeric value indicating parsing starting position
+ * @param numberOfCharacters (Number, required): number of chars one wants returned
  * @returns string
  * @example
  * MID("abcd", 2, 2) // returns "bc"
@@ -2955,9 +3001,11 @@ declare function MEDIAN(...args: any[]): number | undefined;
 declare function MID(value: string, startPosition: number, numberOfCharacters: number): string | undefined;
 /**
  * Returns a specific number of characters from a text string.
- * @param value required; text string
- * @param startPosition required; numeric value indicating where in the `value` one should start cutting
- * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mid/
+ * @param value (String, required): text to be parsed
+ * @param startPosition (Number, required): numeric value indicating parsing starting position
+ * @param numberOfCharacters (Number, required): number of chars one wants returned
  * @returns string
  * @example
  * MID("abcd", 2, 2) // returns "bc"
@@ -2965,79 +3013,97 @@ declare function MID(value: string, startPosition: number, numberOfCharacters: n
 declare function MID(value: string, startPosition: string, numberOfCharacters: string): string | undefined;
 /**
  * Returns a specific number of characters from a text string.
- * @param value required; text string
- * @param startPosition required; numeric value indicating where in the `value` one should start cutting
- * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mid/
+ * @param value (String, required): text to be parsed
+ * @param startPosition (Number, required): numeric value indicating parsing starting position
+ * @param numberOfCharacters (Number, required): number of chars one wants returned
  * @returns string
  * @example
  * MID("abcd", 2, 2) // returns "bc"
  */
 declare function MID(value?: any, startPosition?: any, numberOfCharacters?: any): string | undefined;
 
+/**
+ * Returns min value from a list of values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mina/
+ * @param args (Number|Array, required): list of numeric values
+ * @returns min numberic value among parameters
+ * @example
+ * MINA(7, 4, 1, 2, 4) // returns 1
+ */
+declare function MINA(...args: any[]): number | undefined;
 
 /**
  * Returns the modulus or remainder of a number divided by a divisor.
- * @param num required; number to be divided
- * @param divisor required; number doing the dividing
- * @returns numeric value; remainder of `num / divisor`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mod/
+ * @param num (Number, required): number to be evaluated
+ * @param divisor (Number, required)
+ * @returns remainder of `num / divisor`
  * @example
  * MOD(10, 2) // returns 0
- * MOD(13, 2) // returns 1
  */
 declare function MOD(num: number, divisor: number): number;
 /**
  * Returns the modulus or remainder of a number divided by a divisor.
- * @param num required; number to be divided
- * @param divisor required; number doing the dividing
- * @returns numeric value; remainder of `num / divisor`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mod/
+ * @param num (Number, required): number to be evaluated
+ * @param divisor (Number, required)
+ * @returns remainder of `num / divisor`
  * @example
  * MOD(10, 2) // returns 0
- * MOD(13, 2) // returns 1
  */
 declare function MOD(num: string, divisor: string): number;
 /**
  * Returns the modulus or remainder of a number divided by a divisor.
- * @param num required; number to be divided
- * @param divisor required; number doing the dividing
- * @returns numeric value; remainder of `num / divisor`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mod/
+ * @param num (Number, required): number to be evaluated
+ * @param divisor (Number, required)
+ * @returns remainder of `num / divisor`
  * @example
  * MOD(10, 2) // returns 0
- * MOD(13, 2) // returns 1
  */
 declare function MOD(num?: any, divisor?: any): number;
 
 /**
  * Returns a month given a date.
- * @param date required; date, either as a Date object or a string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/month/
+ * @param date (Date|String, required): date object or string in "XXXX-XX-XX" format
  * @returns month as numeric value
  * @example
- * MONTH("2015/12/16") // returns 12
- * MONTH(new Date("2015/12/16 00:00:00") // returns 12
+ * MONTH("2015-12-16") // returns 12
  */
 declare function MONTH(date: Date): number;
 /**
  * Returns a month given a date.
- * @param date required; date, either as a Date object or a string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/month/
+ * @param date (Date|String, required): date object or string in "XXXX-XX-XX" format
  * @returns month as numeric value
  * @example
- * MONTH("2015/12/16") // returns 12
- * MONTH(new Date("2015/12/16 00:00:00") // returns 12
+ * MONTH("2015-12-16") // returns 12
  */
 declare function MONTH(date: MaybeString): number;
 /**
  * Returns a month given a date.
- * @param date required; date, either as a Date object or a string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/month/
+ * @param date (Date|String, required): date object or string in "XXXX-XX-XX" format
  * @returns month as numeric value
  * @example
- * MONTH("2015/12/16") // returns 12
- * MONTH(new Date("2015/12/16 00:00:00") // returns 12
+ * MONTH("2015-12-16") // returns 12
  */
 declare function MONTH(): void;
 
 /**
  * Returns a numeric value. If a number if passed in, the same number is returned, otherwise
  * function returns 1 for a true boolean value, and 0 for all other values.
- * @param value optional
+ * @param value (Number|Any, required): value to be evaluated
  * @returns a numeric value
  * @example
  * N(97) // returns 97
@@ -3046,8 +3112,10 @@ declare function MONTH(): void;
 declare function N(value: any): number;
 
 /**
- * Returns the negation of a value, i.e. if a value is falsey NOT() will return true.
- * @param value parameter of any type
+ * Returns the negation of a value, i.e. if a value is falsey `NOT()` will return true.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/not/
+ * @param value (Any, required): parameter of any type
  * @returns boolean
  * @example
  * NOT("test") // returns false
@@ -3056,32 +3124,40 @@ declare function NOT(value?: any): boolean;
 
 /**
  * Maps over arguments passed in and converts each to a number value.
- * @param args list of values to be mapped to numbers
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/nums/
+ * @param args (String|Number|Array, required): list of values to be mapped to numbers
  * @returns array of numberic values
  * @example
- * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+ * NUMS("2", "3", "4") // returns [2, 3, 4]
  */
 declare function NUMS(...args: string[]): number[];
 /**
  * Maps over arguments passed in and converts each to a number value.
- * @param args list of values to be mapped to numbers
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/nums/
+ * @param args (String|Number|Array, required): list of values to be mapped to numbers
  * @returns array of numberic values
  * @example
- * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+ * NUMS("2", "3", "4") // returns [2, 3, 4]
  */
 declare function NUMS(...args: number[]): number[];
 /**
  * Maps over arguments passed in and converts each to a number value.
- * @param args list of values to be mapped to numbers
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/nums/
+ * @param args (String|Number|Array, required): list of values to be mapped to numbers
  * @returns array of numberic values
  * @example
- * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+ * NUMS("2", "3", "4") // returns [2, 3, 4]
  */
 declare function NUMS(...args: any[]): number[];
 
 /**
  * Returns the next odd number.
- * @param value number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/odd/
+ * @param value (Number, required): number to be evaluated
  * @returns number
  * @example
  * ODD(2) // returns 3
@@ -3089,7 +3165,9 @@ declare function NUMS(...args: any[]): number[];
 declare function ODD(value: number): number;
 /**
  * Returns the next odd number.
- * @param value number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/odd/
+ * @param value (Number, required): number to be evaluated
  * @returns number
  * @example
  * ODD(2) // returns 3
@@ -3276,746 +3354,228 @@ interface RemoveAudioEvent extends RemoveMediaEvent {
 
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: FormEventNames, callback: (event: FormEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: RepeatableEventNames, field: RepeatableFieldName, callback: (event: RepeatableEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: ChangeGeometryEventName, field: RepeatableFieldName, callback: (event: GeometryEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: AddPhotoEventName, field: PhotoFieldName, callback: (event: AddPhotoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: ReplacePhotoEventName, field: PhotoFieldName, callback: (event: ReplacePhotoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: RemovePhotoEventName, field: PhotoFieldName, callback: (event: RemoveMediaEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: AddVideoEventName, field: VideoFieldName, callback: (event: AddVideoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void;
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 declare function OFF(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
 
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: FormEventNames, callback: (event: FormEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: RepeatableEventNames, field: RepeatableFieldName, callback: (event: RepeatableEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: ChangeGeometryEventName, callback: (event: GeometryEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: ChangeGeometryEventName, field: RepeatableFieldName, callback: (event: GeometryEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: AddPhotoEventName, field: PhotoFieldName, callback: (event: AddPhotoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: ReplacePhotoEventName, field: PhotoFieldName, callback: (event: ReplacePhotoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: RemovePhotoEventName, field: PhotoFieldName, callback: (event: RemoveMediaEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: AddVideoEventName, field: VideoFieldName, callback: (event: AddVideoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: RemoveVideoEventName, field: VideoFieldName, callback: (event: RemoveVideoEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: AddAudioEventName, field: AudioFieldName, callback: (event: AddAudioEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback: (event: RemoveAudioEvent) => void): void;
 /**
  * Attaches an event handler that listens for record, repeatable, or field events.
- * The ON function is the starting point for most data event scripts. It wires up an
- * event to a function that gets called when that event happens. Events are things like
- * a record being opened, edited, saved, validated, a field changing, or the record
- * location changing. Using the `ON` function you can add custom logic to be performed
- * when the events happen. The `ON` function by itself is not useful unless it's combined
- * with the other data event functions to manipulate the record data and perform other
- * actions like custom alerts and validations.
- * @param event event name
- * @param target (optional) field to bind the event to
- * @param callback function called when the specified event is triggered
- * @example
- * var callback = function () {
- *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
- *     INVALID('Latitude must be between 40 and 41.');
- *   }
- * };
  *
- * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
- * ON('validate-record', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the new $weather_summary values
- * };
- *
- * // Listens for changes to the weather summary field and executes callback
- * ON('change', 'weather_summary', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a record's geometry (location) and executes callback
- * ON('change-geometry', callback);
- *
- * @example
- * var callback = function () {
- *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
- * };
- *
- * // Listens for changes to a repeatable item's geometry and executes callback
- * ON('change-geometry', 'repeatable_item', callback);
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+ * @param event (String, required): event name
+ * @param target (String, optional): data name of field to bind the event to
+ * @param callback (Function, required): callback called when the specified event is triggered
  */
 declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 

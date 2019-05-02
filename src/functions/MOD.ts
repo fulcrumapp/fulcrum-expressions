@@ -3,12 +3,13 @@ import NUM from "./NUM"
 
 /**
  * Returns the modulus or remainder of a number divided by a divisor.
- * @param num required; number to be divided
- * @param divisor required; number doing the dividing
- * @returns numeric value; remainder of `num / divisor`
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mod/
+ * @param num (Number, required): number to be evaluated
+ * @param divisor (Number, required)
+ * @returns remainder of `num / divisor`
  * @example
  * MOD(10, 2) // returns 0
- * MOD(13, 2) // returns 1
  */
 
 export default function MOD(num: number, divisor: number): number

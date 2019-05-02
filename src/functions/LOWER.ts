@@ -3,7 +3,9 @@ import { GenericObject } from "../types/primitives"
 
 /**
  * Converts a string value to all lowercase.
- * @param value required; value to be converted to lowercase
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lower/
+ * @param value (String, required): value to be converted to lowercase
  * @returns string
  * @example
  * LOWER("CASE") // returns "case"

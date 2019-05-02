@@ -2,11 +2,12 @@ import { isArray, isEmpty, isString, slice } from "lodash"
 
 /**
  * Returns the last n items of an array or string.
- * @param item required; array or string to extract items from
- * @param n optional; number of items to be extracted
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/last/
+ * @param item (Array|String, required): array or string to extract items from
+ * @param n (Number, optional): number of items to be extracted
  * @returns items extracted; if more than one item is extracted an array is returned
  * @example
- * LAST([1, 2, 3]) // returns 3
  * LAST([1 ,2 ,3], 2) // return [2, 3]
  */
 

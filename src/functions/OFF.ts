@@ -29,13 +29,11 @@ import ERROR from "./ERROR"
 
 /**
  * Detaches an event handler set by ON.
- * @param event The event name
- * @param field The (optional) field the event was bound to
- * @param callback The function to detach
- * @example
- * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
- * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
- *
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+ * @param event (String, required): event name
+ * @param field (String, optional): data name of ield the event was bound to
+ * @param callback (Function, required): callback to detach
  */
 export default function OFF(name: FormEventNames, callback: (event: FormEvent) => void): void
 export default function OFF(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void

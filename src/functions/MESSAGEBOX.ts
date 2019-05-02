@@ -19,28 +19,12 @@ type MaybeFunction = Function | undefined
 const DEFAULT_BUTTONS = ["Okay"]
 
 /**
- * MESSAGEBOX displays a message to the user.
- * You can provide both the title and message of the alert box.
- * Using the buttons parameter you can specify the button titles that are displayed in the message box.
- * @param options Object(required) - options for the message box
- * @param callback function(required) - invoked when message box is dismissed
+ * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/messagebox/
+ * @param options (MessageBoxPayload, required): options for the message box
+ * @param callback (Function, required): invoked when message box is dismissed
  * @returns invokes callback or returns an options Object
- * @example
- * const options = {
- * title: 'Confirm',
- * message: 'You selected a safety violation: Are you sure?',
- * buttons: ['Yes', 'No']
- * }
- *
- * const callback = function (result) {
- *               if (result.value === 'Yes') {
- *                  // Selected Yes
- *               } else {
- *                 // Selected No
- *               }
- *            }
- *
- * MESSAGEBOX(options, callback);
  */
 
 export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): void

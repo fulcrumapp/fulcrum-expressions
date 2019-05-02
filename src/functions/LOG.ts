@@ -2,8 +2,10 @@ import NUM from "./NUM"
 
 /**
  * Calculates the log of a value given a base.
- * @param value required; number to be logged
- * @param base optional; base with which to calculated the log, defaults to 10
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log/
+ * @param value (Number, required) number to be logged
+ * @param base (Number, optional): logarithmic base, defaults to 10
  * @returns number
  * @example
  * LOG(100) // returns 2

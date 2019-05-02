@@ -4,9 +4,11 @@ import ISNAN from "./ISNAN"
 
 /**
  * Returns a specific number of characters from a text string.
- * @param value required; text string
- * @param startPosition required; numeric value indicating where in the `value` one should start cutting
- * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mid/
+ * @param value (String, required): text to be parsed
+ * @param startPosition (Number, required): numeric value indicating parsing starting position
+ * @param numberOfCharacters (Number, required): number of chars one wants returned
  * @returns string
  * @example
  * MID("abcd", 2, 2) // returns "bc"

@@ -8,7 +8,9 @@ export interface MediaObject {
 
 /**
  * Checks whether the media is in portrait mode.
- * @param media required; media object, height and width attributes must be present
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/isportrait/
+ * @param media (MediaObject, required): media object, height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 100, height: 200 }

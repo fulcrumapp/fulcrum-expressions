@@ -16,15 +16,11 @@ import { ChoiceFieldValue } from "../types/values"
  * Returns a boolean value indiciating whether the object is blank/empty.
  * Values of null, undefined, and NaN are considered blank and the function will return true.
  *
- * @param value item or Choice Field value to be checked for blankness or emptiness;
- * Example: ISBLANK( { choice_values: null, other_values: ['a', 'b'] } )
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isblank/
+ * @param value (ChoiceFieldValue|Any, required) item to be checked for blankness or emptiness;
  * @returns boolean value
- *
  * @example
  * ISBLANK('') // returns true
- * ISBLANK(NaN) // returns true
- * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
- * ISBLANK({choice_values: null, other_values: null}) // returns true
  */
 
 export default function ISBLANK(value: ChoiceFieldValue): boolean

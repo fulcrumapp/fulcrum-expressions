@@ -3,7 +3,9 @@ import NUM from "./NUM"
 
 /**
  * Returns the next odd number.
- * @param value number to be evaluated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/odd/
+ * @param value (Number, required): number to be evaluated
  * @returns number
  * @example
  * ODD(2) // returns 3

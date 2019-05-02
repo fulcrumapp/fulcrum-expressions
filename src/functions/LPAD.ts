@@ -5,13 +5,14 @@ import RIGHT from "./RIGHT"
 
 /**
  * Returns a string padded to the left with a character of choice.
- * @param value required; string to be padded
- * @param count required; integer indicating the total length of the desired string
- * @param padding option; string, character to use for padding, defaults to " "
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lpad/
+ * @param value (String, required): string to be padded
+ * @param count (Number, required): integer indicating the total length of the desired string
+ * @param padding (String, option): character to use for padding, defaults to " "
  * @returns a padded string
  * @example
  * LPAD("abc", 5) // returns "  abc"
- * LPAD("abc", 5, "0") // returns "00abc"
  */
 
 export default function LPAD(value: string, count: number, padding?: string): MaybeString

@@ -230,6 +230,9 @@ declare module 'src/functions/FLATTEN' {
 	}
 	/**
 	 * Accepts a nested array and returns an array flattened to one level deep
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/flatten/
+	 * @param value (Array, required): nested array to be flattened
 	 * @returns a flattened array
 	 * @example
 	 * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]
@@ -619,7 +622,7 @@ declare module 'src/functions/CONFIGURE' {
 declare module 'src/functions/ERROR' {
 	/**
 	 * Allows throwing of errors for validation, etc.
-	 * @param message the error message to display
+	 * @param message (String, required): error message to display
 	 * @throws Error entered by the user
 	 */
 	export default function ERROR(message: string): void;
@@ -1130,10 +1133,11 @@ declare module 'src/functions/DATANAMES' {
 	/**
 	 * Returns the data names of the form fields. Also accepts an optional
 	 * type argument to filter form fields by type.
-	 * @param type optional; string of a FormFieldType: e.g. "YesNoField"
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/datanames/
+	 * @param type (String, optional): FormFieldType: e.g. "YesNoField"
 	 * @returns array of datanames
 	 * @example
-	 * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
 	 * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
 	 */
 	export default function DATANAMES(): FieldName[];
@@ -1145,12 +1149,13 @@ declare module 'src/functions/FLOOR' {
 	/**
 	 * Returns number rounded down, away from zero, to the nearest multiple
 	 * If a multiple is not specified, number will be rounded to next lowest integer (multiple of 1)
-	 * @param number numeric value to be rounded
-	 * @param multiple optional, multiple to which a number will be rounded
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/floor/
+	 * @param number (Number, required): value to be rounded
+	 * @param multiple (Number, optional): multiple to which a number will be rounded
 	 * @returns number rounded to nearest multiple
 	 * @example
 	 * FLOOR(3.45) // returns 3
-	 * FLOOR(2.3333333, 4) // returns 2
 	 */
 	export default function FLOOR(value: number): number;
 	export default function FLOOR(value: number, multiple: number): number;
@@ -1167,12 +1172,12 @@ declare module 'src/functions/INT' {
 declare module 'src/functions/DATE' {
 	/**
 	 * Returns a new Date object given a year, month, and day.
-	 * @param year four-digit number
-	 * @param month one-two digit number
-	 * @param day one-two digit number
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/date/
+	 * @param year (Number, required): four-digit number
+	 * @param month (Number, required): one-two digit number
+	 * @param day (Number, required): one-two digit number
 	 * @returns Date object
-	 * @example
-	 * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
 	 */
 	export default function DATE(year: number, month: number, day: number): Date;
 	export default function DATE(year: string, month: string, day: string): Date | undefined;
@@ -1217,12 +1222,11 @@ declare module 'src/functions/DATEVALUE' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Returns a date value given a date and optional time string
-	 * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
-	 * @param timeString optional; string representing a time
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/datevalue/
+	 * @param dateString (String|Date, required): string in XXXX-XX-XX format or a Date object
+	 * @param timeString (String, optional): string in XX:XX or XX:XX:XX format
 	 * @returns Date value
-	 * @example
-	 * DATEVALUE("2018-02-07") // returns 2018-02-07T00:00:00.000Z
-	 * DATEVALUE("2018-02-07", "06:01") // returns 2018-02-07T06:01:00.000Z
 	 */
 	export default function DATEVALUE(dateString: Date | MaybeString, timeString?: string): Date;
 	export default function DATEVALUE(dateString: string): Date;
@@ -1234,12 +1238,11 @@ declare module 'src/functions/DATEADD' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Adds a given number of days to a date.
-	 * @param date required; Date object or a string representing a string in XXXX-XX-XX format
-	 * @param number required; number of days to be added as an integer
-	 * @returns Date object
 	 *
-	 * @example
-	 * DATEADD("2012-03-04", 5) // returns 2012-03-09T00:00:00.000Z
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/dateadd/
+	 * @param date (Date|String, required): Date object or string in XXXX-XX-XX format
+	 * @param number (Number, required): number of days to be added as an integer
+	 * @returns Date object
 	 */
 	export default function DATEADD(date: Date | MaybeString, number: number): Date | undefined;
 
@@ -1248,11 +1251,12 @@ declare module 'src/functions/DAY' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Returns a day given a date.
-	 * @param date required; date, either as a Date object or a string
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/day/
+	 * @param date (Date|String, required): Date object or a string in XXXX-XX-XX format
 	 * @returns day as numeric value
 	 * @example
 	 * DAY("2015/12/16") // returns 16
-	 * DAY(new Date("2015/12/16 00:00:00") // returns 16
 	 */
 	export default function DAY(date: Date): number;
 	export default function DAY(date: MaybeString): number;
@@ -1270,11 +1274,12 @@ declare module 'src/functions/DECIMALSEPARATOR' {
 declare module 'src/functions/DEGREES' {
 	/**
 	 * Returns degrees for an input of radians.
-	 * @param value required; numeric value or string representing a value in radians
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/degrees/
+	 * @param value (Number, required): numeric value representing a value in radians
 	 * @returns numeric value representing degrees
 	 * @example
 	 * DEGREES(Math.PI) // returns 180
-	 * DEGREES("0.78") // returns 44.69070802020421
 	 */
 	export default function DEGREES(value: number | string): number;
 	export default function DEGREES(value: undefined | null): number;
@@ -1286,10 +1291,11 @@ declare module 'src/functions/FIELD' {
 	import { FormFields as FormField, FieldName } from 'src/types/fields';
 	/**
 	 * Returns definition object for a specified field
-	 * @param dataName The data name of the field
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/field/
+	 * @param dataName (String, required): data name of the field
 	 * @example
 	 * FIELD('child_item_cost').label // returns "Child Item Cost"
-	 * FIELD('child_item_cost').parent.label // returns "Child Items"
 	 */
 	export default function FIELD(dataName: FieldName): FormField;
 	export default function FIELD(dataName: FieldName | string | null | undefined): FormField | undefined;
@@ -1299,10 +1305,10 @@ declare module 'src/functions/DESCRIPTION' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Returns a field's description.
-	 * @param dataName required; data_name of desired field
-	 * @returns the field's description
-	 * @example
-	 * DESCRIPTION("operating_hours") // returns "Stores operating hours in 24-hour time format"
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/description/
+	 * @param dataName (String, required): data name of desired field
+	 * @returns string, the field's description
 	 */
 	export default function DESCRIPTION(dataName: MaybeString): string | undefined;
 	export default function DESCRIPTION(): undefined;
@@ -1325,11 +1331,10 @@ declare module 'src/functions/DEVICEMODEL' {
 declare module 'src/functions/DEVICEINFO' {
 	/**
 	 * Returns device info, including the device manufacturer and model
-	 * @param separator optional; character to separate device manufacturer and model, defauls to ", "
+	 * @param separator (String, optional): character to separate device manufacturer and model, defauls to `", "`
 	 * @returns string
 	 * @example
 	 * DEVICEINFO() // returns "Apple, MQCK2LL/A"
-	 * DEVICEINFO(": ") // returns "Apple: MQCK2LL/A"
 	 */
 	export default function DEVICEINFO(separator?: string): string;
 	export default function DEVICEINFO(separator?: any): string;
@@ -1338,6 +1343,8 @@ declare module 'src/functions/DEVICEINFO' {
 declare module 'src/functions/EMAIL' {
 	/**
 	 * Returns the user's email from the configuration object.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/email/
 	 */
 	export default function EMAIL(): string | undefined;
 
@@ -1345,11 +1352,12 @@ declare module 'src/functions/EMAIL' {
 declare module 'src/functions/EVEN' {
 	/**
 	 * Returns number rounded up to the nearest even integer
-	 * @param value number
-	 * @returns number or NaN
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/even/
+	 * @param value (Number, required): number to evaluate
+	 * @returns number
 	 * @example
 	 * EVEN(-3.4) // returns -2
-	 * EVEN([]) // returns NaN
 	 */
 	export default function EVEN(value: number): number;
 	export default function EVEN(value: string): number;
@@ -1359,12 +1367,13 @@ declare module 'src/functions/EVEN' {
 declare module 'src/functions/EXACT' {
 	/**
 	 * Returns whether two items are deeply equal
-	 * @param value1 item of any type
-	 * @param value2 item of any type
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/exact/
+	 * @param value1 (Any, required): item of any type
+	 * @param value2 (Any, required): item of any type
 	 * @returns boolean
 	 * @example
 	 * EXACT([1, 2, 3], [1, 2, 3]) // returns true
-	 * EXACT([1, 2, 3], [2, 1, 3]) // returns false
 	 */
 	export default function EXACT(value1: any, value2: any): boolean;
 
@@ -1372,11 +1381,12 @@ declare module 'src/functions/EXACT' {
 declare module 'src/functions/EXISTS' {
 	/**
 	 * Checks whether all values passed in exist.
-	 * @param args list of items to check
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/exists/
+	 * @param args (Any|Array): list of items to check
 	 * @returns boolean value indicating whether all values exist
 	 * @example
-	 * EXISTS(1, 3, 7, 0) // returns true
-	 * EXISTS(1, null, 7, 0) // returns false
+	 * EXISTS(1, 3, 7, null) // returns false
 	 */
 	export default function EXISTS(arg: any, ...args: any[]): arg is number | boolean | string | object;
 	export default function EXISTS(...args: any[]): boolean;
@@ -1384,12 +1394,13 @@ declare module 'src/functions/EXISTS' {
 }
 declare module 'src/functions/EXP' {
 	/**
-	 * Returns e^x, where `x` is the argument, and `e` is Euler's number, the base of the natural logarithms.
-	 * @param x option; numeric value
-	 * @returns number, evaluates to `e` to the `x` power
+	 * Returns e^x, where `x` is the argument, and `e` is Euler's number, the base of natural logarithms.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/exp/
+	 * @param x (Number, required): exponent value
+	 * @returns number,`e` to the `x` power
 	 * @example
 	 * EXP(1) // returns 2.718281828459045
-	 * EXP(2) // 7.38905609893065
 	 */
 	export default function EXP(x: number): number;
 	export default function EXP(x: string): number;
@@ -1406,10 +1417,11 @@ declare module 'src/functions/MEMOIZED_FACT' {
 declare module 'src/functions/FACT' {
 	/**
 	 * Returns factorial of a number, n (n!)
-	 * @param value postive integer
-	 * @returns factorial of value (value!)
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fact/
+	 * @param value (Number, required): postive integer
+	 * @returns factorial of `value`
 	 * @example
-	 * FACT(0) // returns 1
 	 * FACT(7) // returns 5040
 	 */
 	export default function FACT(value: any): number;
@@ -1426,11 +1438,12 @@ declare module 'src/functions/MEMOIZED_FACTDOUBLE' {
 declare module 'src/functions/FACTDOUBLE' {
 	/**
 	 * Returns double factorial of a number, n (n!!)
-	 * @param value postive integer
-	 * @returns factorial of value (value!!)
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/factdouble/
+	 * @param value (Number, required): postive integer
+	 * @returns factorial of value
 	 * @example
-	 * FACT(0) // returns 1
-	 * FACT(7) // returns 5040
+	 * FACT(5) // returns 15
 	 */
 	export default function FACTDOUBLE(value: any): number;
 
@@ -1452,11 +1465,12 @@ declare module 'src/functions/FIELDS' {
 	}
 	/**
 	 * Returns child fields of a repeatable or section field associated with a given data name
-	 * @param dataName required; string
-	 * @param options optional; object indicating if result should be flattened recursively,
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fields/
+	 * @param dataName (String, required): parent field's data name
+	 * @param options (Object, optional): object indicating if result should be flattened recursively,
 	 * e.g. `{ repeatables: boolean, sections: boolean }`
 	 * @returns array of child fields
-	 *
 	 */
 	export default function FIELDS(dataName: ContainerFieldName): FormFields[];
 	export default function FIELDS(dataName: ContainerFieldName, options: FieldsOptions): FormFields[];
@@ -1468,17 +1482,12 @@ declare module 'src/functions/FIELDNAMES' {
 	import { ContainerFieldName, FieldName } from 'src/types/fields';
 	/**
 	 * Returns child field names when passed in a parent's dataname
-	 * @param dataName required; string
-	 * @param options optional; object indicating if result should be flattened recursively,
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fieldnames/
+	 * @param dataName (String, required): parent field's data name
+	 * @param options (Object, optional); object indicating if result should be flattened recursively,
 	 * e.g. `{ repeatables: boolean, sections: boolean }`
 	 * @returns array of child field names
-	 * @example
-	 * FIELDNAMES('items')
-	 * // returns ['cost', 'choice_value', 'child_items', 'child_item_cost']
-	 *
-	 * // do not recursively look for child records of repeatable children
-	 * FIELDNAMES('items', { repeatables: false })
-	 * // returns ['cost', 'choice_value', 'child_items']
 	 */
 	export default function FIELDNAMES(dataName: ContainerFieldName, options?: FieldsOptions): FieldName[] | undefined;
 	export default function FIELDNAMES(dataName: ContainerFieldName): FieldName[] | undefined;
@@ -1488,7 +1497,9 @@ declare module 'src/functions/FIELDTYPE' {
 	import { FieldName } from 'src/types/fields';
 	/**
 	 * Returns a field's type.
-	 * @param dataName required; data_name of desired field
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fieldtype/
+	 * @param dataName (String, required): data name of desired field
 	 * @returns the field's type
 	 * @example
 	 * FIELDTYPE("operating_hours") // returns "TimeField"
@@ -1499,6 +1510,11 @@ declare module 'src/functions/FIELDTYPE' {
 declare module 'src/functions/FIRST' {
 	/**
 	 * Returns the first n items of an array or string.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/first/
+	 * @param item (Array, required): array to evaluate
+	 * @param n (Number, optional): number of items to return, defaults to 1
+	 * @returns a single value or an array of values
 	 */
 	export default function FIRST(item: any[] | string, n: number): any[] | undefined;
 	export default function FIRST(item: any[] | string, n?: number): any[] | undefined;
@@ -1546,14 +1562,15 @@ declare module 'src/functions/MIN' {
 declare module 'src/functions/FIXED' {
 	/**
 	 * Returns fixed represention of a number
-	 * @param num required; numeric value to be converted
-	 * @param decimals  optional; integer between 0 - 20 indicating total fractional digits, defaults to 2
-	 * @param suppressGroupingSeparator optional; boolean, whether to separate numbers with
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fixed/
+	 * @param num (Number, required): value to be converted
+	 * @param decimals  (Number, optional): integer between 0 - 20 indicating total fractional digits, defaults to 2
+	 * @param suppressGroupingSeparator (Boolean, optional): whether to separate numbers with
 	 * groupingSeparator character, defaults to false
 	 * @returns fixed representation of a number as a string
 	 * @example
 	 * FIXED(12345678901 / 3, 3) // returns "4,115,226,300.333"
-	 * FIXED(12345678901 / 3, 3, true) // returns "4115226300.333"
 	 */
 	export default function FIXED(num: number, decimals?: number, suppressGroupingSeparator?: boolean): string | undefined;
 	export default function FIXED(num: number, decimals?: number): string | undefined;
@@ -1563,6 +1580,8 @@ declare module 'src/functions/FIXED' {
 declare module 'src/functions/FORM' {
 	/**
 	 * Returns the current form object.
+	 *
+	 * View Documentatino - https://learn.fulcrumapp.com/dev/expressions/reference/form/
 	 */
 	export default function FORM(): {};
 
@@ -1570,15 +1589,11 @@ declare module 'src/functions/FORM' {
 declare module 'src/functions/FORMAT' {
 	/**
 	 * Formats a string
-	 * @param template string format. Use %s for strings and %d for numbers.
-	 * @param variables Value(s) to substitute into the format string
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/format/
+	 * @param template (String, required): desired format, `%s` for strings and `%d` for numbers.
+	 * @param variables (String|Number, required), values to substitute into the format string
 	 * @returns formatted string
-	 * @example
-	 * // returns "The pole height is 20 meters and has 3 issues detected."
-	 * FORMAT('The pole height is %d meters and has %d issues detected.', 20, 3)
-	 * @example
-	 * // returns "11/11/2015 12:30:30"
-	 * FORMAT('%s/%s/%s %s:%s:%s', 11, 11, 2015, 12, 30, 30)
 	 */
 	export default function FORMAT(template: string, ...variables: any[]): string;
 
@@ -1587,24 +1602,12 @@ declare module 'src/functions/FORMATADDRESS' {
 	import { AddressFieldValue } from 'src/types/values';
 	/**
 	 * Returns a formatted address
-	 * @param address required; string, must be valid AddressFieldValue:
-	 * { sub_thoroughfare?: string, thoroughfare?: string, suite?: string, locality?: string,
-	 * sub_admin_area?: string, admin_area?: string, postal_code?: string, country?: string }
-	 * @param lineSeparator optional; string, character to separate address lines, defaults to "\n"
-	 * @param partSeparator optional; string, character to separate address parts, defaulst to " "
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/formataddress/
+	 * @param address (AddressFieldValue, required) must be valid AddressFieldValue
+	 * @param lineSeparator (String, optional): character to separate address lines, defaults to `"\n"`
+	 * @param partSeparator (String, optional): character to separate address parts, defaulst to " "
 	 * @returns string, formatted address
-	 * @example
-	 * const exampleAddress = {
-	 *  sub_thoroughfare: "360",
-	 *   thoroughfare: "Central Avenue",
-	 *   suite: "200",
-	 *   locality: "St. Petersburg",
-	 *   sub_admin_area: "Pinellas",
-	 *   admin_area: "FL",
-	 *   postal_code: "33701",
-	 *   country: "US",
-	 * }
-	 * FORMATADDRESS(exampleAddress) // returns "360 Central Avenue #200\nSt. Petersburg FL 33701\nUS"
 	 */
 	export default function FORMATADDRESS(address: AddressFieldValue, lineSeparator?: string, partSeparator?: string): string | undefined;
 	export default function FORMATADDRESS(address: AddressFieldValue): string | undefined;
@@ -1623,25 +1626,12 @@ declare module 'src/functions/FORMATNUMBER' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Returns a number formatted based on the current language and the styling options passed in.
-	 * @param value required; number to be formatted
-	 * @param langauge optional; languange- and country-specific string, e.g. "en-US", to indicate desired
-	 * language formatting. Defaults to device's current langauge setting.
-	 * @param options optional; formatting options hash:
-	 * {
-	 *  localeMatcher: locale string, e.g. "en_US",
-	 *  style: "currency" | "percent" | "decimal",
-	 *  currency: currency code string, e.g. "USD",
-	 *  minimumSignificantDigits: number,
-	 *  maximumSignificantDigits: number,
-	 *  minimumIntegerDigits: number,
-	 *  minimumFractionDigits?: number,
-	 *  maximumFractionDigits?: number,
-	 *  useGrouping: boolean,
-	 * }
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/formatnumber/
+	 * @param value (Number, required): number to be formatted
+	 * @param langauge (String, optional): languange- and country-specific string, e.g. "en-US"
+	 * @param options (NumberFormatOptions, optional): formatting options hash
 	 * @returns formatted number string
-	 * @example
-	 * FORMATNUMBER(10000 / 3, "pt-BR", { style: "currency", currency: "BRL" }) // returns "R$3.333,33"
-	 * FORMATNUMBER(1 / 3, null, { minimumFractionDigits: 5 }) // returns "0.33333"
 	 */
 	export default function FORMATNUMBER(value: number, language: MaybeString, options: NumberFormatOptions): string;
 	export default function FORMATNUMBER(value: number, language: MaybeString): string;
@@ -1651,8 +1641,10 @@ declare module 'src/functions/FORMATNUMBER' {
 declare module 'src/functions/GCD' {
 	/**
 	 * Returns the greatest common divisor
-	 * @param args list of numbers
-	 * @returns number; greatest commom divisor
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/gcd/
+	 * @param args (Any|Array, required): list of numbers
+	 * @returns greatest commom divisor among the numbers passed in
 	 * @example
 	 * GCD(8, 16, 32, 36) // returns 4
 	 */
@@ -1669,12 +1661,11 @@ declare module 'src/functions/GETRESULT' {
 declare module 'src/functions/GROUP' {
 	/**
 	 * Returns values grouped according to a passed in iteratee or according to identity
-	 * @param values required; array of values
-	 * @param iteratee optional; function to determine value sorting, defaults to identity (`===`)
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/group/
+	 * @param values (Array, required): array of values
+	 * @param iteratee (Function, optional): function to determine value sorting, defaults to identity (`===`)
 	 * @returns object of grouped values; keys are determined by the return values of `iteratee`
-	 * @example
-	 * GROUP([3, 2, 1, 3, 3, 3]) // returns {1: [1], 2: [2], 3: [3, 3, 3, 3]}
-	 * GROUP([6.1, 4.2, 6.3], Math.floor) // returns { 4: [4.2], 6: [6.1, 6.3] }
 	 */
 	export default function GROUP(values: number[], iteratee: Function): {} | undefined;
 	export default function GROUP(values: any[]): {} | undefined;
@@ -1686,13 +1677,10 @@ declare module 'src/functions/HASOTHER' {
 	import { ChoiceFieldValue } from 'src/types/values';
 	/**
 	 * Returns where or not a ChoiceFieldValue has an `other_values` key
-	 * @param value ChoiceFieldValue { choice_values?: string[ ], other_values?: string[ ] }
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/hasother/
+	 * @param value (ChoiceFieldValue, required): `{ choice_values?: string[ ], other_values?: string[ ] }`
 	 * @returns boolean value
-	 * @example
-	 * const choiceField1 = { choice_values: ["yes", "no"], other_values: ["maybe"] }
-	 * const choiceField2 = { choice_values: ["yes", "no"] }
-	 * HASOTHER(choiceField1) // returns true
-	 * HASOTHER(choiceField2) // returns false
 	 */
 	export default function HASOTHER(value: ChoiceFieldValue): boolean;
 	export default function HASOTHER(value?: any): boolean;

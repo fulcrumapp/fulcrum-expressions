@@ -3,7 +3,9 @@ import ISPORTRAIT, { MediaObject } from "./ISPORTRAIT"
 
 /**
  * Checks whether the media is in landscape mode.
- * @param media required; media object, height and width attributes must be present
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/islandscape/
+ * @param media (MediaObject, required): height and width attributes must be present
  * @returns boolean
  * @example
  * const mediaObject = { width: 200, height: 100 }

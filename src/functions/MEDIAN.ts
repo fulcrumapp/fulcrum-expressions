@@ -4,7 +4,9 @@ import NUM from "./NUM"
 
 /**
  * Returns the median value of list of numbers.
- * @param args required; numeric values to be evaluated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/median/
+ * @param args (Number|Array, required): numeric values to be evaluated
  * @returns median value
  * @example
  * MEDIAN(3, 4, 2, 5, 1) // returns 3

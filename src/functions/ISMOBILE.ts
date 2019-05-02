@@ -3,6 +3,8 @@ import PLATFORM from "./PLATFORM"
 
 /**
  * Returns true if the record is being edited from the mobile app
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ismobile/
  * @returns boolean value
  */
 

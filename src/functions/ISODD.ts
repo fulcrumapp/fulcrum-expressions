@@ -4,10 +4,11 @@ import NUM from "./NUM"
 
 /**
  * Returns whether or not a value is odd
- * @param value required; numeric value to be checked
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isodd/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISODD(24) // returns false
  * ISODD(5 * 5) // returns true
  */
 

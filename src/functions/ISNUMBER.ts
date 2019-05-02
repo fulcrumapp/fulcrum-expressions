@@ -2,12 +2,12 @@ import { isFinite } from "lodash"
 
 /**
  * Returns a boolean value indicating if value passed in is a numeric value
- * @param value any type
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnumber/
+ * @param value (Any, required): value to be checked
  * @returns boolean
  * @example
  * ISNUMBER(8) // returns true
- * ISNUMBER(3.78) // returns true
- * ISNUMBER('3.67') // returns false
  */
 export default function ISNUMBER(value: any): boolean {
   return isFinite(value)

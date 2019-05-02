@@ -5,12 +5,10 @@ import ROLE from "./ROLE"
 /**
  * Determines whether arguments passed in contain the role of the current user
  * by comparing it to  userRoleName on the configuration object
- * @param args required; role(s) to be checked as strings
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isrole/
+ * @param args (String|Array, required): role(s) to be checked
  * @returns boolean
- * @example
- * // userRoleName = Standard User
- * ISROLE("Admin") // returns false
- * ISROLE("Admin", "ReadOnly", "Standard User") // returns true
  */
 export default function ISROLE(...args: string[]): boolean
 export default function ISROLE(...args: any[]): boolean

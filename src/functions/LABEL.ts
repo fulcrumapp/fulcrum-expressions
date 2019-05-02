@@ -4,7 +4,9 @@ import FIELD from "./FIELD"
 
 /**
  * Returns the label of a field
- * @param dataName required; data_name of a form field (string)
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/label/
+ * @param dataName (String, required): data name of desired field
  * @returns form label, string
  * @example
  * LABEL("business_name") // returns "Business Name"

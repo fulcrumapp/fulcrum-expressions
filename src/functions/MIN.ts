@@ -4,11 +4,12 @@ import NUM from "./NUM"
 
 /**
  * Returns min value from a list of values
- * @param args a list of numeric values or string number values
- * @returns min value in numeric form
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/min/
+ * @param args (Number|Array, required): list of numeric values
+ * @returns min numberic value among parameters
  * @example
  * MIN(7, 4, 1, 2, 4) // returns 1
- * MIN(["45", "50", "32", "51"]) // returns 32
  */
 
 export default function MIN(...args: any[]): number|undefined {

@@ -4,10 +4,11 @@ import NUM from "./NUM"
 
 /**
  * Returns whether or not a value is even
- * @param value required; numeric value to be checked
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/iseven/
+ * @param value (Number, required): numeric value to be checked
  * @returns boolean value
  * @example
- * ISEVEN(24) // returns true
  * ISEVEN(5 * 5) // returns false
  */
 

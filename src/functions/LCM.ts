@@ -4,8 +4,10 @@ import ISNAN from "./ISNAN"
 
 /**
  * Returns the least common multiple of the arguments passed in
- * @param args numbers or numbers as string values to be evaluated
- * @returns number; least common multiple
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lcm/
+ * @param args (Number|Array) list of numbers to be evaluated
+ * @returns number, least common multiple
  * @example
  * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
  */

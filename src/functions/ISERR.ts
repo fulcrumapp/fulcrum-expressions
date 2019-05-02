@@ -1,7 +1,7 @@
 import { isNaN, isNull, isUndefined } from "lodash"
 /**
  * Checks if a value is an instance of an Error or has no value
- * @param value required; item to be checked
+ * @param value (Error|Any, required): item to be checked
  * @returns boolean
  * @example
  * const badField = FIELD('does_not_exist') // = undefined

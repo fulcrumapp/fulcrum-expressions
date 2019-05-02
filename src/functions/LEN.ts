@@ -9,11 +9,12 @@ import { isArray,
 
 /**
  * Returns the length of a value as a string or an array-like object.
- * @param value required; item to be measured
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/len/
+ * @param value (Any, required): item to be measured
  * @returns number
  * @example
  * LEN("test") // returns 4
- * LEN(["test", "test"]) // returns 2
  */
 
 export default function LEN(value: any): number {
