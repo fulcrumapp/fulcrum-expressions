@@ -3,12 +3,10 @@ import { FieldName } from "../types/fields"
 
 /**
  * Sets a field to required or optional.
- * @param dataName required; data name of targeted field
- * @param value boolean value indicating whether to require field
- * @example
  * 
- * SETREQUIRED("choice_field", true) // set field to required
- * SETREQUIRED("choice_field", false) // make field optional
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setrequired/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Boolean, required): whether to require field
  */
 
 export default function SETREQUIRED(dataName: FieldName, value: boolean): void

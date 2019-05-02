@@ -6,8 +6,10 @@ import SETVALUE from "./SETVALUE"
 
 /**
  * Sets location geometry given a latitude and longitude value.
- * @param latitude numeric value fo latitude coordinate
- * @param longitude number value for longitude coordinate
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlocation/
+ * @param latitude (Number, required): latitude coordinate
+ * @param longitude (Numner, required): longitude coordinate
  */
 
 export default function SETLOCATION(latitude: number, longitude: number): void

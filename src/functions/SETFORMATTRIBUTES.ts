@@ -28,8 +28,10 @@ const FORM_ATTRIBUTES = [
 
 /**
  * Updates a form's attributes.
- * @param dataName data name of desired form field to be updated
- * @param attributes optional; object of attributes to be updated and their corresponding values
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setformattributes/
+ * @param dataName (String, optional): data name of desired form field to be updated
+ * @param attributes (Object, required): object of attributes to be updated and their corresponding values
  */
 export default function SETFORMATTRIBUTES(dataName: string, attributes?: any): void
 export default function SETFORMATTRIBUTES(dataName: any): void

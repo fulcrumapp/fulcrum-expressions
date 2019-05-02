@@ -10,8 +10,10 @@ interface ChoicesInterface {
 
 /**
  * Updates the form choices attribute.
- * @param dataName required; data name of form field to be updated
- * @param value required; an array of values; can be `null`
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setchoices/
+ * @param dataName (String, required): data name of form field to be updated
+ * @param value (Array|Null, required) an array of values or `null`
  */
 export default function SETCHOICES(dataName: ChoiceFieldName, value: any): void {
   // TODO(zhm) throw some kind of error here if the param is wrong

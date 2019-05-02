@@ -4,8 +4,10 @@ import { FieldName } from "../types/fields"
 
 /**
  * Sets the minimum length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing min length desired
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setminlength/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Number, required): min length desired
  */
 
 export default function SETMINLENGTH(dataName: FieldName, value: number): void

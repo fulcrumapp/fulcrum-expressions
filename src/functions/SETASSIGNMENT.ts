@@ -4,7 +4,7 @@ import SETVALUE from "./SETVALUE"
 
 /**
  * Assign a user to a record.
- * @param user required; user's name, must be a string
+ * @param user (String, required): user's name
  */
 
 export default function SETASSIGNMENT(user: string): void {

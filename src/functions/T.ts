@@ -2,10 +2,9 @@ import { isNull, isUndefined } from "lodash"
 
 /**
  * Stringifies the value passed in
- * @param value required; value to be converted to a string
+ * @param value (Any, required): value to be converted to a string
  * @returns string value
  * @example
- *
  * T(true) // returns "true"
  */
 

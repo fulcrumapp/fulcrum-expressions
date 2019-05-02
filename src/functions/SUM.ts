@@ -4,11 +4,10 @@ import NUM from "./NUM"
 
 /**
  * Returns the sum of its arguments.
- * @param args required; list of numbers
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sum/
+ * @param args (Array|Any, required): list of numbers
  * @returns sum of its arguments
- * @example
- *
- * SUM(1, 2, 3, 4) // returns 10
  */
 
 export default function SUM(...args: number[]): number

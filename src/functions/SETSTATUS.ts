@@ -4,7 +4,9 @@ import SETVALUE from "./SETVALUE"
 
 /**
  * Sets record's status.
- * @param status status value, string
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setstatus/
+ * @param status (String, required): status value
  */
 
 export default function SETSTATUS(status: string): void

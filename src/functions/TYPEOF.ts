@@ -14,12 +14,12 @@ import {
 
 /**
  * Returns a string describing the type of argument passed in.
- * @param value required; value to be evaluated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/typeof/
+ * @param value (Any, required): value to be evaluated
  * @returns a string indiciating the type of argument passed in
  * @example
  * TYPEOF("test") // "string"
- * TYPEOF(true) // "boolean"
- * TYPEOF(NaN) // "nan"
  */
 
 export default function TYPEOF(value: any): string {

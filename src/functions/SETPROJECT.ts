@@ -4,7 +4,9 @@ import SETVALUE from "./SETVALUE"
 
 /**
  * Sets project for a record.
- * @param project project name, string
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setproject/
+ * @param project (String, required): project name
  */
 
 export default function SETPROJECT(project: string): void

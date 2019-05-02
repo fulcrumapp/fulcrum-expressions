@@ -3,7 +3,9 @@ import { GenericObject } from "../types/primitives"
 
 /**
  * Returns a string of all uppercase letters
- * @param value required; value to be converted to uppercase
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/upper/
+ * @param value (String, required): text to be converted to uppercase
  * @returns string of uppercase letters
  * @example
  * UPPER("test") // returns "TEST"

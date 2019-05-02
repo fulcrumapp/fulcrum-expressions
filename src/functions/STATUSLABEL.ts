@@ -1,7 +1,9 @@
 import STATUS from "./STATUS"
 
 /**
- * Returns the status value of a record.
+ * Returns the status label of a record.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/statuslabel/
  */
 
 export default function STATUSLABEL(): string|undefined {

@@ -2,14 +2,15 @@ import { includes, isString } from "lodash"
 import NUM from "./NUM"
 
 /**
- * Returns the difference between two times in minutes or hours. Format defaults to hours if no format is specified.
- * @param startTime required; string specifying a start time: XX:XX
- * @param endTime required; string specifying an end time: XX:XX
- * @param format optional; "hours" or "minutes"
+ * Returns the difference between two times in minutes or hours.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timediff/
+ * @param startTime (String, required): string specifying a start time: XX:XX
+ * @param endTime (String, required): string specifying an end time: XX:XX
+ * @param format ("hours"|"minutes", optional): measure difference in minutes or hours; defaults to hours
  * @returns numeric value indicating the difference between two times in either minutes or hours
  * @example
  * TIMEDIFF("14:00", "18:00") // returns 4
- * TIMEDIFF("14:00", "18:00", "minutes") // returns 240
  */
 
 export default function TIMEDIFF(startTime: string, endTime: string, format?: string): number|undefined

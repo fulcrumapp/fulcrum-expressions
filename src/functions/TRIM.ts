@@ -2,7 +2,9 @@ import { trim } from "lodash"
 
 /**
  * Trims leading and trailing whitespace from a string.
- * @param value required; string to be trimmed
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/trim/
+ * @param value (String, required): string to be trimmed
  * @returns trimmed string
  * @example
  * TRIM("  test  ") // returns "test"

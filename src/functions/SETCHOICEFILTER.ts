@@ -4,8 +4,10 @@ import { ChoiceFieldName } from "../types/fields"
 
 /**
  * Sets a choice filter for a form.
- * @param dataName required; data name of field to be updated
- * @param value required; a value or an array of values on which to filter
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setchoicefilter/
+ * @param dataName (String, required): data name of field to be updated
+ * @param value (Any, required): a value or an array of values on which to filter
  */
 
 export default function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void

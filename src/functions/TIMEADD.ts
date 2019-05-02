@@ -5,9 +5,11 @@ import NUM from "./NUM"
 
 /**
  * Adds specified amount of time to a time string.
- * @param startTime required; string specifying a start time: XX:XX
- * @param amount required; number of minutes or hours to be added
- * @param format required; "hours" or "minutes" indicating where amount idicated is to be added
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timeadd/
+ * @param startTime (String, required): string specifying a start time: XX:XX
+ * @param amount (Number, equired): number of minutes or hours to be added
+ * @param format ("hours"|"minutes", required): add time to minutes or hours
  * @returns time string
  */
 

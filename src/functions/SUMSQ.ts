@@ -4,10 +4,11 @@ import NUM from "./NUM"
 
 /**
  * Returns the sum of each number squared.
- * @param args array of numbers
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sumsq/
+ * @param args (Array|Number, required): array or list of numbers
  * @returns sum of the square of each argument
  * @example
- *
  * SUMSQ(1, 2, 3, 4) // returns 30
  */
 

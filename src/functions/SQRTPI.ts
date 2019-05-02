@@ -3,7 +3,9 @@ import SQRT from "./SQRT"
 
 /**
  * Returns the square root of a number times PI.
- * @param num number to be evaluated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrtpi/
+ * @param num (Number, required): number to be evaluated
  * @returns the sqrt of `num` * PI
  */
 

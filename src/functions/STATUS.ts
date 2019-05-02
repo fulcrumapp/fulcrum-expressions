@@ -1,7 +1,9 @@
 import { CONFIG } from "./CONFIG"
 
 /**
- * Returns the record status or undefined if the status is not present.
+ * Returns the record status.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/status/
  */
 
 export default function STATUS(): string|undefined {

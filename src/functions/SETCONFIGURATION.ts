@@ -38,7 +38,7 @@ const CONFIGURATION_ATTRIBUTES = [
 
 /**
  * Set form level configuration sttings
- * @param settings key value pair of settings to configure
+ * @param settings (Object, required): key value pair of settings to configure
  */
 export default function SETCONFIGURATION(settings: Configuration) {
   each(settings, (value, attribute) => {

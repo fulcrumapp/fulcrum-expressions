@@ -2,7 +2,9 @@ import NUM from "./NUM"
 
 /**
  * Returns function returns the hyperbolic sine of a number
- * @param value numeric value
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sinh/
+ * @param value (Number, required): value to evaluate
  * @returns numeric value of angle's hyperbolic sine
  * @example
  * SINH(12) // returns 0.8438539587324921

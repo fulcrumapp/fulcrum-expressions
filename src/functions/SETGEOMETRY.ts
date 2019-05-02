@@ -1,10 +1,11 @@
 import isValidGeometry, { ValidGeometry } from "../util/is-valid-geometry"
 
 /**
- * Sets geometry values if a valid GeoJSON object is passed in.
- * @param geometry GeoJSON object containing geometry `type` and lat-long `coordinates`
+ * Sets geometry values
+ * @param geometry (GeoJSON, required): object containing geometry `type` and lat-long `coordinates`
  * @example
- * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]}) // sets geometry to Null Island
+ * // set geometry to Null Island
+ * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
 
 export default function SETGEOMETRY(geometry: ValidGeometry): void

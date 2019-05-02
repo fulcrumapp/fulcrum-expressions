@@ -1,6 +1,8 @@
 /**
  * Sets result variable on runtime.
- * @param result required; desired result
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/setresult/
+ * @param result (Any, required): desired result
  */
 
 export default function SETRESULT(result: any): void {

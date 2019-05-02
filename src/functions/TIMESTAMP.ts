@@ -5,10 +5,10 @@ import LPAD from "./LPAD"
 /**
  * Returns a time stamp given a date object for display only. As it does not contain a timezone, it should not 
  * be used to perform calculations such as time deltas.
- * @param date optional; Date object - if nothing is passed in to TIMESTAMP, today's timestamp will be returned
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timestamp/
+ * @param date (Date, optional): if no Date object is passed in to TIMESTAMP, today's timestamp will be returned
  * @returns a string timestamp in YYYY-MM-DD HH:MM:SS format
- * @example
- * TIMESTAMP("December 16, 1982 03:24:00") // returns "1982-12-16 03:24:00"
  */
 
 export default function TIMESTAMP(date: Date): string

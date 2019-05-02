@@ -2,7 +2,9 @@ import NUM from "./NUM"
 
 /**
  * Returns the square root of a number.
- * @param num number to be evaluated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrt/
+ * @param num (Number, required): number to be evaluated
  * @returns square root of original value
  */
 

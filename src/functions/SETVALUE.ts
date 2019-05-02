@@ -12,11 +12,10 @@ import FORMAT from "./FORMAT"
 
 /**
  * Sets or clears the value of a field depending on value passed in.
- * @param dataName required; string, data_name of field to be set
- * @param value required; value for field, or `null` to clear the field
- * @example
- * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
- * SETVALUE('name', null) // Clears the value of field called 'name'
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setvalue/
+ * @param dataName (String, required): data_name of field to be set
+ * @param value (Any, required): value for field, or `null` to clear the field
  */
 
 export default function SETVALUE(dataName: FieldName,

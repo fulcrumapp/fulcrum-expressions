@@ -4,8 +4,10 @@ import { FieldName } from "../types/fields"
 
 /**
  * Sets the label of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which label should be set
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlabel/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (String, required): value to which label should be set
  */
 
 export default function SETLABEL(dataName: FieldName, value: string): void

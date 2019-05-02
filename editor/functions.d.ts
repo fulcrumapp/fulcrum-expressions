@@ -2228,7 +2228,11 @@ declare function GCD(...args: string[]): number;
  */
 declare function GCD(...args: any[]): number;
 
-/** Returns result from $$HOST */
+/**
+ * Returns the current result value for the current expression
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/getresult/
+ */
 declare function GETRESULT(): any;
 
 /**
@@ -3856,20 +3860,18 @@ declare function REPEATABLEVALUES(repeatableValue: any[], dataName: FieldName[] 
 
 /**
  * Returns the sum of its arguments.
- * @param args required; list of numbers
- * @returns sum of its arguments
- * @example
  *
- * SUM(1, 2, 3, 4) // returns 10
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sum/
+ * @param args (Array|Any, required): list of numbers
+ * @returns sum of its arguments
  */
 declare function SUM(...args: number[]): number;
 /**
  * Returns the sum of its arguments.
- * @param args required; list of numbers
- * @returns sum of its arguments
- * @example
  *
- * SUM(1, 2, 3, 4) // returns 10
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sum/
+ * @param args (Array|Any, required): list of numbers
+ * @returns sum of its arguments
  */
 declare function SUM(...args: any[]): number;
 
@@ -4033,77 +4035,84 @@ declare function RPAD(value: any, count: any, padding?: any): string | undefined
 
 /**
  * Searches a string for a substring and returns a 1-based index.
- * @param needle required; substring to search for
- * @param haystack required; string in which to search for `needle` substring
- * @param startPosition optional; number, 1-based index from which to start searching the `haystack` string
- * @returns 1-based index indicating where substring is located
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/search/
+ * @param needle (String, required): substring to search for
+ * @param haystack (Strnig, required): string in which to search for `needle`
+ * @param startPosition (Number, optional): 1-based index from which to start searching the `haystack` string
+ * @returns 1-based index indicating where substring is located
  * @example
  * SEARCH('4', '1234') // returns 4
- * // startPosition = 2 so search begins at second character of string
- * SEARCH("t", "test", 2) // returns 4
  */
 declare function SEARCH(needle: string, haystack: string, startPosition?: number): number | undefined;
 /**
  * Searches a string for a substring and returns a 1-based index.
- * @param needle required; substring to search for
- * @param haystack required; string in which to search for `needle` substring
- * @param startPosition optional; number, 1-based index from which to start searching the `haystack` string
- * @returns 1-based index indicating where substring is located
  *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/search/
+ * @param needle (String, required): substring to search for
+ * @param haystack (Strnig, required): string in which to search for `needle`
+ * @param startPosition (Number, optional): 1-based index from which to start searching the `haystack` string
+ * @returns 1-based index indicating where substring is located
  * @example
  * SEARCH('4', '1234') // returns 4
- * // startPosition = 2 so search begins at second character of string
- * SEARCH("t", "test", 2) // returns 4
  */
 declare function SEARCH(needle: any, haystack: any, startPosition?: any): number | undefined;
 
 /**
  * Sets or clears the value of a field depending on value passed in.
- * @param dataName required; string, data_name of field to be set
- * @param value required; value for field, or `null` to clear the field
- * @example
- * SETVALUE('yes_no_field', 'yes') // Sets the value of a yes/no field
- * SETVALUE('name', null) // Clears the value of field called 'name'
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setvalue/
+ * @param dataName (String, required): data_name of field to be set
+ * @param value (Any, required): value for field, or `null` to clear the field
  */
 declare function SETVALUE(dataName: FieldName, value: string | ChoiceFieldValue | AddressFieldValue | ValidGeometry | string[] | number[] | null): void;
 
 /**
  * Assign a user to a record.
- * @param user required; user's name, must be a string
+ * @param user (String, required): user's name
  */
 declare function SETASSIGNMENT(user: string): void;
 
 /**
  * Updates a form's attributes.
- * @param dataName data name of desired form field to be updated
- * @param attributes optional; object of attributes to be updated and their corresponding values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setformattributes/
+ * @param dataName (String, optional): data name of desired form field to be updated
+ * @param attributes (Object, required): object of attributes to be updated and their corresponding values
  */
 declare function SETFORMATTRIBUTES(dataName: string, attributes?: any): void;
 /**
  * Updates a form's attributes.
- * @param dataName data name of desired form field to be updated
- * @param attributes optional; object of attributes to be updated and their corresponding values
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setformattributes/
+ * @param dataName (String, optional): data name of desired form field to be updated
+ * @param attributes (Object, required): object of attributes to be updated and their corresponding values
  */
 declare function SETFORMATTRIBUTES(dataName: any): void;
 
 /**
  * Sets a choice filter for a form.
- * @param dataName required; data name of field to be updated
- * @param value required; a value or an array of values on which to filter
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setchoicefilter/
+ * @param dataName (String, required): data name of field to be updated
+ * @param value (Any, required): a value or an array of values on which to filter
  */
 declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any[]): void;
 /**
  * Sets a choice filter for a form.
- * @param dataName required; data name of field to be updated
- * @param value required; a value or an array of values on which to filter
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setchoicefilter/
+ * @param dataName (String, required): data name of field to be updated
+ * @param value (Any, required): a value or an array of values on which to filter
  */
 declare function SETCHOICEFILTER(dataName: ChoiceFieldName, value: any): void;
 
 /**
  * Updates the form choices attribute.
- * @param dataName required; data name of form field to be updated
- * @param value required; an array of values; can be `null`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setchoices/
+ * @param dataName (String, required): data name of form field to be updated
+ * @param value (Array|Null, required) an array of values or `null`
  */
 declare function SETCHOICES(dataName: ChoiceFieldName, value: any): void;
 
@@ -4130,296 +4139,307 @@ interface Configuration {
 }
 /**
  * Set form level configuration sttings
- * @param settings key value pair of settings to configure
+ * @param settings (Object, required): key value pair of settings to configure
  */
 declare function SETCONFIGURATION(settings: Configuration): void;
 
 /**
  * Sets the description of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which description should be set
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setdescription/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Stirng, required): value to which description should be set
  */
 declare function SETDESCRIPTION(dataName: FieldName, value: string): void;
 /**
  * Sets the description of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which description should be set
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setdescription/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Stirng, required): value to which description should be set
  */
 declare function SETDESCRIPTION(dataName: FieldName, value?: any): void;
 
 /**
  * Sets a field to read only or removes a read only condition.
- * @param dataName required; data name of the targeted field
- * @param value boolean value indicating whether to set as read only
- * @example
  *
- * SETREADONLY("role", true) // sets role field to read only
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setreadonly/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Boolean, required): whether to set as read only
  */
 declare function SETREADONLY(dataName: FieldName, value: boolean): void;
 /**
  * Sets a field to read only or removes a read only condition.
- * @param dataName required; data name of the targeted field
- * @param value boolean value indicating whether to set as read only
- * @example
  *
- * SETREADONLY("role", true) // sets role field to read only
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setreadonly/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Boolean, required): whether to set as read only
  */
 declare function SETREADONLY(dataName: FieldName, value?: boolean): void;
 
+/**
+ * Disables a field.
+ *
+ * @param dataName (String, required): data name of field
+ * @param value (Boolean, required): whether to disable field
+ */
 declare function SETDISABLED(dataName: FieldName, value: boolean): void;
 /**
- * Sets a field to read only or removes a read only condition.
- * @param dataName required; data name of the targeted field
- * @param value boolean value indicating whether to set as read only
- * @example
+ * Disables a field.
  *
- * SETREADONLY("role", true) // sets role field to read only
+ * @param dataName (String, required): data name of field
+ * @param value (Boolean, required): whether to disable field
  */
 declare function SETDISABLED(dataName: FieldName, value?: boolean): void;
 
 /**
- * Sets geometry values if a valid GeoJSON object is passed in.
- * @param geometry GeoJSON object containing geometry `type` and lat-long `coordinates`
+ * Sets geometry values
+ * @param geometry (GeoJSON, required): object containing geometry `type` and lat-long `coordinates`
  * @example
- * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]}) // sets geometry to Null Island
+ * // set geometry to Null Island
+ * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
 declare function SETGEOMETRY(geometry: ValidGeometry): void;
 /**
- * Sets geometry values if a valid GeoJSON object is passed in.
- * @param geometry GeoJSON object containing geometry `type` and lat-long `coordinates`
+ * Sets geometry values
+ * @param geometry (GeoJSON, required): object containing geometry `type` and lat-long `coordinates`
  * @example
- * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]}) // sets geometry to Null Island
+ * // set geometry to Null Island
+ * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
 declare function SETGEOMETRY(geometry: any): void;
 
 /**
  * Sets a field to hidden or visible.
- * @param dataName required; data name of targeted field
- * @param value boolean value indicating whether to hide field
- * @example
  *
- * SETHIDDEN("choice_field", true) // hide field
- * SETHIDDEN("choice_field", false) // make field visible
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/sethidden/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Boolean, required): whether to hide field
  */
 declare function SETHIDDEN(dataName: FieldName, value: boolean): void;
 /**
  * Sets a field to hidden or visible.
- * @param dataName required; data name of targeted field
- * @param value boolean value indicating whether to hide field
- * @example
  *
- * SETHIDDEN("choice_field", true) // hide field
- * SETHIDDEN("choice_field", false) // make field visible
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/sethidden/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Boolean, required): whether to hide field
  */
 declare function SETHIDDEN(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets up a function to be called repeatedly after a fixed time delay.
- * The SETINTERVAL function can be used to repeatedly call a function at a specified interval.
- * It’s nearly identical to the web platform standard
- * [setInterval](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval).
- * @param function The function to execute after interval
- * @param delay The number of milliseconds to delay (e.g. 1000 is 1 second)
- * @returns timer ID that can be used to clear the interval with [CLEARINTERVAL](/data-events/reference/clearinterval)
- * @example
- * // Set a field label to the current GPS accuracy every 5 seconds
- * ON('load-record', function(event) {
- *  var fiveSeconds = 1000 * 5;
-
- *  SETINTERVAL(function() {
- *    if (CURRENTLOCATION()) {
- *      SETLABEL('accuracy', CURRENTLOCATION().accuracy);
- *    }
- *   }, fiveSeconds);
- *  });
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setinterval/
+ * @param function (Function, required): function to execute after interval
+ * @param delay (Number, required): number of milliseconds to delay (e.g. 1000 is 1 second)
+ * @returns timer ID that can be used to clear the interval with `CLEARINTERVAL`
  */
 declare function SETINTERVAL(fn: Function, timeout: number): number;
 
 /**
  * Sets the label of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which label should be set
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlabel/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (String, required): value to which label should be set
  */
 declare function SETLABEL(dataName: FieldName, value: string): void;
 /**
  * Sets the label of a field.
- * @param dataName required; data name of targeted field
- * @param value value to which label should be set
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlabel/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (String, required): value to which label should be set
  */
 declare function SETLABEL(dataName: FieldName, value?: any): void;
 
 /**
  * Sets location geometry given a latitude and longitude value.
- * @param latitude numeric value fo latitude coordinate
- * @param longitude number value for longitude coordinate
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlocation/
+ * @param latitude (Number, required): latitude coordinate
+ * @param longitude (Numner, required): longitude coordinate
  */
 declare function SETLOCATION(latitude: number, longitude: number): void;
 /**
  * Sets location geometry given a latitude and longitude value.
- * @param latitude numeric value fo latitude coordinate
- * @param longitude number value for longitude coordinate
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlocation/
+ * @param latitude (Number, required): latitude coordinate
+ * @param longitude (Numner, required): longitude coordinate
  */
 declare function SETLOCATION(latitude: string, longitude: string): void;
 /**
  * Sets location geometry given a latitude and longitude value.
- * @param latitude numeric value fo latitude coordinate
- * @param longitude number value for longitude coordinate
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setlocation/
+ * @param latitude (Number, required): latitude coordinate
+ * @param longitude (Numner, required): longitude coordinate
  */
 declare function SETLOCATION(latitude?: any, longitude?: any): void;
 
 /**
  * Sets the max length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing max length desired
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setmaxlength/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Number, required): max length desired
  */
 declare function SETMAXLENGTH(dataName: FieldName, value: number): void;
 /**
  * Sets the max length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing max length desired
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setmaxlength/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Number, required): max length desired
  */
 declare function SETMAXLENGTH(dataName: FieldName, value?: any): void;
 
 /**
  * Sets the minimum length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing min length desired
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setminlength/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Number, required): min length desired
  */
 declare function SETMINLENGTH(dataName: FieldName, value: number): void;
 /**
  * Sets the minimum length of a field.
- * @param dataName required; data name of the targeted field
- * @param value number representing min length desired
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setminlength/
+ * @param dataName (String, required): data name of the targeted field
+ * @param value (Number, required): min length desired
  */
 declare function SETMINLENGTH(dataName: FieldName, value?: any): void;
 
 /**
  * Sets project for a record.
- * @param project project name, string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setproject/
+ * @param project (String, required): project name
  */
 declare function SETPROJECT(project: string): void;
 /**
  * Sets project for a record.
- * @param project project name, string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setproject/
+ * @param project (String, required): project name
  */
 declare function SETPROJECT(project: any): void;
 
 /**
  * Sets a field to required or optional.
- * @param dataName required; data name of targeted field
- * @param value boolean value indicating whether to require field
- * @example
  *
- * SETREQUIRED("choice_field", true) // set field to required
- * SETREQUIRED("choice_field", false) // make field optional
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setrequired/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Boolean, required): whether to require field
  */
 declare function SETREQUIRED(dataName: FieldName, value: boolean): void;
 /**
  * Sets a field to required or optional.
- * @param dataName required; data name of targeted field
- * @param value boolean value indicating whether to require field
- * @example
  *
- * SETREQUIRED("choice_field", true) // set field to required
- * SETREQUIRED("choice_field", false) // make field optional
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setrequired/
+ * @param dataName (String, required): data name of targeted field
+ * @param value (Boolean, required): whether to require field
  */
 declare function SETREQUIRED(dataName: FieldName, value?: boolean): void;
 
 /**
  * Sets result variable on runtime.
- * @param result required; desired result
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/setresult/
+ * @param result (Any, required): desired result
  */
 declare function SETRESULT(result: any): void;
 
 /**
  * Sets record's status.
- * @param status status value, string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setstatus/
+ * @param status (String, required): status value
  */
 declare function SETSTATUS(status: string): void;
 /**
  * Sets record's status.
- * @param status status value, string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setstatus/
+ * @param status (String, required): status value
  */
 declare function SETSTATUS(status?: any): void;
 
 /**
  * Set status filter values.
- * @param value required; array of statuses (strings) or a single status to filter by
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setstatusfilter/
+ * @param value (Array|String, required): array of statuses (strings) or a single status to filter by
  */
 declare function SETSTATUSFILTER(value: string[] | string): void;
 
 /**
  * Sets status to hidden or visible.
- * @param value boolean value indicating whether to hide status
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setstatushidden/
+ * @param value (Boolean, required): whether to hide status
  */
 declare function SETSTATUSHIDDEN(value: boolean): void;
 
 /**
  * Sets status to read only or removes a read only condition.
- * @param value required; boolean value indicating whether status should be read-only
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/setstatusreadonly/
+ * @param value (Boolean, required): whether status should be read-only
  */
 declare function SETSTATUSREADONLY(value: boolean): void;
 
 /**
  * Calls a function after a specified delay.
- * The SETTIMEOUT function can be used to delay execution of a function for a specified amount of time. It's
- * nearly identical to the web platform standard
- * [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setTimeout).
- * @param function The function to execute after the delay
- * @param delay The number of milliseconds to delay (e.g. 1000 is 1 second)
- * @returns timer ID that can be used to clear the timeout with [CLEARTIMEOUT](/data-events/reference/cleartimeout/)
- * @example
- * ON('load-record', function(event) {
- *   var fiveMinutes = 1000 * 60 * 5;
  *
- *   SETTIMEOUT(function() {
- *     ALERT("You've been editing this record for 5 minutes.");
- *   }, fiveMinutes);
- * });
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/settimeout/
+ * @param function (Function, required): function to execute after the delay
+ * @param delay (Number, required): number of milliseconds to delay (e.g. 1000 is 1 second)
+ * @returns timer ID that can be used to clear the timeout with `CLEARTIMEOUT`
  */
 declare function SETTIMEOUT(fn: Function, timeout: number): number;
 
 /**
  * Can toggle between settings to either show errors or not.
- * @param showErrors optional; boolean value indiciating whether to show errors or not. Defaults to true.
- * @example
- * SHOWERRORS() // errors will be shown
- * SHOWERRORS(false) // errors will not be shown
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/showerrors/
+ * @param showErrors (Boolean, required): whether to show errors or not
  */
 declare function SHOWERRORS(showErrors?: boolean): void;
 
 /**
  * Randomly shuffles values passed in and returns them as an array.
- * @param values set of values to be shuffled
- * @returns a shuffled array
- * @example
  *
- * SHUFFLE([1, 2, 3], 4) // returns [4, 2, 3, 1]
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/shuffle/
+ * @param values (Array|Any, required): set of values to be shuffled
+ * @returns a shuffled array
  */
 declare function SHUFFLE(...values: any[]): any[];
 
 /**
  * Returns the sign of a number.
- * @param num required; numeric value
- * @returns sign of a number: 1 for positive numbers, -1 for negative numbers, 0 for 0
- * @example
  *
- * SIGN(9 * -3) // returns -1
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sign/
+ * @param num (Number, required): value to evaluate
+ * @returns sign of a number: 1 for positive numbers, -1 for negative numbers, 0 for 0
  */
 declare function SIGN(num: number): number;
 /**
  * Returns the sign of a number.
- * @param num required; numeric value
- * @returns sign of a number: 1 for positive numbers, -1 for negative numbers, 0 for 0
- * @example
  *
- * SIGN(9 * -3) // returns -1
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sign/
+ * @param num (Number, required): value to evaluate
+ * @returns sign of a number: 1 for positive numbers, -1 for negative numbers, 0 for 0
  */
 declare function SIGN(num: any): number;
 
 /**
  * Returns the sine of the specified angle value, which must be specified in radians.
- * @param value numeric value specifying radians
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sin/
+ * @param value (Number, required)L: numeric value specifying radians
  * @returns numeric value between 1 and -1 indicating the angle's sine
  * @example
  * SIN(12) // returns -0.5365729180004349
@@ -4427,7 +4447,9 @@ declare function SIGN(num: any): number;
 declare function SIN(value: number): number;
 /**
  * Returns the sine of the specified angle value, which must be specified in radians.
- * @param value numeric value specifying radians
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sin/
+ * @param value (Number, required)L: numeric value specifying radians
  * @returns numeric value between 1 and -1 indicating the angle's sine
  * @example
  * SIN(12) // returns -0.5365729180004349
@@ -4436,7 +4458,9 @@ declare function SIN(value: string): number;
 
 /**
  * Returns function returns the hyperbolic sine of a number
- * @param value numeric value
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sinh/
+ * @param value (Number, required): value to evaluate
  * @returns numeric value of angle's hyperbolic sine
  * @example
  * SINH(12) // returns 0.8438539587324921
@@ -4444,7 +4468,9 @@ declare function SIN(value: string): number;
 declare function SINH(value: number): number;
 /**
  * Returns function returns the hyperbolic sine of a number
- * @param value numeric value
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sinh/
+ * @param value (Number, required): value to evaluate
  * @returns numeric value of angle's hyperbolic sine
  * @example
  * SINH(12) // returns 0.8438539587324921
@@ -4452,7 +4478,9 @@ declare function SINH(value: number): number;
 declare function SINH(value: string): number;
 /**
  * Returns function returns the hyperbolic sine of a number
- * @param value numeric value
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sinh/
+ * @param value (Number, required): value to evaluate
  * @returns numeric value of angle's hyperbolic sine
  * @example
  * SINH(12) // returns 0.8438539587324921
@@ -4460,218 +4488,218 @@ declare function SINH(value: string): number;
 declare function SINH(value: any): number;
 
 /**
- * Sorts parameters passed in according to an optional callback. Defaults to basic comparison sort sans callback.
- * @param args values to be sorted, optional callback must be passed in last
+ * Sorts parameters passed in according to an optional callback.
+ * Defaults to basic alphabetic/numeric sort sans callback.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sort/
+ * @param args (Array|Any...Function, required): values to be sorted, optional callback must be passed in last
  * @returns sorted list of values
- * @example
- * SORT(1, 3, 6, 6, 2) // returns [1, 2, 3 , 6, 6]
- * SORT({test: 2}, {test: 1}, {test: 1}, (a: any, b: any) => a.test) // returns [{test: 1}, {test: 1}, {test: 2}]
  */
 declare function SORT(...args: any[]): any[] | undefined;
 
 /**
  * Returns the square root of a number.
- * @param num number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrt/
+ * @param num (Number, required): number to be evaluated
  * @returns square root of original value
  */
 declare function SQRT(num: number): number;
 /**
  * Returns the square root of a number.
- * @param num number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrt/
+ * @param num (Number, required): number to be evaluated
  * @returns square root of original value
  */
 declare function SQRT(num: string): number;
 /**
  * Returns the square root of a number.
- * @param num number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrt/
+ * @param num (Number, required): number to be evaluated
  * @returns square root of original value
  */
 declare function SQRT(num: any): number;
 
 /**
  * Returns the square root of a number times PI.
- * @param num number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrtpi/
+ * @param num (Number, required): number to be evaluated
  * @returns the sqrt of `num` * PI
  */
 declare function SQRTPI(num: number): number;
 /**
  * Returns the square root of a number times PI.
- * @param num number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrtpi/
+ * @param num (Number, required): number to be evaluated
  * @returns the sqrt of `num` * PI
  */
 declare function SQRTPI(num: string): number;
 /**
  * Returns the square root of a number times PI.
- * @param num number to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sqrtpi/
+ * @param num (Number, required): number to be evaluated
  * @returns the sqrt of `num` * PI
  */
 declare function SQRTPI(num: any): number;
 
 /**
- * Returns the record status or undefined if the status is not present.
+ * Returns the record status.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/status/
  */
 declare function STATUS(): string | undefined;
 
 /**
- * Returns the status value of a record.
+ * Returns the status label of a record.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/statuslabel/
  */
 declare function STATUSLABEL(): string | undefined;
 
 /**
  * Returns a storage object for setting and getting local storage items.
- * @example
- * storage = STORAGE();
- * KEY = 'item_key';
- * storage.setItem(KEY, 'hello world');
  *
- * // Sets an item in local storage, must be a string
- * @example
- * item = storage.getItem(KEY);
- *
- * // Gets an item from storage if it exists, otherwise returns null
- * @example
- * geom = { type: 'Point', coordinates: [-100, 40] };
- * storage.setItem('geometry', JSON.stringify(geom));
- *
- * anotherGeom = JSON.parse(storage.getItem('geometry'));
- *
- * // Use JSON.stringify and JSON.parse to serialize and deserialize objects in local storage
- * @example
- * storage.removeItem(KEY);
- *
- * // Removes an item from storage
- * @example
- * storage.clear();
- *
- * // Removes all items from storage
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/storage/
  */
 declare function STORAGE(): typeof storage | Storage;
 
 /**
  * Returns a single string of stringable values extracted from parameters.
- * `null`, `undefined`, `NaN` values are ignored. STRING can be used to extract the following values from objects:
+ * STRING can be used to extract the following values from objects:
  * `photo_id`, `video_id`, `audio_id`, `signature_id`, `record_id`, and `id`. STRING will unpack Choice field options
  * if passed in.
- * @param args list of values
- * @returns a string of values separated by commas
- * @example
  *
- * STRING(1, 2, null, 4) // returns "1, 2, 4"
- * STRING({ choice_values: ["yes", "no"], other_values: ["maybe"] }) // returns "yes, no, maybe"
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/string/
+ * @param args (Any|Array|Object, required): list of values or array-like object
+ * @returns a string of values separated by commas
  */
 declare function STRING(...args: any[]): string;
 
 /**
  * Searches a string for a pattern and replaces it with a new substring.
- * @param text required; text to be searched
- * @param oldText required; pattern to be replaced
- * @param newText required; substring to replace `oldText`
- * @param occurrence optional; numeric value indicating at which occurrence of `oldText` should be replaced
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/substitute/
+ * @param text (String, required): text to be searched
+ * @param oldText (String, required): pattern to be replaced
+ * @param newText (Stirng, required): substring to replace `oldText`
+ * @param occurrence (Number, optional): numeric value indicating at which occurrence of `oldText` should be replaced
  * @returns string with new substring incorporated
- *
- * @example
- *
- * SUBSTITUTE('abc abc abc', 'abc', 'def', 2) // returns 'abc def abc'
  */
 declare function SUBSTITUTE(text: string, oldText: string, newText: string, occurrence?: number): string | undefined;
 
 /**
  * Returns the sum of each number squared.
- * @param args array of numbers
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sumsq/
+ * @param args (Array|Number, required): array or list of numbers
  * @returns sum of the square of each argument
  * @example
- *
  * SUMSQ(1, 2, 3, 4) // returns 30
  */
 declare function SUMSQ(...args: number[]): number;
 /**
  * Returns the sum of each number squared.
- * @param args array of numbers
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/sumsq/
+ * @param args (Array|Number, required): array or list of numbers
  * @returns sum of the square of each argument
  * @example
- *
  * SUMSQ(1, 2, 3, 4) // returns 30
  */
 declare function SUMSQ(...args: any[]): number;
 
 /**
  * Stringifies the value passed in
- * @param value required; value to be converted to a string
+ * @param value (Any, required): value to be converted to a string
  * @returns string value
  * @example
- *
  * T(true) // returns "true"
  */
 declare function T(value: any): string;
 
 /**
  * Adds specified amount of time to a time string.
- * @param startTime required; string specifying a start time: XX:XX
- * @param amount required; number of minutes or hours to be added
- * @param format required; "hours" or "minutes" indicating where amount idicated is to be added
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timeadd/
+ * @param startTime (String, required): string specifying a start time: XX:XX
+ * @param amount (Number, equired): number of minutes or hours to be added
+ * @param format ("hours"|"minutes", required): add time to minutes or hours
  * @returns time string
  */
 declare function TIMEADD(startTime: string, amount: number, format: string): string | undefined;
 /**
  * Adds specified amount of time to a time string.
- * @param startTime required; string specifying a start time: XX:XX
- * @param amount required; number of minutes or hours to be added
- * @param format required; "hours" or "minutes" indicating where amount idicated is to be added
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timeadd/
+ * @param startTime (String, required): string specifying a start time: XX:XX
+ * @param amount (Number, equired): number of minutes or hours to be added
+ * @param format ("hours"|"minutes", required): add time to minutes or hours
  * @returns time string
  */
 declare function TIMEADD(startTime: any, amount: any, format?: any): string | undefined;
 
 /**
- * Returns the difference between two times in minutes or hours. Format defaults to hours if no format is specified.
- * @param startTime required; string specifying a start time: XX:XX
- * @param endTime required; string specifying an end time: XX:XX
- * @param format optional; "hours" or "minutes"
+ * Returns the difference between two times in minutes or hours.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timediff/
+ * @param startTime (String, required): string specifying a start time: XX:XX
+ * @param endTime (String, required): string specifying an end time: XX:XX
+ * @param format ("hours"|"minutes", optional): measure difference in minutes or hours; defaults to hours
  * @returns numeric value indicating the difference between two times in either minutes or hours
  * @example
  * TIMEDIFF("14:00", "18:00") // returns 4
- * TIMEDIFF("14:00", "18:00", "minutes") // returns 240
  */
 declare function TIMEDIFF(startTime: string, endTime: string, format?: string): number | undefined;
 /**
- * Returns the difference between two times in minutes or hours. Format defaults to hours if no format is specified.
- * @param startTime required; string specifying a start time: XX:XX
- * @param endTime required; string specifying an end time: XX:XX
- * @param format optional; "hours" or "minutes"
+ * Returns the difference between two times in minutes or hours.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timediff/
+ * @param startTime (String, required): string specifying a start time: XX:XX
+ * @param endTime (String, required): string specifying an end time: XX:XX
+ * @param format ("hours"|"minutes", optional): measure difference in minutes or hours; defaults to hours
  * @returns numeric value indicating the difference between two times in either minutes or hours
  * @example
  * TIMEDIFF("14:00", "18:00") // returns 4
- * TIMEDIFF("14:00", "18:00", "minutes") // returns 240
  */
 declare function TIMEDIFF(startTime: any, endTime: any, format?: any): number | undefined;
 
 /**
  * Returns a time stamp given a date object for display only. As it does not contain a timezone, it should not
  * be used to perform calculations such as time deltas.
- * @param date optional; Date object - if nothing is passed in to TIMESTAMP, today's timestamp will be returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timestamp/
+ * @param date (Date, optional): if no Date object is passed in to TIMESTAMP, today's timestamp will be returned
  * @returns a string timestamp in YYYY-MM-DD HH:MM:SS format
- * @example
- * TIMESTAMP("December 16, 1982 03:24:00") // returns "1982-12-16 03:24:00"
  */
 declare function TIMESTAMP(date: Date): string;
 /**
  * Returns a time stamp given a date object for display only. As it does not contain a timezone, it should not
  * be used to perform calculations such as time deltas.
- * @param date optional; Date object - if nothing is passed in to TIMESTAMP, today's timestamp will be returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timestamp/
+ * @param date (Date, optional): if no Date object is passed in to TIMESTAMP, today's timestamp will be returned
  * @returns a string timestamp in YYYY-MM-DD HH:MM:SS format
- * @example
- * TIMESTAMP("December 16, 1982 03:24:00") // returns "1982-12-16 03:24:00"
  */
 declare function TIMESTAMP(date?: Date): string;
 
 /**
  * Returns the current timezone or, if it's not available, the default timezone
  * from the form configuration object.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/timezone/
  */
 declare function TIMEZONE(): string;
 
 /**
  * Trims leading and trailing whitespace from a string.
- * @param value required; string to be trimmed
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/trim/
+ * @param value (String, required): string to be trimmed
  * @returns trimmed string
  * @example
  * TRIM("  test  ") // returns "test"
@@ -4679,7 +4707,9 @@ declare function TIMEZONE(): string;
 declare function TRIM(value: string): string;
 /**
  * Trims leading and trailing whitespace from a string.
- * @param value required; string to be trimmed
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/trim/
+ * @param value (String, required): string to be trimmed
  * @returns trimmed string
  * @example
  * TRIM("  test  ") // returns "test"
@@ -4695,29 +4725,30 @@ declare function TRUE(): true;
 
 /**
  * Returns a string describing the type of argument passed in.
- * @param value required; value to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/typeof/
+ * @param value (Any, required): value to be evaluated
  * @returns a string indiciating the type of argument passed in
  * @example
  * TYPEOF("test") // "string"
- * TYPEOF(true) // "boolean"
- * TYPEOF(NaN) // "nan"
  */
 declare function TYPEOF(value: any): string;
 
 /**
  * Evaluates an array of items for unqiueness and returns an array devoid of duplicates.
  * If objects to be compared require an iteratee to extract data, it should be passed in as the last argument.
- * @param args required; items to be evaluated
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/unique/
+ * @param args (Any, required): items to be evaluated
  * @returns an array of unique items
- * @example
- * UNIQUE(1, 2, 5, 6, 3, 2, 1) // returns [ 1, 2, 5, 6, 3]
- * UNIQUE({test: 1}, {test: 1}, {test: 2}, (a: any) => a.test) //     returns [{test: 1}, {test: 2}]
  */
 declare function UNIQUE(...args: any[]): any[] | undefined;
 
 /**
  * Returns a string of all uppercase letters
- * @param value required; value to be converted to uppercase
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/upper/
+ * @param value (String, required): text to be converted to uppercase
  * @returns string of uppercase letters
  * @example
  * UPPER("test") // returns "TEST"
@@ -4725,7 +4756,9 @@ declare function UNIQUE(...args: any[]): any[] | undefined;
 declare function UPPER(value: string): string;
 /**
  * Returns a string of all uppercase letters
- * @param value required; value to be converted to uppercase
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/upper/
+ * @param value (String, required): text to be converted to uppercase
  * @returns string of uppercase letters
  * @example
  * UPPER("test") // returns "TEST"
@@ -4734,121 +4767,152 @@ declare function UPPER(value: undefined | null | object | Array<any> | GenericOb
 
 /**
  * Returns the current user's full name if it exists in the current configuration.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/userfullname/
  */
 declare function USERFULLNAME(): string | undefined;
 
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: NumericFieldName): NumericFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: TextFieldName): TextFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: YesNoFieldName): YesNoFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: PhotoFieldName): PhotoFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: VideoFieldName): VideoFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: AudioFieldName): AudioFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: ChoiceFieldName): ChoiceFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: RepeatableFieldName): RepeatableFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: SignatureFieldName): SignatureFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: RecordLinkFieldName): RecordLinkFieldValue;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: FieldName): string | undefined;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: string): string | undefined;
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 declare function VALUE(dataName: any): any;
 
 /**
- * Returns device, platform, and application information.
- * @param separator optional; character to separate each item returned - defaults to " ,"
- * @example
- * VERSIONINFO() // returns "Apple MQCK2LL/A, iOS 2.0, Chrome 4.2.3.5.2 Webkit"
+ * Returns versino info about the app.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/versioninfo/
+ * @param separator (String, optional): character to separate each item returned - defaults to " ,"
  */
 declare function VERSIONINFO(separator?: string): string;
 
 /**
  * Returns a year given a date.
- * @param date required; date, either as a Date object or a string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/year/
+ * @param date (Date|String, required): date, either as a Date object or a string in XXXX-XX-XX format
  * @returns year as numeric value
  * @example
  * YEAR("2015/12/16") // returns 2015
- * YEAR(new Date("2015/12/16 00:00:00") // returns 2015
  */
 declare function YEAR(date: Date): number;
 /**
  * Returns a year given a date.
- * @param date required; date, either as a Date object or a string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/year/
+ * @param date (Date|String, required): date, either as a Date object or a string in XXXX-XX-XX format
  * @returns year as numeric value
  * @example
  * YEAR("2015/12/16") // returns 2015
- * YEAR(new Date("2015/12/16 00:00:00") // returns 2015
  */
 declare function YEAR(date: MaybeString): number;
 /**
  * Returns a year given a date.
- * @param date required; date, either as a Date object or a string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/year/
+ * @param date (Date|String, required): date, either as a Date object or a string in XXXX-XX-XX format
  * @returns year as numeric value
  * @example
  * YEAR("2015/12/16") // returns 2015
- * YEAR(new Date("2015/12/16 00:00:00") // returns 2015
  */
 declare function YEAR(): undefined;
 

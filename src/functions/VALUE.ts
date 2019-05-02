@@ -28,7 +28,9 @@ import {
 
 /**
  * Returns a data value when given the field's data name.
- * @param dataName required; data name of the desired field
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/value/
+ * @param dataName (String, required): data name of the desired field
  * @returns a form field value
  */
 

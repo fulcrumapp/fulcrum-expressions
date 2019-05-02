@@ -3,15 +3,14 @@ import NUM from "./NUM"
 
 /**
  * Searches a string for a substring and returns a 1-based index.
- * @param needle required; substring to search for
- * @param haystack required; string in which to search for `needle` substring
- * @param startPosition optional; number, 1-based index from which to start searching the `haystack` string
- * @returns 1-based index indicating where substring is located
  * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/search/
+ * @param needle (String, required): substring to search for
+ * @param haystack (Strnig, required): string in which to search for `needle`
+ * @param startPosition (Number, optional): 1-based index from which to start searching the `haystack` string
+ * @returns 1-based index indicating where substring is located
  * @example
  * SEARCH('4', '1234') // returns 4
- * // startPosition = 2 so search begins at second character of string
- * SEARCH("t", "test", 2) // returns 4
  */
 export default function SEARCH(needle: string, haystack: string, startPosition?: number): number|undefined
 export default function SEARCH(needle: any, haystack: any, startPosition?: any): number|undefined

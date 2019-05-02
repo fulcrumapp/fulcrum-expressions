@@ -5,11 +5,10 @@ import FIRST from "./FIRST"
 /**
  * Evaluates an array of items for unqiueness and returns an array devoid of duplicates.
  * If objects to be compared require an iteratee to extract data, it should be passed in as the last argument.
- * @param args required; items to be evaluated
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/unique/
+ * @param args (Any, required): items to be evaluated
  * @returns an array of unique items
- * @example
- * UNIQUE(1, 2, 5, 6, 3, 2, 1) // returns [ 1, 2, 5, 6, 3]
- * UNIQUE({test: 1}, {test: 1}, {test: 2}, (a: any) => a.test) //     returns [{test: 1}, {test: 2}]
  */
 
 export default function UNIQUE(...args: any[]): any[]|undefined {

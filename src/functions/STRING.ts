@@ -13,15 +13,13 @@ import COMPACT from "./COMPACT"
 
 /**
  * Returns a single string of stringable values extracted from parameters. 
- * `null`, `undefined`, `NaN` values are ignored. STRING can be used to extract the following values from objects:
+ * STRING can be used to extract the following values from objects:
  * `photo_id`, `video_id`, `audio_id`, `signature_id`, `record_id`, and `id`. STRING will unpack Choice field options
  * if passed in.
- * @param args list of values
- * @returns a string of values separated by commas
- * @example
  * 
- * STRING(1, 2, null, 4) // returns "1, 2, 4"
- * STRING({ choice_values: ["yes", "no"], other_values: ["maybe"] }) // returns "yes, no, maybe"
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/string/
+ * @param args (Any|Array|Object, required): list of values or array-like object
+ * @returns a string of values separated by commas
  */
 
 export default function STRING(...args: any[]): string {
