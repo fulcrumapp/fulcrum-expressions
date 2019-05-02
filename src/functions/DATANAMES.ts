@@ -26,10 +26,11 @@ const FORM_FIELD_TYPES = [ "TextField",
 /**
  * Returns the data names of the form fields. Also accepts an optional
  * type argument to filter form fields by type.
- * @param type optional; string of a FormFieldType: e.g. "YesNoField"
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/datanames/
+ * @param type (String, optional): FormFieldType: e.g. "YesNoField"
  * @returns array of datanames
  * @example
- * DATANAMES() // returns [ "name", "items", "cost", "choice_value", "child_items", "child_item_cost", "choice_field" ]
  * DATANAMES('Repeatable') // returns [ "items", "child_items" ]
  */
 

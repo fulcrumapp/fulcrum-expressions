@@ -9,25 +9,12 @@ import NUM from "./NUM"
 
 /**
  * Returns a number formatted based on the current language and the styling options passed in.
- * @param value required; number to be formatted
- * @param langauge optional; languange- and country-specific string, e.g. "en-US", to indicate desired
- * language formatting. Defaults to device's current langauge setting.
- * @param options optional; formatting options hash:
- * {
- *  localeMatcher: locale string, e.g. "en_US",
- *  style: "currency" | "percent" | "decimal",
- *  currency: currency code string, e.g. "USD",
- *  minimumSignificantDigits: number,
- *  maximumSignificantDigits: number,
- *  minimumIntegerDigits: number,
- *  minimumFractionDigits?: number,
- *  maximumFractionDigits?: number,
- *  useGrouping: boolean,
- * }
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/formatnumber/
+ * @param value (Number, required): number to be formatted
+ * @param langauge (String, optional): languange- and country-specific string, e.g. "en-US"
+ * @param options (NumberFormatOptions, optional): formatting options hash
  * @returns formatted number string
- * @example
- * FORMATNUMBER(10000 / 3, "pt-BR", { style: "currency", currency: "BRL" }) // returns "R$3.333,33"
- * FORMATNUMBER(1 / 3, null, { minimumFractionDigits: 5 }) // returns "0.33333"
  */
 
 export default function FORMATNUMBER(value: number, language: MaybeString, options: NumberFormatOptions): string

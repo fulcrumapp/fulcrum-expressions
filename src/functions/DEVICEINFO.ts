@@ -4,11 +4,10 @@ import DEVICEMODEL from "./DEVICEMODEL"
 
 /**
  * Returns device info, including the device manufacturer and model
- * @param separator optional; character to separate device manufacturer and model, defauls to ", "
+ * @param separator (String, optional): character to separate device manufacturer and model, defauls to `", "`
  * @returns string
  * @example
  * DEVICEINFO() // returns "Apple, MQCK2LL/A"
- * DEVICEINFO(": ") // returns "Apple: MQCK2LL/A"
  */
 
 export default function DEVICEINFO(separator?: string): string

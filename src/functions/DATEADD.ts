@@ -6,12 +6,11 @@ import { MaybeString } from "../types/primitives"
 
 /**
  * Adds a given number of days to a date.
- * @param date required; Date object or a string representing a string in XXXX-XX-XX format
- * @param number required; number of days to be added as an integer
- * @returns Date object
  * 
- * @example
- * DATEADD("2012-03-04", 5) // returns 2012-03-09T00:00:00.000Z
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/dateadd/
+ * @param date (Date|String, required): Date object or string in XXXX-XX-XX format
+ * @param number (Number, required): number of days to be added as an integer
+ * @returns Date object
  */
 
 export default function DATEADD(date: Date|MaybeString, number: number): Date|undefined {

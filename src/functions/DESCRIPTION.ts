@@ -5,10 +5,10 @@ import FIELD from "./FIELD"
 
 /**
  * Returns a field's description.
- * @param dataName required; data_name of desired field
- * @returns the field's description
- * @example
- * DESCRIPTION("operating_hours") // returns "Stores operating hours in 24-hour time format"
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/description/
+ * @param dataName (String, required): data name of desired field
+ * @returns string, the field's description
  */
 
 export default function DESCRIPTION(dataName: MaybeString): string | undefined

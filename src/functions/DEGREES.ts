@@ -3,11 +3,12 @@ import NUM from "./NUM"
 
 /**
  * Returns degrees for an input of radians.
- * @param value required; numeric value or string representing a value in radians
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/degrees/
+ * @param value (Number, required): numeric value representing a value in radians
  * @returns numeric value representing degrees
  * @example
  * DEGREES(Math.PI) // returns 180
- * DEGREES("0.78") // returns 44.69070802020421
  */
 
 export default function DEGREES(value: number|string): number

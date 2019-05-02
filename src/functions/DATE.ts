@@ -3,12 +3,12 @@ import ISNAN from "./ISNAN"
 
 /**
  * Returns a new Date object given a year, month, and day.
- * @param year four-digit number
- * @param month one-two digit number
- * @param day one-two digit number
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/date/
+ * @param year (Number, required): four-digit number
+ * @param month (Number, required): one-two digit number
+ * @param day (Number, required): one-two digit number
  * @returns Date object
- * @example
- * DATE(2012, 3, 14) // returns 2012-04-14T00:00:00.000Z
  */
 
 export default function DATE(year: number, month: number, day: number): Date

@@ -4,11 +4,12 @@ import NUM from "./NUM"
 
 /**
  * Returns number rounded up to the nearest even integer
- * @param value number
- * @returns number or NaN
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/even/
+ * @param value (Number, required): number to evaluate
+ * @returns number
  * @example
  * EVEN(-3.4) // returns -2
- * EVEN([]) // returns NaN
  */
 
 export default function EVEN(value: number): number

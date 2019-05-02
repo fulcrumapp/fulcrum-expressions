@@ -4,11 +4,12 @@ import DATEVALUE from "./DATEVALUE"
 
 /**
  * Returns a day given a date.
- * @param date required; date, either as a Date object or a string
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/day/
+ * @param date (Date|String, required): Date object or a string in XXXX-XX-XX format
  * @returns day as numeric value
  * @example
  * DAY("2015/12/16") // returns 16
- * DAY(new Date("2015/12/16 00:00:00") // returns 16
  */
 
 export default function DAY(date: Date): number

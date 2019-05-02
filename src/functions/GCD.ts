@@ -3,8 +3,10 @@ import NUM from "./NUM"
 
 /**
  * Returns the greatest common divisor
- * @param args list of numbers
- * @returns number; greatest commom divisor
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/gcd/
+ * @param args (Any|Array, required): list of numbers
+ * @returns greatest commom divisor among the numbers passed in
  * @example
  * GCD(8, 16, 32, 36) // returns 4
  */

@@ -4,6 +4,9 @@ export interface RecursiveArray<T> extends Array<T|RecursiveArray<T>> {}
 
 /**
  * Accepts a nested array and returns an array flattened to one level deep
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/flatten/
+ * @param value (Array, required): nested array to be flattened
  * @returns a flattened array
  * @example
  * FLATTEN([1, [2, [3]]]) // returns [1, 2, 3]

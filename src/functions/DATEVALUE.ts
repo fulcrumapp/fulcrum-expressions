@@ -5,12 +5,11 @@ import LPAD from "./LPAD"
 
 /**
  * Returns a date value given a date and optional time string
- * @param dateString required; string representing a date in XXXX-XX-XX form or a Date object
- * @param timeString optional; string representing a time
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/datevalue/
+ * @param dateString (String|Date, required): string in XXXX-XX-XX format or a Date object
+ * @param timeString (String, optional): string in XX:XX or XX:XX:XX format
  * @returns Date value
- * @example
- * DATEVALUE("2018-02-07") // returns 2018-02-07T00:00:00.000Z
- * DATEVALUE("2018-02-07", "06:01") // returns 2018-02-07T06:01:00.000Z
  */
 
 export default function DATEVALUE(dateString: Date|MaybeString, timeString?: string): Date

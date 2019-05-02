@@ -4,7 +4,9 @@ import FIELD from "./FIELD"
 
 /**
  * Returns a field's type.
- * @param dataName required; data_name of desired field
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fieldtype/
+ * @param dataName (String, required): data name of desired field
  * @returns the field's type
  * @example
  * FIELDTYPE("operating_hours") // returns "TimeField"

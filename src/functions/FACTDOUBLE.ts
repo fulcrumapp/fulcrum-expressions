@@ -4,11 +4,12 @@ import NUM from "./NUM"
 
 /**
  * Returns double factorial of a number, n (n!!)
- * @param value postive integer
- * @returns factorial of value (value!!)
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/factdouble/
+ * @param value (Number, required): postive integer
+ * @returns factorial of value
  * @example
- * FACT(0) // returns 1
- * FACT(7) // returns 5040
+ * FACT(5) // returns 15
  */
 
 export default function FACTDOUBLE(value: any): number {

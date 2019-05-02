@@ -10,11 +10,12 @@ export interface FieldsOptions {
 
 /**
  * Returns child fields of a repeatable or section field associated with a given data name
- * @param dataName required; string
- * @param options optional; object indicating if result should be flattened recursively,
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fields/
+ * @param dataName (String, required): parent field's data name
+ * @param options (Object, optional): object indicating if result should be flattened recursively,
  * e.g. `{ repeatables: boolean, sections: boolean }`
  * @returns array of child fields
- *
  */
 
 export default function FIELDS(dataName: ContainerFieldName): FormFields[]

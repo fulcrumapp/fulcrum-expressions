@@ -4,10 +4,11 @@ import NUM from "./NUM"
 
 /**
  * Returns factorial of a number, n (n!)
- * @param value postive integer
- * @returns factorial of value (value!)
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/fact/
+ * @param value (Number, required): postive integer
+ * @returns factorial of `value`
  * @example
- * FACT(0) // returns 1
  * FACT(7) // returns 5040
  */
 

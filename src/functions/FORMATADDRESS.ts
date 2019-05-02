@@ -4,24 +4,12 @@ import EXISTS from "./EXISTS"
 
 /**
  * Returns a formatted address
- * @param address required; string, must be valid AddressFieldValue:
- * { sub_thoroughfare?: string, thoroughfare?: string, suite?: string, locality?: string,
- * sub_admin_area?: string, admin_area?: string, postal_code?: string, country?: string }
- * @param lineSeparator optional; string, character to separate address lines, defaults to "\n"
- * @param partSeparator optional; string, character to separate address parts, defaulst to " "
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/formataddress/
+ * @param address (AddressFieldValue, required) must be valid AddressFieldValue
+ * @param lineSeparator (String, optional): character to separate address lines, defaults to `"\n"`
+ * @param partSeparator (String, optional): character to separate address parts, defaulst to " "
  * @returns string, formatted address
- * @example
- * const exampleAddress = {
- *  sub_thoroughfare: "360",
- *   thoroughfare: "Central Avenue",
- *   suite: "200",
- *   locality: "St. Petersburg",
- *   sub_admin_area: "Pinellas",
- *   admin_area: "FL",
- *   postal_code: "33701",
- *   country: "US",
- * }
- * FORMATADDRESS(exampleAddress) // returns "360 Central Avenue #200\nSt. Petersburg FL 33701\nUS"
  */
 
 export default function FORMATADDRESS(address: AddressFieldValue,

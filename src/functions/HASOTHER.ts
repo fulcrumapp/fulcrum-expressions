@@ -3,13 +3,10 @@ import { ChoiceFieldValue } from "../types/values"
 
 /**
  * Returns where or not a ChoiceFieldValue has an `other_values` key
- * @param value ChoiceFieldValue { choice_values?: string[ ], other_values?: string[ ] }
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/hasother/
+ * @param value (ChoiceFieldValue, required): `{ choice_values?: string[ ], other_values?: string[ ] }`
  * @returns boolean value
- * @example
- * const choiceField1 = { choice_values: ["yes", "no"], other_values: ["maybe"] }
- * const choiceField2 = { choice_values: ["yes", "no"] }
- * HASOTHER(choiceField1) // returns true
- * HASOTHER(choiceField2) // returns false
  */
 
 export default function HASOTHER(value: ChoiceFieldValue): boolean

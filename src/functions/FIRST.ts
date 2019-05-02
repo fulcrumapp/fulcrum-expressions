@@ -2,6 +2,11 @@ import { isArray, isEmpty, isString, slice } from "lodash"
 
 /**
  * Returns the first n items of an array or string.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/first/
+ * @param item (Array, required): array to evaluate
+ * @param n (Number, optional): number of items to return, defaults to 1
+ * @returns a single value or an array of values
  */
 
 export default function FIRST(item: any[]|string, n: number): any[]|undefined
