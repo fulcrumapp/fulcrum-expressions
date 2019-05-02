@@ -1,11 +1,12 @@
 declare module 'src/functions/NUM' {
 	/**
 	 * Parses the passed in value as a numeric value
-	 * @param value any type
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/num/
+	 * @param value (Number|String, required): value to be coerced to a numeric value
 	 * @returns a numeric value
 	 * @example
 	 * NUM('1') // returns 1
-	 * NUM('a') // returns NaN
 	 */
 	export default function NUM(value: any): number;
 
@@ -271,12 +272,12 @@ declare module 'src/functions/AVERAGE' {
 declare module 'src/functions/ISNUMBER' {
 	/**
 	 * Returns a boolean value indicating if value passed in is a numeric value
-	 * @param value any type
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnumber/
+	 * @param value (Any, required): value to be checked
 	 * @returns boolean
 	 * @example
 	 * ISNUMBER(8) // returns true
-	 * ISNUMBER(3.78) // returns true
-	 * ISNUMBER('3.67') // returns false
 	 */
 	export default function ISNUMBER(value: any): boolean;
 
@@ -284,11 +285,12 @@ declare module 'src/functions/ISNUMBER' {
 declare module 'src/functions/ISNAN' {
 	/**
 	 * Returns a boolean value indicating if the passed in value is not a number
-	 * @param value value of any type
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnan/
+	 * @param value (Any, required): value to be checked
 	 * @returns boolean value
 	 * @example
-	 * ISNAN(9) // returns false
-	 * ISNAN('a7') // returns true
+	 * ISNAN("a7") // returns true
 	 */
 	export default function ISNAN(value: any): boolean;
 
@@ -446,15 +448,11 @@ declare module 'src/functions/ISBLANK' {
 	 * Returns a boolean value indiciating whether the object is blank/empty.
 	 * Values of null, undefined, and NaN are considered blank and the function will return true.
 	 *
-	 * @param value item or Choice Field value to be checked for blankness or emptiness;
-	 * Example: ISBLANK( { choice_values: null, other_values: ['a', 'b'] } )
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isblank/
+	 * @param value (ChoiceFieldValue|Any, required) item to be checked for blankness or emptiness;
 	 * @returns boolean value
-	 *
 	 * @example
 	 * ISBLANK('') // returns true
-	 * ISBLANK(NaN) // returns true
-	 * ISBLANK({choice_values: ['a'], other_values: null}) // returns false
-	 * ISBLANK({choice_values: null, other_values: null}) // returns true
 	 */
 	export default function ISBLANK(value: ChoiceFieldValue): boolean;
 	export default function ISBLANK(value: any): boolean;
@@ -640,28 +638,12 @@ declare module 'src/functions/MESSAGEBOX' {
 	    default?: any[] | null;
 	}
 	/**
-	 * MESSAGEBOX displays a message to the user.
-	 * You can provide both the title and message of the alert box.
-	 * Using the buttons parameter you can specify the button titles that are displayed in the message box.
-	 * @param options Object(required) - options for the message box
-	 * @param callback function(required) - invoked when message box is dismissed
+	 * MESSAGEBOX displays a message to the user. You can provide both the title and message of the alert box.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/messagebox/
+	 * @param options (MessageBoxPayload, required): options for the message box
+	 * @param callback (Function, required): invoked when message box is dismissed
 	 * @returns invokes callback or returns an options Object
-	 * @example
-	 * const options = {
-	 * title: 'Confirm',
-	 * message: 'You selected a safety violation: Are you sure?',
-	 * buttons: ['Yes', 'No']
-	 * }
-	 *
-	 * const callback = function (result) {
-	 *               if (result.value === 'Yes') {
-	 *                  // Selected Yes
-	 *               } else {
-	 *                 // Selected No
-	 *               }
-	 *            }
-	 *
-	 * MESSAGEBOX(options, callback);
 	 */
 	export default function MESSAGEBOX(options: MessageBoxPayload, callback: Function): void;
 	export default function MESSAGEBOX(options: MessageBoxPayload): void;
@@ -1165,8 +1147,17 @@ declare module 'src/functions/FLOOR' {
 
 }
 declare module 'src/functions/INT' {
-	import FLOOR from 'src/functions/FLOOR';
-	export default FLOOR;
+	/**
+	 * Returns number rounded down, away from zero, to the nearest interger
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/int/
+	 * @param number (Number, required): value to be converted
+	 * @param multiple (Number, optional): multiple to which a `number` will be converted
+	 * @returns number converted to an int, rounded to nearest multiple
+	 * @example
+	 * INT(3.45) // returns 3
+	 */
+	export default function INT(number: number, multiple?: number): number;
 
 }
 declare module 'src/functions/DATE' {
@@ -1205,13 +1196,14 @@ declare module 'src/functions/LPAD' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Returns a string padded to the left with a character of choice.
-	 * @param value required; string to be padded
-	 * @param count required; integer indicating the total length of the desired string
-	 * @param padding option; string, character to use for padding, defaults to " "
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lpad/
+	 * @param value (String, required): string to be padded
+	 * @param count (Number, required): integer indicating the total length of the desired string
+	 * @param padding (String, option): character to use for padding, defaults to " "
 	 * @returns a padded string
 	 * @example
 	 * LPAD("abc", 5) // returns "  abc"
-	 * LPAD("abc", 5, "0") // returns "00abc"
 	 */
 	export default function LPAD(value: string, count: number, padding?: string): MaybeString;
 	export default function LPAD(value: any, count: any, padding?: any): MaybeString;
@@ -1538,23 +1530,26 @@ declare module 'src/functions/GROUPINGSIZE' {
 declare module 'src/functions/MAX' {
 	/**
 	 * Returns max value from a list of values
-	 * @param args a list of numeric values or string number values
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/max/
+	 * @param args (Number|Array, required): list of numeric values
 	 * @returns max value in numeric form
 	 * @example
 	 * MAX(1, 4, 7, 2, 4) // returns 7
-	 * MAX(["45", "50", "32", "51"]) // returns 51
 	 */
+	export default function MAX(...args: number[]): number | undefined;
 	export default function MAX(...args: any[]): number | undefined;
 
 }
 declare module 'src/functions/MIN' {
 	/**
 	 * Returns min value from a list of values
-	 * @param args a list of numeric values or string number values
-	 * @returns min value in numeric form
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/min/
+	 * @param args (Number|Array, required): list of numeric values
+	 * @returns min numberic value among parameters
 	 * @example
 	 * MIN(7, 4, 1, 2, 4) // returns 1
-	 * MIN(["45", "50", "32", "51"]) // returns 32
 	 */
 	export default function MIN(...args: any[]): number | undefined;
 
@@ -1690,10 +1685,12 @@ declare module 'src/functions/HASOTHER' {
 declare module 'src/functions/IF' {
 	/**
 	 * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
-	 * @param test required; conditional expression that evaluates to true or false
-	 * @param trueValue required; value to be returned in case of true
-	 * @param falseValue required; vaue to be returned in case of false
-	 * @returns boolean or `trueValue`/`falseValue` if supplied
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/if/
+	 * @param test (Expression, required): conditional expression that evaluates to true or false
+	 * @param trueValue (Any,required): value to be returned in case of true
+	 * @param falseValue (Any, required): vaue to be returned in case of false
+	 * @returns`trueValue`/`falseValue` if supplied, else boolean
 	 * @example
 	 * IF(1 > 0, 10, 20) // returns 10
 	 */
@@ -1703,7 +1700,7 @@ declare module 'src/functions/IF' {
 declare module 'src/functions/ISERR' {
 	/**
 	 * Checks if a value is an instance of an Error or has no value
-	 * @param value required; item to be checked
+	 * @param value (Error|Any, required): item to be checked
 	 * @returns boolean
 	 * @example
 	 * const badField = FIELD('does_not_exist') // = undefined
@@ -1715,8 +1712,8 @@ declare module 'src/functions/ISERR' {
 declare module 'src/functions/IFERROR' {
 	/**
 	 * Evaluates whether a passed in value is an error.
-	 * @param value required; value to be evaluated
-	 * @param errorValue required; value to be returned in event `value` is an error
+	 * @param value (Error|Any, required): value to be evaluated
+	 * @param errorValue (Any, required): value to be returned in event `value` is an error
 	 * @returns `errorValue` in case `value` is an error, otherwise `value`
 	 * @example
 	 * IFERROR(EVEN(null), "ERR") // returns "ERR"
@@ -1727,10 +1724,10 @@ declare module 'src/functions/IFERROR' {
 declare module 'src/functions/INSPECT' {
 	/**
 	 * Returns a string representation of the passed in parameter
-	 * @param VALUE Number (required); value to inspect
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/inspect/
+	 * @param value (Number, required): value to inspect
 	 * @returns stringified value
-	 * @example
-	 * [INSPECT documentation]{`https://learn.fulcrumapp.com/dev/expressions/reference/inspect\/`}
 	 */
 	export default function INSPECT(value: any): string;
 
@@ -1817,16 +1814,10 @@ declare module 'src/types/results' {
 declare module 'src/functions/INVALID' {
 	/**
 	 * Displays an alert and stops a record from being saved
-	 * @description
-	 * The INVALID function is designed for the sole purpose of doing custom validations when saving records.
-	 * It’s a special purpose function that’s intended to only be used within the `validate-record` and
-	 * `validate-repeatable` events. It’s different from `ALERT` in a couple of ways. First, it instructs
-	 * the editor to halt saving the record. And second, messages passed to `INVALID` are combined and displayed
-	 * alongside the rest of the built-in validations like required fields, pattern validations, and min/max constraints.
-	 * Thus, custom validation logic can be displayed in a natural way to the end user as if it were a built-in validation.
-	 * @param message required; string detailing the reason for invalidating a record
-	 * @param dataName optional; string, data_name of field to be validated
-	 * @returns void
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/invalid/
+	 * @param message (String, required): reason for invalidating a record
+	 * @param dataName (String, optional): data name of field to be validated
 	 */
 	export default function INVALID(message: string, dataName?: string): void;
 	export default function INVALID(message: string, dataName?: string): void;
@@ -1834,17 +1825,25 @@ declare module 'src/functions/INVALID' {
 
 }
 declare module 'src/functions/ISERROR' {
-	import ISERR from 'src/functions/ISERR';
-	export default ISERR;
+	/**
+	 * Checks if a value is an instance of an Error or has no value
+	 * @param value (Error|Any, required): item to be checked
+	 * @returns boolean
+	 * @example
+	 * const badField = FIELD('does_not_exist') // = undefined
+	 * ISERROR(badField) // returns true
+	 */
+	export default function ISERROR(value: any): boolean;
 
 }
 declare module 'src/functions/ISEVEN' {
 	/**
 	 * Returns whether or not a value is even
-	 * @param value required; numeric value to be checked
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/iseven/
+	 * @param value (Number, required): numeric value to be checked
 	 * @returns boolean value
 	 * @example
-	 * ISEVEN(24) // returns true
 	 * ISEVEN(5 * 5) // returns false
 	 */
 	export default function ISEVEN(value: number): boolean;
@@ -1860,7 +1859,9 @@ declare module 'src/functions/ISPORTRAIT' {
 	}
 	/**
 	 * Checks whether the media is in portrait mode.
-	 * @param media required; media object, height and width attributes must be present
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/isportrait/
+	 * @param media (MediaObject, required): media object, height and width attributes must be present
 	 * @returns boolean
 	 * @example
 	 * const mediaObject = { width: 100, height: 200 }
@@ -1875,7 +1876,9 @@ declare module 'src/functions/ISLANDSCAPE' {
 	import { MediaObject } from 'src/functions/ISPORTRAIT';
 	/**
 	 * Checks whether the media is in landscape mode.
-	 * @param media required; media object, height and width attributes must be present
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/islandscape/
+	 * @param media (MediaObject, required): height and width attributes must be present
 	 * @returns boolean
 	 * @example
 	 * const mediaObject = { width: 200, height: 100 }
@@ -1889,11 +1892,12 @@ declare module 'src/functions/ISLANDSCAPE' {
 declare module 'src/functions/ISLOGICAL' {
 	/**
 	 * Checks for a boolean value
-	 * @param value required; value to be checked
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/islogical/
+	 * @param value (Any, required): value to be checked
 	 * @returns boolean value
 	 * @example
 	 * ISLOGICAL(2 > 0) // returns true
-	 * ISLOGICAL([ false ]) // returns false
 	 */
 	export default function ISLOGICAL(value: any): boolean;
 
@@ -1906,6 +1910,8 @@ declare module 'src/functions/PLATFORM' {
 declare module 'src/functions/ISMOBILE' {
 	/**
 	 * Returns true if the record is being edited from the mobile app
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ismobile/
 	 * @returns boolean value
 	 */
 	export default function ISMOBILE(): boolean;
@@ -1914,6 +1920,9 @@ declare module 'src/functions/ISMOBILE' {
 declare module 'src/functions/ISNEW' {
 	/**
 	 * Returns a boolean indicating whether the feature is new or an update.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnew/
+	 * @returns boolean
 	 */
 	export default function ISNEW(): boolean;
 
@@ -1921,11 +1930,12 @@ declare module 'src/functions/ISNEW' {
 declare module 'src/functions/ISNONTEXT' {
 	/**
 	 * Checks if a value is a a non-text value (not a string)
-	 * @param value required; value to be checked
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isnontext/
+	 * @param value (Any, required): value to be checked
 	 * @returns boolean
 	 * @example
-	 * ISNONTEXT("a string") // returns false
-	 * ISNONTEXT(["an array"]) // returns true
+	 * ISNONTEXT(["a string"]) // returns true
 	 */
 	export default function ISNONTEXT(value: any): boolean;
 
@@ -1933,10 +1943,11 @@ declare module 'src/functions/ISNONTEXT' {
 declare module 'src/functions/ISODD' {
 	/**
 	 * Returns whether or not a value is odd
-	 * @param value required; numeric value to be checked
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isodd/
+	 * @param value (Number, required): numeric value to be checked
 	 * @returns boolean value
 	 * @example
-	 * ISODD(24) // returns false
 	 * ISODD(5 * 5) // returns true
 	 */
 	export default function ISODD(value: number): boolean;
@@ -1955,12 +1966,10 @@ declare module 'src/functions/ISROLE' {
 	/**
 	 * Determines whether arguments passed in contain the role of the current user
 	 * by comparing it to  userRoleName on the configuration object
-	 * @param args required; role(s) to be checked as strings
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isrole/
+	 * @param args (String|Array, required): role(s) to be checked
 	 * @returns boolean
-	 * @example
-	 * // userRoleName = Standard User
-	 * ISROLE("Admin") // returns false
-	 * ISROLE("Admin", "ReadOnly", "Standard User") // returns true
 	 */
 	export default function ISROLE(...args: string[]): boolean;
 	export default function ISROLE(...args: any[]): boolean;
@@ -1970,11 +1979,11 @@ declare module 'src/functions/ISSELECTED' {
 	import { ChoiceFieldValue } from 'src/types/values';
 	/**
 	 * Checks to see if a choice is selected
-	 * @param value required; ChoiceFieldValues containing possible choices to check against
-	 * @param choice required; choice or array of choices to check if they are selected
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isselected/
+	 * @param value (ChoiceFieldValue, required): field object containing possible choices to check against
+	 * @param choice (Any|Array, required): choice or array of choices to check if they are selected
 	 * @returns boolean
-	 * @example
-	 * ISELECTED({choice_values: ["test", "not test"]}, "test")) // returns true
 	 */
 	export default function ISSELECTED(value: ChoiceFieldValue, choice: string | string[]): boolean;
 	export default function ISSELECTED(value: ChoiceFieldValue, choice?: string | string[]): boolean;
@@ -1984,11 +1993,12 @@ declare module 'src/functions/ISSELECTED' {
 declare module 'src/functions/ISTEXT' {
 	/**
 	 * Checks if a value is a text value (string)
-	 * @param value required; value to be checked
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/istext/
+	 * @param value (Any, required): value to be checked
 	 * @returns boolean
 	 * @example
 	 * ISTEXT("a string") // returns true
-	 * ISTEXT(["an array"]) // returns false
 	 */
 	export default function ISTEXT(value: any): boolean;
 
@@ -1996,6 +2006,9 @@ declare module 'src/functions/ISTEXT' {
 declare module 'src/functions/ISUPDATE' {
 	/**
 	 * Returns a boolean indicating if the feature being edited is an update
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/isupdate/
+	 * @returns boolean
 	 */
 	export default function ISUPDATE(): boolean;
 
@@ -2004,7 +2017,9 @@ declare module 'src/functions/LABEL' {
 	import { FieldName } from 'src/types/fields';
 	/**
 	 * Returns the label of a field
-	 * @param dataName required; data_name of a form field (string)
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/label/
+	 * @param dataName (String, required): data name of desired field
 	 * @returns form label, string
 	 * @example
 	 * LABEL("business_name") // returns "Business Name"
@@ -2015,11 +2030,12 @@ declare module 'src/functions/LABEL' {
 declare module 'src/functions/LAST' {
 	/**
 	 * Returns the last n items of an array or string.
-	 * @param item required; array or string to extract items from
-	 * @param n optional; number of items to be extracted
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/last/
+	 * @param item (Array|String, required): array or string to extract items from
+	 * @param n (Number, optional): number of items to be extracted
 	 * @returns items extracted; if more than one item is extracted an array is returned
 	 * @example
-	 * LAST([1, 2, 3]) // returns 3
 	 * LAST([1 ,2 ,3], 2) // return [2, 3]
 	 */
 	export default function LAST(item: any[] | string, n: number): any[] | undefined;
@@ -2030,6 +2046,9 @@ declare module 'src/functions/LAST' {
 declare module 'src/functions/LATITUDE' {
 	/**
 	 * Returns the latitude of the record if it exists.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/latitude/
+	 * @returns numeric value
 	 */
 	export default function LATITUDE(): number;
 
@@ -2037,8 +2056,10 @@ declare module 'src/functions/LATITUDE' {
 declare module 'src/functions/LCM' {
 	/**
 	 * Returns the least common multiple of the arguments passed in
-	 * @param args numbers or numbers as string values to be evaluated
-	 * @returns number; least common multiple
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lcm/
+	 * @param args (Number|Array) list of numbers to be evaluated
+	 * @returns number, least common multiple
 	 * @example
 	 * LCM(-50, 25, -45, -18, 90, 447) // returns 67050
 	 */
@@ -2050,10 +2071,11 @@ declare module 'src/functions/LCM' {
 declare module 'src/functions/LEFT' {
 	/**
 	 * Returns n left characters of a string.
-	 * @param value required; string
-	 * @param numberOfCharacters optional; number of characters to be returned. If not specified
-	 * one character will be returned
-	 * @returns string; number of characters specified
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/left/
+	 * @param value (String, required) string to be parsed
+	 * @param numberOfCharacters (Number, optional) number of characters to be returned, defaults to 1
+	 * @returns string, number of characters specified
 	 * @example
 	 * LEFT("Hello, World", 3) // returns "Hel"
 	 */
@@ -2066,19 +2088,22 @@ declare module 'src/functions/LEFT' {
 declare module 'src/functions/LEN' {
 	/**
 	 * Returns the length of a value as a string or an array-like object.
-	 * @param value required; item to be measured
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/len/
+	 * @param value (Any, required): item to be measured
 	 * @returns number
 	 * @example
 	 * LEN("test") // returns 4
-	 * LEN(["test", "test"]) // returns 2
 	 */
 	export default function LEN(value: any): number;
 
 }
 declare module 'src/functions/LN' {
 	/**
-	 * Returns the returns the natural logarithm of a value. In mathematics, this is equivalent to _ln(x)_.
-	 * @param value numeric value specifying radians
+	 * Returns the natural logarithm of a value; equivalent to _ln(x)_.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/ln/
+	 * @param value (Number, required): positive number for which to calculate the logarithm, base `e`
 	 * @returns numeric value indicating the natural log of a value
 	 * @example
 	 * LN(12) // returns 2.4849066497880004
@@ -2098,8 +2123,10 @@ declare module 'src/functions/LOCALE' {
 declare module 'src/functions/LOG' {
 	/**
 	 * Calculates the log of a value given a base.
-	 * @param value required; number to be logged
-	 * @param base optional; base with which to calculated the log, defaults to 10
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log/
+	 * @param value (Number, required) number to be logged
+	 * @param base (Number, optional): logarithmic base, defaults to 10
 	 * @returns number
 	 * @example
 	 * LOG(100) // returns 2
@@ -2112,7 +2139,9 @@ declare module 'src/functions/LOG' {
 declare module 'src/functions/LOG10' {
 	/**
 	 * Calculates the log10 (common logarithm) of a value.
-	 * @param value required; number to be calculated
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/log10/
+	 * @param value (Number, required): number to be calculated
 	 * @returns numeric value
 	 * @example
 	 * LOG10(100) // returns 2
@@ -2125,6 +2154,9 @@ declare module 'src/functions/LOG10' {
 declare module 'src/functions/LONGITUDE' {
 	/**
 	 * Returns a record's longitude if it exists.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/longitude/
+	 * @returns number
 	 */
 	export default function LONGITUDE(): number;
 
@@ -2133,7 +2165,9 @@ declare module 'src/functions/LOWER' {
 	import { GenericObject } from 'src/types/primitives';
 	/**
 	 * Converts a string value to all lowercase.
-	 * @param value required; value to be converted to lowercase
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/lower/
+	 * @param value (String, required): value to be converted to lowercase
 	 * @returns string
 	 * @example
 	 * LOWER("CASE") // returns "case"
@@ -2143,14 +2177,24 @@ declare module 'src/functions/LOWER' {
 
 }
 declare module 'src/functions/MAXA' {
-	import MAX from 'src/functions/MAX';
-	export default MAX;
+	/**
+	 * Returns max value from a list of values
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/maxa/
+	 * @param args (Number|Array, required): list of numeric values
+	 * @returns max value in numeric form
+	 * @example
+	 * MAXA(1, 4, 7, 2, 4) // returns 7
+	 */
+	export default function MAXA(...args: number[]): number | undefined;
 
 }
 declare module 'src/functions/MEDIAN' {
 	/**
 	 * Returns the median value of list of numbers.
-	 * @param args required; numeric values to be evaluated
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/median/
+	 * @param args (Number|Array, required): numeric values to be evaluated
 	 * @returns median value
 	 * @example
 	 * MEDIAN(3, 4, 2, 5, 1) // returns 3
@@ -2162,9 +2206,11 @@ declare module 'src/functions/MEDIAN' {
 declare module 'src/functions/MID' {
 	/**
 	 * Returns a specific number of characters from a text string.
-	 * @param value required; text string
-	 * @param startPosition required; numeric value indicating where in the `value` one should start cutting
-	 * @param numberOfCharacters required; numeric value indiciating the number of chars one wants returned
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mid/
+	 * @param value (String, required): text to be parsed
+	 * @param startPosition (Number, required): numeric value indicating parsing starting position
+	 * @param numberOfCharacters (Number, required): number of chars one wants returned
 	 * @returns string
 	 * @example
 	 * MID("abcd", 2, 2) // returns "bc"
@@ -2175,19 +2221,28 @@ declare module 'src/functions/MID' {
 
 }
 declare module 'src/functions/MINA' {
-	import MIN from 'src/functions/MIN';
-	export default MIN;
+	/**
+	 * Returns min value from a list of values
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mina/
+	 * @param args (Number|Array, required): list of numeric values
+	 * @returns min numberic value among parameters
+	 * @example
+	 * MINA(7, 4, 1, 2, 4) // returns 1
+	 */
+	export default function MINA(...args: any[]): number | undefined;
 
 }
 declare module 'src/functions/MOD' {
 	/**
 	 * Returns the modulus or remainder of a number divided by a divisor.
-	 * @param num required; number to be divided
-	 * @param divisor required; number doing the dividing
-	 * @returns numeric value; remainder of `num / divisor`
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/mod/
+	 * @param num (Number, required): number to be evaluated
+	 * @param divisor (Number, required)
+	 * @returns remainder of `num / divisor`
 	 * @example
 	 * MOD(10, 2) // returns 0
-	 * MOD(13, 2) // returns 1
 	 */
 	export default function MOD(num: number, divisor: number): number;
 	export default function MOD(num: string, divisor: string): number;
@@ -2198,11 +2253,12 @@ declare module 'src/functions/MONTH' {
 	import { MaybeString } from 'src/types/primitives';
 	/**
 	 * Returns a month given a date.
-	 * @param date required; date, either as a Date object or a string
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/month/
+	 * @param date (Date|String, required): date object or string in "XXXX-XX-XX" format
 	 * @returns month as numeric value
 	 * @example
-	 * MONTH("2015/12/16") // returns 12
-	 * MONTH(new Date("2015/12/16 00:00:00") // returns 12
+	 * MONTH("2015-12-16") // returns 12
 	 */
 	export default function MONTH(date: Date): number;
 	export default function MONTH(date: MaybeString): number;
@@ -2213,7 +2269,7 @@ declare module 'src/functions/N' {
 	/**
 	 * Returns a numeric value. If a number if passed in, the same number is returned, otherwise
 	 * function returns 1 for a true boolean value, and 0 for all other values.
-	 * @param value optional
+	 * @param value (Number|Any, required): value to be evaluated
 	 * @returns a numeric value
 	 * @example
 	 * N(97) // returns 97
@@ -2224,8 +2280,10 @@ declare module 'src/functions/N' {
 }
 declare module 'src/functions/NOT' {
 	/**
-	 * Returns the negation of a value, i.e. if a value is falsey NOT() will return true.
-	 * @param value parameter of any type
+	 * Returns the negation of a value, i.e. if a value is falsey `NOT()` will return true.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/not/
+	 * @param value (Any, required): parameter of any type
 	 * @returns boolean
 	 * @example
 	 * NOT("test") // returns false
@@ -2236,10 +2294,12 @@ declare module 'src/functions/NOT' {
 declare module 'src/functions/NUMS' {
 	/**
 	 * Maps over arguments passed in and converts each to a number value.
-	 * @param args list of values to be mapped to numbers
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/nums/
+	 * @param args (String|Number|Array, required): list of values to be mapped to numbers
 	 * @returns array of numberic values
 	 * @example
-	 * NUMS("2", "3", "4", "5") // returns [2, 3, 4, 5]
+	 * NUMS("2", "3", "4") // returns [2, 3, 4]
 	 */
 	export default function NUMS(...args: string[]): number[];
 	export default function NUMS(...args: number[]): number[];
@@ -2249,7 +2309,9 @@ declare module 'src/functions/NUMS' {
 declare module 'src/functions/ODD' {
 	/**
 	 * Returns the next odd number.
-	 * @param value number to be evaluated
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/odd/
+	 * @param value (Number, required): number to be evaluated
 	 * @returns number
 	 * @example
 	 * ODD(2) // returns 3
@@ -2446,13 +2508,11 @@ declare module 'src/functions/OFF' {
 	import { FieldName, PhotoFieldName, AudioFieldName, VideoFieldName, RepeatableFieldName } from 'src/types/fields';
 	/**
 	 * Detaches an event handler set by ON.
-	 * @param event The event name
-	 * @param field The (optional) field the event was bound to
-	 * @param callback The function to detach
-	 * @example
-	 * OFF('validate-record', callback); // Detaches an event handler from the 'validate-record' event
-	 * OFF('validate-record'); // Detaches all event handlers listening to the 'validate-record' event
 	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/off/
+	 * @param event (String, required): event name
+	 * @param field (String, optional): data name of ield the event was bound to
+	 * @param callback (Function, required): callback to detach
 	 */
 	export default function OFF(name: FormEventNames, callback: (event: FormEvent) => void): void;
 	export default function OFF(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void;
@@ -2473,49 +2533,11 @@ declare module 'src/functions/ON' {
 	import { FieldName, PhotoFieldName, AudioFieldName, VideoFieldName, RepeatableFieldName } from 'src/types/fields';
 	/**
 	 * Attaches an event handler that listens for record, repeatable, or field events.
-	 * The ON function is the starting point for most data event scripts. It wires up an
-	 * event to a function that gets called when that event happens. Events are things like
-	 * a record being opened, edited, saved, validated, a field changing, or the record
-	 * location changing. Using the `ON` function you can add custom logic to be performed
-	 * when the events happen. The `ON` function by itself is not useful unless it's combined
-	 * with the other data event functions to manipulate the record data and perform other
-	 * actions like custom alerts and validations.
-	 * @param event event name
-	 * @param target (optional) field to bind the event to
-	 * @param callback function called when the specified event is triggered
-	 * @example
-	 * var callback = function () {
-	 *   if (!(LATITUDE() >= 40 && LATITUDE() <= 41)) {
-	 *     INVALID('Latitude must be between 40 and 41.');
-	 *   }
-	 * };
 	 *
-	 * // Listens for 'save-record' events and stops the record from being saved unless it's within a latitude range
-	 * ON('validate-record', callback);
-	 *
-	 * @example
-	 * var callback = function () {
-	 *   // Do something with the new $weather_summary values
-	 * };
-	 *
-	 * // Listens for changes to the weather summary field and executes callback
-	 * ON('change', 'weather_summary', callback);
-	 *
-	 * @example
-	 * var callback = function () {
-	 *   // Do something with the location via LATITUDE() AND LONGITUDE() values
-	 * };
-	 *
-	 * // Listens for changes to a record's geometry (location) and executes callback
-	 * ON('change-geometry', callback);
-	 *
-	 * @example
-	 * var callback = function () {
-	 *   // Do something with the repeatable location via LATITUDE() AND LONGITUDE() values
-	 * };
-	 *
-	 * // Listens for changes to a repeatable item's geometry and executes callback
-	 * ON('change-geometry', 'repeatable_item', callback);
+	 * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/on/
+	 * @param event (String, required): event name
+	 * @param target (String, optional): data name of field to bind the event to
+	 * @param callback (Function, required): callback called when the specified event is triggered
 	 */
 	export default function ON(name: FormEventNames, callback: (event: FormEvent) => void): void;
 	export default function ON(name: FieldEventNames, field: FieldName, callback: (event: FieldEvent) => void): void;

@@ -7,7 +7,9 @@ import { capitalize,
 
 /**
  * Capitalizes the first letter in each word of a string.
- * @param value required; string to be capitalized
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/proper/
+ * @param value (String, required): string to be capitalized
  * @returns string
  * @example
  *

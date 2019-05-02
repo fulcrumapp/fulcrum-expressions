@@ -3,11 +3,12 @@ import NUM from "./NUM"
 
 /**
  * Returns the number of digits to the right of the decimal point
- * @param value a numeric type
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/precision/
+ * @param value (Number, required): number to be evaluated
  * @returns numberic value
  * @example
  * PRECISION(9.034) // returns 3
- * PRECISION(9) // returns 0
  */
 export default function PRECISION(value: number): number
 export default function PRECISION(value: string): number

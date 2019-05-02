@@ -4,7 +4,7 @@ import PLATFORMVERSION from "./PLATFORMVERSION"
 
 /**
  * Returns platform information off the form configuration object including platform name and version.
- * @param separator optional; separator with which to combine platform name and version - defaults to ", "
+ * @param separator (String, optional): separator with which to combine platform name and version - defaults to ", "
  * @returns string with platform name and version
  * @example
  * PLATFORMINFO() // returns "Android, 0.9.3"

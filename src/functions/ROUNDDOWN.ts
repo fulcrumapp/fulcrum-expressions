@@ -2,12 +2,11 @@ import NUM from "./NUM"
 
 /**
  * Rounds down a given number to the specified number of digits.
- * @param num required; numeric value to be round down
- * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
- * @returns numeric value rounded down to desired number of digits
- * @example
  * 
- * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rounddown/
+ * @param num (Number, required): numeric value to be round down
+ * @param digits (Number, optional): number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
  */
 
 export default function ROUNDDOWN(num: number, digits?: number): number

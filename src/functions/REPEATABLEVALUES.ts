@@ -5,8 +5,10 @@ import repeatableValues from "../util/repeatable-values"
 
 /**
  * Returns a specific field out of a collection of repeatable items.
- * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
- * @param dataName required; data name of desired field or an array of data names
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatablevalues/
+ * @param repeatableValue (Array, required): array of form_value objects: `[ { id: 1, form_values: "value" } ]`
+ * @param dataName (String|Array, required): data name of desired field or an array of data names
  * @returns array of values
  */
 

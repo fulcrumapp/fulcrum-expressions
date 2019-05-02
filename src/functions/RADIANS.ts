@@ -3,7 +3,9 @@ import NUM from "./NUM"
 
 /**
  * Converts degress into radians.
- * @param degress required; number of degrees
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/radians/
+ * @param degrees (Number, required): number of degrees
  * @returns number of radians
  * @example
  * RADIANS(45) // returns 0.7853981633974483

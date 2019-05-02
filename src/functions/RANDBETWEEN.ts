@@ -3,12 +3,11 @@ import NUM from "./NUM"
 
 /**
  * Returns a random integer between the high and low values specified.
- * @param low required; lowest value of desired range
- * @param high required; highest value of desired range
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/randbetween/
+ * @param low (Number, required): lowest value of desired range
+ * @param high (Number, required): highest value of desired range
  * @returns random integer within specified range
- * @example
- * RANDBETWEEN(1, 10) // returns 2
- * RANDBETWEEN(1, 10) // returns 8
  */
 
 export default function RANDBETWEEN(low: number, high: number): number

@@ -5,12 +5,13 @@ import ISNAN from "./ISNAN"
 
 /**
  * Returns the right characters of a string, i.e. the characters starting at index -1
- * @param value required; string
- * @param numberOfCharacters optional; number indicating the amount of characters to be returned
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/right/
+ * @param value (String, required): string to parse
+ * @param numberOfCharacters (Number, optional): number of characters to be returned
  * @returns a substring of characters
  * @example
  * RIGHT("abc") // returns "c"
- * RIGHT("abc", 2) // returns "bc"
  */
 export default function RIGHT(value: string, numberOfCharacters: number): MaybeString
 export default function RIGHT(value: any, numberOfCharacters?: any): MaybeString

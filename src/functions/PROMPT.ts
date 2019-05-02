@@ -3,17 +3,11 @@ import MESSAGEBOX from "./MESSAGEBOX"
 
 /**
  * Display a text field to get input from the user and a callback to respond to the result.
- * @param title required; A short title for the alert; pass in `null` for no title
- * @param message required; The message content for the alert
- * @param callback required; Function to be invoked when the message box is dismissed
- * @example
- * PROMPT('Please enter the current year', function (result) {
- * if (result.input === new Date().getFullYear()) {
- *   // Correct
- * } else {
- *   // Incorrect
- * }
- * });
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/prompt/
+ * @param title (String|Null, required): A short title for the alert; pass in `null` for no title
+ * @param message (String, required): The message content for the alert
+ * @param callback (Function, required): callback
  */
 
 export default function PROMPT(title: string|null, message: string, callback: Function): void {

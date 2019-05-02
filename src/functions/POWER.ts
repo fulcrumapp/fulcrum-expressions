@@ -3,8 +3,10 @@ import NUM from "./NUM"
 
 /**
  * Returns the base number raised to the exponent power.
- * @param base required; base number to be exponentially multiplied
- * @param exponent required; number to serve as exponent
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/power/
+ * @param base (Number, required): base number
+ * @param exponent (Number, required): exponent
  * @returns number
  * @example
  * POWER(3, 4) // returns 81

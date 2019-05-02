@@ -2,12 +2,12 @@ import NUM from "./NUM"
 
 /**
  * Rounds up the given number to the specified number of digits.
- * @param num required; numeric value to be round up
- * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/roundup/
+ * @param num (Number, required): numeric value to be round up
+ * @param digits (Number, optional): desired number of digits to which `num` is to be rounded; defaults to `0`
  * @returns numeric value rounded up to the desired number of digits
- * 
  * @example
- * 
  * ROUNDUP(2.6666666, 4) // returns 2.6667
  */
 

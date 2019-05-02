@@ -4,13 +4,13 @@ import LEFT from "./LEFT"
 
 /**
  * Returns a string padded to the right by a desired character.
- * @param value required; string value to be padded
- * @param count required; total number of spaces desired in returned value
- * @param padding optional; character with which the `value` is to be padded; defaults to `" "`
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rpad/
+ * @param value (String, required): string value to be padded
+ * @param count (Number, required): length desired in returned value
+ * @param padding (String, optional): character with which the `value` is to be padded; defaults to `" "`
  * @returns a padded string value
- * 
  * @example
- * 
  * RPAD('1', 2, '0') // returns "10"
  */
 

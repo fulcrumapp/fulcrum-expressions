@@ -293,60 +293,66 @@ declare function ISNAN(value: any): boolean;
 
 /**
  * Returns the number of digits to the right of the decimal point
- * @param value a numeric type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/precision/
+ * @param value (Number, required): number to be evaluated
  * @returns numberic value
  * @example
  * PRECISION(9.034) // returns 3
- * PRECISION(9) // returns 0
  */
 declare function PRECISION(value: number): number;
 /**
  * Returns the number of digits to the right of the decimal point
- * @param value a numeric type
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/precision/
+ * @param value (Number, required): number to be evaluated
  * @returns numberic value
  * @example
  * PRECISION(9.034) // returns 3
- * PRECISION(9) // returns 0
  */
 declare function PRECISION(value: string): number;
 
 /**
  * Rounds a number to given scale
- * @param number numeric value to be rounded
- * @param scale optional, number of digits required after the decimal point
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/round/
+ * @param number (Number, required): numeric value to be rounded
+ * @param scale (Number, optional): number of digits required after the decimal point
  * @returns rounded number
  * @example
- * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
 declare function ROUND(value: number): number;
 /**
  * Rounds a number to given scale
- * @param number numeric value to be rounded
- * @param scale optional, number of digits required after the decimal point
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/round/
+ * @param number (Number, required): numeric value to be rounded
+ * @param scale (Number, optional): number of digits required after the decimal point
  * @returns rounded number
  * @example
- * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
 declare function ROUND(value: number, scale: number): number;
 /**
  * Rounds a number to given scale
- * @param number numeric value to be rounded
- * @param scale optional, number of digits required after the decimal point
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/round/
+ * @param number (Number, required): numeric value to be rounded
+ * @param scale (Number, optional): number of digits required after the decimal point
  * @returns rounded number
  * @example
- * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
 declare function ROUND(value: string): number;
 /**
  * Rounds a number to given scale
- * @param number numeric value to be rounded
- * @param scale optional, number of digits required after the decimal point
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/round/
+ * @param number (Number, required): numeric value to be rounded
+ * @param scale (Number, optional): number of digits required after the decimal point
  * @returns rounded number
  * @example
- * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
 declare function ROUND(value: string, scale: number): number;
@@ -1549,32 +1555,35 @@ declare function DATE(): undefined;
 
 /**
  * Returns the right characters of a string, i.e. the characters starting at index -1
- * @param value required; string
- * @param numberOfCharacters optional; number indicating the amount of characters to be returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/right/
+ * @param value (String, required): string to parse
+ * @param numberOfCharacters (Number, optional): number of characters to be returned
  * @returns a substring of characters
  * @example
  * RIGHT("abc") // returns "c"
- * RIGHT("abc", 2) // returns "bc"
  */
 declare function RIGHT(value: string, numberOfCharacters: number): MaybeString;
 /**
  * Returns the right characters of a string, i.e. the characters starting at index -1
- * @param value required; string
- * @param numberOfCharacters optional; number indicating the amount of characters to be returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/right/
+ * @param value (String, required): string to parse
+ * @param numberOfCharacters (Number, optional): number of characters to be returned
  * @returns a substring of characters
  * @example
  * RIGHT("abc") // returns "c"
- * RIGHT("abc", 2) // returns "bc"
  */
 declare function RIGHT(value: any, numberOfCharacters?: any): MaybeString;
 /**
  * Returns the right characters of a string, i.e. the characters starting at index -1
- * @param value required; string
- * @param numberOfCharacters optional; number indicating the amount of characters to be returned
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/right/
+ * @param value (String, required): string to parse
+ * @param numberOfCharacters (Number, optional): number of characters to be returned
  * @returns a substring of characters
  * @example
  * RIGHT("abc") // returns "c"
- * RIGHT("abc", 2) // returns "bc"
  */
 declare function RIGHT(): undefined;
 
@@ -2553,7 +2562,10 @@ declare function ISLANDSCAPE(): undefined;
  */
 declare function ISLOGICAL(value: any): boolean;
 
-/** Returns the platform name from the configuration object */
+/** Returns the platform name from the configuration object
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/platform/
+*/
 declare function PLATFORM(): string;
 
 /**
@@ -2616,6 +2628,8 @@ declare function ISODD(value: any): boolean;
 
 /**
  * Returns the current user's role or, if it's not available, undefined.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/role/
  */
 declare function ROLE(): string | undefined;
 
@@ -3589,6 +3603,8 @@ declare function OPENURL(url: string): void;
 
 /**
  * Returns the value of pi (π).
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/pi/
  */
 declare function PI(): number;
 
@@ -3597,7 +3613,7 @@ declare function PLATFORMVERSION(): string;
 
 /**
  * Returns platform information off the form configuration object including platform name and version.
- * @param separator optional; separator with which to combine platform name and version - defaults to ", "
+ * @param separator (String, optional): separator with which to combine platform name and version - defaults to ", "
  * @returns string with platform name and version
  * @example
  * PLATFORMINFO() // returns "Android, 0.9.3"
@@ -3606,20 +3622,20 @@ declare function PLATFORMINFO(separator?: string): string;
 
 /**
  * Maps over a collection and returns the items based on a property (key).
- * @param object required; Array-like object to be iterated over\
- * @param property required; key name being targeted
- * @returns an array of items that match the `property` param
- * @example
- * const users = [ { name: "Daniel" }, { name: "Susie" } ]
  *
- * PLUCK(users, "name") // returns [ "Daniel", "Susie" ]
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/pluck/
+ * @param object (Array, required): Array-like object to be iterated over
+ * @param property (String, required): string or key being targeted
+ * @returns an array of items that match the `property` param
  */
 declare function PLUCK(object: any[], property: string): any[];
 
 /**
  * Returns the base number raised to the exponent power.
- * @param base required; base number to be exponentially multiplied
- * @param exponent required; number to serve as exponent
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/power/
+ * @param base (Number, required): base number
+ * @param exponent (Number, required): exponent
  * @returns number
  * @example
  * POWER(3, 4) // returns 81
@@ -3627,8 +3643,10 @@ declare function PLUCK(object: any[], property: string): any[];
 declare function POWER(base: number, power: number): number;
 /**
  * Returns the base number raised to the exponent power.
- * @param base required; base number to be exponentially multiplied
- * @param exponent required; number to serve as exponent
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/power/
+ * @param base (Number, required): base number
+ * @param exponent (Number, required): exponent
  * @returns number
  * @example
  * POWER(3, 4) // returns 81
@@ -3637,7 +3655,9 @@ declare function POWER(base?: any, power?: any): number;
 
 /**
  * Multiplies all the numbers given as arguments
- * @param args required; list of numbers to be multiplied
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/product/
+ * @param args (Number|Array, required): list of numbers to be multiplied
  * @returns product
  * @example
  * PRODUCT(-2, 3, 4) // returns -24
@@ -3645,7 +3665,9 @@ declare function POWER(base?: any, power?: any): number;
 declare function PRODUCT(...args: number[]): number;
 /**
  * Multiplies all the numbers given as arguments
- * @param args required; list of numbers to be multiplied
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/product/
+ * @param args (Number|Array, required): list of numbers to be multiplied
  * @returns product
  * @example
  * PRODUCT(-2, 3, 4) // returns -24
@@ -3654,58 +3676,42 @@ declare function PRODUCT(...args: any[]): number;
 
 /**
  * Displays a non-dismissible message that can be used to provide feedback when performing an asynchronous function.
- * @description While fetching data from an API using REQUEST it might be desirable
- * to let the user know that the request is in progress. This is an advanced function that requires thorough
- * testing and error checking in your logic since the message is not dismissible by the user. To dismiss
- * the progress message, call PROGRESS();.
- * @param title required; A short title for the progress message
- * @param message required; The message content for the progress alert
- * @example
- * const url: string = 'https://example.com';
- * // show progress message while request is happening
- * PROGRESS('Searching for nearby facilities ...');
  *
- * REQUEST(url, function(error, response, body) {
- *  // resets progress message after request finishes
- *  PROGRESS();
- *  if (error) {
- *    ALERT(INSPECT(error));
- *  } else {
- *   // do something with the API response
- *  }
- * });
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/progress/
+ * @param title (String, required): A short title for the progress message
+ * @param message (String, required): The message content for the progress alert
  */
 declare function PROGRESS(title?: null | string, message?: null | string): void;
 
 /**
  * Returns the project ID off the configuration object.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/projectid/
  */
 declare function PROJECTID(): string | undefined;
 
 /**
  * Returns the project name from the configuration object
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/projectname/
  */
 declare function PROJECTNAME(): string | undefined;
 
 /**
  * Display a text field to get input from the user and a callback to respond to the result.
- * @param title required; A short title for the alert; pass in `null` for no title
- * @param message required; The message content for the alert
- * @param callback required; Function to be invoked when the message box is dismissed
- * @example
- * PROMPT('Please enter the current year', function (result) {
- * if (result.input === new Date().getFullYear()) {
- *   // Correct
- * } else {
- *   // Incorrect
- * }
- * });
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/prompt/
+ * @param title (String|Null, required): A short title for the alert; pass in `null` for no title
+ * @param message (String, required): The message content for the alert
+ * @param callback (Function, required): callback
  */
 declare function PROMPT(title: string | null, message: string, callback: Function): void;
 
 /**
  * Capitalizes the first letter in each word of a string.
- * @param value required; string to be capitalized
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/proper/
+ * @param value (String, required): string to be capitalized
  * @returns string
  * @example
  *
@@ -3714,7 +3720,9 @@ declare function PROMPT(title: string | null, message: string, callback: Functio
 declare function PROPER(value: string): string | undefined;
 /**
  * Capitalizes the first letter in each word of a string.
- * @param value required; string to be capitalized
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/proper/
+ * @param value (String, required): string to be capitalized
  * @returns string
  * @example
  *
@@ -3724,38 +3732,43 @@ declare function PROPER(value: any): string | undefined;
 
 /**
  * Returns quotient of numerator and denominator as integer.
- * @param numerator required; number to be divided
- * @param denominator required; divisor
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/quotient/
+ * @param numerator (Number, required): number to be divided
+ * @param denominator (Number, required): divisor
  * @returns integer
  * @example
  * QUOTIENT(12, 2) // returns 6
- * QUOTIENT(12.5, 2) // returns 6
  */
 declare function QUOTIENT(numerator: number, denominator: number): number;
 /**
  * Returns quotient of numerator and denominator as integer.
- * @param numerator required; number to be divided
- * @param denominator required; divisor
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/quotient/
+ * @param numerator (Number, required): number to be divided
+ * @param denominator (Number, required): divisor
  * @returns integer
  * @example
  * QUOTIENT(12, 2) // returns 6
- * QUOTIENT(12.5, 2) // returns 6
  */
 declare function QUOTIENT(numerator: any, denominator: any): number;
 /**
  * Returns quotient of numerator and denominator as integer.
- * @param numerator required; number to be divided
- * @param denominator required; divisor
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/quotient/
+ * @param numerator (Number, required): number to be divided
+ * @param denominator (Number, required): divisor
  * @returns integer
  * @example
  * QUOTIENT(12, 2) // returns 6
- * QUOTIENT(12.5, 2) // returns 6
  */
 declare function QUOTIENT(numerator?: any, denominator?: any): number;
 
 /**
  * Converts degress into radians.
- * @param degress required; number of degrees
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/radians/
+ * @param degrees (Number, required): number of degrees
  * @returns number of radians
  * @example
  * RADIANS(45) // returns 0.7853981633974483
@@ -3763,7 +3776,9 @@ declare function QUOTIENT(numerator?: any, denominator?: any): number;
 declare function RADIANS(degrees: number): number;
 /**
  * Converts degress into radians.
- * @param degress required; number of degrees
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/radians/
+ * @param degrees (Number, required): number of degrees
  * @returns number of radians
  * @example
  * RADIANS(45) // returns 0.7853981633974483
@@ -3772,6 +3787,8 @@ declare function RADIANS(degrees: any): number;
 
 /**
  * Returns a random number between 0 and 1.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rand/
  * @example
  * RAND() // returns 0.45
  * RAND() // returns 0.91
@@ -3780,54 +3797,59 @@ declare function RAND(): number;
 
 /**
  * Returns a random integer between the high and low values specified.
- * @param low required; lowest value of desired range
- * @param high required; highest value of desired range
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/randbetween/
+ * @param low (Number, required): lowest value of desired range
+ * @param high (Number, required): highest value of desired range
  * @returns random integer within specified range
- * @example
- * RANDBETWEEN(1, 10) // returns 2
- * RANDBETWEEN(1, 10) // returns 8
  */
 declare function RANDBETWEEN(low: number, high: number): number;
 /**
  * Returns a random integer between the high and low values specified.
- * @param low required; lowest value of desired range
- * @param high required; highest value of desired range
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/randbetween/
+ * @param low (Number, required): lowest value of desired range
+ * @param high (Number, required): highest value of desired range
  * @returns random integer within specified range
- * @example
- * RANDBETWEEN(1, 10) // returns 2
- * RANDBETWEEN(1, 10) // returns 8
  */
 declare function RANDBETWEEN(low: any, high: any): number;
 /**
  * Returns a random integer between the high and low values specified.
- * @param low required; lowest value of desired range
- * @param high required; highest value of desired range
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/randbetween/
+ * @param low (Number, required): lowest value of desired range
+ * @param high (Number, required): highest value of desired range
  * @returns random integer within specified range
- * @example
- * RANDBETWEEN(1, 10) // returns 2
- * RANDBETWEEN(1, 10) // returns 8
  */
 declare function RANDBETWEEN(low?: any, high?: any): number;
 
 /**
  * Returns the current record's id from the form configuration obejct.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/recordid/
  */
 declare function RECORDID(): string | undefined;
 
 /**
  * Returns a the id of the repeatable being edited.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatableid/
  */
 declare function REPEATABLEID(): string | undefined;
 
 /**
  * Returns human-readable index of current repeatable field. Subtract 1 from returned value for computer index.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatablenumber/
  */
 declare function REPEATABLENUMBER(): number | undefined;
 
 /**
  * Returns a specific field out of a collection of repeatable items.
- * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
- * @param dataName required; data name of desired field or an array of data names
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatablevalues/
+ * @param repeatableValue (Array, required): array of form_value objects: `[ { id: 1, form_values: "value" } ]`
+ * @param dataName (String|Array, required): data name of desired field or an array of data names
  * @returns array of values
  */
 declare function REPEATABLEVALUES(repeatableValue: any[], dataName: FieldName[] | FieldName): any[] | undefined | null;
@@ -3853,8 +3875,10 @@ declare function SUM(...args: any[]): number;
 
 /**
  * Returns the sum of all the numeric form values in a repeatable field.
- * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
- * @param dataName required; data name of desired field or an array of data names
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatablesum/
+ * @param repeatableValue (Array, required): array of form_value objects: `[ { id: 1, form_values: "value" } ]`
+ * @param dataName (String|Array, required):data name of desired field or an array of data names
  * @returns sum of numeric form values
  */
 declare function REPEATABLESUM(repeatableValue: any[], dataName: FieldName | FieldName[]): number;
@@ -3903,195 +3927,106 @@ interface RequestOptions {
 }
 /**
  * Performs an HTTP request and executes the callback on completion.
- * The REQUEST function is for making external HTTP requests. It's one of the most powerful data
- * event functions and enables you to retrieve external data while filling out a form. It can be
- * combined with the other functions to create very dynamic forms that populate information on-demand
- * from external sources. It contains the necessary options to perform any HTTP request, including
- * support for PUT, POST, etc and custom headers.
  *
- * ### CORS and Web Browser Support
- *
- * To work in the web browser, URLs fetched using REQUEST *require* HTTPS &
- * [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of
- * Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website,
- * all requests made from the site must also be secure and respond with the proper headers required by
- * the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we
- * recommend contacting the API provider and asking them to
- * [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS
- * proxy to proxy requests to URLs that don't support it.
- *
- * http://cors-anywhere.herokuapp.com/, http://cors-proxy.htmldriven.com/, and https://crossorigin.me
- *  are various CORS proxies. Note that these are not Fulcrum services.
- * Please also note, when using CORS proxies you are effectively exposing everything about a network
- * request to an unknown host. This should be especially considered if sending information like
- * passwords, tokens, etc.
- *
- * @param options The url or options to pass for the request
- * @param callback The function to call when the request is complete - The function is
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/request/
+ * @param options (String|Object, required): the url or options to pass for the request
+ * @param callback (Function, required): callback to invoke when the request is complete - The function is
  * passed `error`, `response`, and `body` parameters
- * @example
- * // This example looks up the place name from OpenStreetMap when the location changes and fills in a text
- * // field with the place name. Replace 'place_name' below with a text field on your form.
- *
- * ON('change-geometry', function(event) {
- *   var options = {
- *     url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' +
- *          LONGITUDE() + '?format=json&polygon=1&addressdetails=1'
- *   };
- *
- *   REQUEST(options, function(error, response, body) {
- *     if (error) {
- *       ALERT('Error with request: ' + INSPECT(error));
- *     } else {
- *       var data = JSON.parse(body);
- *
- *       if (data.length) {
- *         SETVALUE('place_name', data[0].display_name);
- *       }
- *     }
- *   });
- * });
  */
 declare function REQUEST(options: RequestOptions, callback: HTTPRequestCallback): void;
 /**
  * Performs an HTTP request and executes the callback on completion.
- * The REQUEST function is for making external HTTP requests. It's one of the most powerful data
- * event functions and enables you to retrieve external data while filling out a form. It can be
- * combined with the other functions to create very dynamic forms that populate information on-demand
- * from external sources. It contains the necessary options to perform any HTTP request, including
- * support for PUT, POST, etc and custom headers.
  *
- * ### CORS and Web Browser Support
- *
- * To work in the web browser, URLs fetched using REQUEST *require* HTTPS &
- * [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). This is not a limitation of
- * Fulcrum - it's just the way modern web browsers work. Since Fulcrum is hosted on a secure website,
- * all requests made from the site must also be secure and respond with the proper headers required by
- * the browser. If you encounter CORS errors when trying to use an API with the REQUEST function, we
- * recommend contacting the API provider and asking them to
- * [add CORS support to their API](http://enable-cors.org). As a last resort, you can use a CORS
- * proxy to proxy requests to URLs that don't support it.
- *
- * http://cors-anywhere.herokuapp.com/, http://cors-proxy.htmldriven.com/, and https://crossorigin.me
- *  are various CORS proxies. Note that these are not Fulcrum services.
- * Please also note, when using CORS proxies you are effectively exposing everything about a network
- * request to an unknown host. This should be especially considered if sending information like
- * passwords, tokens, etc.
- *
- * @param options The url or options to pass for the request
- * @param callback The function to call when the request is complete - The function is
+ * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/request/
+ * @param options (String|Object, required): the url or options to pass for the request
+ * @param callback (Function, required): callback to invoke when the request is complete - The function is
  * passed `error`, `response`, and `body` parameters
- * @example
- * // This example looks up the place name from OpenStreetMap when the location changes and fills in a text
- * // field with the place name. Replace 'place_name' below with a text field on your form.
- *
- * ON('change-geometry', function(event) {
- *   var options = {
- *     url: 'https://nominatim.openstreetmap.org/search/' + LATITUDE() + ',' +
- *          LONGITUDE() + '?format=json&polygon=1&addressdetails=1'
- *   };
- *
- *   REQUEST(options, function(error, response, body) {
- *     if (error) {
- *       ALERT('Error with request: ' + INSPECT(error));
- *     } else {
- *       var data = JSON.parse(body);
- *
- *       if (data.length) {
- *         SETVALUE('place_name', data[0].display_name);
- *       }
- *     }
- *   });
- * });
  */
 declare function REQUEST(url: string, callback: HTTPRequestCallback): void;
 
 /**
  * Rounds down a given number to the specified number of digits.
- * @param num required; numeric value to be round down
- * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
- * @returns numeric value rounded down to desired number of digits
- * @example
  *
- * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rounddown/
+ * @param num (Number, required): numeric value to be round down
+ * @param digits (Number, optional): number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
  */
 declare function ROUNDDOWN(num: number, digits?: number): number;
 /**
  * Rounds down a given number to the specified number of digits.
- * @param num required; numeric value to be round down
- * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
- * @returns numeric value rounded down to desired number of digits
- * @example
  *
- * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rounddown/
+ * @param num (Number, required): numeric value to be round down
+ * @param digits (Number, optional): number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
  */
 declare function ROUNDDOWN(num: string | number, digits?: number): number;
 /**
  * Rounds down a given number to the specified number of digits.
- * @param num required; numeric value to be round down
- * @param digits optional; number of digits to which `num` is to be rounded down; defaults to `0`
- * @returns numeric value rounded down to desired number of digits
- * @example
  *
- * ROUNDDOWN(2.6666666, 4) // returns 2.6666
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rounddown/
+ * @param num (Number, required): numeric value to be round down
+ * @param digits (Number, optional): number of digits to which `num` is to be rounded down; defaults to `0`
+ * @returns numeric value rounded down to desired number of digits
  */
 declare function ROUNDDOWN(num: any, digits?: any): number;
 
 /**
  * Rounds up the given number to the specified number of digits.
- * @param num required; numeric value to be round up
- * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/roundup/
+ * @param num (Number, required): numeric value to be round up
+ * @param digits (Number, optional): desired number of digits to which `num` is to be rounded; defaults to `0`
  * @returns numeric value rounded up to the desired number of digits
- *
  * @example
- *
  * ROUNDUP(2.6666666, 4) // returns 2.6667
  */
 declare function ROUNDUP(num: number, digits?: number): number;
 /**
  * Rounds up the given number to the specified number of digits.
- * @param num required; numeric value to be round up
- * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/roundup/
+ * @param num (Number, required): numeric value to be round up
+ * @param digits (Number, optional): desired number of digits to which `num` is to be rounded; defaults to `0`
  * @returns numeric value rounded up to the desired number of digits
- *
  * @example
- *
  * ROUNDUP(2.6666666, 4) // returns 2.6667
  */
 declare function ROUNDUP(num: string | number, digits?: number): number;
 /**
  * Rounds up the given number to the specified number of digits.
- * @param num required; numeric value to be round up
- * @param digits optional; desired number of digits to which `num` is to be rounded; defaults to `0`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/roundup/
+ * @param num (Number, required): numeric value to be round up
+ * @param digits (Number, optional): desired number of digits to which `num` is to be rounded; defaults to `0`
  * @returns numeric value rounded up to the desired number of digits
- *
  * @example
- *
  * ROUNDUP(2.6666666, 4) // returns 2.6667
  */
 declare function ROUNDUP(num: any, digits?: any): number;
 
 /**
  * Returns a string padded to the right by a desired character.
- * @param value required; string value to be padded
- * @param count required; total number of spaces desired in returned value
- * @param padding optional; character with which the `value` is to be padded; defaults to `" "`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rpad/
+ * @param value (String, required): string value to be padded
+ * @param count (Number, required): length desired in returned value
+ * @param padding (String, optional): character with which the `value` is to be padded; defaults to `" "`
  * @returns a padded string value
- *
  * @example
- *
  * RPAD('1', 2, '0') // returns "10"
  */
 declare function RPAD(value: string, count: number, padding?: string): string;
 /**
  * Returns a string padded to the right by a desired character.
- * @param value required; string value to be padded
- * @param count required; total number of spaces desired in returned value
- * @param padding optional; character with which the `value` is to be padded; defaults to `" "`
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/rpad/
+ * @param value (String, required): string value to be padded
+ * @param count (Number, required): length desired in returned value
+ * @param padding (String, optional): character with which the `value` is to be padded; defaults to `" "`
  * @returns a padded string value
- *
  * @example
- *
  * RPAD('1', 2, '0') // returns "10"
  */
 declare function RPAD(value: any, count: any, padding?: any): string | undefined;

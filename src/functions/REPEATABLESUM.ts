@@ -6,8 +6,10 @@ import { FieldName } from "../types/fields"
 
 /**
  * Returns the sum of all the numeric form values in a repeatable field.
- * @param repeatableValue required; array of form_value objects: [ { id: 1, form_values: "value" } ]
- * @param dataName required; data name of desired field or an array of data names
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatablesum/
+ * @param repeatableValue (Array, required): array of form_value objects: `[ { id: 1, form_values: "value" } ]`
+ * @param dataName (String|Array, required):data name of desired field or an array of data names
  * @returns sum of numeric form values
  */
 

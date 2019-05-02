@@ -2,11 +2,12 @@ import NUM from "./NUM"
 
 /**
  * Rounds a number to given scale
- * @param number numeric value to be rounded
- * @param scale optional, number of digits required after the decimal point
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/round/
+ * @param number (Number, required): numeric value to be rounded
+ * @param scale (Number, optional): number of digits required after the decimal point
  * @returns rounded number
  * @example
- * ROUND(5.6) // returns 6
  * ROUND(-2.3333333, 4) // return -2.3333;
  */
 export default function ROUND(value: number): number

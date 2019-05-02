@@ -3,7 +3,9 @@ import NUM from "./NUM"
 
 /**
  * Multiplies all the numbers given as arguments
- * @param args required; list of numbers to be multiplied
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/product/
+ * @param args (Number|Array, required): list of numbers to be multiplied
  * @returns product
  * @example
  * PRODUCT(-2, 3, 4) // returns -24
