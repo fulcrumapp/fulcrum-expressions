@@ -1689,6 +1689,19 @@ declare module 'src/functions/HASOTHER' {
 	export default function HASOTHER(): boolean;
 
 }
+declare module 'src/functions/TYPEOF' {
+	/**
+	 * Returns a string describing the type of argument passed in.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/typeof/
+	 * @param value (Any, required): value to be evaluated
+	 * @returns a string indiciating the type of argument passed in
+	 * @example
+	 * TYPEOF("test") // "string"
+	 */
+	export default function TYPEOF(value: any): string;
+
+}
 declare module 'src/functions/IF' {
 	/**
 	 * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
@@ -3499,19 +3512,6 @@ declare module 'src/functions/TRUE' {
 	 * TRUE() // returns true
 	 */
 	export default function TRUE(): true;
-
-}
-declare module 'src/functions/TYPEOF' {
-	/**
-	 * Returns a string describing the type of argument passed in.
-	 *
-	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/typeof/
-	 * @param value (Any, required): value to be evaluated
-	 * @returns a string indiciating the type of argument passed in
-	 * @example
-	 * TYPEOF("test") // "string"
-	 */
-	export default function TYPEOF(value: any): string;
 
 }
 declare module 'src/functions/UNIQUE' {

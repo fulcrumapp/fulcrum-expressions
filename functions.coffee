@@ -717,7 +717,7 @@ exports.IF = (test, trueValue, falseValue) ->
   if test
     value = trueValue
   
-  if TYPEOF(value) === 'function'
+  if TYPEOF(value) == 'function'
     value = value()
   
   value
