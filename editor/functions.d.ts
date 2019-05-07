@@ -2298,6 +2298,17 @@ declare function HASOTHER(value?: any): boolean;
 declare function HASOTHER(): boolean;
 
 /**
+ * Returns a string describing the type of argument passed in.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/typeof/
+ * @param value (Any, required): value to be evaluated
+ * @returns a string indiciating the type of argument passed in
+ * @example
+ * TYPEOF("test") // "string"
+ */
+declare function TYPEOF(value: any): string;
+
+/**
  * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/if/
@@ -4722,17 +4733,6 @@ declare function TRIM(value: any): string;
  * TRUE() // returns true
  */
 declare function TRUE(): true;
-
-/**
- * Returns a string describing the type of argument passed in.
- *
- * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/typeof/
- * @param value (Any, required): value to be evaluated
- * @returns a string indiciating the type of argument passed in
- * @example
- * TYPEOF("test") // "string"
- */
-declare function TYPEOF(value: any): string;
 
 /**
  * Evaluates an array of items for unqiueness and returns an array devoid of duplicates.

@@ -713,7 +713,14 @@ exports.HASOTHER = (value) ->
      value.other_values.length > 0)
 
 exports.IF = (test, trueValue, falseValue) ->
-  if test then trueValue else falseValue
+  value = falseValue
+  if test
+    value = trueValue
+  
+  if TYPEOF(value) === 'function'
+    value = value()
+  
+  value
 
 exports.IFERROR = (value, errorValue) ->
   if ISERR(value) then errorValue else value

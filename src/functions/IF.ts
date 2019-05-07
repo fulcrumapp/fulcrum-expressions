@@ -1,3 +1,4 @@
+import TYPEOF from "./TYPEOF"
 
 /**
  * Evaluates a conditional expression and returns a designated `trueValue` or `falseValue`
@@ -13,5 +14,14 @@
 
 export default function IF(test: any, trueValue: any, falseValue: any): any
 export default function IF(test: any, trueValue: any, falseValue: any): any {
-  return test ? trueValue : falseValue
+  let value = falseValue
+  if (test) {
+    value = trueValue
+  }
+  
+  if (TYPEOF(value) === "function") {
+    value = value()
+  }
+  
+  return value
 }
