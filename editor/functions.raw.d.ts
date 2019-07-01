@@ -2579,6 +2579,18 @@ declare module 'src/functions/ON' {
 	export default function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 
 }
+declare module 'src/functions/ONCE' {
+	/**
+	 * Returns a value once, given the current value.
+	 * This is useful to perform a calculation only once, the first time it's evaluated.
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/once/
+	 * @param (Any, required): expression/function/value to be evaluated
+	 * @returns a value given the current value
+	 */
+	export default function ONCE(value: any): any;
+
+}
 declare module 'src/functions/OPENURL' {
 	/**
 	 * Open a URL for a website or mobile app.
@@ -2587,6 +2599,20 @@ declare module 'src/functions/OPENURL' {
 	 * @param url (String, required): url to open
 	 */
 	export default function OPENURL(url: string): void;
+
+}
+declare module 'src/functions/OTHER' {
+	/**
+	 * Returns the current 'Other' value for a choice field or classification field
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
+	 *
+	 * @param (ChoiceFieldValue, required): The choice field or classification field variable
+	 * @returns string - current 'Other' value
+	 */
+	export default function OTHER(value: ChoiceFieldValue): string | undefined;
+	export default function OTHER(value: Object): string | undefined;
+	export default function OTHER(value: any): string | undefined;
 
 }
 declare module 'src/functions/PI' {
