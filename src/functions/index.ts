@@ -127,7 +127,9 @@ import NUMS from "./NUMS"
 import ODD from "./ODD"
 import OFF from "./OFF"
 import ON from "./ON"
+import ONCE from "./ONCE"
 import OPENURL from "./OPENURL"
+import OTHER from "./OTHER"
 import PI from "./PI"
 import PLATFORM from "./PLATFORM"
 import PLATFORMINFO from "./PLATFORMINFO"
@@ -348,7 +350,9 @@ export const functions: FunctionMap = {
   ODD,
   OFF,
   ON,
+  ONCE,
   OPENURL,
+  OTHER,
   PI,
   PLATFORM,
   PLATFORMINFO,
