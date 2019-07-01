@@ -3627,6 +3627,34 @@ declare function ONCE(value: any): any;
 declare function OPENURL(url: string): void;
 
 /**
+ * Returns the current 'Other' value for a choice field or classification field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
+ *
+ * @param (ChoiceFieldValue, required): The choice field or classification field variable
+ * @returns string - current 'Other' value
+ */
+declare function OTHER(value: ChoiceFieldValue): string | undefined;
+/**
+ * Returns the current 'Other' value for a choice field or classification field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
+ *
+ * @param (ChoiceFieldValue, required): The choice field or classification field variable
+ * @returns string - current 'Other' value
+ */
+declare function OTHER(value: Object): string | undefined;
+/**
+ * Returns the current 'Other' value for a choice field or classification field
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
+ *
+ * @param (ChoiceFieldValue, required): The choice field or classification field variable
+ * @returns string - current 'Other' value
+ */
+declare function OTHER(value: any): string | undefined;
+
+/**
  * Returns the value of pi (π).
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/pi/
