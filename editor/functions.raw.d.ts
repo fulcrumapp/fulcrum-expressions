@@ -590,6 +590,15 @@ declare module 'src/functions/CONCATENATE' {
 }
 declare module 'src/functions/CONCAT' {
 	import CONCATENATE from 'src/functions/CONCATENATE';
+	/**
+	 * Returns a concatenated string
+	 *
+	 * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/concat/
+	 * @param strings (String|Array, required): strings to be concatenated
+	 * @returns a single concatenated string
+	 * @example
+	 * CONCAT('hello', 'world') // returns 'helloworld'
+	 */
 	export default CONCATENATE;
 
 }
