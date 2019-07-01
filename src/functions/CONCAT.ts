@@ -1,4 +1,13 @@
 import CONCATENATE from "./CONCATENATE"
 
-// Since this is just an alias, we don't need to re-document it.
+/**
+ * Returns a concatenated string
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/concat/
+ * @param strings (String|Array, required): strings to be concatenated
+ * @returns a single concatenated string
+ * @example
+ * CONCAT('hello', 'world') // returns 'helloworld'
+ */
+
 export default CONCATENATE
