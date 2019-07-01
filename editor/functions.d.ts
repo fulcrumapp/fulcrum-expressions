@@ -3609,6 +3609,16 @@ declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback:
 declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 
 /**
+ * Returns a value once, given the current value.
+ * This is useful to perform a calculation only once, the first time it's evaluated.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/once/
+ * @param (Any, required): expression/function/value to be evaluated
+ * @returns a value given the current value
+ */
+declare function ONCE(value: any): any;
+
+/**
  * Open a URL for a website or mobile app.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/data-events/reference/openurl/
