@@ -772,6 +772,17 @@ declare function CONCATENATE(): string;
  * @example
  * CONCAT('hello', 'world') // returns 'helloworld'
  */
+declare function CONCAT(...strings: any[]): string;
+/**
+ * Returns a concatenated string
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/concat/
+ * @param strings (String|Array, required): strings to be concatenated
+ * @returns a single concatenated string
+ * @example
+ * CONCAT('hello', 'world') // returns 'helloworld'
+ */
+declare function CONCAT(): string;
 
 /**
  * CONFIGURE allows the user to update the configuration of the Form.

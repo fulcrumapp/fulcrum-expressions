@@ -10,4 +10,8 @@ import CONCATENATE from "./CONCATENATE"
  * CONCAT('hello', 'world') // returns 'helloworld'
  */
 
-export default CONCATENATE
+export default function CONCAT(...strings: any[]): string
+export default function CONCAT(): string
+export default function CONCAT(...strings: any[]) {
+  return CONCATENATE(strings)
+}
