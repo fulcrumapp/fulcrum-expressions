@@ -589,7 +589,6 @@ declare module 'src/functions/CONCATENATE' {
 
 }
 declare module 'src/functions/CONCAT' {
-	import CONCATENATE from 'src/functions/CONCATENATE';
 	/**
 	 * Returns a concatenated string
 	 *
@@ -599,7 +598,8 @@ declare module 'src/functions/CONCAT' {
 	 * @example
 	 * CONCAT('hello', 'world') // returns 'helloworld'
 	 */
-	export default CONCATENATE;
+	export default function CONCAT(...strings: any[]): string;
+	export default function CONCAT(): string;
 
 }
 declare module 'src/functions/CONFIGURE' {
