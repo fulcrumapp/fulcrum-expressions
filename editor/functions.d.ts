@@ -3629,12 +3629,15 @@ declare function ON(name: RemoveAudioEventName, field: AudioFieldName, callback:
 declare function ON(name: EventNames, fieldOrCallback: FieldName | ((event: Event) => void), callback?: ((event: Event) => void)): void;
 
 /**
- * Returns a value once, given the current value.
- * This is useful to perform a calculation only once, the first time it's evaluated.
+ * Returns a value once, given the current value. This is useful to perform a calculation
+ * only once, the first time it's evaluated, e.g. pulling the name of the user that
+ * created the record so the value doesn't change each time the app is updated.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/once/
  * @param (Any, required): expression/function/value to be evaluated
  * @returns a value given the current value
+ * @example
+ * ONCE(FULLUSERNAME()) // returns "Jane Doe"
  */
 declare function ONCE(value: any): any;
 
@@ -3647,7 +3650,9 @@ declare function ONCE(value: any): any;
 declare function OPENURL(url: string): void;
 
 /**
- * Returns the current 'Other' value for a choice field or classification field
+ * Returns the current 'Other' text value for a Single Choice, Multiple Choice, or Classification Set form field.
+ * `OTHER` will extract a user-entered 'Other' value from the form for
+ * further inspection/action.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
  *
@@ -3656,7 +3661,9 @@ declare function OPENURL(url: string): void;
  */
 declare function OTHER(value: ChoiceFieldValue): string | undefined;
 /**
- * Returns the current 'Other' value for a choice field or classification field
+ * Returns the current 'Other' text value for a Single Choice, Multiple Choice, or Classification Set form field.
+ * `OTHER` will extract a user-entered 'Other' value from the form for
+ * further inspection/action.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
  *
@@ -3665,7 +3672,9 @@ declare function OTHER(value: ChoiceFieldValue): string | undefined;
  */
 declare function OTHER(value: Object): string | undefined;
 /**
- * Returns the current 'Other' value for a choice field or classification field
+ * Returns the current 'Other' text value for a Single Choice, Multiple Choice, or Classification Set form field.
+ * `OTHER` will extract a user-entered 'Other' value from the form for
+ * further inspection/action.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
  *

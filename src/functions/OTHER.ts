@@ -2,7 +2,9 @@ import HASOTHER from "./HASOTHER"
 import ISBLANK from "./ISBLANK"
 
 /**
- * Returns the current 'Other' value for a choice field or classification field
+ * Returns the current 'Other' text value for a Single Choice, Multiple Choice, or Classification Set form field.
+ * `OTHER` will extract a user-entered 'Other' value from the form for 
+ * further inspection/action. 
  * 
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/other/
  * 
