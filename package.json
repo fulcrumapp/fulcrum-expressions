@@ -19,7 +19,7 @@
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
-    "underscore": "^1.7.0",
+    "underscore": "^1.12.1",
     "underscore.string": "^2.4.0"
   },
   "devDependencies": {
