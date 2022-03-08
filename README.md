@@ -13,7 +13,7 @@ yarn
 ### Build
 
 ```sh
-make
+yarn build
 ```
 
 ### Generate Documentation
@@ -21,15 +21,15 @@ make
 Make changes to `docs.js` and `event_docs.js`.
 
 ```sh
-make docs
+yarn build:docs
 ```
 
 ### Distribute
 
-Builds the final output
+Builds the final output along with docs and help
 
 ```sh
-make dist
+yarn build:dist
 ```
 
 ### Copy files to other repositories
@@ -45,20 +45,20 @@ export FULCRUM_WEB=/path/to/web/app
 export FULCRUM_DEV_SITE=/path/to/website
 ```
 
-Or you can assign them in the make command:
+Or you can assign them in the yarn command:
 
 ```sh
-FULCRUM_DEV_SITE=$HOME/dev/fulcrumapp.com make dist copy
+FULCRUM_DEV_SITE=$HOME/dev/fulcrumapp.com yarn build:dist && yarn copy
 ```
 
 Once you have the environment variables set, you can run:
 
 ```sh
-make copy
+yarn copy
 
 or
 
-make dist copy # clean, build and deploy everything
+yarn build:dist && yarn copy # clean, build and deploy everything
 ```
 
 ### Documentation
@@ -68,7 +68,7 @@ Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions doc
 ### Tests
 
 ```sh
-make test
+yarn test
 ```
 
 ### Console
@@ -76,5 +76,5 @@ make test
 Starts an interactive node terminal with the functions available to call
 
 ```sh
-./console
+yarn console
 ```

@@ -1,20 +1,25 @@
 {
-  "name": "fulcrum-expressions",
+  "name": "@fulcrum/expressions",
   "version": "1.0.0",
   "description": "Expression runtime for Fulcrum",
-  "main": "./dist/expressions.js",
+  "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
+  "license": "BSD",
+  "main": "expressions.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/fulcrumapp/fulcrum-expressions.git"
   },
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "make test"
+    "build": "mkdir -p dist && browserify -t coffeeify --extension=.coffee runtime.coffee | uglifyjs > dist/expressions.js --mangle && cp package.json dist",
+    "build:debug": "mkdir -p dist && ./node_modules/browserify/bin/cmd.js -t coffeeify --extension=.coffee runtime.coffee > dist/expressions.js",
+    "build:docs": "./script/build-docs",
+    "build:help": "mkdir -p docs/output/help && mkdir -p docs/output/help/expressions/reference && mkdir -p docs/output/help/events/reference && coffee script/generate-help.coffee",
+    "build:dist": "yarn clean && yarn build && yarn build:docs && yarn build:help && yarn test",
+    "test": "mocha --reporter list --require should --require coffee-coverage/register-istanbul --require coffee-script/register test/**/*.coffee && istanbul report",
+    "copy": "coffee script/copy-files.coffee",
+    "console": "./console",
+    "clean": "rm -rf dist && rm -rf docs/output rm -rf coverage"
   },
-  "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
-  "license": "BSD",
   "dependencies": {
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
@@ -37,7 +42,6 @@
     "mocha": "^9.2.1",
     "season": "^5.0.3",
     "should": "^8.4.0",
-    "spawn-sync": "^1.0.1",
     "uglify-js": "^2.4.16"
   }
 }
