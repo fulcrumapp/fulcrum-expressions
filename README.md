@@ -8,9 +8,9 @@ Currently all projects pull the expression.js lib produced by this repo from htt
 yarn build:dist
 aws sso login --profile fulcrum (or however you login to the readonly fulcrum aws account)
 aws s3 cp --cache-control "no-cache, no-store, max-age=0, must-revalidate" --expires "Mon, 01 Jan 1990 00:00:00 GMT" --content-type "text/html" dist/expressions.js s3://fulcrum-assets/expv1/expressions.js
-
 ```
 **Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
+After uploading to S3 we likely want to invalidate the cloudfront cache so that clients pick up the changes.
 
 ### Setup
 
