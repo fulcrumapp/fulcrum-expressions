@@ -656,7 +656,7 @@ describe 'LEN', ->
     LEN({}).should.be.exactly(0)
     LEN({key1: 1}).should.be.exactly(1)
     LEN({key1: 1, key2: 2}).should.be.exactly(2)
-    LEN(new Date).should.be.exactly(39)
+    LEN(new Date).should.be.exactly((new Date).toString().length)
     LEN(/test/).should.be.exactly(6)
 
 describe 'LN', ->
@@ -1408,9 +1408,9 @@ describe 'DOLLAR', ->
 
     resetConfig()
 
-    DOLLAR(10000 / 3, 2, 'THB').should.eql('฿3,333.33')
-    DOLLAR(10000 / 3, 0, 'THB').should.eql('฿3,333')
-    DOLLAR(10000 / 3, 4, 'THB').should.eql('฿3,333.3333')
+    DOLLAR(10000 / 3, 2, 'GBP').should.eql('£3,333.33')
+    DOLLAR(10000 / 3, 0, 'GBP').should.eql('£3,333')
+    DOLLAR(10000 / 3, 4, 'GBP').should.eql('£3,333.3333')
 
 
 describe 'VERSIONINFO', ->
@@ -1601,17 +1601,20 @@ describe 'DATEVALUE', ->
     date.getDate().should.be.exactly(7)
 
     # parse as UTC, read back as local
+    expected = new Date('2018/02/07 01:01:00')
     date = DATEVALUE('2018-02-07', '01:01')
-    date.getFullYear().should.be.exactly(2018)
-    date.getMonth().should.be.exactly(1)
-    date.getDate().should.be.exactly(7)
-    date.toISOString().should.be.exactly('2018-02-07T06:01:00.000Z')
+    date.getFullYear().should.be.exactly(expected.getFullYear())
+    date.getMonth().should.be.exactly(expected.getMonth())
+    date.getDate().should.be.exactly(expected.getDate())
+    date.toISOString().should.be.exactly(expected.toISOString())
 
+    d = new Date('2018-02-07T05:00:00.000Z')
+    expected = new Date(d.getFullYear() + '/0' + (d.getMonth() + 1) + '/0' + d.getDate() + ' 01:01:00')
     date = DATEVALUE(new Date('2018-02-07T05:00:00.000Z'), '01:01')
-    date.getFullYear().should.be.exactly(2018)
-    date.getMonth().should.be.exactly(1)
-    date.getDate().should.be.exactly(7)
-    date.toISOString().should.be.exactly('2018-02-07T06:01:00.000Z')
+    date.getFullYear().should.be.exactly(expected.getFullYear())
+    date.getMonth().should.be.exactly(expected.getMonth())
+    date.getDate().should.be.exactly(expected.getDate())
+    date.toISOString().should.be.exactly(expected.toISOString())
 
 describe 'DAY', ->
   it 'returns a day given a date', ->
@@ -1699,7 +1702,7 @@ describe 'STRING', ->
     STRING([1, 2, 3]).should.be.eql('1, 2, 3')
     STRING([1, 2, 3], [4, 5, 6]).should.be.eql('1, 2, 3, 4, 5, 6')
     STRING({choice_values: ['a', 'b', 'c']}, {choice_values: ['d', 'e', 'f']}).should.be.eql('a, b, c, d, e, f')
-    STRING(new Date('2018-02-07T10:00:01Z')).should.be.eql('2/7/2018, 5:00:01 AM')
+    STRING(new Date('2018-02-07T10:00:01Z')).should.be.eql((new Date('2018-02-07T10:00:01Z')).toLocaleString())
 
 describe 'TIMEDIFF', ->
   it 'returns the number of minutes between 2 times', ->
@@ -1820,118 +1823,119 @@ describe 'ISPORTRAIT', ->
     ISPORTRAIT({width: 100, height: 200}).should.eql(true)
     ISPORTRAIT({width: 200, height: 100}).should.eql(false)
 
-describe 'Values', ->
-  it 'should create choice values', ->
-    makeValue = Utils.converters.ChoiceField
+if !DIST
+  describe 'Values', ->
+    it 'should create choice values', ->
+      makeValue = Utils.converters.ChoiceField
 
-    makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
-    makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
-    makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
-    makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
+      makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
+      makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
+      makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
+      makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
 
-    shouldBeNull(makeValue({bogus: ['a']}))
-    shouldBeNull(makeValue({}))
-    shouldBeNull(makeValue(null))
-    shouldBeNull(makeValue(undefined))
-    shouldBeNull(makeValue(new Date))
-    shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
+      shouldBeNull(makeValue({bogus: ['a']}))
+      shouldBeNull(makeValue({}))
+      shouldBeNull(makeValue(null))
+      shouldBeNull(makeValue(undefined))
+      shouldBeNull(makeValue(new Date))
+      shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
 
-  it 'should create classification values', ->
-    makeValue = Utils.converters.ClassificationField
+    it 'should create classification values', ->
+      makeValue = Utils.converters.ClassificationField
 
-    makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
-    makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
-    makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
-    makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
+      makeValue('test').should.eql({ choice_values: [ 'test' ], other_values: [] })
+      makeValue(1).should.eql({ choice_values: [ '1' ], other_values: [] })
+      makeValue(['a', 'b', 'c']).should.eql({ choice_values: [ 'a', 'b', 'c' ], other_values: [] })
+      makeValue({choice_values: ['a']}).should.eql({ choice_values: [ 'a' ], other_values: [] })
 
-    shouldBeNull(makeValue({bogus: ['a']}))
-    shouldBeNull(makeValue({}))
-    shouldBeNull(makeValue(null))
-    shouldBeNull(makeValue(undefined))
-    shouldBeNull(makeValue(new Date))
-    shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
+      shouldBeNull(makeValue({bogus: ['a']}))
+      shouldBeNull(makeValue({}))
+      shouldBeNull(makeValue(null))
+      shouldBeNull(makeValue(undefined))
+      shouldBeNull(makeValue(new Date))
+      shouldBeNull(makeValue('')) # special case for empty string blanking out the choice field
 
-  it 'should create date values', ->
-    makeValue = Utils.converters.DateTimeField
+    it 'should create date values', ->
+      makeValue = Utils.converters.DateTimeField
 
-    makeValue('2015-01-01').should.eql('2015-01-01')
-    makeValue('2015-12-31').should.eql('2015-12-31')
-    makeValue('2015/12/31').should.eql('2015-12-31')
-    makeValue(new Date('01/01/2015')).should.eql('2015-01-01')
+      makeValue('2015-01-01').should.eql('2015-01-01')
+      makeValue('2015-12-31').should.eql('2015-12-31')
+      makeValue('2015/12/31').should.eql('2015-12-31')
+      makeValue(new Date('01/01/2015')).should.eql('2015-01-01')
 
-    shouldBeNull(makeValue({bogus: ['a']}))
-    shouldBeNull(makeValue({}))
-    shouldBeNull(makeValue(null))
-    shouldBeNull(makeValue(undefined))
-    shouldBeNull(makeValue(''))
+      shouldBeNull(makeValue({bogus: ['a']}))
+      shouldBeNull(makeValue({}))
+      shouldBeNull(makeValue(null))
+      shouldBeNull(makeValue(undefined))
+      shouldBeNull(makeValue(''))
 
-  it 'should create time values', ->
-    makeValue = Utils.converters.TimeField
+    it 'should create time values', ->
+      makeValue = Utils.converters.TimeField
 
-    makeValue('12:30').should.eql('12:30')
-    makeValue('23:00').should.eql('23:00')
-    makeValue('00:00').should.eql('00:00')
-    makeValue('01:01').should.eql('01:01')
+      makeValue('12:30').should.eql('12:30')
+      makeValue('23:00').should.eql('23:00')
+      makeValue('00:00').should.eql('00:00')
+      makeValue('01:01').should.eql('01:01')
 
-    shouldBeNull(makeValue('25:61'))
-    shouldBeNull(makeValue('2:30'))
-    shouldBeNull(makeValue('a'))
-    shouldBeNull(makeValue({bogus: ['a']}))
-    shouldBeNull(makeValue({}))
-    shouldBeNull(makeValue(null))
-    shouldBeNull(makeValue(undefined))
-    shouldBeNull(makeValue(''))
+      shouldBeNull(makeValue('25:61'))
+      shouldBeNull(makeValue('2:30'))
+      shouldBeNull(makeValue('a'))
+      shouldBeNull(makeValue({bogus: ['a']}))
+      shouldBeNull(makeValue({}))
+      shouldBeNull(makeValue(null))
+      shouldBeNull(makeValue(undefined))
+      shouldBeNull(makeValue(''))
 
-  it 'should create address values', ->
-    makeValue = Utils.converters.AddressField
+    it 'should create address values', ->
+      makeValue = Utils.converters.AddressField
 
-    addressWith = (parts) ->
-      address =
-        sub_thoroughfare: null
-        thoroughfare: null
-        suite: null
-        locality: null
-        sub_admin_area: null
-        admin_area: null
-        postal_code: null
-        country: null
+      addressWith = (parts) ->
+        address =
+          sub_thoroughfare: null
+          thoroughfare: null
+          suite: null
+          locality: null
+          sub_admin_area: null
+          admin_area: null
+          postal_code: null
+          country: null
 
-      _.extend(address, parts)
+        _.extend(address, parts)
 
-    makeValue(admin_area: 'FL').should.eql(addressWith(admin_area: 'FL'))
-    makeValue(suite: 200).should.eql(addressWith(suite: '200'))
-    makeValue(suite: true).should.eql(addressWith(suite: 'true'))
-    makeValue(suite: undefined).should.eql(addressWith(suite: null))
-    makeValue(suite: NaN).should.eql(addressWith(suite: 'NaN'))
-    makeValue(suite: {}).should.eql(addressWith(suite: '[object Object]'))
-    makeValue(suite: []).should.eql(addressWith(suite: ''))
-    makeValue(suite: [1]).should.eql(addressWith(suite: '1'))
-    makeValue(suite: ['1']).should.eql(addressWith(suite: '1'))
+      makeValue(admin_area: 'FL').should.eql(addressWith(admin_area: 'FL'))
+      makeValue(suite: 200).should.eql(addressWith(suite: '200'))
+      makeValue(suite: true).should.eql(addressWith(suite: 'true'))
+      makeValue(suite: undefined).should.eql(addressWith(suite: null))
+      makeValue(suite: NaN).should.eql(addressWith(suite: 'NaN'))
+      makeValue(suite: {}).should.eql(addressWith(suite: '[object Object]'))
+      makeValue(suite: []).should.eql(addressWith(suite: ''))
+      makeValue(suite: [1]).should.eql(addressWith(suite: '1'))
+      makeValue(suite: ['1']).should.eql(addressWith(suite: '1'))
 
-    makeValue(bogus: 'something').should.eql(addressWith())
-    makeValue({}).should.eql(addressWith())
+      makeValue(bogus: 'something').should.eql(addressWith())
+      makeValue({}).should.eql(addressWith())
 
-    shouldBeNull(makeValue('25:61'))
-    shouldBeNull(makeValue('2:30'))
-    shouldBeNull(makeValue('a'))
-    shouldBeNull(makeValue(null))
-    shouldBeNull(makeValue(undefined))
-    shouldBeNull(makeValue(''))
+      shouldBeNull(makeValue('25:61'))
+      shouldBeNull(makeValue('2:30'))
+      shouldBeNull(makeValue('a'))
+      shouldBeNull(makeValue(null))
+      shouldBeNull(makeValue(undefined))
+      shouldBeNull(makeValue(''))
 
-  it 'should not create values for unsupported field types', ->
-    fields = [
-      'PhotoField'
-      'VideoField'
-      'AudioField'
-      'SignatureField'
-      'RecordLinkField'
-      'Repeatable'
-      'Section'
-      'Label'
-    ]
+    it 'should not create values for unsupported field types', ->
+      fields = [
+        'PhotoField'
+        'VideoField'
+        'AudioField'
+        'SignatureField'
+        'RecordLinkField'
+        'Repeatable'
+        'Section'
+        'Label'
+      ]
 
-    for field in fields
-      shouldBeNull(Utils.makeValue(type: field, 'test'))
+      for field in fields
+        shouldBeNull(Utils.makeValue(type: field, 'test'))
 
 describe "SETCHOICEFILTER", ->
   it 'accepts an array of objects and converts them to strings', ->

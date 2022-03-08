@@ -1,13 +1,13 @@
-## Fulcrum Expressions [![Build Status](https://secure.travis-ci.org/fulcrumapp/fulcrum-expressions.svg)](http://travis-ci.org/fulcrumapp/fulcrum-expressions)
+## Fulcrum Expressions
 
 This implements the runtime for javascript expressions in Fulcrum.
 
 ### Setup
 
-Install npm dependencies
+Install dependencies
 
 ```sh
-npm install
+yarn
 ```
 
 ### Build
@@ -17,8 +17,6 @@ make
 ```
 
 ### Generate Documentation
-
-Make sure to set your `FULCRUM_DEV_SITE` environment variable so the script knows where to copy the generated documentation.
 
 Make changes to `docs.js` and `event_docs.js`.
 
@@ -50,7 +48,7 @@ export FULCRUM_DEV_SITE=/path/to/website
 Or you can assign them in the make command:
 
 ```sh
-FULCRUM_SITE=$HOME/dev/fulcrumapp.com make dist copy
+FULCRUM_DEV_SITE=$HOME/dev/fulcrumapp.com make dist copy
 ```
 
 Once you have the environment variables set, you can run:
