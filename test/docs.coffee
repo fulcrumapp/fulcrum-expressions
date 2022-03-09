@@ -5,10 +5,6 @@ CSON = require 'season'
 Utils = require '../utils'
 stringify = require 'json-stringify-safe'
 
-spawnSync = require('child_process').spawnSync or require('spawn-sync')
-
-spawnSync('make', ['docs'])
-
 global.Intl = require 'intl'
 
 DIST = process.env.DIST or false

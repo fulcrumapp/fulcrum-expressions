@@ -713,7 +713,14 @@ exports.HASOTHER = (value) ->
      value.other_values.length > 0)
 
 exports.IF = (test, trueValue, falseValue) ->
-  if test then trueValue else falseValue
+  value = falseValue
+  if test
+    value = trueValue
+
+  if TYPEOF(value) == 'function'
+    value = value()
+
+  value
 
 exports.IFERROR = (value, errorValue) ->
   if ISERR(value) then errorValue else value
@@ -1564,6 +1571,12 @@ exports.SETPROJECT = (project) ->
   ERROR('project must be a string') if project? and not _.isString(project)
   SETVALUE('@project', project)
 
+exports.SETPROJECTHIDDEN = (value) ->
+  SETHIDDEN('@project', value)
+
+exports.SETPROJECTREADONLY = (value) ->
+  SETREADONLY('@project', value)
+
 exports.SETDESCRIPTION = (dataName, value) ->
   SETFORMATTRIBUTES(dataName, description: if value? then value.toString() else null)
 
@@ -1670,7 +1683,7 @@ exports.SETFORMATTRIBUTES = (dataName, attributes) ->
 
   element = FIELD(dataName)
 
-  return NO_VALUE unless (element or dataName is '@status' or dataName is '@form')
+  return NO_VALUE unless (element or dataName is '@status' or dataName is '@project' or dataName is '@form')
 
   for attributeName, value of attributes
     continue unless _.contains(FORM_ATTRIBUTES, attributeName)

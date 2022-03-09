@@ -1,2 +1,4 @@
-node_modules/
+coverage
+node_modules
+dist/package.json
 docs/output
