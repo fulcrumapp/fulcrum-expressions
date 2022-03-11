@@ -82,8 +82,10 @@ exports.APPLICATIONVERSION = ->
   Config.applicationVersion ? ''
 
 evaluateChoiceValueEquals = (choiceValues, matchValues) ->
-  return false unless choiceValues and choiceValues.length is matchValues.length
-  return choiceValues.every((element) -> element in matchValues)
+  Array.isArray(choiceValues) and
+    Array.isArray(matchValues) and
+    choiceValues.length is matchValues.length and
+    choiceValues.every((element) -> element in matchValues)
 
 evaluateEquals = (field, value) ->
   result = switch FIELDTYPE(field)
@@ -104,7 +106,7 @@ performAction = (action) ->
     when 'setvalue' then SETVALUE(action.field, action.value)
 
 applyEffect = ({ actions, conditions }) ->
-  return if !actions or !conditions
+  return if not Array.isArray(actions) or not Array.isArray(conditions)
   actions.forEach(performAction) if conditions.every(evaluateCondition)
 
 exports.APPLY_FIELD_EFFECTS = (fieldEffects) ->
