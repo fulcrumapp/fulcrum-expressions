@@ -1,4 +1,0 @@
-#!/bin/sh
-
-./node_modules/jsdoc/jsdoc.js -t templates/haruki docs/docs.js -d console > docs/docs.json
-./node_modules/jsdoc/jsdoc.js -t templates/haruki docs/event_docs.js -d console > docs/event_docs.json

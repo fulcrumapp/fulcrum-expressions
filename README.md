@@ -1,67 +1,75 @@
 ## Fulcrum Expressions
-
 This implements the runtime for javascript expressions in Fulcrum.
 
-### IMPORTANT!
-Currently all projects pull the expression.js lib produced by this repo from https://assets.fulcrumapp.com/expv1/expressions.js. Until we are able to move projects over to using the published npm library, we will need to manually deploy by copying the dist/expressions.js file to that S3 bucket for others to see changes.
-```
-yarn build:dist
-aws sso login --profile fulcrum (or however you login to the readonly fulcrum aws account)
-aws s3 cp --cache-control "no-cache, no-store, max-age=0, must-revalidate" --expires "Mon, 01 Jan 1990 00:00:00 GMT" --content-type "text/html" dist/expressions.js s3://fulcrum-assets/expv1/expressions.js
-```
-**Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
-After uploading to S3 we likely want to invalidate the cloudfront cache so that clients pick up the changes.
+The current implementation uses coffeescript.
+
+There is a typescript implementation (latest version is likely in fulcrum-components/src/expressions, but there is also a typescript branch on this repo) that is currently being used in fulcrum-components to provide types to the monaco editor used to edit data events, calculations, etc.
+Eventually, this repo should contain that implementation, and ideally move off the coffeescript implementation once we are confident the typescript implementation works.
+Right now, we haven't determined the best way to distribute those types from this package. Until then, any type updates that need to be made (new public facing functions or otherwise) will need to be made in the typescript implementation.
 
 ### Setup
-
 Install dependencies
-
 ```sh
 yarn
 ```
 
 ### Build
-
+Build expressions.js and sandbox (expressions-proxy.js and expressions.html)
 ```sh
 yarn build
 ```
+Build debug versions
+```sh
+yarn build:debug
+```
 
 ### Generate Documentation
-
 Make changes to `docs.js` and `event_docs.js`.
-
 ```sh
 yarn build:docs
 ```
 
 ### Distribute
-
-Builds the final output along with docs and help
-
+Builds everything for distribution
 ```sh
 yarn build:dist
 ```
 
-### Documentation
-
-Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
-
 ### Tests
-
 ```sh
 yarn test
 ```
 
 ### Console
-
 Starts an interactive node terminal with the functions available to call
-
 ```sh
 yarn console
 ```
 
-### Copy files to other repositories (NOT USED, BUT LEFT FOR REFERENCE)
+### Deploy
+Currently all projects pull the expression.js lib produced by this repo from https://assets.fulcrumapp.com/expv1/expressions.js. Until we are able to move projects over to using the published npm library, we will need to manually deploy by copying the dist/expressions.js file to that S3 bucket for others to see changes.
 
+To deploy to your user's preview environment:
+```sh
+aws sso login (or however you login to the readonly fulcrum aws account)
+yarn deploy
+```
+(Remember to update fulcrum's config to point at your S3 bucket's files)
+
+To deploy to production (requires fulcrum production access):
+```sh
+aws sso login (or however you login to the readonly fulcrum aws account)
+yarn deploy production
+```
+**Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
+After uploading to S3 we likely want to invalidate the cloudfront cache so that clients pick up the changes.
+
+### Documentation
+Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
+
+## Deprecated Info (NOT USED, AND PROBABLY DOESN'T WORK, BUT LEFT FOR REFERENCE)
+
+### Copy files to other repositories
 Copies the build output and docs to the other repositories (each are optional, but at least one is needed).
 
 You can define the paths to the Fulcrum repos using environment variables in your shell config:
