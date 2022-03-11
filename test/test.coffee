@@ -1766,13 +1766,11 @@ describe 'VALUE', ->
     shouldHaveNoValue(VALUE('invalid_field'))
 
 describe 'SETVALUE', ->
-  it 'wraps text field values in double quotes', ->
+  it 'wraps values in quotes', ->
     SETVALUE('name', 'Fred')
     runtime.results[0].value.should.eql '"Fred"'
-
-  it 'sets the value of checklists', ->
     SETVALUE('checklist', {an: 'object', of: 'my choosing'})
-    runtime.results[0].value.should.eql {an: 'object', of: 'my choosing'}
+    runtime.results[1].value.should.eql JSON.stringify({an: 'object', of: 'my choosing'})
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->

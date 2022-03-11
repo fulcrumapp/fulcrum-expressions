@@ -145,6 +145,11 @@ class Utils
     BarcodeField: (value) ->
       Utils.converters.TextField(value)
 
+    DynamicField: (value) ->
+      return null unless _.isObject(value)
+
+      value
+
     DateTimeField: (value) ->
       return null unless value?
 
