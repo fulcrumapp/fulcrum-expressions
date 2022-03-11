@@ -82,20 +82,19 @@ exports.APPLICATIONVERSION = ->
   Config.applicationVersion ? ''
 
 evaluateChoiceValueEquals = (choiceValues, matchValues) ->
-  return false unless choiceValues.length is matchValues.length
+  return false unless choiceValues and choiceValues.length is matchValues.length
   return choiceValues.every((element) -> element in matchValues)
 
-evaluateEquals = (type, value, other) ->
-  return value is other if !value
-  result = switch type
-    when 'ChoiceField', 'ClassificationField' then evaluateChoiceValueEquals(value.choice_values, other)
-    else value is other
+evaluateEquals = (field, value) ->
+  result = switch FIELDTYPE(field)
+    when 'ChoiceField', 'ClassificationField' then evaluateChoiceValueEquals(CHOICEVALUES(VALUE(field)), value)
+    else VALUE(field) is value
   return result
 
 evaluateCondition = ({ field, operator, value }) ->
-  return false if not field or not operator or not value
+  return false if not field or not operator
   result = switch operator
-    when 'equals' then evaluateEquals(FIELDTYPE(field), VALUE(field), value)
+    when 'equals' then evaluateEquals(field, value)
     else false
   return result
 
