@@ -1556,7 +1556,7 @@ describe 'REPEATABLESUM', ->
 describe 'DATANAMES', ->
   it 'returns the data names of the form fields', ->
     names = DATANAMES()
-    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'choice_field' ])
+    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'choice_field', 'checklist' ])
 
     names = DATANAMES('Repeatable')
     names.should.eql([ 'items', 'child_items' ])
@@ -1764,6 +1764,15 @@ describe 'VALUE', ->
     VALUE('name').should.be.exactly('Test Record')
     shouldHaveNoValue(VALUE(null))
     shouldHaveNoValue(VALUE('invalid_field'))
+
+describe 'SETVALUE', ->
+  it 'wraps text field values in double quotes', ->
+    SETVALUE('name', 'Fred')
+    runtime.results[0].value.should.eql '"Fred"'
+
+  it 'sets the value of checklists', ->
+    SETVALUE('checklist', {an: 'object', of: 'my choosing'})
+    runtime.results[0].value.should.eql {an: 'object', of: 'my choosing'}
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->
