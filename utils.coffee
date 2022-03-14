@@ -146,9 +146,15 @@ class Utils
       Utils.converters.TextField(value)
 
     DynamicField: (value) ->
-      return null unless _.isObject(value)
-
-      value
+      vals = ARRAY()
+      if _.isArray(value)
+        _.each value, (val) ->
+          if(val && val.id && val.elements && val.values &&
+            _.isString(val.id) && _.isArray(val.elements) &&
+            _.isObject(val.values) && !_.isArray(val.values)
+          )
+            vals.push(val)
+      vals
 
     DateTimeField: (value) ->
       return null unless value?

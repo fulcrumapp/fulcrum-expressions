@@ -1769,8 +1769,21 @@ describe 'SETVALUE', ->
   it 'wraps values in quotes', ->
     SETVALUE('name', 'Fred')
     runtime.results[0].value.should.eql '"Fred"'
-    SETVALUE('checklist', {an: 'object', of: 'my choosing'})
-    runtime.results[1].value.should.eql JSON.stringify({an: 'object', of: 'my choosing'})
+    SETVALUE('checklist', [{id: 'someid', elements: [], values: {}}])
+    runtime.results[1].value.should.eql JSON.stringify([{id: 'someid', elements: [], values: {}}])
+  it 'returns an empty array for invalid dynamic fields', ->
+    SETVALUE('checklist', 'strings do not work')
+    SETVALUE('checklist', [
+      {id: {shouldabeen: 'a string'}, elements: [], values: {}}
+      {id: 'elements should be an array', elements: {}, values: {}}
+      {id: 'values should be an object', elements: [], values: []}
+      {id: 'someid', elements: 'not an array', values: {}}
+      {id: 'someid', elements: [], values: 'not an object'}
+    ])
+    runtime.results.length.should.eql(2)
+    _.each runtime.results, (res) ->
+      res.value.should.eql('[]')
+
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->
