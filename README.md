@@ -51,7 +51,7 @@ Currently all projects pull the expression.js lib produced by this repo from htt
 
 To deploy to your user's preview environment:
 ```sh
-aws sso login (or however you login to the readonly fulcrum aws account)
+aws sso login (or however you login to the chaos aws account)
 yarn deploy
 ```
 (Remember to update fulcrum's config to point at your S3 bucket's files)
