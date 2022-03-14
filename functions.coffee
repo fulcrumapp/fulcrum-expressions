@@ -109,14 +109,14 @@ applyEffect = ({ actions, conditions }) ->
   return if not Array.isArray(actions) or not Array.isArray(conditions)
   actions.forEach(performAction) if conditions.every(evaluateCondition)
 
-exports.APPLY_FIELD_EFFECTS = (fieldEffects) ->
+exports.APPLYFIELDEFFECTS = (fieldEffects) ->
   return if !fieldEffects or not Array.isArray(fieldEffects.effects)
   for effect in fieldEffects.effects
-    if effect.event in ['change', 'focus', 'blur', 'click']
-      for condition in effect.conditions
-        ON(effect.event, condition.field, (event) -> applyEffect(effect))
+    continue if !effect.event
+    if effect.event.field
+      ON(effect.event.name, effect.event.field, (event) -> applyEffect(effect))
     else
-      ON(effect.event, (event) -> applyEffect(effect))
+      ON(effect.event.name, (event) -> applyEffect(effect))
 
 exports.ARRAY = ->
   FLATTEN(toArray(arguments))

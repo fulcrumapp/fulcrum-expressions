@@ -346,6 +346,7 @@ class Runtime
 
     specialFunctions =
       ALERT: true
+      APPLYFIELDEFFECTS: true
       CURRENTLOCATION: true
       INVALID: true
       OFF: true
