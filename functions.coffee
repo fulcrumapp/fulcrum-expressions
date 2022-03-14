@@ -112,7 +112,7 @@ applyEffect = ({ actions, conditions }) ->
 exports.APPLYFIELDEFFECTS = (fieldEffects) ->
   return if !fieldEffects or not Array.isArray(fieldEffects.effects)
   for effect in fieldEffects.effects
-    continue if !effect.event
+    continue if !effect.event or !effect.event.name
     if effect.event.field
       ON(effect.event.name, effect.event.field, (event) -> applyEffect(effect))
     else

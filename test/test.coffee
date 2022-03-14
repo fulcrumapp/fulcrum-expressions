@@ -116,6 +116,31 @@ describe 'AND', ->
     AND(true, false).should.be.false
     AND({}, []).should.be.true
 
+describe 'APPLYFIELDEFFECTS', ->
+  it 'sets up events for effects', ->
+    APPLYFIELDEFFECTS({
+      effects: [
+        {
+          event: { name: 'change', field: 'choice_field' },
+          conditions: [ { field: 'name', operator: 'equals', value: 'Test Record' } ],
+          actions: [ { type: 'setvalue', field: 'name', value: 'New Name' } ]
+        }
+      ]
+    })
+    runtime.events.hook_change.hook_choice_field.length.should.eql(1)
+    (typeof runtime.events['hook_change']['hook_choice_field'][0]).should.eql('function')
+
+    runtime.events = {}
+
+    APPLYFIELDEFFECTS({})
+    runtime.events.should.eql({})
+    APPLYFIELDEFFECTS({ effects: 'not an array' })
+    runtime.events.should.eql({})
+    APPLYFIELDEFFECTS({ effects: [{}]})
+    runtime.events.should.eql({})
+    APPLYFIELDEFFECTS({ effects: [{ event: {}, conditions: [], actions: [] }]})
+    runtime.events.should.eql({})
+
 describe 'AVERAGE', ->
   it 'returns the average of all of the parameters', ->
     AVERAGE(1, 2, 3).should.be.exactly(2)
