@@ -1769,16 +1769,20 @@ describe 'SETVALUE', ->
   it 'wraps values in quotes', ->
     SETVALUE('name', 'Fred')
     runtime.results[0].value.should.eql '"Fred"'
-    SETVALUE('checklist', [{id: 'someid', elements: [], values: {}}])
-    runtime.results[1].value.should.eql JSON.stringify([{id: 'someid', elements: [], values: {}}])
+
+    singleField = {metadata: {id: 'someid'}, elements: [], values: {}}
+    SETVALUE('checklist', [singleField])
+    runtime.results[1].value.should.eql JSON.stringify([singleField])
+
   it 'returns an empty array for invalid dynamic fields', ->
     SETVALUE('checklist', 'strings do not work')
     SETVALUE('checklist', [
-      {id: {shouldabeen: 'a string'}, elements: [], values: {}}
-      {id: 'elements should be an array', elements: {}, values: {}}
-      {id: 'values should be an object', elements: [], values: []}
-      {id: 'someid', elements: 'not an array', values: {}}
-      {id: 'someid', elements: [], values: 'not an object'}
+      {metadata: 'should be object', elements: [], values: {}}
+      {metadata: {id: {shouldabeen: 'a string'}}, elements: [], values: {}}
+      {metadata: {id: 'elements should be an array'}, elements: {}, values: {}}
+      {metadata: {id: 'values should be an object'}, elements: [], values: []}
+      {metadata: {id: 'someid'}, elements: 'not an array', values: {}}
+      {metadata: {id: 'someid'}, elements: [], values: 'not an object'}
     ])
     runtime.results.length.should.eql(2)
     _.each runtime.results, (res) ->

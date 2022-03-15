@@ -149,8 +149,9 @@ class Utils
       vals = ARRAY()
       if _.isArray(value)
         _.each value, (val) ->
-          if(val && val.id && val.elements && val.values &&
-            _.isString(val.id) && _.isArray(val.elements) &&
+          if(val && val.metadata && val.elements && val.values &&
+            _.isObject(val.metadata) && _.isString(val.metadata.id) &&
+            _.isArray(val.elements) &&
             _.isObject(val.values) && !_.isArray(val.values)
           )
             vals.push(val)
