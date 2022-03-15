@@ -145,6 +145,18 @@ class Utils
     BarcodeField: (value) ->
       Utils.converters.TextField(value)
 
+    DynamicField: (value) ->
+      vals = ARRAY()
+      if _.isArray(value)
+        _.each value, (val) ->
+          if(val && val.metadata && val.elements && val.values &&
+            _.isObject(val.metadata) && _.isString(val.metadata.id) &&
+            _.isArray(val.elements) &&
+            _.isObject(val.values) && !_.isArray(val.values)
+          )
+            vals.push(val)
+      vals
+
     DateTimeField: (value) ->
       return null unless value?
 

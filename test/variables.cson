@@ -234,6 +234,22 @@ form:
         { label: "6", value:"6" }
       ]
     }
+    {
+      type: "DynamicField",
+      key: "b835",
+      label: "Checklist",
+      description: null,
+      required: false,
+      disabled: false,
+      hidden: true,
+      data_name: "checklist",
+      default_value: null,
+      visible_conditions_type: null,
+      visible_conditions_behavior: "clear",
+      visible_conditions: null,
+      required_conditions_type: null,
+      required_conditions: null
+  }
   ]
   image: null
   name: "Fire Hydrant Inspection Form"

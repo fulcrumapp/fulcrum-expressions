@@ -1581,7 +1581,7 @@ describe 'REPEATABLESUM', ->
 describe 'DATANAMES', ->
   it 'returns the data names of the form fields', ->
     names = DATANAMES()
-    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'choice_field' ])
+    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'choice_field', 'checklist' ])
 
     names = DATANAMES('Repeatable')
     names.should.eql([ 'items', 'child_items' ])
@@ -1789,6 +1789,30 @@ describe 'VALUE', ->
     VALUE('name').should.be.exactly('Test Record')
     shouldHaveNoValue(VALUE(null))
     shouldHaveNoValue(VALUE('invalid_field'))
+
+describe 'SETVALUE', ->
+  it 'wraps values in quotes', ->
+    SETVALUE('name', 'Fred')
+    runtime.results[0].value.should.eql '"Fred"'
+
+    singleField = {metadata: {id: 'someid'}, elements: [], values: {}}
+    SETVALUE('checklist', [singleField])
+    runtime.results[1].value.should.eql JSON.stringify([singleField])
+
+  it 'returns an empty array for invalid dynamic fields', ->
+    SETVALUE('checklist', 'strings do not work')
+    SETVALUE('checklist', [
+      {metadata: 'should be object', elements: [], values: {}}
+      {metadata: {id: {shouldabeen: 'a string'}}, elements: [], values: {}}
+      {metadata: {id: 'elements should be an array'}, elements: {}, values: {}}
+      {metadata: {id: 'values should be an object'}, elements: [], values: []}
+      {metadata: {id: 'someid'}, elements: 'not an array', values: {}}
+      {metadata: {id: 'someid'}, elements: [], values: 'not an object'}
+    ])
+    runtime.results.length.should.eql(2)
+    _.each runtime.results, (res) ->
+      res.value.should.eql('[]')
+
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->
