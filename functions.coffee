@@ -81,6 +81,43 @@ exports.APPLICATIONINFO = (separator=', ') ->
 exports.APPLICATIONVERSION = ->
   Config.applicationVersion ? ''
 
+evaluateChoiceValueEquals = (choiceValues, matchValues) ->
+  Array.isArray(choiceValues) and
+    Array.isArray(matchValues) and
+    choiceValues.length is matchValues.length and
+    choiceValues.every((element) -> element in matchValues)
+
+evaluateEquals = (field, value) ->
+  result = switch FIELDTYPE(field)
+    when 'ChoiceField', 'ClassificationField' then evaluateChoiceValueEquals(CHOICEVALUES(VALUE(field)), value)
+    else VALUE(field) is value
+  return result
+
+evaluateCondition = ({ field, operator, value }) ->
+  return false if not field or not operator
+  result = switch operator
+    when 'equals' then evaluateEquals(field, value)
+    else false
+  return result
+
+performAction = (action) ->
+  return if !action
+  switch action.type
+    when 'setvalue' then SETVALUE(action.field, action.value)
+
+applyEffect = ({ actions, conditions }) ->
+  return if not Array.isArray(actions) or not Array.isArray(conditions)
+  actions.forEach(performAction) if conditions.every(evaluateCondition)
+
+exports.APPLYFIELDEFFECTS = (fieldEffects) ->
+  return if !fieldEffects or not Array.isArray(fieldEffects.effects)
+  for effect in fieldEffects.effects
+    continue if !effect.event or !effect.event.name
+    if effect.event.field
+      ON(effect.event.name, effect.event.field, (event) -> applyEffect(effect))
+    else
+      ON(effect.event.name, (event) -> applyEffect(effect))
+
 exports.ARRAY = ->
   FLATTEN(toArray(arguments))
 
