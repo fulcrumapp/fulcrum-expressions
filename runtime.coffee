@@ -180,13 +180,11 @@ class Runtime
     @scriptInitialized = true
 
     script = if _.isString(@form.script) then @form.script else ''
-    console.log(@form)
     if @form.field_effects
       script = """
         APPLYFIELDEFFECTS(#{JSON.stringify(@form.field_effects)});
         #{script}
       """
-    console.log(script)
 
     `with (this.variables) { eval(script) }`
 
