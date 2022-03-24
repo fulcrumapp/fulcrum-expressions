@@ -16,7 +16,6 @@ class ExpressionEngine
 
   prepare: (event, message) ->
     $$runtime.form = message.form
-    $$runtime.script = message.form.script
     $$prepare()
 
     @setupHostFunctions()

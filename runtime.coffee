@@ -36,8 +36,6 @@ class Runtime
     change: {}
     click: {}
 
-  script: null
-
   customVariables: {}
 
   locale: @defaultLocale
@@ -181,9 +179,14 @@ class Runtime
 
     @scriptInitialized = true
 
-    return unless _.isString(@script)
+    script = if _.isString(@form.script) then @form.script else ''
+    if @form.field_effects
+      script = """
+        APPLYFIELDEFFECTS(#{JSON.stringify(@form.field_effects)});
+        #{script}
+      """
 
-    `with (this.variables) { eval(this.script) }`
+    `with (this.variables) { eval(script) }`
 
     return
 
