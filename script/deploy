@@ -51,3 +51,14 @@ aws s3 cp \
   ${root_dir}/dist/expressions.html s3://${bucket}/expv1/expressions.html
 
 printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.html\n"
+
+if [[ "${ENVIRONMENT}" == "production" ]]
+then
+    printf "Invalidating production CloudFront.\n"
+    aws cloudfront create-invalidation \
+      --distribution-id E1ONQRALSE0LBO \
+      --paths "/expv1/*"
+
+    printf "To get the status, run: aws cloudfront get-invalidation --distribution-id E1ONQRALSE0LBO --id #{id}\n"
+    printf "Documentation says it can take up to 30 minutes to complete, but less than 5 is normal.\n"
+fi
