@@ -62,7 +62,6 @@ aws sso login (or however you login to the readonly fulcrum aws account)
 yarn deploy production
 ```
 **Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
-After uploading to S3 we likely want to invalidate the cloudfront cache so that clients pick up the changes.
 
 ### Documentation
 Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
