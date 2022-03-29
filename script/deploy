@@ -32,7 +32,7 @@ aws s3 cp \
   --acl "public-read" \
   ${root_dir}/dist/expressions.js s3://${bucket}/expv1/expressions.js
 
-printf "Deployed https://${bucket}.s3.amazonaws.com/expressions.js\n"
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
 
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
@@ -41,7 +41,7 @@ aws s3 cp \
   --acl "public-read" \
   ${root_dir}/dist/expressions-proxy.js s3://${bucket}/expv1/expressions-proxy.js
 
-printf "Deployed https://${bucket}.s3.amazonaws.com/expressions-proxy.js\n"
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions-proxy.js\n"
 
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
@@ -50,4 +50,4 @@ aws s3 cp \
   --acl "public-read" \
   ${root_dir}/dist/expressions.html s3://${bucket}/expv1/expressions.html
 
-printf "Deployed https://${bucket}.s3.amazonaws.com/expressions.html\n"
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.html\n"
