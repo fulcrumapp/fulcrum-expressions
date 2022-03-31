@@ -22,6 +22,36 @@ featureGeometry:
 values:
   form_values:
     '97ab': "Test Record"
+    '9991': [
+      {
+        id: '1'
+        form_values: {
+          '9992': 'Child 1'
+        }
+      }
+      {
+        id: '2'
+        form_values: {
+          '9992': 'Child 2'
+          '9993': [
+            {
+              id: '2b'
+              form_values: {
+                '9994': 'Grand Child 2'
+                '9995': [
+                  {
+                    id: '2c'
+                    form_values: {
+                      '9996': 'Great Grand Child 2'
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
     '1337': [
       {
         id: '1'
@@ -97,6 +127,135 @@ form:
       required_conditions: null
       required_conditions_type: null
       type: "TextField"
+      visible_conditions: null
+      visible_conditions_type: null
+    }
+    {
+      data_name: "level_1"
+      default_value: null
+      description: null
+      disabled: false
+      elements: [
+        {
+          data_name: "level_1_field"
+          default_value: null
+          description: null
+          disabled: false
+          hidden: false
+          key: "9992"
+          label: "Level 1 field"
+          max: null
+          max_length: null
+          min: null
+          min_length: null
+          numeric: false
+          required: false
+          required_conditions: null
+          required_conditions_type: null
+          type: "TextField"
+          visible_conditions: null
+          visible_conditions_type: null
+        }
+        {
+          data_name: "level_2"
+          default_value: null
+          description: null
+          disabled: false
+          elements: [
+            {
+              data_name: "level_2_field"
+              default_value: null
+              description: null
+              disabled: false
+              hidden: false
+              key: "9994"
+              label: "Level 2 field"
+              max: null
+              max_length: null
+              min: null
+              min_length: null
+              numeric: false
+              required: false
+              required_conditions: null
+              required_conditions_type: null
+              type: "TextField"
+              visible_conditions: null
+              visible_conditions_type: null
+            }
+            {
+              data_name: "level_3"
+              default_value: null
+              description: null
+              disabled: false
+              elements: [
+                {
+                  data_name: "level_3_field"
+                  default_value: null
+                  description: null
+                  disabled: false
+                  hidden: false
+                  key: "9996"
+                  label: "Level 3 field"
+                  max: null
+                  max_length: null
+                  min: null
+                  min_length: null
+                  numeric: false
+                  required: false
+                  required_conditions: null
+                  required_conditions_type: null
+                  type: "TextField"
+                  visible_conditions: null
+                  visible_conditions_type: null
+                }
+              ]
+              geometry_required: false
+              geometry_types: ["Point"]
+              hidden: false
+              key: "9995"
+              label: "Level 3"
+              max_length: null
+              min_length: null
+              required: false
+              required_conditions: null
+              required_conditions_type: null
+              title_field_key: null
+              title_field_keys: ["9996"]
+              type: "Repeatable"
+              visible_conditions: null
+              visible_conditions_type: null
+            }
+          ]
+          geometry_required: false
+          geometry_types: ["Point"]
+          hidden: false
+          key: "9993"
+          label: "Level 2"
+          max_length: null
+          min_length: null
+          required: false
+          required_conditions: null
+          required_conditions_type: null
+          title_field_key: null
+          title_field_keys: ["9994"]
+          type: "Repeatable"
+          visible_conditions: null
+          visible_conditions_type: null
+        }
+      ]
+      geometry_required: false
+      geometry_types: ["Point"]
+      hidden: false
+      key: "9991"
+      label: "Level 1"
+      max_length: null
+      min_length: null
+      required: false
+      required_conditions: null
+      required_conditions_type: null
+      title_field_key: null
+      title_field_keys: ["9992"]
+      type: "Repeatable"
       visible_conditions: null
       visible_conditions_type: null
     }

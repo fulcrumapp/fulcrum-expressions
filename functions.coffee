@@ -1385,15 +1385,25 @@ exports.REPEATABLENUMBER = ->
 exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
   if _.isArray(dataName)
     if dataName.length is 1
+      console.log "CCCC: #{dataName[0]}"
       dataName = dataName[0]
     else
       repeatableDataName = dataName[0]
       restOfDataNames = dataName.slice(1)
+      console.log "A: #{repeatableValue}"
+      console.log "B: #{repeatableDataName}"
+      console.log "C: #{dataName[1]}"
 
-      childValues = REPEATABLEVALUES(repeatableValue, repeatableDataName).map (item) =>
-        REPEATABLEVALUES(item, restOfDataNames)
+      childValues = REPEATABLEVALUES(repeatableValue, repeatableDataName)
+        # .filter (item) => item != undefined
+        .map (item) =>
+          console.log "D: #{item}"
+          REPEATABLEVALUES(item, restOfDataNames)
+        .filter (item) => item != undefined
 
       return _.flatten(childValues)
+  else
+    console.log "not an array"
 
   dataElement = $$runtime.elementsByDataName[dataName]
 
@@ -1403,7 +1413,10 @@ exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
 
   return NO_VALUE unless repeatableElement
 
+  console.log "xxxx"
+  console.log Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
   Utils.repeatableValues(repeatableElement, repeatableValue, dataName)
+    .filter (item) => item != undefined
 
 exports.REPEATABLESUM = (repeatableValue, dataName) ->
   SUM.apply(null, _.filter(REPEATABLEVALUES(repeatableValue, dataName)), ISNUMBER)
