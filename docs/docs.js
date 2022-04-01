@@ -420,10 +420,10 @@ function CURRENCYSYMBOL() {}
  * @param {String} [type=any] Optional field type
  * @returns {Array}
  * @example
- * // returns ["name","items","cost","choice_value","child_items","child_item_cost","choice_field","checklist"]
+ * // returns ["name","items","cost","choice_value","child_items","child_item_cost","grandchild_items","grandchild_item_cost","choice_field","checklist"]
  * DATANAMES()
  * @example
- * // returns ["items","child_items"]
+ * // returns ["items","child_items","grandchild_items"]
  * DATANAMES('Repeatable')
  */
 function DATANAMES() {}
@@ -709,7 +709,7 @@ function FIELD() {}
  * @param {Object} options `repeatables` and `sections` boolean values to control whether to drill into further nested sections and repeatables when returning the child fields. For example, passing `{sections: false}` will not return fields that are in nested sections.
  * @returns {Array}
  * @example
- * // returns 1
+ * // returns 3
  * FIELDS('child_items').length
  */
 function FIELDS() {}
@@ -724,7 +724,7 @@ function FIELDS() {}
  * @param {Object} options `repeatables` and `sections` boolean values to control whether to drill into further nested sections and repeatables when returning the child fields. For example, passing `{sections: false}` will not return fields that are in nested sections. This function is identical to `FIELDS` except it returns only the data name strings instead of the actual field objects.
  * @returns {Array}
  * @example
- * // returns ["child_item_cost"]
+ * // returns ["child_item_cost","grandchild_items","grandchild_item_cost"]
  * FIELDNAMES('child_items')
  */
 function FIELDNAMES() {}
