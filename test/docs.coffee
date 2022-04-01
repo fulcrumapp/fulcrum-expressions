@@ -38,27 +38,27 @@ shouldHaveNoValue = (value) ->
 shouldBeUndefined = (value) ->
   (value is undefined).should.be.true
 
-# describe 'Documentation', ->
-#   _.each docs.functions, (func) ->
-#     it "examples for #{func.name}", ->
-#       _.each func.examples, (example) ->
-#         returnValue = example.split("\n")[0].replace('// returns ', '')
+describe 'Documentation', ->
+  _.each docs.functions, (func) ->
+    it "examples for #{func.name}", ->
+      _.each func.examples, (example) ->
+        returnValue = example.split("\n")[0].replace('// returns ', '')
 
-#         return if returnValue is 'VALUE'
+        return if returnValue is 'VALUE'
 
-#         # make the docs for things that need a choice field nicer
-#         $choice_field = { choice_values: ['Red', 'Green', 'Blue'] }
+        # make the docs for things that need a choice field nicer
+        $choice_field = { choice_values: ['Red', 'Green', 'Blue'] }
 
-#         (-> eval(example)).should.not.throw
+        (-> eval(example)).should.not.throw
 
-#         result = eval(example)
-#         actual = stringify(result)
+        result = eval(example)
+        actual = stringify(result)
 
-#         if _.isUndefined(result)
-#           actual = 'undefined'
-#         else if _.isNaN(result)
-#           actual = 'NaN'
-#         else if _.isDate(result)
-#           actual = Utils.formatMachineDate(result)
+        if _.isUndefined(result)
+          actual = 'undefined'
+        else if _.isNaN(result)
+          actual = 'NaN'
+        else if _.isDate(result)
+          actual = Utils.formatMachineDate(result)
 
-#         actual.should.eql(returnValue)
+        actual.should.eql(returnValue)

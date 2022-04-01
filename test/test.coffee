@@ -1292,14 +1292,14 @@ describe 'FIELDS', ->
   it 'returns the child fields', ->
     shouldHaveNoValue(FIELDS('does_not_exist'))
     shouldHaveNoValue(FIELDS('name'))
-    FIELDS('items').length.should.eql(4)
+    FIELDS('items').length.should.eql(6)
     FIELDS('items', {repeatables: false}).length.should.eql(3)
 
 describe 'FIELDNAMES', ->
   it 'returns the child field names', ->
     shouldHaveNoValue(FIELDNAMES('does_not_exist'))
     shouldHaveNoValue(FIELDNAMES('name'))
-    FIELDNAMES('items').should.eql(['cost', 'choice_value', 'child_items', 'child_item_cost'])
+    FIELDNAMES('items').should.eql(['cost', 'choice_value', 'child_items', 'child_item_cost', 'grandchild_items', 'grandchild_item_cost'])
     FIELDNAMES('items', {repeatables: false}).length.should.eql(3)
 
 describe 'FIXED', ->
@@ -1493,18 +1493,18 @@ describe 'REPEATABLEVALUES', ->
     costs.should.eql([1, 2, 3])
 
   it 'looks for 2 levels of data with 1 orphan', ->
-    $repeatable_field = variables.values.form_values['9991']
+    $repeatable_field = variables.values.form_values['1337']
 
-    levels = REPEATABLEVALUES($repeatable_field, ['level_2', 'level_2_field'])
+    levels = REPEATABLEVALUES($repeatable_field, ['child_items', 'child_item_cost'])
 
-    levels.should.eql([ 'Grand Child 2' ])
+    levels.should.eql([ 4, 5, 10, null ])
 
   it 'looks for 3 levels of data with 1 orphan', ->
-    $repeatable_field = variables.values.form_values['9991']
+    $repeatable_field = variables.values.form_values['1337']
 
-    levels = REPEATABLEVALUES($repeatable_field, ['level_2', 'level_3', 'level_3_field'])
+    levels = REPEATABLEVALUES($repeatable_field, ['child_items', 'grandchild_items', 'grandchild_item_cost'])
 
-    levels.should.eql([ 'Great Grand Child 2' ])
+    levels.should.eql([ null, 21, null, null ])
 
   it 'returns grandchild data out of repeatables', ->
     $repeatable_field = variables.values.form_values['1337']
@@ -1512,11 +1512,11 @@ describe 'REPEATABLEVALUES', ->
     child_items = REPEATABLEVALUES($repeatable_field, 'child_items').map (item) =>
       REPEATABLEVALUES(item, 'child_item_cost')
 
-    child_items.should.eql([ [ 4, 5 ], [ 10 ] ])
+    child_items.should.eql([ [ 4, 5 ], [ 10 ], null ])
 
     child_items_all = REPEATABLEVALUES($repeatable_field, ['child_items', 'child_item_cost'])
 
-    child_items_all.should.eql([ 4, 5, 10 ])
+    child_items_all.should.eql([ 4, 5, 10, null ])
 
   it 'returns a specific field out of a blank collection of repeatable items', ->
     $repeatable_field = []
@@ -1592,13 +1592,13 @@ describe 'REPEATABLESUM', ->
 
     totalCost.should.be.NaN
 
-# describe 'DATANAMES', ->
-#   it 'returns the data names of the form fields', ->
-#     names = DATANAMES()
-#     names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'choice_field', 'checklist' ])
+describe 'DATANAMES', ->
+  it 'returns the data names of the form fields', ->
+    names = DATANAMES()
+    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'grandchild_items', 'grandchild_item_cost', 'choice_field', 'checklist' ])
 
-#     names = DATANAMES('Repeatable')
-#     names.should.eql([ 'items', 'child_items' ])
+    names = DATANAMES('Repeatable')
+    names.should.eql([ 'items', 'child_items', 'grandchild_items' ])
 
 describe 'DATE', ->
   it 'returns a date given a year, month, and day', ->
