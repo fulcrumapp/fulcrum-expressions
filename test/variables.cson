@@ -42,6 +42,14 @@ values:
               id: '1b',
               form_values: {
                 '1399': 5
+                '1492': [
+                  {
+                    id: '1ba'
+                    form_values: {
+                      '1493': 21
+                    }
+                  }
+                ]
               }
             }
           ]
@@ -156,25 +164,71 @@ form:
           description: null
           disabled: false
           elements: [
-            data_name: "child_item_cost"
-            default_value: null
-            description: null
-            disabled: false
-            format: "decimal"
-            hidden: false
-            key: "1399"
-            label: "Child Item Cost"
-            max: null
-            max_length: null
-            min: null
-            min_length: null
-            numeric: true
-            required: false
-            required_conditions: null
-            required_conditions_type: null
-            type: "TextField"
-            visible_conditions: null
-            visible_conditions_type: null
+            {
+              data_name: "child_item_cost"
+              default_value: null
+              description: null
+              disabled: false
+              format: "decimal"
+              hidden: false
+              key: "1399"
+              label: "Child Item Cost"
+              max: null
+              max_length: null
+              min: null
+              min_length: null
+              numeric: true
+              required: false
+              required_conditions: null
+              required_conditions_type: null
+              type: "TextField"
+              visible_conditions: null
+              visible_conditions_type: null
+            }
+            {
+              data_name: "grandchild_items"
+              default_value: null
+              description: null
+              disabled: false
+              elements: [
+                {
+                  data_name: "grandchild_item_cost"
+                  default_value: null
+                  description: null
+                  disabled: false
+                  format: "decimal"
+                  hidden: false
+                  key: "1493"
+                  label: "Child Item Cost"
+                  max: null
+                  max_length: null
+                  min: null
+                  min_length: null
+                  numeric: true
+                  required: false
+                  required_conditions: null
+                  required_conditions_type: null
+                  type: "TextField"
+                  visible_conditions: null
+                  visible_conditions_type: null
+                }
+              ]
+              geometry_required: false
+              geometry_types: ["Point"]
+              hidden: false
+              key: "1492"
+              label: "Grandchild Items"
+              max_length: null
+              min_length: null
+              required: false
+              required_conditions: null
+              required_conditions_type: null
+              title_field_key: null
+              title_field_keys: ["1493"]
+              type: "Repeatable"
+              visible_conditions: null
+              visible_conditions_type: null
+            }
           ]
           geometry_required: false
           geometry_types: ["Point"]

@@ -1383,6 +1383,9 @@ exports.REPEATABLENUMBER = ->
   CONFIG().featureIndex + 1
 
 exports.REPEATABLEVALUES = (repeatableValue, dataName) ->
+  if repeatableValue is undefined
+    return null
+
   if _.isArray(dataName)
     if dataName.length is 1
       dataName = dataName[0]
