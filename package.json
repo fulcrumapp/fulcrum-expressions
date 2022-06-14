@@ -1,5 +1,5 @@
 {
-  "name": "@fulcrum/expressions",
+  "name": "@fulcrumapp/expressions",
   "version": "1.0.0",
   "description": "Expression runtime for Fulcrum",
   "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
