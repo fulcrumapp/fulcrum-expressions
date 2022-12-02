@@ -1196,7 +1196,7 @@ validateEventParams = (event, param) ->
     when 'click'
       field = FIELD(param)
 
-      invariant(field?.type is 'HyperlinkField')
+      invariant(field?.type in ['HyperlinkField', 'ButtonField'])
 
     when 'load-repeatable', 'new-repeatable', 'edit-repeatable', 'save-repeatable', 'validate-repeatable'
       field = FIELD(param)
