@@ -355,6 +355,7 @@ class Runtime
       OFF: true
       ON: true
       OPENURL: true
+      OPENEXTERNAL: true
       PROGRESS: true
       REQUEST: true
       SETCHOICEFILTER: true

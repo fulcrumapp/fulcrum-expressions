@@ -32,6 +32,8 @@ if ios
 
 if web
   copyFile(expressionjs, path.join(web, 'public', 'resources', 'expressions.js'))
+  copyFile('./dist/expressions.html', path.join(web, 'public', 'resources', 'expressions.html'))
+  copyFile('./dist/expressions-proxy.js', path.join(web, 'public', 'resources', 'expressions-proxy.js'))
   copyFile('./docs/output/functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'expression_functions.js.coffee'))
   copyFile('./docs/output/event_functions.coffee', path.join(web, 'app', 'assets', 'javascripts', 'form_builder', 'models', 'event_functions.js.coffee'))
 

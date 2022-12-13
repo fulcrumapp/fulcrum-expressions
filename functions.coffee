@@ -1250,6 +1250,12 @@ exports.OPENURL = (value) ->
 
   $$runtime.results.push(type: 'open', value: JSON.stringify(value))
 
+exports.OPENEXTENSION = (options = {}) ->
+  return NO_VALUE unless _.isObject(options)
+  return NO_VALUE unless _.isString(options.url)
+
+  $$runtime.results.push(type: 'open-extension', value: JSON.stringify(options))
+
 exports.OR = ->
   _.find(toArray(arguments), (item) -> item) isnt undefined
 
