@@ -2016,3 +2016,12 @@ describe "SETCHOICEFILTER", ->
   it 'accepts null and does not return an array', ->
     SETCHOICEFILTER('choice_field', null)
     shouldBeNull(runtime.results[0].value)
+
+describe "SETMODE", ->
+  it 'sets the mode of the editor to view', ->
+    SETMODE('view')
+    MODE().should.eql('view')
+
+  it 'sets the mode of the editor to edit', ->
+    SETMODE('edit')
+    MODE().should.eql('edit')

@@ -1128,6 +1128,9 @@ exports.MOD = (number, divisor) ->
 
   if divisor > 0 then modulus else -modulus
 
+exports.MODE = () ->
+  $$runtime.mode
+
 exports.MONTH = (date) ->
   date = DATEVALUE(date)
 
@@ -1595,6 +1598,10 @@ exports.SETLOCATION = (latitude, longitude) ->
     ERROR(format('Invalid latitude/longitude. SETLOCATION(%s, %s).', latitude, longitude))
 
   SETVALUE('@geometry', geometry)
+
+exports.SETMODE = (mode) ->
+  ERROR('mode must be edit or view') unless _.include(['view', 'edit'], mode)
+  $$runtime.mode = mode
 
 exports.SETSTATUS = (status) ->
   ERROR('status must be a string') if status? and not _.isString(status)
