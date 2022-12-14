@@ -2025,3 +2025,4 @@ describe "SETMODE", ->
   it 'sets the mode of the editor to edit', ->
     SETMODE('edit')
     MODE().should.eql('edit')
+ 
