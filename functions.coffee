@@ -1600,7 +1600,7 @@ exports.SETLOCATION = (latitude, longitude) ->
   SETVALUE('@geometry', geometry)
 
 exports.SETMODE = (mode) ->
-  ERROR('mode must be edit or view') unless _.include(['view', 'edit'], mode)
+  ERROR('mode must be a string') unless mode? and _.isString(mode)
   $$runtime.mode = mode
 
 exports.SETSTATUS = (status) ->
