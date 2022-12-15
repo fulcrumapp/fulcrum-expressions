@@ -23,6 +23,8 @@ class Runtime
 
   form: {}
 
+  mode: null
+
   values: {}
 
   repeatable: null
