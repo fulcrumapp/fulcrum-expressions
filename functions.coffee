@@ -1253,6 +1253,22 @@ exports.OPENURL = (value) ->
 
   $$runtime.results.push(type: 'open', value: JSON.stringify(value))
 
+exports.OPENEXTENSION = (params) ->
+  if _.isString(params)
+    params = { url: params }
+
+  return ERROR('A url must be provided to OPENEXTENSION') unless _.isString(params.url)
+
+  value =
+    url: params.url
+    title: if params.title? then params.title.toString() else null
+    data: if params.data? then params.data else null
+    width: if _.isNumber(params.width) then params.width else null
+    height: if _.isNumber(params.height) then params.height else null
+
+
+  $$runtime.results.push(type: 'open-extension', value: JSON.stringify(value))
+
 exports.OR = ->
   _.find(toArray(arguments), (item) -> item) isnt undefined
 
