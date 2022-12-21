@@ -1253,19 +1253,29 @@ exports.OPENURL = (value) ->
 
   $$runtime.results.push(type: 'open', value: JSON.stringify(value))
 
-exports.OPENEXTENSION = (params) ->
-  if _.isString(params)
-    params = { url: params }
+exports.nextExtensionSessionID = 0
+exports.extensionMessageHandlers = {}
 
-  return ERROR('A url must be provided to OPENEXTENSION') unless _.isString(params.url)
+exports.OPENEXTENSION = (options) ->
+  ERROR('options must be provided') unless _.isObject(options)
+  ERROR('url must be provided') unless _.isString(options.url)
+  ERROR('onMessage function must be provided') unless _.isFunction(options.onMessage)
+
+  sessionID = ++exports.nextExtensionSessionID
+
+  onMessage = (message) ->
+    options.onMessage(message)
+    delete exports.extensionMessageHandlers[sessionID] if message.close is true
+
+  exports.extensionMessageHandlers[sessionID] = onMessage
 
   value =
-    url: params.url
-    title: if params.title? then params.title.toString() else null
-    data: if params.data? then params.data else null
-    width: if _.isNumber(params.width) then params.width else null
-    height: if _.isNumber(params.height) then params.height else null
-
+    id: sessionID
+    url: options.url
+    title: if options.title? then options.title.toString() else null
+    data: if options.data? then options.data else null
+    width: if _.isNumber(options.width) then options.width else null
+    height: if _.isNumber(options.height) then options.height else null
 
   $$runtime.results.push(type: 'open-extension', value: JSON.stringify(value))
 
