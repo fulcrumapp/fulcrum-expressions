@@ -896,6 +896,18 @@ describe 'ODD', ->
     ODD(new Date).should.be.NaN
     ODD().should.be.NaN
 
+describe 'OPENEXTENSION', ->
+  it 'accepts a url', ->
+    OPENEXTENSION(url: 'https://test.com', onMessage: ->)
+
+    JSON.parse(runtime.results[0].value).url.should.eql 'https://test.com'
+
+  it 'requires a url', ->
+    (-> OPENEXTENSION({})).should.throw('url must be provided');
+
+  it 'requires an onMessage handler', ->
+    (-> OPENEXTENSION(url: 'https://test.com')).should.throw('onMessage function must be provided');
+
 describe 'OR', ->
   it 'returns true if any argument is truthy', ->
     OR(true, false).should.be.true

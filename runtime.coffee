@@ -190,6 +190,9 @@ class Runtime
 
     `with (this.variables) { eval(script) }`
 
+    ON 'extension-message', (event) =>
+      functions.extensionMessageHandlers[event.id]?(event)
+
     return
 
   hookName: (name) ->
@@ -357,6 +360,7 @@ class Runtime
       OFF: true
       ON: true
       OPENURL: true
+      OPENEXTENSION: true
       PROGRESS: true
       REQUEST: true
       SETCHOICEFILTER: true

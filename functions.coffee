@@ -1253,6 +1253,32 @@ exports.OPENURL = (value) ->
 
   $$runtime.results.push(type: 'open', value: JSON.stringify(value))
 
+exports.nextExtensionSessionID = 0
+exports.extensionMessageHandlers = {}
+
+exports.OPENEXTENSION = (options) ->
+  ERROR('options must be provided') unless _.isObject(options)
+  ERROR('url must be provided') unless _.isString(options.url)
+  ERROR('onMessage function must be provided') unless _.isFunction(options.onMessage)
+
+  sessionID = ++exports.nextExtensionSessionID
+
+  onMessage = (message) ->
+    options.onMessage(message)
+    delete exports.extensionMessageHandlers[sessionID] if message.close is true
+
+  exports.extensionMessageHandlers[sessionID] = onMessage
+
+  value =
+    id: sessionID
+    url: options.url
+    title: if options.title? then options.title.toString() else null
+    data: if options.data? then options.data else null
+    width: if _.isNumber(options.width) then options.width else null
+    height: if _.isNumber(options.height) then options.height else null
+
+  $$runtime.results.push(type: 'open-extension', value: JSON.stringify(value))
+
 exports.OR = ->
   _.find(toArray(arguments), (item) -> item) isnt undefined
 
