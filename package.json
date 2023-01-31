@@ -1,9 +1,9 @@
 {
   "name": "fulcrum-expressions",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Expression runtime for Fulcrum",
   "author": "Fulcrum",
-  "license": "BSD",
+  "license": "BSD-3-Clause",
   "main": "dist/expressions.js",
   "repository": {
     "type": "git",
@@ -23,7 +23,8 @@
     "copy": "coffee script/copy-files.coffee",
     "console": "./console",
     "clean": "rm -rf dist && rm -rf docs/output rm -rf coverage",
-    "deploy": "yarn build:dist && ./script/deploy"
+    "deploy": "yarn build:dist && ./script/deploy",
+    "prepublish": "yarn build:dist"
   },
   "dependencies": {
     "encodeurl": "^1.0.1",
