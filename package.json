@@ -1,5 +1,5 @@
 {
-  "name": "fulcrum-expressions",
+  "name": "@fulcrumapp/expressions",
   "version": "1.0.2",
   "description": "Expression runtime for Fulcrum",
   "author": "Fulcrum",
