@@ -1512,8 +1512,8 @@ exports.RPAD = (value, count, padding=' ') ->
 
   LEFT(value + Array(count).join(padding), count)
 
-exports.SAVE = (options = {}) ->
-  $$runtime.results.push(type: 'save', options: JSON.stringify(options))
+exports.SAVE = () ->
+  $$runtime.results.push(type: 'save')
 
 exports.SEARCH = (needle, haystack, startPosition) ->
   startPosition ?= 1
