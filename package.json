@@ -1,6 +1,6 @@
 {
   "name": "fulcrum-expressions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Expression runtime for Fulcrum",
   "author": "Fulcrum",
   "license": "BSD",
