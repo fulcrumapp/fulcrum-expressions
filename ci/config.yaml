@@ -1,3 +1,1 @@
-unittest:
-  image: "node:18-bullseye"
-  command: "./ci/scripts/test.sh"
+outputType: "npm"
