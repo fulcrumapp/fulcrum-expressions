@@ -1321,6 +1321,9 @@ exports.PRECISION = (number) ->
 
   parts[1].length
 
+exports.PREVENTDEFAULT = () ->
+  $$runtime.results.push(type: 'prevent-default')
+
 exports.PRODUCT = ->
   numbers = toArray(arguments).map(NUM)
 
@@ -1508,6 +1511,9 @@ exports.RPAD = (value, count, padding=' ') ->
   return NO_VALUE unless _.isString(padding)
 
   LEFT(value + Array(count).join(padding), count)
+
+exports.SAVE = () ->
+  $$runtime.results.push(type: 'save')
 
 exports.SEARCH = (needle, haystack, startPosition) ->
   startPosition ?= 1

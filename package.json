@@ -1,10 +1,10 @@
 {
-  "name": "@fulcrumapp/expressions",
-  "version": "1.0.0",
+  "name": "fulcrum-expressions",
+  "version": "1.0.7",
   "description": "Expression runtime for Fulcrum",
-  "author": "Zac McCormick <zac.mccormick@gmail.com> (http://github.com/zhm)",
-  "license": "BSD",
-  "main": "expressions.js",
+  "author": "Fulcrum",
+  "license": "BSD-3-Clause",
+  "main": "dist/expressions.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/fulcrumapp/fulcrum-expressions.git"
