@@ -5337,6 +5337,15 @@ interface FunctionMap {
  type HostFormatNumber = (value: number, locale: string, options: {}) => string;
 
 /**
+ * The SETINTERVAL function can be used to repeatedly call a function at a specified interval.
+ * It’s nearly identical to the web platform standard setInterval.
+ * @param callback required; function to be called
+ * @param interval required; numeric value indicating number of milliseconds between subsequent calls
+ * @returns numeric id interval on host
+ */
+declare function setInterval(callback: Function, interval: number): number | undefined;
+
+/**
  * Generate a Results object for a given expression.
  * @param key the form key of the expression field
  * @param rawValue the raw processed result
@@ -5659,15 +5668,6 @@ interface WindowWithRuntime extends Window {
     title_field_keys: string[];
     type: string;
 };
-
-/**
- * The SETINTERVAL function can be used to repeatedly call a function at a specified interval.
- * It’s nearly identical to the web platform standard setInterval.
- * @param callback required; function to be called
- * @param interval required; numeric value indicating number of milliseconds between subsequent calls
- * @returns numeric id interval on host
- */
-declare function setInterval(callback: Function, interval: number): number | undefined;
 
   var $$runtime: Runtime
 } var $$runtime: Runtime
