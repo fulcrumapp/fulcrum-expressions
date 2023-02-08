@@ -7,7 +7,7 @@
 require 'json'
 
 IN_FILE = 'dist/js-api.raw.d.ts'.freeze
-OUT_FILE = 'dist/js-api.ts'.freeze
+OUT_FILE = 'js-api.js'.freeze
 
 filtered_lines = []
 
