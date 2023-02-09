@@ -13,5 +13,5 @@ types:
 									--exclude functions/index.ts \
 									--exclude types/globals.d.ts \
 									--exclude types/node_modules.d.ts \
-									--out dist/js-api.raw.d.ts \
+									--out dist/api.raw.d.ts \
 		&& asdf exec ruby script/build.rb
