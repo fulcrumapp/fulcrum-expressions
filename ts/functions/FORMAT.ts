@@ -8,6 +8,6 @@ import { format } from "util"
  * @param variables (String|Number, required), values to substitute into the format string
  * @returns formatted string
  */
-export default function FORMAT(template: string, ...variables: any[]) {
+export default function FORMAT(template: string, ...variables: any[]): string {
   return format(template, ...variables)
 }

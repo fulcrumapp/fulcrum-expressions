@@ -18,7 +18,7 @@
     "build:sandbox:debug": "mkdir -p dist && browserify -t coffeeify --extension=.coffee expressions-proxy.coffee > dist/expressions-proxy.js && cp expressions.html dist/expressions.html",
     "build:docs": "jsdoc -t templates/haruki docs/docs.js -d console > docs/docs.json && jsdoc -t templates/haruki docs/event_docs.js -d console > docs/event_docs.json",
     "build:help": "mkdir -p docs/output/help && mkdir -p docs/output/help/expressions/reference && mkdir -p docs/output/help/events/reference && coffee script/generate-help.coffee",
-    "build:dist": "yarn clean && yarn build && yarn build:docs && yarn build:help && yarn test",
+    "build:dist": "yarn clean && yarn build && yarn build:docs && yarn build:help && yarn test && make types",
     "test": "mocha --reporter list --require should --require coffee-coverage/register-istanbul --require coffee-script/register test/**/*.coffee && istanbul report",
     "copy": "coffee script/copy-files.coffee",
     "console": "./console",

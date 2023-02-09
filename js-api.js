@@ -623,33 +623,6 @@ declare function CHOICEVALUE(field: any): MaybeString;
  */
 declare function CLEAN(text: string): string;
 
-interface AsyncFunctionSchema {
-    [key: number]: Function;
-}
-interface SetIntervalSchema {
-    [key: number]: number;
-}
-interface HostState {
-    timeouts: AsyncFunctionSchema;
-    intervals: SetIntervalSchema;
-    nextTimeoutID: number;
-    nextIntervalID: number;
-}
- const resetState: () => void;
- const state: () => HostState;
-
-/**
- * Removes a timeout call from the host queue.
- * @param id id of the setTimeout call
- */
-declare function clearTimeout(id: number): void;
-
-/**
- * Clears an interval from event queue.
- * @param id required; id for interval to be cleared
- */
-declare function clearInterval(id: number): void;
-
 /**
  * Clears an interval that was previously started with \`SETINTERVAL\`.
  *
@@ -880,8 +853,6 @@ declare function CONFIGURE(): Config;
  * @throws Error entered by the user
  */
 declare function ERROR(message: string): void;
-
-declare function messageBox(json: string, wrapper: Function): void;
 
 interface MessageBoxPayload {
     title?: MaybeString;
@@ -2016,7 +1987,6 @@ declare function FACTDOUBLE(value: any): number;
  */
 declare function FALSE(): false;
 
-
 interface FieldsOptions {
     repeatables?: boolean;
     sections?: boolean;
@@ -2209,7 +2179,7 @@ declare function FORM(): {};
  * @param variables (String|Number, required), values to substitute into the format string
  * @returns formatted string
  */
-declare function FORMAT(template: string, ...variables: any[]): any;
+declare function FORMAT(template: string, ...variables: any[]): string;
 
 /**
  * Returns a formatted address
@@ -2231,29 +2201,6 @@ declare function FORMATADDRESS(address: AddressFieldValue, lineSeparator?: strin
  * @returns string, formatted address
  */
 declare function FORMATADDRESS(address: AddressFieldValue): string | undefined;
-
-/**
- * options hash to determine number formatting
- */
-interface NumberFormatOptions {
-    localeMatcher?: string | undefined;
-    style?: string | undefined;
-    currency?: string | undefined;
-    minimumSignificantDigits?: number | undefined;
-    maximumSignificantDigits?: number | undefined;
-    minimumIntegerDigits?: number | undefined;
-    minimumFractionDigits?: number | undefined;
-    maximumFractionDigits?: number | undefined;
-    useGrouping?: boolean | undefined;
-}
-/**
- * Sends value, locale, and options hash to host for formatting.
- * @param value number value to be formatted
- * @param locale string with a BCP 47 language tag
- * @param options hash of formatting options
- * @returns formatted string value
- */
-declare function formatNumber(value: number, locale: string, options: NumberFormatOptions): string;
 
 /**
  * Returns the language value or, if it's not available, the default language
@@ -3984,12 +3931,6 @@ declare function RADIANS(degrees: number): number;
  */
 declare function RADIANS(degrees: any): number;
 
- global {
-    interface Window {
-        msCrypto?: any;
-    }
-} const RandomNumber: (int: number) => number;
-
  const RAND: () => number;
 
 /**
@@ -4022,128 +3963,6 @@ declare function REPEATABLEID(): string | undefined;
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/repeatablenumber/
  */
 declare function REPEATABLENUMBER(): number | undefined;
-
-/**
- * Returns the nearest repeatable when passed in a child field.
- */
-declare function nearestRepeatable(element: FormFields): FormFields | null;
-/**
- * Returns the nearest repeatable when passed in a child field.
- */
-declare function nearestRepeatable(element?: any): FormFields | null;
-
-interface RepeatableElementsCache {
-    [key: string]: FormFields[];
-}
-interface RepeatableElements {
-    [key: string]: FormFields;
-}
-interface RepeatableElementsByKey {
-    [key: string]: RepeatableElements;
-}
-interface RepeatableElementsByDataName {
-    [dataName: string]: RepeatableElements;
-}
-interface RepeatableValueElementsResult {
-    all: FormFields[];
-    byDataName: RepeatableElements;
-    byKey: RepeatableElements;
-}
- const repeatableValueElementsCache: RepeatableElementsCache;
- const repeatableValueElementsByKeyCache: RepeatableElementsByKey;
- const repeatableValueElementsByDataNameCache: RepeatableElementsByDataName;
-/**
- * Returns an object that has the elements of a repeatable field.
- * @param repeatable required; Repeatable field
- * @returns
- *  Object contains three keys:
- * \`all\`: contains all elements of the repeatable field as an array of FormFields.
- * \`byDataName\`: contains all first-level elements of a repeatable field by data_name.
- * \`byKey\`: contains all first-level elements of a repeatable field by the form field's 4 digit key
- */
-declare function repeatableValueElements(repeatable: RepeatableField): RepeatableValueElementsResult;
-
-/**
- * Returns a date value given an appropriate date string in ISO 8601 format, i.e. YYYY-MM-DD
- * @param value required; string value of a date
- * @returns date value
- */
-declare function dateValue(value: string): Date;
-/**
- * Returns a date value given an appropriate date string in ISO 8601 format, i.e. YYYY-MM-DD
- * @param value required; string value of a date
- * @returns date value
- */
-declare function dateValue(value: any): any;
-
-/**
- * Checks if an element is a Date Field or not.
- * @param element required; form field to be checked
- * @returns boolean indicating if it is a date field
- */
-declare function isDateElement(element: FormFields): boolean;
-
-/**
- * Checks element passed in to see if the element is numeric in nature.
- * @param element required; a form field to be checked
- * @returns boolean indiciating if element is numeric
- */
-declare function isNumericElement(element: FormFields): any;
-
-/**
- * Returns a numeric value for the value passed in.
- * @param value required; any value, preferrably a number or a number in string form
- * @returns number
- */
-declare function numberValue(value?: any): number | undefined;
-
-/**
- * Returns a value for an element.
- * @description
- * Function converts numeric field values into numbers and date field
- * values into Date instances. Otherwise, it returns the value passed in.
- * @param element required; Form field object to be evaluated
- * @param value required; form value in need of conversion
- * @returns number for numeric fields, Date instances for date fields, else the original value.
- */
-declare function valueForElement(element: FormFields, value: number | string): number;
-/**
- * Returns a value for an element.
- * @description
- * Function converts numeric field values into numbers and date field
- * values into Date instances. Otherwise, it returns the value passed in.
- * @param element required; Form field object to be evaluated
- * @param value required; form value in need of conversion
- * @returns number for numeric fields, Date instances for date fields, else the original value.
- */
-declare function valueForElement(element: FormFields, value: string): Date;
-/**
- * Returns a value for an element.
- * @description
- * Function converts numeric field values into numbers and date field
- * values into Date instances. Otherwise, it returns the value passed in.
- * @param element required; Form field object to be evaluated
- * @param value required; form value in need of conversion
- * @returns number for numeric fields, Date instances for date fields, else the original value.
- */
-declare function valueForElement(element: FormFields, value: any): any;
-
-/**
- * Returns an array of values for a specific field contained in a repeatable.
- * @param repeatable required; the repeatable field containing the desired field
- * @param items required; array of objects in this format: { form_values: { form_key: value } }
- * @param dataName required; data name of desired field
- * @returns array of values
- */
-declare function repeatableValues(repeatable: RepeatableField, items: any[], dataName: string): null | any[];
-/**
- * Returns an array of values for a specific field contained in a repeatable.
- * @param repeatable required; the repeatable field containing the desired field
- * @param items required; array of objects in this format: { form_values: { form_key: value } }
- * @param dataName required; data name of desired field
- * @returns array of values
- */
-declare function repeatableValues(repeatable: any, items: any, dataName: string): null | any[];
 
 /**
  * Returns a specific field out of a collection of repeatable items.
@@ -4197,7 +4016,6 @@ interface HTTPRequestCallback {
   (error: Error, response?: null, body?: null): void
   (error: null, response: object, body: string): void
 }
-
 type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS";
 interface RequestOptions {
     /** The url for the request */
@@ -4356,66 +4174,6 @@ declare function SEARCH(needle: string, haystack: string, startPosition?: number
  * SEARCH('4', '1234') // returns 4
  */
 declare function SEARCH(needle: any, haystack: any, startPosition?: any): number | undefined;
-
-/**
- * Creates a ChoiceFieldValue from given params
- * @param choices optional; array of strings
- * @param other optional; array of strings
- * @returns ChoiceFieldValue: { choice_values: [ ... ], other_values: [ ... ] }
- */
-declare function makeChoiceValue(choices?: string[] | null, others?: string[] | null): ChoiceFieldValue;
-
-interface Converter {
-    [FormField: string]: Function;
-}
-interface RecordLinkIds {
-    record_id: string;
-}
-/** Object containing functions to convert values to appropriate format for $$HOST.
- * Functions are accessed according to FieldType.
- * @example
- * converters["CalculatedField"]
- */
- const converters: Converter;
-
-interface ValidGeometry {
-    type: "Point";
-    coordinates: number[];
-}
-/**
- * Checks to see if a valid GeoJSON object was passed in.
- * @param geometry geometry object to be tested
- * @returns boolean value
- */
-declare function isValidGeometry(geometry: ValidGeometry): boolean;
-/**
- * Checks to see if a valid GeoJSON object was passed in.
- * @param geometry geometry object to be tested
- * @returns boolean value
- */
-declare function isValidGeometry(geometry: any): boolean;
-/**
- * Checks to see if a valid GeoJSON object was passed in.
- * @param geometry geometry object to be tested
- * @returns boolean value
- */
-declare function isValidGeometry(): boolean;
-
-/**
- * Determines if an element is within the current editing scope.
- * @param containerElements required; array of FormFields representing current editing scope
- * @param dataElement required; single element of type FormFields
- * @returns boolean
- */
-declare function isSetValueSupported(containerElements: FormFields[], dataElement: FormFields, type: string): boolean;
-
-/**
- * Converts value to proper format for $$HOST depending on element type.
- * @param element required; single element of type FormFields
- * @param value required; value to be converted
- * @returns converted value as \`string|ChoiceFieldValue|AddressFieldValue|RecordLinkIds[]|null\`
- */
-declare function makeValue(element: FormFields, value?: string | ChoiceFieldValue | AddressFieldValue | string[] | number[] | null): string | ChoiceFieldValue | AddressFieldValue | RecordLinkIds[] | null;
 
 /**
  * Sets or clears the value of a field depending on value passed in.
@@ -4584,13 +4342,6 @@ declare function SETHIDDEN(dataName: FieldName, value: boolean): void;
  * @param value (Boolean, required): whether to hide field
  */
 declare function SETHIDDEN(dataName: FieldName, value?: boolean): void;
-
-/**
- * Queues up a function to run after the desired interval on the Host
- * @param callback callback to call
- * @param timeout timeout to call
- */
-declare function setTimeout(callback: Function, timeout: number): number;
 
 /**
  * Sets up a function to be called repeatedly after a fixed time delay.
@@ -4943,38 +4694,6 @@ declare function STATUS(): string | undefined;
  */
 declare function STATUSLABEL(): string | undefined;
 
- class HostStorage {
-    scope: string;
-    /**
-     * Gets the number of keys stored in the local storage
-     */
-    get length(): number | undefined;
-    /**
-     * Fetches the key from the storage engine
-     * @param index index of the key
-     */
-    key(index: number): any;
-    /**
-     * Fetches the value from the store.
-     */
-    getItem(key: string): any;
-    /**
-     * Stores a string value in the local storage for the given key
-     * @param key key to store the value as
-     * @param value stringified value to store
-     */
-    setItem(key: string, value: string): void;
-    /**
-     * Remove the selected key from the store
-     * @param key key to remove from the store
-     */
-    removeItem(key: string): void;
-    /**
-     * Reset the state of the local store.
-     */
-    clear(): void;
-} const _default: HostStorage;
-
 /**
  * Returns a storage object for setting and getting local storage items.
  *
@@ -5319,372 +5038,4 @@ declare function YEAR(date: MaybeString): number;
  */
 declare function YEAR(): undefined;
 
-interface FunctionMap {
-    [functionName: string]: Function | undefined;
-}
- const functions: FunctionMap;
-
- type HostHTTPClient = (json: string, callbackID: number) => void;
- type HostSetTimeout = (duration: number, callbackID: number) => (number | undefined);
- type HostClearTimeout = (id: number) => void;
- type HostStorageLength = (scope: string) => number;
- type HostStorageKey = (scope: string, index: number) => any;
- type HostStorageGetItem = (scope: string, key: string) => any;
- type HostStorageSetItem = (scope: string, key: string, value: string) => void;
- type HostStorageRemoveItem = (scope: string, key: string) => void;
- type HostStorageClear = (scope: string) => void;
- type HostMessageBox = (json: string, callbackID: number) => void;
- type HostFormatNumber = (value: number, locale: string, options: {}) => string;
-
-/**
- * The SETINTERVAL function can be used to repeatedly call a function at a specified interval.
- * It’s nearly identical to the web platform standard setInterval.
- * @param callback required; function to be called
- * @param interval required; numeric value indicating number of milliseconds between subsequent calls
- * @returns numeric id interval on host
- */
-declare function setInterval(callback: Function, interval: number): number | undefined;
-
-/**
- * Generate a Results object for a given expression.
- * @param key the form key of the expression field
- * @param rawValue the raw processed result
- * @param value the stringified version of the result
- * @param error errors generated
- * @param showErrors show errors as the value or not
- */
-declare function (key: string, rawValue: any, value: MaybeString, error: any, showErrors: boolean): ExpressionResult;
-
-/**
- * Generate a human readable format for use in the data events/expression fields.
- * @param value the value to format
- */
-declare function formatValue(value?: any): string | null;
-
-interface ElementStore {
-    [key: string]: FormFields;
-}
-type RuntimeResults = Array<AlertResult | ConfigurationResult | InvalidResult | SetValueResult | ProgressResult | ExpressionResult | UpdateFormAttributesResult | OpenURLResult>;
-type RuntimeResultCalculator = () => RuntimeResults;
-type HostFunction = HostHTTPClient | HostSetTimeout | HostStorageLength | HostStorageKey | HostStorageGetItem | HostStorageSetItem | HostStorageRemoveItem | HostStorageClear | HostMessageBox | HostFormatNumber | HostClearTimeout;
-interface WindowWithRuntime extends Window {
-    $$runtime: Runtime;
-    $$evaluate: RuntimeResultCalculator;
-    $$trigger: RuntimeResultCalculator;
-    $$finishAsync: RuntimeResultCalculator;
-    $$prepare: () => void;
-}
-/**
- * The Runtime class handles the state of a data event in the context of a single Record being edited.
- */
-    static defaultLocale: string;
-    static defaultCurrencyCode: string;
-    static defaultCurrencySymbol: string;
-    static defaultTimeZone: string;
-    callbackArguments: any[];
-    $$httpRequest?: HostHTTPClient;
-    $$setTimeout?: HostSetTimeout;
-    $$storageLength?: HostStorageLength;
-    $$storageKey?: HostStorageKey;
-    $$storageGetItem?: HostStorageGetItem;
-    $$storageSetItem?: HostStorageSetItem;
-    $$storageRemoveItem?: HostStorageRemoveItem;
-    $$storageClear?: HostStorageClear;
-    $$messageBox?: HostMessageBox;
-    $$formatNumber?: HostFormatNumber;
-    $$clearTimeout?: HostClearTimeout;
-    global: WindowWithRuntime;
-    expressions: any[];
-    form: any;
-    values: {
-        [key: string]: any;
-    };
-    repeatable: null | string;
-    hooks: {};
-    event: {
-        name?: EventNames;
-        field?: MaybeString;
-    };
-    events: {
-        [key: string]: {
-            [grouping: string]: Function[];
-        };
-    };
-    script: null | string;
-    customVariables: {
-        [key: string]: any;
-    };
-    currentValue: any;
-    locale: string;
-    currencyCode: string;
-    currencySymbol: string;
-    variables: {
-        [key: string]: any;
-    };
-    results: RuntimeResults;
-    result: any;
-    dataNames: {
-        [key: string]: string;
-    };
-    elements: FormFields[];
-    elementsByKey: ElementStore;
-    elementsByDataName: ElementStore;
-    statusesByValue: {
-        [key: string]: string;
-    };
-    functions: FunctionMap;
-    featureIsNew: boolean;
-    showErrors: boolean;
-    asyncCallbacks: {
-        [id: number]: Function;
-    };
-    callbackID: number | null;
-    asyncCount: number;
-    scriptInitialized: boolean;
-    hooksInitialized: boolean;
-    isCalculation: boolean;
-    extraVariableNames: string[];
-    specialFunctions: {
-        [name: string]: boolean;
-    };
-    constructor();
-    /**
-     * This is executed by the $$HOST after completing an asycnronous action.
-     *
-     * @example
-     * $$runtime.callbackID = 200
-     * $$runtime.callbackArguments = ['Joe Smith']
-     * const results = $$finishAsync()
-     * results.each((result) => ...)
-     */
-    finishAsync: RuntimeResultCalculator;
-    /**
-     * This is executed by the $$HOST when initializing a new session.
-     *
-     * @example
-     * $$runtime.form = { ...formSchema }
-     * if (form.script) $$runtime.script = form.script
-     * $$prepare()
-     */
-    prepare: () => void;
-    /**
-     * Clear the values so that the references from the \`with\` statements remain
-     * on the same root object. If we create a new \`variables\` it won't stay the same
-     * across executions. This is so the $field variables work in the form-level scripts.
-     */
-    clearValues: () => void;
-    /**
-     * Used to reset values when a form value changes and $$evaluate is called.
-     */
-    setupValues: () => void;
-    /**
-     * Initialize a script during setupValues call if it is needed.
-     */
-    initializeScriptIfNecessary: () => undefined;
-    /**
-     * Executed by the $$HOST when a form value changes.
-     *
-     * @example
-     * $$runtime.values = { ...formValues }
-     * const results = $$evaluate()
-     * results.each((result) => ...)
-     */
-    evaluate: RuntimeResultCalculator;
-    /**
-     * Evaluates an expression and returns an ExpressionResult.
-     * @param context required; object that contains a field's dataName, key, and an expression
-     * @returns ExpressionResult: { type: 'calculation', key: string, error?: string, value: any }
-     */
-    evaluateExpression: (context: any) => ExpressionResult;
-    /**
-     * Executed by the $$HOST when a form level event has occurred.
-     *
-     * @example
-     * $$runtime.values = { ...formValues }
-     * $$runtime.event = 'CHANGE'
-     * const results = $$trigger()
-     * results.each((result) => ...)
-     */
-    trigger: RuntimeResultCalculator;
-    /**
-     * Dispatch a function to execute asyncronously on the $$HOST
-     * @param func host function to invoke
-     * @param args arguments to pass to the $$HOST function
-     * @param callback callback to execute after the $$HOST has completed it's async operation
-     */
-    invokeAsync(func: HostFunction, args: any[], callback: Function): void;
-    /**
-     * Add a hook to the Events table.
-     * @param name event to hook in to
-     * @param param field to bind to
-     * @param callback callback to execute
-     */
-    addHook(name: EventNames, param: MaybeString, callback: Function): void;
-    /**
-     * Remove the hook from the Events table.
-     * @param name event to hook in to
-     * @param param field to bind to
-     * @param callback callback to execute
-     */
-    removeHook(name: EventNames, param: MaybeString, callback?: Function): void;
-    private pathFor;
-    private resetResults;
-}
-
-/**
- * Setup a new instance of the $$runtime global.
- */
- const prepareRuntime: () => Runtime;
-/** Simlate a host finishing an async operation */
- const finishAsync: (callbackID: number) => void;
- const extendToBeWithinRange: () => any;
- const extendContainAllElements: () => any;
-
- const _default: {
-    data_name: string;
-    default_value: string;
-    description: string;
-    disabled: boolean;
-    elements: ({
-        data_name: string;
-        default_value: null;
-        description: null;
-        disabled: boolean;
-        format: string;
-        hidden: boolean;
-        key: string;
-        label: string;
-        max: null;
-        max_length: null;
-        min: null;
-        min_length: null;
-        numeric: boolean;
-        required: boolean;
-        required_conditions: null;
-        required_conditions_type: null;
-        type: string;
-        visible_conditions: null;
-        visible_conditions_type: null;
-        multiple?: undefined;
-        allow_other?: undefined;
-        default_previous_value?: undefined;
-        choices?: undefined;
-        elements?: undefined;
-        geometry_required?: undefined;
-        geometry_types?: undefined;
-        title_field_key?: undefined;
-        title_field_keys?: undefined;
-    } | {
-        type: string;
-        key: string;
-        label: string;
-        description: null;
-        required: boolean;
-        disabled: boolean;
-        hidden: boolean;
-        data_name: string;
-        default_value: null;
-        visible_conditions_type: null;
-        visible_conditions: null;
-        required_conditions_type: null;
-        required_conditions: null;
-        multiple: boolean;
-        allow_other: boolean;
-        default_previous_value: boolean;
-        choices: {
-            label: string;
-            value: string;
-        }[];
-        format?: undefined;
-        max?: undefined;
-        max_length?: undefined;
-        min?: undefined;
-        min_length?: undefined;
-        numeric?: undefined;
-        elements?: undefined;
-        geometry_required?: undefined;
-        geometry_types?: undefined;
-        title_field_key?: undefined;
-        title_field_keys?: undefined;
-    } | {
-        data_name: string;
-        default_value: null;
-        description: null;
-        disabled: boolean;
-        elements: {
-            data_name: string;
-            default_value: null;
-            description: null;
-            disabled: boolean;
-            format: string;
-            hidden: boolean;
-            key: string;
-            label: string;
-            max: null;
-            max_length: null;
-            min: null;
-            min_length: null;
-            numeric: boolean;
-            required: boolean;
-            required_conditions: null;
-            required_conditions_type: null;
-            type: string;
-            visible_conditions: null;
-            visible_conditions_type: null;
-        }[];
-        geometry_required: boolean;
-        geometry_types: string[];
-        hidden: boolean;
-        key: string;
-        label: string;
-        max_length: null;
-        min_length: null;
-        required: boolean;
-        required_conditions: null;
-        required_conditions_type: null;
-        title_field_key: null;
-        title_field_keys: string[];
-        type: string;
-        visible_conditions: null;
-        visible_conditions_type: null;
-        format?: undefined;
-        max?: undefined;
-        min?: undefined;
-        numeric?: undefined;
-        multiple?: undefined;
-        allow_other?: undefined;
-        default_previous_value?: undefined;
-        choices?: undefined;
-    })[];
-    geometry_required: boolean;
-    geometry_types: string[];
-    hidden: boolean;
-    key: string;
-    label: string;
-    max_length: null;
-    min_length: null;
-    required: boolean;
-    title_field_key: null;
-    title_field_keys: string[];
-    type: string;
-};
-
-  var $$runtime: Runtime
-} var $$runtime: Runtime
-
- /**
-  * Encode a URL to a percent-encoded form, excluding already-encoded sequences.
-  *
-  * This function will take an already-encoded URL and encode all the non-URL
-  * code points. This function will not encode the "%" character unless it is
-  * not part of a valid sequence (\`%20\` will be left as-is, but \`%foo\` will
-  * be encoded as \`%25foo\`).
-  *
-  * This encode is meant to be "safe" and does not throw errors. It will try as
-  * hard as it can to properly encode the given URL, including replacing any raw,
-  * unpaired surrogate pairs with the Unicode replacement character prior to
-  * encoding.
-  */
- function encodeurl(url: string): string
-  = encodeurl
 `;
