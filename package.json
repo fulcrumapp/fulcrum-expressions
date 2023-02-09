@@ -33,11 +33,14 @@
     "underscore.string": "^2.4.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
+    "@types/query-string": "^6.3.0",
     "browser-request": "^0.3.3",
     "browserify": "13.0.1",
     "coffee-coverage": "^2.0.1",
     "coffee-script": "^1.8.0",
     "coffeeify": "^2.0.1",
+    "dts-generator": "^3.0.0",
     "fs-sync": "^1.0.6",
     "html-entities": "^1.1.2",
     "intl": "^1.2.5",
@@ -48,6 +51,7 @@
     "mocha": "^9.2.1",
     "season": "^5.0.3",
     "should": "^8.4.0",
+    "typescript": "^4.9.5",
     "uglify-js": "^2.4.16"
   }
 }
