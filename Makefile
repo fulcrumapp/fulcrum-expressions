@@ -10,6 +10,7 @@ types:
 									--exclude **/__tests__/** \
 									--exclude **/node_modules/** \
 									--exclude **/dist/** \
+									--exclude ts/api.ts \
 									--exclude functions/index.ts \
 									--exclude types/globals.d.ts \
 									--exclude types/node_modules.d.ts \
