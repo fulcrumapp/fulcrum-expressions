@@ -2446,6 +2446,14 @@ declare function GCD(...args: string[]): number;
 declare function GCD(...args: any[]): number;
 
 /**
+ * Returns the geometry of the current record or repeatable.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometry/
+ * @returns Geometry value
+ */
+declare function GEOMETRY(): Geometry | null;
+
+/**
  * Returns the current result value for the current expression
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/getresult/
