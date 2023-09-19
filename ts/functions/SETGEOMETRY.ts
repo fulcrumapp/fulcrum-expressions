@@ -8,7 +8,4 @@ import type { Geometry } from "../types/values"
  * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
 
-export default function SETGEOMETRY(geometry: Geometry): void
-export default function SETGEOMETRY(geometry: any): void
-export default function SETGEOMETRY(geometry?: any): void {
-}
+export default function SETGEOMETRY(geometry: Geometry | null): void
