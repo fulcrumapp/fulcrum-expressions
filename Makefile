@@ -1,5 +1,5 @@
 types:
-	asdf exec yarn && asdf exec yarn run \
+	rm ts/api.ts && asdf exec yarn && asdf exec yarn run \
 		dts-generator \
 									--project ./ts \
 									--target 0 \
