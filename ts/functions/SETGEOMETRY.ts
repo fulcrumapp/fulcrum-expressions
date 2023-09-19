@@ -1,4 +1,4 @@
-import isValidGeometry, { ValidGeometry } from "../util/is-valid-geometry"
+import type { Geometry } from "../types/values"
 
 /**
  * Sets geometry values
@@ -8,12 +8,7 @@ import isValidGeometry, { ValidGeometry } from "../util/is-valid-geometry"
  * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
 
-export default function SETGEOMETRY(geometry: ValidGeometry): void
+export default function SETGEOMETRY(geometry: Geometry): void
 export default function SETGEOMETRY(geometry: any): void
 export default function SETGEOMETRY(geometry?: any): void {
-  if (!isValidGeometry(geometry)) {
-    ERROR('Geometry must be a valid GeoJSON value.')
-  }
-  SETVALUE('@geometry', geometry)
 }
-

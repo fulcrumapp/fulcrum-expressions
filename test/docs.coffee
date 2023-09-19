@@ -30,13 +30,13 @@ $repeatable_field = variables.values.form_values['1337']
 docs = JSON.parse(fs.readFileSync(__dirname + '/../docs/docs.json'))
 
 shouldBeNull = (value) ->
-  (value is null).should.be.true
+  (value is null).should.be.true()
 
 shouldHaveNoValue = (value) ->
-  (value is NO_VALUE).should.be.true
+  (value is NO_VALUE).should.be.true()
 
 shouldBeUndefined = (value) ->
-  (value is undefined).should.be.true
+  (value is undefined).should.be.true()
 
 describe 'Documentation', ->
   _.each docs.functions, (func) ->

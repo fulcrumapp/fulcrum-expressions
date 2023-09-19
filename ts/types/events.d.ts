@@ -1,6 +1,6 @@
 import { GUID } from "./primitives"
 import { FormFields, FieldName } from "./fields";
-import { ChoiceFieldValue } from "./values"
+import { ChoiceFieldValue, Geometry } from "./values"
 
 export interface TriggeredEvent {
   name: EventNames,
@@ -92,10 +92,7 @@ export interface FieldEvent extends EventWithField {
   value: FieldEventValue
 }
 
-export interface GeometryEventValue {
-  coordinates: number[],
-  type: "Point"
-}
+export type GeometryEventValue = Geometry;
 
 export interface GeometryEvent extends Event {
   field?: string
