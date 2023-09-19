@@ -1,4 +1,4 @@
-import type { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon } from "geojson"
+import type { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon } from "../types/geojson"
 
 export type Geometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon
 

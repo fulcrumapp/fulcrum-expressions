@@ -28,6 +28,7 @@ import {
 import { EventNames } from "../types/events"
 import { FormFields } from "../types/fields"
 import { MaybeString } from "../types/primitives"
+import { CurrentLocation } from "../types/values"
 import {
   AlertResult,
   ConfigurationResult,
@@ -144,6 +145,8 @@ export default class Runtime {
   currencyCode = Runtime.defaultCurrencyCode
 
   currencySymbol = Runtime.defaultCurrencySymbol
+
+  currentLocation: CurrentLocation | null = null
 
   variables: { [key: string]: any } = {}
 

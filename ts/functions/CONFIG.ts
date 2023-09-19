@@ -1,3 +1,4 @@
+import { Geometry } from "../types/geojson"
 export interface Config {
   /** Optional: Set to record's altitude */
   recordAltitude?: any,
@@ -38,7 +39,7 @@ export interface Config {
   /** Optional: Indicates where the current feature is new */
   featureIsNew?: boolean,
   /** Optional: Object containing feature geometry */
-  featureGeometry?: FeatureGeometry,
+  featureGeometry?: Geometry,
   /** Optional: current platform name */
   platform?: string,
   /** Optional: Current platform version */
@@ -57,10 +58,6 @@ export interface Config {
   featureIndex?: number,
   /** Optional: Current user's full name */
   userFullName?: string,
-}
-
-export interface FeatureGeometry {
-  coordinates: string[]
 }
 
 export const DEFAULTS = {

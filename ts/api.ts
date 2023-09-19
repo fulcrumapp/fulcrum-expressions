@@ -91,6 +91,181 @@ declare function ALERT(message: ToStringable): void;
  */
 declare function ALERT(title: ToStringable, message: ToStringable): void;
 
+// Type definitions for non-npm package geojson 7946.0
+// Project: https://geojson.org/
+// Definitions by: Jacob Bruun <https://github.com/cobster>
+//                 Arne Schubert <https://github.com/atd-schubert>
+//                 Jeff Jacobson <https://github.com/JeffJacobson>
+//                 Ilia Choly <https://github.com/icholy>
+//                 Dan Vanderkam <https://github.com/danvk>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// TypeScript Version: 2.3
+
+// Note: as of the RFC 7946 version of GeoJSON, Coordinate Reference Systems
+// are no longer supported. (See https://tools.ietf.org/html/rfc7946#appendix-B)}
+
+ as namespace GeoJSON;
+
+/**
+ * The valid values for the "type" property of GeoJSON geometry objects.
+ * https://tools.ietf.org/html/rfc7946#section-1.4
+ */
+ type GeoJsonGeometryTypes = Geometry['type'];
+
+/**
+ * The value values for the "type" property of GeoJSON Objects.
+ * https://tools.ietf.org/html/rfc7946#section-1.4
+ */
+ type GeoJsonTypes = GeoJSON['type'];
+
+/**
+ * Bounding box
+ * https://tools.ietf.org/html/rfc7946#section-5
+ */
+ type BBox = [number, number, number, number] | [number, number, number, number, number, number];
+
+/**
+ * A Position is an array of coordinates.
+ * https://tools.ietf.org/html/rfc7946#section-3.1.1
+ * Array should contain between two and three elements.
+ * The previous GeoJSON specification allowed more elements (e.g., which could be used to represent M values),
+ * but the current specification only allows X, Y, and (optionally) Z to be defined.
+ */
+ type Position = number[]; // [number, number] | [number, number, number];
+
+/**
+ * The base GeoJSON object.
+ * https://tools.ietf.org/html/rfc7946#section-3
+ * The GeoJSON specification also allows foreign members
+ * (https://tools.ietf.org/html/rfc7946#section-6.1)
+ * Developers should use "&" type in TypeScript or extend the interface
+ * to add these foreign members.
+ */
+interface GeoJsonObject {
+    // Don't include foreign members directly into this type def.
+    // in order to preserve type safety.
+    // [key: string]: any;
+    /**
+     * Specifies the type of GeoJSON object.
+     */
+    type: GeoJsonTypes;
+    /**
+     * Bounding box of the coordinate range of the object's Geometries, Features, or Feature Collections.
+     * The value of the bbox member is an array of length 2*n where n is the number of dimensions
+     * represented in the contained geometries, with all axes of the most southwesterly point
+     * followed by all axes of the more northeasterly point.
+     * The axes order of a bbox follows the axes order of geometries.
+     * https://tools.ietf.org/html/rfc7946#section-5
+     */
+    bbox?: BBox | undefined;
+}
+
+/**
+ * Union of GeoJSON objects.
+ */
+ type GeoJSON = Geometry | Feature | FeatureCollection;
+
+/**
+ * Geometry object.
+ * https://tools.ietf.org/html/rfc7946#section-3
+ */
+ type Geometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon | GeometryCollection;
+ type GeometryObject = Geometry;
+
+/**
+ * Point geometry object.
+ * https://tools.ietf.org/html/rfc7946#section-3.1.2
+ */
+interface Point extends GeoJsonObject {
+    type: 'Point';
+    coordinates: Position;
+}
+
+/**
+ * MultiPoint geometry object.
+ *  https://tools.ietf.org/html/rfc7946#section-3.1.3
+ */
+interface MultiPoint extends GeoJsonObject {
+    type: 'MultiPoint';
+    coordinates: Position[];
+}
+
+/**
+ * LineString geometry object.
+ * https://tools.ietf.org/html/rfc7946#section-3.1.4
+ */
+interface LineString extends GeoJsonObject {
+    type: 'LineString';
+    coordinates: Position[];
+}
+
+/**
+ * MultiLineString geometry object.
+ * https://tools.ietf.org/html/rfc7946#section-3.1.5
+ */
+interface MultiLineString extends GeoJsonObject {
+    type: 'MultiLineString';
+    coordinates: Position[][];
+}
+
+/**
+ * Polygon geometry object.
+ * https://tools.ietf.org/html/rfc7946#section-3.1.6
+ */
+interface Polygon extends GeoJsonObject {
+    type: 'Polygon';
+    coordinates: Position[][];
+}
+
+/**
+ * MultiPolygon geometry object.
+ * https://tools.ietf.org/html/rfc7946#section-3.1.7
+ */
+interface MultiPolygon extends GeoJsonObject {
+    type: 'MultiPolygon';
+    coordinates: Position[][][];
+}
+
+/**
+ * Geometry Collection
+ * https://tools.ietf.org/html/rfc7946#section-3.1.8
+ */
+interface GeometryCollection<G extends Geometry = Geometry> extends GeoJsonObject {
+    type: 'GeometryCollection';
+    geometries: G[];
+}
+
+ type GeoJsonProperties = { [name: string]: any } | null;
+
+/**
+ * A feature object which contains a geometry and associated properties.
+ * https://tools.ietf.org/html/rfc7946#section-3.2
+ */
+interface Feature<G extends Geometry | null = Geometry, P = GeoJsonProperties> extends GeoJsonObject {
+    type: 'Feature';
+    /**
+     * The feature's geometry
+     */
+    geometry: G;
+    /**
+     * A value that uniquely identifies this feature in a
+     * https://tools.ietf.org/html/rfc7946#section-3.2.
+     */
+    id?: string | number | undefined;
+    /**
+     * Properties associated with this feature.
+     */
+    properties: P;
+}
+
+/**
+ * A collection of feature objects.
+ *  https://tools.ietf.org/html/rfc7946#section-3.3
+ */
+interface FeatureCollection<G extends Geometry | null = Geometry, P = GeoJsonProperties> extends GeoJsonObject {
+    type: 'FeatureCollection';
+    features: Array<Feature<G, P>>;
+}
 interface Config {
     /** Optional: Set to record's altitude */
     recordAltitude?: any;
@@ -131,7 +306,7 @@ interface Config {
     /** Optional: Indicates where the current feature is new */
     featureIsNew?: boolean;
     /** Optional: Object containing feature geometry */
-    featureGeometry?: FeatureGeometry;
+    featureGeometry?: Geometry;
     /** Optional: current platform name */
     platform?: string;
     /** Optional: Current platform version */
@@ -150,9 +325,6 @@ interface Config {
     featureIndex?: number;
     /** Optional: Current user's full name */
     userFullName?: string;
-}
-interface FeatureGeometry {
-    coordinates: string[];
 }
  const DEFAULTS: {
     country: string;
@@ -572,7 +744,7 @@ declare function ISBLANK(): boolean;
  * @example
  * CHOICEVALUES($choice_field) // returns [ 'a', 'b', 'c', 'd' ]
  */
-declare function CHOICEVALUES(field: ChoiceFieldValue): string[];
+declare function CHOICEVALUES(value: ChoiceFieldValue): string[];
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
  *
@@ -582,7 +754,7 @@ declare function CHOICEVALUES(field: ChoiceFieldValue): string[];
  * @example
  * CHOICEVALUES($choice_field) // returns [ 'a', 'b', 'c', 'd' ]
  */
-declare function CHOICEVALUES(field: any): any[];
+declare function CHOICEVALUES(value: any): any[];
 /**
  * Converts a choicefield object to an array with null values and blank strings removed
  *
@@ -2395,6 +2567,7 @@ declare function IFERROR(value: any, errorValue: any): any;
  */
 declare function INSPECT(value: any): string;
 
+
 interface AlertResult {
   /** result type */
   type: "message",
@@ -2810,7 +2983,7 @@ declare function LAST(item: any): any[] | undefined;
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/latitude/
  * @returns numeric value
  */
-declare function LATITUDE(): number;
+declare function LATITUDE(): number | null;
 
 /**
  * Returns the least common multiple of the arguments passed in
@@ -3006,7 +3179,7 @@ declare function LOG10(value: any): number;
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/longitude/
  * @returns number
  */
-declare function LONGITUDE(): number;
+declare function LONGITUDE(): number | null;
 
 /**
  * Converts a string value to all lowercase.
@@ -4182,7 +4355,7 @@ declare function SEARCH(needle: any, haystack: any, startPosition?: any): number
  * @param dataName (String, required): data_name of field to be set
  * @param value (Any, required): value for field, or \`null\` to clear the field
  */
-declare function SETVALUE(dataName: FieldName, value: string | ChoiceFieldValue | AddressFieldValue | ValidGeometry | string[] | number[] | null): void;
+declare function SETVALUE(dataName: FieldName, value: string | ChoiceFieldValue | AddressFieldValue | Geometry | string[] | number[] | null): void;
 
 /**
  * Assign a user to a record.
