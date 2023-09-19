@@ -1612,7 +1612,7 @@ VALID_GEOMETRY_TYPES = [
   'LineString',
   'Polygon',
   'MultiPoint',
-  'MiltiLineString',
+  'MultiLineString',
   'MultiPolygon'
 ]
 
