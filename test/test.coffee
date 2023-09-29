@@ -32,13 +32,13 @@ runtime.values = variables.values.form_values
 runtime.prepare()
 
 shouldBeNull = (value) ->
-  (value is null).should.be.true
+  (value is null).should.be.true()
 
 shouldHaveNoValue = (value) ->
-  (value is NO_VALUE).should.be.true
+  (value is NO_VALUE).should.be.true()
 
 shouldBeUndefined = (value) ->
-  (value is undefined).should.be.true
+  (value is undefined).should.be.true()
 
 beforeEach ->
   resetConfig()
@@ -75,46 +75,46 @@ describe 'NUM', ->
     NUM(1).should.be.exactly(1)
     NUM(-1).should.be.exactly(-1)
     NUM('1').should.be.exactly(1)
-    NUM({}).should.be.NaN
-    NUM().should.be.NaN
-    NUM([]).should.be.NaN
-    NUM('test').should.be.NaN
+    NUM({}).should.be.NaN()
+    NUM().should.be.NaN()
+    NUM([]).should.be.NaN()
+    NUM('test').should.be.NaN()
 
 describe 'ISNAN', ->
   it 'tests whether the input is not a number', ->
-    ISNAN(1).should.be.false
-    ISNAN('1').should.be.false
-    ISNAN('a7').should.be.true
-    ISNAN({}).should.be.true
+    ISNAN(1).should.be.false()
+    ISNAN('1').should.be.false()
+    ISNAN('a7').should.be.true()
+    ISNAN({}).should.be.true()
 
 describe 'PRECISION', ->
   it 'returns the precision of a number', ->
     PRECISION(1.11).should.be.exactly(2)
     PRECISION('1').should.be.exactly(0)
-    PRECISION('aaa').should.be.NaN
+    PRECISION('aaa').should.be.NaN()
     PRECISION(1 / 3).should.be.exactly(16)
 
 describe 'ACOS', ->
   it 'returns the arccosine, or inverse cosine, of a number', ->
-    ACOS(-7).should.be.NaN
+    ACOS(-7).should.be.NaN()
     ACOS(0.13213).should.be.exactly(1.4382788129257988)
-    ACOS(NaN).should.be.NaN
-    ACOS(undefined).should.be.NaN
-    ACOS('-7').should.be.NaN
-    ACOS('7').should.be.NaN
-    ACOS('7').should.be.NaN
-    ACOS('z7').should.be.NaN
-    ACOS('7z').should.be.NaN
+    ACOS(NaN).should.be.NaN()
+    ACOS(undefined).should.be.NaN()
+    ACOS('-7').should.be.NaN()
+    ACOS('7').should.be.NaN()
+    ACOS('7').should.be.NaN()
+    ACOS('z7').should.be.NaN()
+    ACOS('7z').should.be.NaN()
 
 describe 'AND', ->
   it 'returns true if all of the parameters evaluate truthy', ->
-    AND(1.11).should.be.true
-    AND(1 > 0, 2 > 1, 3 > 2).should.be.true
-    AND(1 > 0, 2 > 1, '').should.be.false
-    AND(0, 0, 0).should.be.false
-    AND(1, 1, 1).should.be.true
-    AND(true, false).should.be.false
-    AND({}, []).should.be.true
+    AND(1.11).should.be.true()
+    AND(1 > 0, 2 > 1, 3 > 2).should.be.true()
+    AND(1 > 0, 2 > 1, '').should.be.false()
+    AND(0, 0, 0).should.be.false()
+    AND(1, 1, 1).should.be.true()
+    AND(true, false).should.be.false()
+    AND({}, []).should.be.true()
 
 describe 'APPLYFIELDEFFECTS', ->
   it 'sets up events for effects', ->
@@ -144,7 +144,7 @@ describe 'APPLYFIELDEFFECTS', ->
 describe 'AVERAGE', ->
   it 'returns the average of all of the parameters', ->
     AVERAGE(1, 2, 3).should.be.exactly(2)
-    AVERAGE(1, 2, 'a').should.be.NaN
+    AVERAGE(1, 2, 'a').should.be.NaN()
     AVERAGE(1).should.be.exactly(1)
     AVERAGE(1, 1.5, 3.75).should.be.exactly(2.0833333333333335)
     AVERAGE(1, [1.5, 3.75]).should.be.exactly(2.0833333333333335)
@@ -157,7 +157,7 @@ describe 'ROUND', ->
     ROUND(1.5).should.be.exactly(2)
     ROUND(2.5).should.be.exactly(3)
     ROUND('2.5').should.be.exactly(3)
-    ROUND('test').should.be.NaN
+    ROUND('test').should.be.NaN()
     ROUND(2.3333333, 4).should.be.exactly(2.3333)
     ROUND(-2.3333333, 4).should.be.exactly(-2.3333)
     ROUND(2.3333333, 7).should.be.exactly(2.3333333)
@@ -170,7 +170,7 @@ describe 'CEILING', ->
     CEILING(1.5).should.be.exactly(2)
     CEILING(2.5).should.be.exactly(3)
     CEILING('2.5').should.be.exactly(3)
-    CEILING('test').should.be.NaN
+    CEILING('test').should.be.NaN()
     CEILING(2.3333333, 4).should.be.exactly(4)
     CEILING(0.13, 0.25).should.be.exactly(0.25)
     CEILING(0.31, 0.25).should.be.exactly(0.5)
@@ -179,19 +179,19 @@ describe 'CEILING', ->
 
 describe 'CONTAINS', ->
   it 'returns whether an array or string contains a string', ->
-    CONTAINS(['1', '2', '3'], '1').should.be.true
-    CONTAINS(['1', '2', '3'], '3').should.be.true
-    CONTAINS(['1', '2', '3'], '4').should.be.false
-    CONTAINS([1, 2, 3], 3).should.be.true
-    CONTAINS('123', '1').should.be.true
-    CONTAINS('123', '3').should.be.true
-    CONTAINS('123', '123').should.be.true
-    CONTAINS('123', 1).should.be.true
-    CONTAINS([null, 1], null).should.be.true
-    CONTAINS([null, 1], '').should.be.false
-    CONTAINS([null, 1], undefined).should.be.false
-    CONTAINS([null, undefined], undefined).should.be.true
-    CONTAINS(null, null).should.be.false
+    CONTAINS(['1', '2', '3'], '1').should.be.true()
+    CONTAINS(['1', '2', '3'], '3').should.be.true()
+    CONTAINS(['1', '2', '3'], '4').should.be.false()
+    CONTAINS([1, 2, 3], 3).should.be.true()
+    CONTAINS('123', '1').should.be.true()
+    CONTAINS('123', '3').should.be.true()
+    CONTAINS('123', '123').should.be.true()
+    CONTAINS('123', 1).should.be.true()
+    CONTAINS([null, 1], null).should.be.true()
+    CONTAINS([null, 1], '').should.be.false()
+    CONTAINS([null, 1], undefined).should.be.false()
+    CONTAINS([null, undefined], undefined).should.be.true()
+    CONTAINS(null, null).should.be.false()
 
 describe 'DESCRIPTION', ->
   it 'returns the description of a field', ->
@@ -205,7 +205,7 @@ describe 'FLOOR', ->
     FLOOR(2.5).should.be.exactly(2)
     FLOOR(-45).should.be.exactly(-45)
     FLOOR('2.5').should.be.exactly(2)
-    FLOOR('test').should.be.NaN
+    FLOOR('test').should.be.NaN()
     FLOOR(2.3333333, 4).should.be.exactly(0)
     FLOOR(0.13, 0.25).should.be.exactly(0)
     FLOOR(0.31, 0.25).should.be.exactly(0.25)
@@ -284,28 +284,28 @@ describe 'CODE', ->
     CODE('1').should.be.exactly(49)
     CODE(1).should.be.exactly(49)
     CODE(1.7).should.be.exactly(49)
-    CODE('').should.be.NaN
-    CODE({}).should.be.NaN
+    CODE('').should.be.NaN()
+    CODE({}).should.be.NaN()
 
 describe 'HASOTHER', ->
   it 'returns true if the field has an other value set', ->
-    HASOTHER(other_values: ['test']).should.be.true
-    HASOTHER(other_values: []).should.be.false
-    HASOTHER(other_values: null).should.be.false
-    HASOTHER().should.be.false
-    HASOTHER(null).should.be.false
-    HASOTHER(choice_values: ['1']).should.be.false
-    HASOTHER(choice_values: ['1'], other_values: ['2']).should.be.true
+    HASOTHER(other_values: ['test']).should.be.true()
+    HASOTHER(other_values: []).should.be.false()
+    HASOTHER(other_values: null).should.be.false()
+    HASOTHER().should.be.false()
+    HASOTHER(null).should.be.false()
+    HASOTHER(choice_values: ['1']).should.be.false()
+    HASOTHER(choice_values: ['1'], other_values: ['2']).should.be.true()
 
 describe 'OTHER', ->
   it 'returns the other value if a field has it set', ->
     OTHER(other_values: ['test']).should.eql('test')
     OTHER(choice_values: ['1'], other_values: ['2']).should.eql('2')
-    (OTHER(other_values: []) is NO_VALUE).should.be.true
-    (OTHER(other_values: null) is NO_VALUE).should.be.true
-    (OTHER() is NO_VALUE).should.be.true
-    (OTHER(null) is NO_VALUE).should.be.true
-    (OTHER(choice_values: ['1']) is NO_VALUE).should.be.true
+    (OTHER(other_values: []) is NO_VALUE).should.be.true()
+    (OTHER(other_values: null) is NO_VALUE).should.be.true()
+    (OTHER() is NO_VALUE).should.be.true()
+    (OTHER(null) is NO_VALUE).should.be.true()
+    (OTHER(choice_values: ['1']) is NO_VALUE).should.be.true()
 
 describe 'CONCATENATE', ->
   it 'join text strings together', ->
@@ -326,9 +326,9 @@ describe 'COMPACT', ->
   it 'compacts an array', ->
     COMPACT([1, 2, 3]).should.eql([1, 2, 3])
     COMPACT([]).should.eql([])
-    (COMPACT(null) is undefined).should.be.true
-    (COMPACT(undefined) is undefined).should.be.true
-    (COMPACT({}) is undefined).should.be.true
+    (COMPACT(null) is undefined).should.be.true()
+    (COMPACT(undefined) is undefined).should.be.true()
+    (COMPACT({}) is undefined).should.be.true()
     COMPACT([undefined]).should.eql([])
     COMPACT([null]).should.eql([])
     COMPACT([0]).should.eql([0])
@@ -349,10 +349,10 @@ describe 'COUNTA', ->
   it 'returns the count of items', ->
     COUNTA([1, 2, 3]).should.be.exactly(3)
     COUNTA(undefined).should.be.exactly(0)
-    shouldHaveNoValue(COUNTA())
-    shouldHaveNoValue(COUNTA(null))
-    shouldHaveNoValue(COUNTA(undefined))
-    shouldHaveNoValue(COUNTA({}))
+    COUNTA().should.be.exactly(0)
+    COUNTA(null).should.be.exactly(0)
+    COUNTA(undefined).should.be.exactly(0)
+    COUNTA({}).should.be.exactly(0)
     COUNTA([0]).should.be.exactly(1)
 
 describe 'COUNTBLANK', ->
@@ -361,9 +361,9 @@ describe 'COUNTBLANK', ->
     COUNTBLANK([1, 2, '']).should.be.exactly(1)
     COUNTBLANK([1, 2, '', undefined]).should.be.exactly(2)
     COUNTBLANK([]).should.be.exactly(0)
-    COUNTBLANK(null).should.be.NaN
-    COUNTBLANK(undefined).should.be.NaN
-    COUNTBLANK({}).should.be.NaN
+    COUNTBLANK(null).should.be.exactly(1)
+    COUNTBLANK(undefined).should.be.exactly(1)
+    COUNTBLANK({}).should.be.exactly(0)
     COUNTBLANK([undefined]).should.be.exactly(1)
     COUNTBLANK([null]).should.be.exactly(1)
     COUNTBLANK([0]).should.be.exactly(0)
@@ -373,11 +373,11 @@ describe 'DEGREES', ->
     DEGREES(Math.PI).should.be.exactly(180)
     DEGREES(Math.PI + '').should.be.exactly(180)
     DEGREES(Math.PI / 4).should.be.exactly(45)
-    DEGREES([]).should.be.NaN
-    DEGREES(undefined).should.be.NaN
-    DEGREES(null).should.be.NaN
-    DEGREES(NaN).should.be.NaN
-    DEGREES(true).should.be.NaN
+    DEGREES([]).should.be.NaN()
+    DEGREES(undefined).should.be.NaN()
+    DEGREES(null).should.be.NaN()
+    DEGREES(NaN).should.be.NaN()
+    DEGREES(true).should.be.NaN()
 
 describe 'EVEN', ->
   it 'returns number rounded up to the nearest even integer', ->
@@ -390,48 +390,48 @@ describe 'EVEN', ->
     EVEN(1.5).should.be.exactly(2)
     EVEN(11.5).should.be.exactly(12)
     EVEN(1 / 3).should.be.exactly(2)
-    EVEN(undefined).should.be.NaN
-    EVEN(null).should.be.NaN
-    EVEN([]).should.be.NaN
-    EVEN({}).should.be.NaN
-    EVEN(true).should.be.NaN
+    EVEN(undefined).should.be.NaN()
+    EVEN(null).should.be.NaN()
+    EVEN([]).should.be.NaN()
+    EVEN({}).should.be.NaN()
+    EVEN(true).should.be.NaN()
 
 describe 'EXACT', ->
   it 'checks to see if two text values are identical', ->
-    EXACT('', '').should.be.true
-    EXACT('test', 'test').should.be.true
-    EXACT(1, 1).should.be.true
-    EXACT([], []).should.be.true
-    EXACT({}, {}).should.be.true
-    EXACT(undefined, undefined).should.be.true
-    EXACT(1, undefined).should.be.false
-    EXACT(NaN, NaN).should.be.true
-    EXACT(1, NaN).should.be.false
+    EXACT('', '').should.be.true()
+    EXACT('test', 'test').should.be.true()
+    EXACT(1, 1).should.be.true()
+    EXACT([], []).should.be.true()
+    EXACT({}, {}).should.be.true()
+    EXACT(undefined, undefined).should.be.true()
+    EXACT(1, undefined).should.be.false()
+    EXACT(NaN, NaN).should.be.true()
+    EXACT(1, NaN).should.be.false()
 
 describe 'EXISTS', ->
   it 'checks whether a value exists', ->
     # truthy things
-    EXISTS(0).should.be.true
-    EXISTS(-1).should.be.true
-    EXISTS(true).should.be.true
-    EXISTS(false).should.be.true
-    EXISTS('test').should.be.true
-    EXISTS([1]).should.be.true
-    EXISTS({test:1}).should.be.true
-    EXISTS(1, 2).should.be.true
-    EXISTS(1, 2, 'test').should.be.true
-    EXISTS(new Date).should.be.true
-    EXISTS(/test/).should.be.true
+    EXISTS(0).should.be.true()
+    EXISTS(-1).should.be.true()
+    EXISTS(true).should.be.true()
+    EXISTS(false).should.be.true()
+    EXISTS('test').should.be.true()
+    EXISTS([1]).should.be.true()
+    EXISTS({test:1}).should.be.true()
+    EXISTS(1, 2).should.be.true()
+    EXISTS(1, 2, 'test').should.be.true()
+    EXISTS(new Date).should.be.true()
+    EXISTS(/test/).should.be.true()
 
     # falsey things
-    EXISTS([]).should.be.false
-    EXISTS({}).should.be.false
-    EXISTS('').should.be.false
-    EXISTS(NaN).should.be.false
-    EXISTS(null).should.be.false
-    EXISTS(undefined).should.be.false
-    EXISTS(undefined, null).should.be.false
-    EXISTS(1, null).should.be.false
+    EXISTS([]).should.be.false()
+    EXISTS({}).should.be.false()
+    EXISTS('').should.be.false()
+    EXISTS(NaN).should.be.false()
+    EXISTS(null).should.be.false()
+    EXISTS(undefined).should.be.false()
+    EXISTS(undefined, null).should.be.false()
+    EXISTS(1, null).should.be.false()
 
 describe 'FACTDOUBLE', ->
   it 'returns the double factorial of a number.', ->
@@ -442,14 +442,14 @@ describe 'FACTDOUBLE', ->
     FACTDOUBLE(4).should.be.exactly(8)
     FACTDOUBLE(7).should.be.exactly(105)
     FACTDOUBLE(20).should.be.exactly(3715891200)
-    FACTDOUBLE(-1).should.be.NaN
-    FACTDOUBLE(NaN).should.be.NaN
-    FACTDOUBLE(true).should.be.NaN
-    FACTDOUBLE([]).should.be.NaN
-    FACTDOUBLE({}).should.be.NaN
-    FACTDOUBLE('').should.be.NaN
-    FACTDOUBLE(null).should.be.NaN
-    FACTDOUBLE(undefined).should.be.NaN
+    FACTDOUBLE(-1).should.be.NaN()
+    FACTDOUBLE(NaN).should.be.NaN()
+    FACTDOUBLE(true).should.be.NaN()
+    FACTDOUBLE([]).should.be.NaN()
+    FACTDOUBLE({}).should.be.NaN()
+    FACTDOUBLE('').should.be.NaN()
+    FACTDOUBLE(null).should.be.NaN()
+    FACTDOUBLE(undefined).should.be.NaN()
 
 describe 'FIND', ->
   it 'find the position of a string in another string', ->
@@ -497,13 +497,13 @@ describe 'GCD', ->
     GCD(3, 6, 9).should.be.exactly(3)
     GCD(4, 6, 10).should.be.exactly(2)
     GCD('4', '6', '10').should.be.exactly(2)
-    GCD(-1, -2, -3).should.be.NaN
-    GCD().should.be.NaN
-    GCD(undefined).should.be.NaN
-    GCD(null).should.be.NaN
-    GCD({}).should.be.NaN
-    GCD([]).should.be.NaN
-    GCD(true).should.be.NaN
+    GCD(-1, -2, -3).should.be.NaN()
+    GCD().should.be.NaN()
+    GCD(undefined).should.be.NaN()
+    GCD(null).should.be.NaN()
+    GCD({}).should.be.NaN()
+    GCD([]).should.be.NaN()
+    GCD(true).should.be.NaN()
 
 describe 'GROUP', ->
   it 'returns the grouped values from the parameters', ->
@@ -533,80 +533,80 @@ describe 'INSPECT', ->
 
 describe 'ISBLANK', ->
   it 'tests if a value is blank', ->
-    ISBLANK('').should.be.true
-    ISBLANK(null).should.be.true
-    ISBLANK(undefined).should.be.true
-    ISBLANK(NaN).should.be.true
-    ISBLANK([]).should.be.true
-    ISBLANK({}).should.be.true
-    ISBLANK({ test: 1 }).should.be.false
-    ISBLANK(7).should.be.false
-    ISBLANK(true).should.be.false
-    ISBLANK('test').should.be.false
-    ISBLANK(new Date).should.be.false
-    ISBLANK(choice_values: null).should.be.true
-    ISBLANK(choice_values: []).should.be.true
-    ISBLANK(choice_values: [], other_values: []).should.be.true
-    ISBLANK(choice_values: [], other_values: null).should.be.true
-    ISBLANK(choice_values: null, other_values: null).should.be.true
-    ISBLANK(choice_values: null, other_values: []).should.be.true
-    ISBLANK(other_values: null).should.be.true
-    ISBLANK(choice_values: ['a'], other_values: []).should.be.false
-    ISBLANK(choice_values: ['a'], other_values: ['b']).should.be.false
-    ISBLANK(choice_values: [], other_values: ['b']).should.be.false
-    ISBLANK(choice_values: null, other_values: ['b']).should.be.false
+    ISBLANK('').should.be.true()
+    ISBLANK(null).should.be.true()
+    ISBLANK(undefined).should.be.true()
+    ISBLANK(NaN).should.be.true()
+    ISBLANK([]).should.be.true()
+    ISBLANK({}).should.be.true()
+    ISBLANK({ test: 1 }).should.be.false()
+    ISBLANK(7).should.be.false()
+    ISBLANK(true).should.be.false()
+    ISBLANK('test').should.be.false()
+    ISBLANK(new Date).should.be.false()
+    ISBLANK(choice_values: null).should.be.true()
+    ISBLANK(choice_values: []).should.be.true()
+    ISBLANK(choice_values: [], other_values: []).should.be.true()
+    ISBLANK(choice_values: [], other_values: null).should.be.true()
+    ISBLANK(choice_values: null, other_values: null).should.be.true()
+    ISBLANK(choice_values: null, other_values: []).should.be.true()
+    ISBLANK(other_values: null).should.be.true()
+    ISBLANK(choice_values: ['a'], other_values: []).should.be.false()
+    ISBLANK(choice_values: ['a'], other_values: ['b']).should.be.false()
+    ISBLANK(choice_values: [], other_values: ['b']).should.be.false()
+    ISBLANK(choice_values: null, other_values: ['b']).should.be.false()
 
 describe 'ISERR', ->
   it 'tests for an error', ->
-    ISERR(EVEN(null)).should.be.true
-    ISERR(EVEN(7)).should.be.false
-    ISERR(new Error).should.be.true
+    ISERR(EVEN(null)).should.be.true()
+    ISERR(EVEN(7)).should.be.false()
+    ISERR(new Error).should.be.true()
 
 describe 'ISLOGICAL', ->
   it 'tests for a logical value', ->
-    ISLOGICAL(true).should.be.true
-    ISLOGICAL(false).should.be.true
-    ISLOGICAL('').should.be.false
+    ISLOGICAL(true).should.be.true()
+    ISLOGICAL(false).should.be.true()
+    ISLOGICAL('').should.be.false()
 
 describe 'ISNONTEXT', ->
   it 'tests for a non-text value', ->
-    ISNONTEXT(true).should.be.true
-    ISNONTEXT(false).should.be.true
-    ISNONTEXT('').should.be.false
+    ISNONTEXT(true).should.be.true()
+    ISNONTEXT(false).should.be.true()
+    ISNONTEXT('').should.be.false()
 
 describe 'ISNUMBER', ->
   it 'tests for a number value', ->
-    ISNUMBER(1).should.be.true
-    ISNUMBER('1').should.be.false
-    ISNUMBER(true).should.be.false
+    ISNUMBER(1).should.be.true()
+    ISNUMBER('1').should.be.true()
+    ISNUMBER(true).should.be.false()
 
 describe 'ISODD', ->
   it 'tests for an odd number', ->
-    ISODD(0).should.be.false
-    ISODD(1).should.be.true
-    ISODD(2).should.be.false
-    ISODD('1').should.be.true
-    ISODD(true).should.be.false
-    ISODD(false).should.be.false
-    ISODD(undefined).should.be.false
-    ISODD(null).should.be.false
+    ISODD(0).should.be.false()
+    ISODD(1).should.be.true()
+    ISODD(2).should.be.false()
+    ISODD('1').should.be.true()
+    ISODD(true).should.be.false()
+    ISODD(false).should.be.false()
+    ISODD(undefined).should.be.false()
+    ISODD(null).should.be.false()
 
 describe 'ISEVEN', ->
   it 'tests for an even number', ->
-    ISEVEN(0).should.be.true
-    ISEVEN(1).should.be.false
-    ISEVEN(2).should.be.true
-    ISEVEN('2').should.be.true
-    ISEVEN(true).should.be.false
-    ISEVEN(false).should.be.false
-    ISEVEN(undefined).should.be.false
-    ISEVEN(null).should.be.false
+    ISEVEN(0).should.be.true()
+    ISEVEN(1).should.be.false()
+    ISEVEN(2).should.be.true()
+    ISEVEN('2').should.be.true()
+    ISEVEN(true).should.be.false()
+    ISEVEN(false).should.be.false()
+    ISEVEN(undefined).should.be.false()
+    ISEVEN(null).should.be.false()
 
 describe 'ISTEXT', ->
   it 'tests for a text value', ->
-    ISTEXT(true).should.be.false
-    ISTEXT(false).should.be.false
-    ISTEXT('').should.be.true
+    ISTEXT(true).should.be.false()
+    ISTEXT(false).should.be.false()
+    ISTEXT('').should.be.true()
 
 describe 'LABEL', ->
   it 'returns the label of a field', ->
@@ -633,15 +633,15 @@ describe 'LCM', ->
   it 'returns the least common multiple', ->
     LCM(-50, 25, -45, -18, 90, 447).should.be.exactly(67050)
     LCM('-50', 25, -45, -18, 90, '447').should.be.exactly(67050)
-    LCM(-50, 25, -45, -18, 90, null).should.be.NaN
-    LCM(-50, 25, -45, -18, 90, NaN).should.be.NaN
+    LCM(-50, 25, -45, -18, 90, null).should.be.NaN()
+    LCM(-50, 25, -45, -18, 90, NaN).should.be.NaN()
     LCM(1.3, 2.5).should.be.exactly(2)
     LCM('1.3', '2.5').should.be.exactly(2)
-    LCM(undefined).should.be.NaN
-    LCM(null).should.be.NaN
-    LCM(true).should.be.NaN
-    LCM('').should.be.NaN
-    LCM(new Date).should.be.NaN
+    LCM(undefined).should.be.NaN()
+    LCM(null).should.be.NaN()
+    LCM(true).should.be.NaN()
+    LCM('').should.be.NaN()
+    LCM(new Date).should.be.NaN()
 
 describe 'LEFT', ->
   it 'returns the left characters of a string', ->
@@ -690,15 +690,15 @@ describe 'LN', ->
     LN(1).should.be.exactly(0)
     LN(100).should.be.exactly(4.605170185988092)
     LN('100').should.be.exactly(4.605170185988092)
-    LN('abc').should.be.NaN
-    LN(-100).should.be.NaN
-    LN('').should.be.NaN
-    LN([]).should.be.NaN
-    LN({}).should.be.NaN
-    LN(true).should.be.NaN
-    LN(undefined).should.be.NaN
-    LN(null).should.be.NaN
-    LN(new Date).should.be.NaN
+    LN('abc').should.be.NaN()
+    LN(-100).should.be.NaN()
+    LN('').should.be.NaN()
+    LN([]).should.be.NaN()
+    LN({}).should.be.NaN()
+    LN(true).should.be.NaN()
+    LN(undefined).should.be.NaN()
+    LN(null).should.be.NaN()
+    LN(new Date).should.be.NaN()
 
 describe 'LOG', ->
   it 'returns the logarithm of a number with the given base', ->
@@ -707,15 +707,15 @@ describe 'LOG', ->
     LOG(100).should.be.exactly(2)
     LOG(1 / 3).should.be.exactly(-0.47712125471966244)
     LOG('100').should.be.exactly(2)
-    LOG('abc').should.be.NaN
-    LOG(-100).should.be.NaN
-    LOG('').should.be.NaN
-    LOG([]).should.be.NaN
-    LOG({}).should.be.NaN
-    LOG(true).should.be.NaN
-    LOG(undefined).should.be.NaN
-    LOG(null).should.be.NaN
-    LOG(new Date).should.be.NaN
+    LOG('abc').should.be.NaN()
+    LOG(-100).should.be.NaN()
+    LOG('').should.be.NaN()
+    LOG([]).should.be.NaN()
+    LOG({}).should.be.NaN()
+    LOG(true).should.be.NaN()
+    LOG(undefined).should.be.NaN()
+    LOG(null).should.be.NaN()
+    LOG(new Date).should.be.NaN()
 
 describe 'LOG10', ->
   it 'returns the logarithm of a number with 10 as the base', ->
@@ -724,15 +724,15 @@ describe 'LOG10', ->
     LOG10(100).should.be.exactly(2)
     LOG10(1 / 3).should.be.exactly(-0.47712125471966244)
     LOG10('100').should.be.exactly(2)
-    LOG10('abc').should.be.NaN
-    LOG10(-100).should.be.NaN
-    LOG10('').should.be.NaN
-    LOG10([]).should.be.NaN
-    LOG10({}).should.be.NaN
-    LOG10(true).should.be.NaN
-    LOG10(undefined).should.be.NaN
-    LOG10(null).should.be.NaN
-    LOG10(new Date).should.be.NaN
+    LOG10('abc').should.be.NaN()
+    LOG10(-100).should.be.NaN()
+    LOG10('').should.be.NaN()
+    LOG10([]).should.be.NaN()
+    LOG10({}).should.be.NaN()
+    LOG10(true).should.be.NaN()
+    LOG10(undefined).should.be.NaN()
+    LOG10(null).should.be.NaN()
+    LOG10(new Date).should.be.NaN()
 
 describe 'LOWER', ->
   it 'returns the string as lower case', ->
@@ -860,24 +860,24 @@ describe 'MOD', ->
     MOD(12.5, 2).should.be.exactly(0.5)
     MOD(11 / 3, 2).should.be.exactly(1.6666666666666665)
     MOD('11', '2').should.be.exactly(1)
-    MOD(1, 0).should.be.NaN
-    MOD(NaN).should.be.NaN
-    MOD(undefined).should.be.NaN
-    MOD(null).should.be.NaN
-    MOD(true).should.be.NaN
-    MOD(new Date).should.be.NaN
-    MOD().should.be.NaN
+    MOD(1, 0).should.be.NaN()
+    MOD(NaN).should.be.NaN()
+    MOD(undefined).should.be.NaN()
+    MOD(null).should.be.NaN()
+    MOD(true).should.be.NaN()
+    MOD(new Date).should.be.NaN()
+    MOD().should.be.NaN()
 
 describe 'NOT', ->
   it 'returns the negation of a value', ->
-    NOT(false).should.be.true
-    NOT(true).should.be.false
-    NOT(1).should.be.false
-    NOT(NaN).should.be.true
-    NOT(undefined).should.be.true
-    NOT(null).should.be.true
-    NOT(new Date).should.be.false
-    NOT().should.be.true
+    NOT(false).should.be.true()
+    NOT(true).should.be.false()
+    NOT(1).should.be.false()
+    NOT(NaN).should.be.true()
+    NOT(undefined).should.be.true()
+    NOT(null).should.be.true()
+    NOT(new Date).should.be.false()
+    NOT().should.be.true()
 
 describe 'ODD', ->
   it 'returns the next odd number', ->
@@ -887,14 +887,14 @@ describe 'ODD', ->
     ODD(-1).should.be.exactly(-1)
     ODD(-2).should.be.exactly(-3)
     ODD(-3).should.be.exactly(-3)
-    ODD(true).should.be.NaN
-    ODD([]).should.be.NaN
-    ODD({}).should.be.NaN
-    ODD(NaN).should.be.NaN
-    ODD(undefined).should.be.NaN
-    ODD(null).should.be.NaN
-    ODD(new Date).should.be.NaN
-    ODD().should.be.NaN
+    ODD(true).should.be.NaN()
+    ODD([]).should.be.NaN()
+    ODD({}).should.be.NaN()
+    ODD(NaN).should.be.NaN()
+    ODD(undefined).should.be.NaN()
+    ODD(null).should.be.NaN()
+    ODD(new Date).should.be.NaN()
+    ODD().should.be.NaN()
 
 describe 'OPENEXTENSION', ->
   it 'accepts a url', ->
@@ -910,20 +910,20 @@ describe 'OPENEXTENSION', ->
 
 describe 'OR', ->
   it 'returns true if any argument is truthy', ->
-    OR(true, false).should.be.true
-    OR(true, true).should.be.true
-    OR(false, true).should.be.true
-    OR(false, false).should.be.false
-    OR(1, 0).should.be.true
-    OR(0, 0).should.be.false
-    OR(true).should.be.true
-    OR(false).should.be.false
-    OR(undefined).should.be.false
-    OR(null).should.be.false
-    OR(NaN).should.be.false
-    OR(new Date).should.be.true
-    OR([]).should.be.true
-    OR({}).should.be.true
+    OR(true, false).should.be.true()
+    OR(true, true).should.be.true()
+    OR(false, true).should.be.true()
+    OR(false, false).should.be.false()
+    OR(1, 0).should.be.true()
+    OR(0, 0).should.be.false()
+    OR(true).should.be.true()
+    OR(false).should.be.false()
+    OR(undefined).should.be.false()
+    OR(null).should.be.false()
+    OR(NaN).should.be.false()
+    OR(new Date).should.be.true()
+    OR([]).should.be.true()
+    OR({}).should.be.true()
 
 describe 'PI', ->
   it 'returns PI', ->
@@ -933,15 +933,15 @@ describe 'POWER', ->
   it 'returns the result of a number raised to a power', ->
     POWER(2, 3).should.be.exactly(8)
     POWER(-2, 3).should.be.exactly(-8)
-    POWER(-2, 3.1).should.be.NaN
+    POWER(-2, 3.1).should.be.NaN()
     POWER('-2', '3').should.be.exactly(-8)
     POWER(1, 0).should.be.exactly(1)
-    POWER(NaN).should.be.NaN
-    POWER(undefined).should.be.NaN
-    POWER(null).should.be.NaN
-    POWER(true).should.be.NaN
-    POWER(new Date).should.be.NaN
-    POWER().should.be.NaN
+    POWER(NaN).should.be.NaN()
+    POWER(undefined).should.be.NaN()
+    POWER(null).should.be.NaN()
+    POWER(true).should.be.NaN()
+    POWER(new Date).should.be.NaN()
+    POWER().should.be.NaN()
 
 describe 'PRODUCT', ->
   it 'multiplies all the numbers given as arguments', ->
@@ -950,12 +950,12 @@ describe 'PRODUCT', ->
     PRODUCT(-2, 3.1, 1.7).should.be.exactly(-10.54)
     PRODUCT('-2', '3').should.be.exactly(-6)
     PRODUCT(1, 0).should.be.exactly(0)
-    PRODUCT(1, NaN).should.be.NaN
-    PRODUCT(undefined).should.be.NaN
-    PRODUCT(null).should.be.NaN
-    PRODUCT(true).should.be.NaN
-    PRODUCT(new Date).should.be.NaN
-    PRODUCT().should.be.NaN
+    PRODUCT(1, NaN).should.be.NaN()
+    PRODUCT(undefined).should.be.NaN()
+    PRODUCT(null).should.be.NaN()
+    PRODUCT(true).should.be.NaN()
+    PRODUCT(new Date).should.be.NaN()
+    PRODUCT().should.be.NaN()
 
 describe 'PROJECTID', ->
   it 'returns the project ID', ->
@@ -990,13 +990,13 @@ describe 'QUOTIENT', ->
     QUOTIENT(12.5, 2).should.be.exactly(6)
     QUOTIENT(11 / 3, 2).should.be.exactly(1)
     QUOTIENT('11', '2').should.be.exactly(5)
-    QUOTIENT(1, 0).should.be.NaN
-    QUOTIENT(NaN).should.be.NaN
-    QUOTIENT(undefined).should.be.NaN
-    QUOTIENT(null).should.be.NaN
-    QUOTIENT(true).should.be.NaN
-    QUOTIENT(new Date).should.be.NaN
-    QUOTIENT().should.be.NaN
+    QUOTIENT(1, 0).should.be.NaN()
+    QUOTIENT(NaN).should.be.NaN()
+    QUOTIENT(undefined).should.be.NaN()
+    QUOTIENT(null).should.be.NaN()
+    QUOTIENT(true).should.be.NaN()
+    QUOTIENT(new Date).should.be.NaN()
+    QUOTIENT().should.be.NaN()
 
 describe 'RADIANS', ->
   it 'converts degrees to radians', ->
@@ -1005,11 +1005,11 @@ describe 'RADIANS', ->
     RADIANS(180).should.be.exactly(Math.PI)
     RADIANS(360).should.be.exactly(Math.PI * 2)
     RADIANS(-45).should.be.exactly(-Math.PI / 4)
-    RADIANS([]).should.be.NaN
-    RADIANS(undefined).should.be.NaN
-    RADIANS(null).should.be.NaN
-    RADIANS(NaN).should.be.NaN
-    RADIANS(true).should.be.NaN
+    RADIANS([]).should.be.NaN()
+    RADIANS(undefined).should.be.NaN()
+    RADIANS(null).should.be.NaN()
+    RADIANS(NaN).should.be.NaN()
+    RADIANS(true).should.be.NaN()
 
 describe 'RAND', ->
   it 'returns a random number between 0 and 1', ->
@@ -1019,13 +1019,13 @@ describe 'RANDBETWEEN', ->
   it 'returns a random integer between low and high', ->
     RANDBETWEEN(5, 10).should.be.above(4).and.below(11)
     RANDBETWEEN('5', '10').should.be.above(4).and.below(11)
-    RANDBETWEEN(NaN, 6).should.be.NaN
-    RANDBETWEEN(null).should.be.NaN
-    RANDBETWEEN(undefined).should.be.NaN
-    RANDBETWEEN(true).should.be.NaN
-    RANDBETWEEN([]).should.be.NaN
-    RANDBETWEEN({}).should.be.NaN
-    RANDBETWEEN(new Date).should.be.NaN
+    RANDBETWEEN(NaN, 6).should.be.NaN()
+    RANDBETWEEN(null).should.be.NaN()
+    RANDBETWEEN(undefined).should.be.NaN()
+    RANDBETWEEN(true).should.be.NaN()
+    RANDBETWEEN([]).should.be.NaN()
+    RANDBETWEEN({}).should.be.NaN()
+    RANDBETWEEN(new Date).should.be.NaN()
 
 describe 'REPLACE', ->
   it 'replace characters in a string', ->
@@ -1075,18 +1075,18 @@ describe 'ROUNDDOWN', ->
     ROUNDDOWN(1.5).should.be.exactly(1)
     ROUNDDOWN(2.5).should.be.exactly(2)
     ROUNDDOWN('2.5').should.be.exactly(2)
-    ROUNDDOWN('test').should.be.NaN
+    ROUNDDOWN('test').should.be.NaN()
     ROUNDDOWN(2.6666666, 4).should.be.exactly(2.6666)
     ROUNDDOWN(-2.6666666, 4).should.be.exactly(-2.6666)
     ROUNDDOWN(2.6666666, 7).should.be.exactly(2.6666666)
     ROUNDDOWN(2.6666666, 8).should.be.exactly(2.6666666)
     ROUNDDOWN(1 / 3, 7).should.be.exactly(0.3333333)
-    ROUNDDOWN(NaN).should.be.NaN
-    ROUNDDOWN(undefined).should.be.NaN
-    ROUNDDOWN(null).should.be.NaN
-    ROUNDDOWN(new Date).should.be.NaN
-    ROUNDDOWN([]).should.be.NaN
-    ROUNDDOWN({}).should.be.NaN
+    ROUNDDOWN(NaN).should.be.NaN()
+    ROUNDDOWN(undefined).should.be.NaN()
+    ROUNDDOWN(null).should.be.NaN()
+    ROUNDDOWN(new Date).should.be.NaN()
+    ROUNDDOWN([]).should.be.NaN()
+    ROUNDDOWN({}).should.be.NaN()
 
 describe 'ROUNDUP', ->
   it 'round up the given number to the specified number of digits', ->
@@ -1094,18 +1094,18 @@ describe 'ROUNDUP', ->
     ROUNDUP(1.5).should.be.exactly(2)
     ROUNDUP(2.5).should.be.exactly(3)
     ROUNDUP('2.5').should.be.exactly(3)
-    ROUNDUP('test').should.be.NaN
+    ROUNDUP('test').should.be.NaN()
     ROUNDUP(2.6666666, 4).should.be.exactly(2.6667)
     ROUNDUP(-2.6666666, 4).should.be.exactly(-2.6667)
     ROUNDUP(2.6666666, 7).should.be.exactly(2.6666666)
     ROUNDUP(2.6666666, 8).should.be.exactly(2.6666666)
     ROUNDUP(1 / 3, 7).should.be.exactly(0.3333334)
-    ROUNDUP(NaN).should.be.NaN
-    ROUNDUP(undefined).should.be.NaN
-    ROUNDUP(null).should.be.NaN
-    ROUNDUP(new Date).should.be.NaN
-    ROUNDUP([]).should.be.NaN
-    ROUNDUP({}).should.be.NaN
+    ROUNDUP(NaN).should.be.NaN()
+    ROUNDUP(undefined).should.be.NaN()
+    ROUNDUP(null).should.be.NaN()
+    ROUNDUP(new Date).should.be.NaN()
+    ROUNDUP([]).should.be.NaN()
+    ROUNDUP({}).should.be.NaN()
 
 describe 'SEARCH', ->
   it 'locate one text string within a second text string', ->
@@ -1137,39 +1137,39 @@ describe 'SIGN', ->
     SIGN(1.5).should.be.exactly(1)
     SIGN(-1.5).should.be.exactly(-1)
     SIGN('2.5').should.be.exactly(1)
-    SIGN('test').should.be.NaN
-    SIGN(NaN).should.be.NaN
-    SIGN(undefined).should.be.NaN
-    SIGN(null).should.be.NaN
-    SIGN(new Date).should.be.NaN
-    SIGN([]).should.be.NaN
-    SIGN({}).should.be.NaN
+    SIGN('test').should.be.NaN()
+    SIGN(NaN).should.be.NaN()
+    SIGN(undefined).should.be.NaN()
+    SIGN(null).should.be.NaN()
+    SIGN(new Date).should.be.NaN()
+    SIGN([]).should.be.NaN()
+    SIGN({}).should.be.NaN()
 
 describe 'SQRT', ->
   it 'return the square root of a number', ->
     SQRT(4).should.be.exactly(2)
     SQRT(9).should.be.exactly(3)
     SQRT('9').should.be.exactly(3)
-    SQRT(-1).should.be.NaN
-    SQRT(NaN).should.be.NaN
-    SQRT(undefined).should.be.NaN
-    SQRT(null).should.be.NaN
-    SQRT(new Date).should.be.NaN
-    SQRT([]).should.be.NaN
-    SQRT({}).should.be.NaN
+    SQRT(-1).should.be.NaN()
+    SQRT(NaN).should.be.NaN()
+    SQRT(undefined).should.be.NaN()
+    SQRT(null).should.be.NaN()
+    SQRT(new Date).should.be.NaN()
+    SQRT([]).should.be.NaN()
+    SQRT({}).should.be.NaN()
 
 describe 'SQRTPI', ->
   it 'return the square root of a number times PI', ->
     SQRTPI(4).should.be.exactly(3.5449077018110318)
     SQRTPI(9).should.be.exactly(5.317361552716548)
     SQRTPI('9').should.be.exactly(5.317361552716548)
-    SQRTPI(-1).should.be.NaN
-    SQRTPI(NaN).should.be.NaN
-    SQRTPI(undefined).should.be.NaN
-    SQRTPI(null).should.be.NaN
-    SQRTPI(new Date).should.be.NaN
-    SQRTPI([]).should.be.NaN
-    SQRTPI({}).should.be.NaN
+    SQRTPI(-1).should.be.NaN()
+    SQRTPI(NaN).should.be.NaN()
+    SQRTPI(undefined).should.be.NaN()
+    SQRTPI(null).should.be.NaN()
+    SQRTPI(new Date).should.be.NaN()
+    SQRTPI([]).should.be.NaN()
+    SQRTPI({}).should.be.NaN()
 
 describe 'SUBSTITUTE', ->
   it 'substitutes text in a text string', ->
@@ -1205,12 +1205,12 @@ describe 'SUM', ->
     SUM([-2, 3.1, [1.7]]).should.be.exactly(2.8)
     SUM('-2', '3').should.be.exactly(1)
     SUM(1, 0).should.be.exactly(1)
-    SUM(1, NaN).should.be.NaN
-    SUM(undefined).should.be.NaN
-    SUM(null).should.be.NaN
-    SUM(true).should.be.NaN
-    SUM(new Date).should.be.NaN
-    SUM().should.be.NaN
+    SUM(1, NaN).should.be.NaN()
+    SUM(undefined).should.be.NaN()
+    SUM(null).should.be.NaN()
+    SUM(true).should.be.NaN()
+    SUM(new Date).should.be.NaN()
+    SUM().should.be.NaN()
 
 describe 'SUMSQ', ->
   it 'sum all the squares of numbers given as arguments', ->
@@ -1220,12 +1220,12 @@ describe 'SUMSQ', ->
     SUMSQ(-2, [3.1, [1.7]]).should.be.exactly(16.5)
     SUMSQ('-2', '3').should.be.exactly(13)
     SUMSQ(1, 0).should.be.exactly(1)
-    SUMSQ(1, NaN).should.be.NaN
-    SUMSQ(undefined).should.be.NaN
-    SUMSQ(null).should.be.NaN
-    SUMSQ(true).should.be.NaN
-    SUMSQ(new Date).should.be.NaN
-    SUMSQ().should.be.NaN
+    SUMSQ(1, NaN).should.be.NaN()
+    SUMSQ(undefined).should.be.NaN()
+    SUMSQ(null).should.be.NaN()
+    SUMSQ(true).should.be.NaN()
+    SUMSQ(new Date).should.be.NaN()
+    SUMSQ().should.be.NaN()
 
 describe 'T', ->
   it 'converts argument to text', ->
@@ -1276,18 +1276,18 @@ describe 'UPPER', ->
 
 describe 'ISSELECTED', ->
   it 'returns true if a choice value is selected', ->
-    ISSELECTED(choice_values: ['test'], 'test').should.be.true
-    ISSELECTED(choice_values: ['1', '2'], '1').should.be.true
-    ISSELECTED(choice_values: ['1', '2'], ['1', '2']).should.be.true
-    ISSELECTED(choice_values: ['1', '2'], ['1', '2', '3']).should.be.false
-    ISSELECTED(other_values: ['test'], 'test').should.be.true
-    ISSELECTED(other_values: [], 'test').should.be.false
-    ISSELECTED(other_values: null, 'test').should.be.false
-    ISSELECTED().should.be.false
-    ISSELECTED(null).should.be.false
-    ISSELECTED(choice_values: ['1']).should.be.false
-    ISSELECTED(choice_values: ['1'], other_values: ['2'], '1').should.be.true
-    ISSELECTED(choice_values: ['1'], other_values: ['2'], '2').should.be.true
+    ISSELECTED(choice_values: ['test'], 'test').should.be.true()
+    ISSELECTED(choice_values: ['1', '2'], '1').should.be.true()
+    ISSELECTED(choice_values: ['1', '2'], ['1', '2']).should.be.true()
+    ISSELECTED(choice_values: ['1', '2'], ['1', '2', '3']).should.be.false()
+    ISSELECTED(other_values: ['test'], 'test').should.be.true()
+    ISSELECTED(other_values: [], 'test').should.be.false()
+    ISSELECTED(other_values: null, 'test').should.be.false()
+    ISSELECTED().should.be.false()
+    ISSELECTED(null).should.be.false()
+    ISSELECTED(choice_values: ['1']).should.be.false()
+    ISSELECTED(choice_values: ['1'], other_values: ['2'], '1').should.be.true()
+    ISSELECTED(choice_values: ['1'], other_values: ['2'], '2').should.be.true()
 
 describe 'CONFIG', ->
   it 'returns the current config', ->
@@ -1462,7 +1462,7 @@ describe 'LATITUDE', ->
 
     CONFIGURE(featureGeometry: null)
 
-    LATITUDE().should.be.NaN
+    LATITUDE().should.be.NaN()
 
 describe 'LONGITUDE', ->
   it 'returns the longitude of the current feature', ->
@@ -1470,7 +1470,25 @@ describe 'LONGITUDE', ->
 
     CONFIGURE(featureGeometry: null)
 
-    LONGITUDE().should.be.NaN
+    LONGITUDE().should.be.NaN()
+
+describe 'GEOMETRY', ->
+  it 'returns the geometry of the current feature', ->
+    polygon =
+      type: "Polygon"
+      coordinates: [
+        [
+          [-82.47576689405734, 27.977757676187323]
+          [-82.47699950483403, 27.974250052144896]
+          [-82.47508211029273, 27.973524322585376]
+          [-82.47357558600966, 27.97509673046042]
+          [-82.47576689405734, 27.977757676187323]
+        ]
+      ]
+
+    CONFIGURE(featureGeometry: polygon)
+
+    GEOMETRY().should.eql polygon
 
 describe 'LPAD', ->
   it 'pads a string on the left', ->
@@ -1564,7 +1582,7 @@ describe 'REPEATABLESUM', ->
 
     totalCost = REPEATABLESUM($repeatable_field, 'cost')
 
-    totalCost.should.be.NaN
+    totalCost.should.be.NaN()
 
   it 'returns the sum of a specific numeric field when some of the items have no value', ->
     $repeatable_field = [
@@ -1602,7 +1620,7 @@ describe 'REPEATABLESUM', ->
 
     totalCost = REPEATABLESUM($repeatable_field, 'does_not_exist')
 
-    totalCost.should.be.NaN
+    totalCost.should.be.NaN()
 
 describe 'DATANAMES', ->
   it 'returns the data names of the form fields', ->
@@ -1839,6 +1857,42 @@ describe 'SETVALUE', ->
     _.each runtime.results, (res) ->
       res.value.should.eql('[]')
 
+describe 'SETGEOMETRY', ->
+  it 'sets the geometry using a point', ->
+    SETGEOMETRY({type: 'Point', coordinates: [1, 2]})
+    
+    runtime.results[0].key.should.eql '@geometry'
+    runtime.results[0].type.should.eql 'set-value'
+    runtime.results[0].value.should.eql JSON.stringify({ "type":"Point", "coordinates": [1, 2] })
+
+  it 'sets the geometry using a polygon', ->
+    polygon =
+      type: "Polygon"
+      coordinates: [
+        [
+          [-82.47576689405734, 27.977757676187323]
+          [-82.47699950483403, 27.974250052144896]
+          [-82.47508211029273, 27.973524322585376]
+          [-82.47357558600966, 27.97509673046042]
+          [-82.47576689405734, 27.977757676187323]
+        ]
+      ]
+
+    SETGEOMETRY(polygon)
+
+    runtime.results[0].key.should.eql '@geometry'
+    runtime.results[0].type.should.eql 'set-value'
+    runtime.results[0].value.should.eql JSON.stringify(polygon)
+
+  it 'sets the geometry to null', ->
+    SETGEOMETRY(null)
+    
+    runtime.results[0].key.should.eql '@geometry'
+    runtime.results[0].type.should.eql 'set-value'
+    runtime.results[0].value.should.eql JSON.stringify(null)
+
+  it 'fails when using an invalid type', ->
+    (-> SETGEOMETRY({type: 'Circle', coordinates: [1, 2, 3]})).should.throw()
 
 describe 'YEAR', ->
   it 'returns a year given a date', ->
@@ -1865,33 +1919,33 @@ describe 'ISLANDSCAPE', ->
 describe 'ISMOBILE', ->
   it 'returns a boolean indicating whether the current device is the mobile app', ->
     CONFIGURE(platform: 'iOS')
-    ISMOBILE().should.be.true
+    ISMOBILE().should.be.true()
 
     CONFIGURE(platform: 'Android')
-    ISMOBILE().should.be.true
+    ISMOBILE().should.be.true()
 
     CONFIGURE(platform: 'Mac OS')
-    ISMOBILE().should.be.false
+    ISMOBILE().should.be.false()
 
     CONFIGURE(platform: null)
-    ISMOBILE().should.be.false
+    ISMOBILE().should.be.false()
 
 describe 'ISNEW', ->
   it 'returns a boolean indicating whether the feature is new or an update', ->
     CONFIGURE(featureIsNew: true)
 
-    ISNEW().should.be.true
-    ISUPDATE().should.be.false
+    ISNEW().should.be.true()
+    ISUPDATE().should.be.false()
 
     CONFIGURE(featureIsNew: false)
 
-    ISNEW().should.be.false
-    ISUPDATE().should.be.true
+    ISNEW().should.be.false()
+    ISUPDATE().should.be.true()
 
     CONFIGURE(featureIsNew: undefined)
 
-    ISNEW().should.be.false
-    ISUPDATE().should.be.true
+    ISNEW().should.be.false()
+    ISUPDATE().should.be.true()
 
 describe 'ISPORTRAIT', ->
   it 'is checks whether the media is portrait', ->

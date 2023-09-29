@@ -1,3 +1,5 @@
+import { MaybeString } from "./primitives"
+
 export interface AlertResult {
   /** result type */
   type: "message",

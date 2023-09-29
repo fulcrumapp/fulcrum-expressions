@@ -919,6 +919,9 @@ exports.LAST = (array, count) ->
 exports.LATITUDE = ->
   NUM(CONFIG().featureGeometry?.coordinates[1])
 
+exports.GEOMETRY = ->
+  CONFIG().featureGeometry
+
 exports.LCM = ->
   numbers = ARRAY(toArray(arguments)).map (num) -> INT(num)
 
@@ -1604,11 +1607,19 @@ exports.SETCONFIGURATION = (settings) ->
 
     $$runtime.results.push(result)
 
+VALID_GEOMETRY_TYPES = [
+  'Point',
+  'LineString',
+  'Polygon',
+  'MultiPoint',
+  'MultiLineString',
+  'MultiPolygon'
+]
+
 isValidGeometry = (geometry) ->
   return true if not geometry?
-  return false unless geometry.type is 'Point'
-  return false unless _.isArray(geometry.coordinates) and geometry.coordinates.length is 2
-  return false if _.some geometry.coordinates, (coord) -> not _.isNumber(coord) || _.isNaN(coord)
+  return false unless _.include(VALID_GEOMETRY_TYPES, geometry.type)
+  return false unless _.isArray(geometry.coordinates) and geometry.coordinates.length > 0
   true
 
 exports.SETGEOMETRY = (geometry) ->

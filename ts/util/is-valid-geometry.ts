@@ -15,14 +15,5 @@ export default function isValidGeometry(geometry: ValidGeometry): boolean
 export default function isValidGeometry(geometry: any): boolean
 export default function isValidGeometry(): boolean
 export default function isValidGeometry(geometry?: any): boolean {
-  if (isUndefined(geometry) || isNull(geometry)) { return true }
-
-  if (!isObject(geometry) || 
-      geometry.type !== "Point" ||
-      !isArray(geometry.coordinates) ||
-      geometry.coordinates.length !== 2 ||
-      some(geometry.coordinates, (coord) => !isFinite(coord))
-      ) { return false }
-
-  return true
+  return false;
 }
