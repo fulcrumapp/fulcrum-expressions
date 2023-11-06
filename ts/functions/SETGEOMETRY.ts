@@ -1,4 +1,4 @@
-import type { Geometry } from "../types/values"
+import type { GeoJSONGeometry } from "../types/geometry"
 
 /**
  * Sets geometry values
@@ -8,4 +8,4 @@ import type { Geometry } from "../types/values"
  * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
 
-export default function SETGEOMETRY(geometry: Geometry | null): void {}
+export default function SETGEOMETRY(geometry: GeoJSONGeometry | null): void {}
