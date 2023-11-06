@@ -719,8 +719,8 @@ exports.GEOMETRYBUFFER = (geometry, radius, options) ->
 exports.GEOMETRYCENTROID = (geometry) ->
   turfCentroid(geometry)
 
-exports.GEOMETRYCONVEX = (geojson, options) ->
-  turfConvex(geojson, options)
+# exports.GEOMETRYCONVEX = (geojson, options) ->
+#   turfConvex(geojson, options)
 
 exports.GEOMETRYDISTANCE = (fromPoint, toPoint, options) ->
   turfDistance(fromPoint, toPoint, options)

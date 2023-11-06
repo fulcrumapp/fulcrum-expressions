@@ -1650,26 +1650,26 @@ describe 'GEOMETRYCENTROID', ->
       }
     }
 
-describe 'GEOMETRYCONVEX', ->
-  it 'returns a convex hull polygon for a given set of points', ->
-    points = GEOMETRYFEATURECOLLECTION(polygon.coordinates[0].map(GEOMETRYPOINT))
+# describe 'GEOMETRYCONVEX', ->
+#   it 'returns a convex hull polygon for a given set of points', ->
+#     points = GEOMETRYFEATURECOLLECTION(polygon.coordinates[0].map(GEOMETRYPOINT))
 
-    GEOMETRYCONVEX(points).should.eql {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [-82.47508211029273, 27.973524322585376],
-            [-82.47699950483403, 27.974250052144896],
-            [-82.47576689405734, 27.977757676187323],
-            [-82.47357558600966, 27.97509673046042],
-            [-82.47508211029273, 27.973524322585376],
-          ],
-        ],
-      },
-    }
+#     GEOMETRYCONVEX(points).should.eql {
+#       type: 'Feature',
+#       properties: {},
+#       geometry: {
+#         type: "Polygon",
+#         coordinates: [
+#           [
+#             [-82.47508211029273, 27.973524322585376],
+#             [-82.47699950483403, 27.974250052144896],
+#             [-82.47576689405734, 27.977757676187323],
+#             [-82.47357558600966, 27.97509673046042],
+#             [-82.47508211029273, 27.973524322585376],
+#           ],
+#         ],
+#       },
+#     }
 
 describe 'GEOMETRYDISTANCE', ->
   it 'calculates the distance between 2 points', ->
