@@ -26,6 +26,17 @@
     "deploy": "yarn build:dist && ./script/deploy"
   },
   "dependencies": {
+    "@turf/area": "^6.5.0",
+    "@turf/bearing": "^6.5.0",
+    "@turf/boolean-within": "^6.5.0",
+    "@turf/buffer": "^6.5.0",
+    "@turf/centroid": "^6.5.0",
+    "@turf/distance": "^6.5.0",
+    "@turf/helpers": "^6.5.0",
+    "@turf/length": "^6.5.0",
+    "@turf/nearest-point": "^6.5.0",
+    "@turf/nearest-point-on-line": "^6.5.0",
+    "@turf/tag": "^6.5.0",
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
