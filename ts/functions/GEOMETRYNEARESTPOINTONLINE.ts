@@ -5,8 +5,7 @@
  */
 
 import type { LineString, MultiLineString, Feature, Point } from "../types/geojson"
-import type { Coord } from "../types/geometry"
-import type { Units } from "@turf/helpers"
+import type { Coord, Units } from "../types/geometry"
 
 export default function GEOMETRYNEARESTPOINTONLINE<G extends LineString | MultiLineString>(
   lines: Feature<G> | G,

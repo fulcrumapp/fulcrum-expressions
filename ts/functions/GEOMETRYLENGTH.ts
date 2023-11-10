@@ -5,8 +5,7 @@
  */
 
 import type { Feature, FeatureCollection, GeometryCollection } from "../types/geojson"
-
-import type { Units } from "@turf/helpers"
+import type { Units } from "../types/geometry"
 
 export default function GEOMETRYLENGTH(
   geojson: Feature<any> | FeatureCollection<any> | GeometryCollection,

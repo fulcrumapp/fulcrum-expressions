@@ -1517,6 +1517,17 @@ polygon =
     ]
   ]
 
+describe 'GEOMETRYALONG', ->
+  it 'returns a point along a line', ->
+    GEOMETRYALONG(lineString, 5).should.eql {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Point',
+        coordinates: [ -82.47576689405734, 27.977757676187323 ]
+      }
+    }
+
 describe 'GEOMETRYAREA', ->
   it 'returns the area of a polygon', ->
     GEOMETRYAREA(polygon).should.eql 82487.30619407611
@@ -1912,6 +1923,27 @@ describe 'GEOMETRYTAG', ->
         }
       ]
     }
+
+describe 'GEOMETRYINTERSECTS', ->
+  it 'checks whether a geometry intersects another geometry', ->
+    polygon = {
+      type: "Polygon",
+      coordinates: [
+        [
+          [-82.64183622729392, 27.80931744582226],
+          [-82.64326557402613, 27.80622328073855],
+          [-82.6428142013739, 27.80436008506105],
+          [-82.6407077956637, 27.80459298626822],
+          [-82.64183622729392, 27.80931744582226],
+        ],
+      ],
+    }
+
+    inside = { type: 'Point', coordinates: [ -82.64206489, 27.805882 ] }
+    outside = { type: 'Point', coordinates: [ -85.64206489, 29.805882 ] }
+
+    GEOMETRYINTERSECTS(inside, polygon).should.eql true
+    GEOMETRYINTERSECTS(outside, polygon).should.eql false
 
 describe 'GEOMETRYWITHIN', ->
   it 'checks whether a geometry is within another geometry', ->

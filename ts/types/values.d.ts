@@ -1,4 +1,4 @@
-import type { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon } from "../types/geojson"
+import { GeoJSONGeometry } from './geometry';
 
 export type FormFieldValues =
   ChoiceFieldValue
@@ -62,6 +62,7 @@ export type RecordLinkFieldValue = Array<RecordLinkItem> | null | undefined
 
 export interface RepeatableItem {
   id: string,
+  geometry: GeoJSONGeometry | null;
   form_values: object
 }
 

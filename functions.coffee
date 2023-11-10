@@ -4,11 +4,15 @@ _.str = require('underscore.string')
 
 _.mixin(_.str.exports())
 
+turfAlong = require('@turf/along').default
+
 turfArea = require('@turf/area').default
 
 turfBearing = require('@turf/bearing').default
 
 turfBooleanWithin = require('@turf/boolean-within').default
+
+turfBooleanIntersects = require('@turf/boolean-intersects').default
 
 turfBuffer = require('@turf/buffer').default
 
@@ -707,6 +711,9 @@ exports.GCD = ->
 
   result
 
+exports.GEOMETRYALONG = (line, distance, options) ->
+  turfAlong(line, distance, options)
+
 exports.GEOMETRYAREA = (geometry) ->
   turfArea(geometry)
 
@@ -751,6 +758,9 @@ exports.GEOMETRYPOLYGON = (coordinates, properties, options) ->
 
 exports.GEOMETRYTAG = (points, polygons, field, outField) ->
   turfTag(points, polygons, field, outField)
+
+exports.GEOMETRYINTERSECTS = (feature1, feature2) ->
+  turfBooleanIntersects(feature1, feature2)
 
 exports.GEOMETRYWITHIN = (feature1, feature2) ->
   turfBooleanWithin(feature1, feature2)

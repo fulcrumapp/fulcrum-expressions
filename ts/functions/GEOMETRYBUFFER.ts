@@ -17,7 +17,7 @@ import type {
   FeatureCollection,
 } from "geojson";
 import type { GeoJSONGeometry } from "../types/geometry"
-import type { Units } from "@turf/helpers";
+import type { Units } from "../types/geometry"
 
 interface Options {
   units?: Units;
