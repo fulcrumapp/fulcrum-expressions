@@ -6,7 +6,7 @@
 
 import type { Point } from "../types/geojson"
 import type { Coord } from "../types/geometry"
-import type { Units } from "@turf/helpers";
+import type { Units } from "../types/geometry"
 
 export default function GEOMETRYDISTANCE(
   from: Coord | Point,

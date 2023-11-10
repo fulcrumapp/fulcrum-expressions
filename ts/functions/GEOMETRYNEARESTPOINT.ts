@@ -5,8 +5,7 @@
  */
 
 import type { Feature, Point, FeatureCollection } from "../types/geojson"
-import type { Coord } from "../types/geometry"
-import type { Units } from "@turf/helpers"
+import type { Coord, Units } from "../types/geometry"
 
 export interface NearestPoint extends Feature<Point> {
   properties: {

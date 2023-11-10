@@ -1,5 +1,5 @@
 /**
- * Takes a set of points and a set of polygons and/or multi-polygons and performs a spatial join.
+ * Boolean-within returns true if the first geometry is completely within the second geometry. The interiors of both geometries must intersect and, the interior and boundary of the primary (geometry a) must not intersect the exterior of the secondary (geometry b).
  * 
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrytag/
  */

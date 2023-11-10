@@ -623,6 +623,15 @@ type GUID = string
  type MaybeError = Error | null
  type GenericObject = { [k: string]: any }
 
+ type Coord = Feature<Point> | Point | Position;
+
+ type Id = string | number;
+
+// Geometry has GeometryCollection, but we don't want that included.
+ type GeoJSONGeometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon;
+
+ type Units = "meters" | "millimeters" | "centimeters" | "kilometers" | "acres" | "miles" | "nauticalmiles" | "inches" | "yards" | "feet" | "radians" | "degrees" | "hectares";
+
  type FormFieldValues =
   ChoiceFieldValue
   | AddressFieldValue
@@ -685,6 +694,7 @@ interface RecordLinkItem {
 
 interface RepeatableItem {
   id: string,
+  geometry: GeoJSONGeometry | null;
   form_values: object
 }
 
@@ -2443,13 +2453,6 @@ declare function GCD(...args: string[]): number;
  */
 declare function GCD(...args: any[]): number;
 
-
- type Coord = Feature<Point> | Point | Position;
-
- type Id = string | number;
-
-// Geometry has GeometryCollection, but we don't want that included.
- type GeoJSONGeometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon;
 /**
  * Returns the geometry of the current record or repeatable.
  *
@@ -2457,6 +2460,16 @@ declare function GCD(...args: any[]): number;
  * @returns Geometry value
  */
 declare function GEOMETRY(): GeoJSONGeometry | null;
+
+/**
+ * Takes one or more features and returns their area in square meters.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometryarea/
+ * @returns number, area
+ */
+declare function GEOMETRYALONG(line: Feature<LineString> | LineString, distance: number, options?: {
+    units?: Units;
+}): Feature<Point>;
 
 /**
  * Takes one or more features and returns their area in square meters.
@@ -2532,6 +2545,13 @@ declare function GEOMETRYFEATURECOLLECTION<G extends GeoJSONGeometry = GeoJSONGe
     bbox?: BBox;
     id?: Id;
 }): FeatureCollection<G, P>;
+
+/**
+ * Returns true if two geometries intersect.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometryintersects/
+ */
+declare function GEOMETRYINTERSECTS(feature1: Feature<any> | Geometry, feature2: Feature<any> | Geometry): boolean;
 
 /**
  * Takes a GeoJSON and measures its length in the specified units.
@@ -2610,7 +2630,7 @@ declare function GEOMETRYPOLYGON<P extends GeoJsonProperties = GeoJsonProperties
 declare function GEOMETRYTAG(points: FeatureCollection<Point>, polygons: FeatureCollection<Polygon | MultiPolygon>, field: string, outField: string): FeatureCollection<Point>;
 
 /**
- * Takes a set of points and a set of polygons and/or multi-polygons and performs a spatial join.
+ * Boolean-within returns true if the first geometry is completely within the second geometry. The interiors of both geometries must intersect and, the interior and boundary of the primary (geometry a) must not intersect the exterior of the secondary (geometry b).
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrytag/
  */
