@@ -5,8 +5,8 @@
  * @returns Geometry value
  */
 
-import { Geometry } from "../types/geojson"
+import type { GeoJSONGeometry } from "../types/geometry"
 
-export default function GEOMETRY(): Geometry | null {
+export default function GEOMETRY(): GeoJSONGeometry | null {
   return null
 }

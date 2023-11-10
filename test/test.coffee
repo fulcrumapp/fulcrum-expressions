@@ -1490,6 +1490,450 @@ describe 'GEOMETRY', ->
 
     GEOMETRY().should.eql polygon
 
+
+point =
+  type: 'Point'
+  coordinates: [-82.47576689405734, 27.977757676187323]
+
+lineString =
+  type: "LineString"
+  coordinates: [
+    [-82.47576689405734, 27.977757676187323]
+    [-82.47699950483403, 27.974250052144896]
+    [-82.47508211029273, 27.973524322585376]
+    [-82.47357558600966, 27.97509673046042]
+    [-82.47576689405734, 27.977757676187323]
+  ]
+
+polygon =
+  type: "Polygon"
+  coordinates: [
+    [
+      [-82.47576689405734, 27.977757676187323]
+      [-82.47699950483403, 27.974250052144896]
+      [-82.47508211029273, 27.973524322585376]
+      [-82.47357558600966, 27.97509673046042]
+      [-82.47576689405734, 27.977757676187323]
+    ]
+  ]
+
+describe 'GEOMETRYAREA', ->
+  it 'returns the area of a polygon', ->
+    GEOMETRYAREA(polygon).should.eql 82487.30619407611
+    GEOMETRYAREA(lineString).should.eql 0
+    GEOMETRYAREA(point).should.eql 0
+
+    (-> GEOMETRYAREA(null)).should.throw()
+    (-> GEOMETRYAREA(undefined)).should.throw()
+    (-> GEOMETRYAREA({})).should.throw('Unknown Geometry Type')
+
+describe 'GEOMETRYBEARING', ->
+  it 'returns the bearing between 2 points', ->
+    point1 =
+      type: 'Point'
+      coordinates: [-82.47576, 27.97775]
+
+    point2 =
+      type: 'Point'
+      coordinates: [-81.47176, 29.07775]
+
+    GEOMETRYBEARING(point1, point2).should.eql 38.48783290426236
+    GEOMETRYBEARING(point1, point1).should.eql 0
+
+describe 'GEOMETRYBUFFER', ->
+  it 'buffers a geometry', ->
+    GEOMETRYBUFFER(polygon, 10, { units: 'meters' }).should.eql {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-82.47568453827446, 27.977810572293752],
+            [-82.4756981604322, 27.97782403277794],
+            [-82.47571455231702, 27.97783481932522],
+            [-82.47573305339334, 27.977842497275038],
+            [-82.47575291813192, 27.97784675723248],
+            [-82.47577334605226, 27.977847427535913],
+            [-82.47579351397937, 27.977844481174397],
+            [-82.47581260921521, 27.977838036876193],
+            [-82.47582986228778, 27.977828354324316],
+            [-82.47584457795843, 27.977815823692172],
+            [-82.47585616323757, 27.97780094992082],
+            [-82.47586415128015, 27.97778433237148],
+            [-82.47709675919884, 27.974276707462298],
+            [-82.47710091009739, 27.97425825762527],
+            [-82.47710062457327, 27.974239448804777],
+            [-82.47709591512027, 27.974221103875827],
+            [-82.47708698777632, 27.974204025418025],
+            [-82.47707423310902, 27.974188960603243],
+            [-82.47705820912836, 27.974176568507488],
+            [-82.47703961687392, 27.97416739127676],
+            [-82.47512222353201, 27.97344166227335],
+            [-82.47510160745033, 27.973436054413277],
+            [-82.47508011639013, 27.973434407791043],
+            [-82.47505871481077, 27.9734367963025],
+            [-82.47503836315595, 27.973443112757867],
+            [-82.47501997475199, 27.97345307369206],
+            [-82.47500437482053, 27.97346623208576],
+            [-82.47349785021564, 27.97503863911403],
+            [-82.473486819009, 27.975052661908563],
+            [-82.4734789876919, 27.975068273296838],
+            [-82.47347463857065, 27.975084910516475],
+            [-82.47347392842492, 27.97510197382545],
+            [-82.4734768828559, 27.9751188481217],
+            [-82.47348339536323, 27.97513492511645],
+            [-82.47349323118384, 27.97514962526199],
+            [-82.47568453827446, 27.977810572293752],
+          ],
+        ],
+      },
+    }
+
+    GEOMETRYBUFFER(lineString, 20, { units: 'meters', steps: 2 }).should.eql {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-82.47719401361172, 27.974303362711307],
+            [-82.477184411975, 27.974174663678557],
+            [-82.47707972885233, 27.974084730396996],
+            [-82.47516233670981, 27.97335900194969],
+            [-82.47503531936675, 27.973349270015664],
+            [-82.47492663943204, 27.973408141542436],
+            [-82.47342011450534, 27.974980547723934],
+            [-82.47337206183079, 27.975090123970215],
+            [-82.47341087627726, 27.97520252001451],
+            [-82.4756021824108, 27.977863468351135],
+            [-82.47565705526041, 27.977893132191117],
+            [-82.47570652634803, 27.977929457630527],
+            [-82.47572193443348, 27.97792820532338],
+            [-82.47573513143665, 27.977935339505162],
+            [-82.47579768376471, 27.97792204869732],
+            [-82.47586175029824, 27.977916841573002],
+            [-82.47587164274118, 27.97790633422077],
+            [-82.4758866866489, 27.977903137752328],
+            [-82.47592027600966, 27.977854677892623],
+            [-82.47596140855103, 27.97781098848725],
+            [-82.47719401361172, 27.974303362711307],
+          ],
+          [
+            [-82.47569274851492, 27.977361844134354],
+            [-82.47383432758582, 27.975105128899653],
+            [-82.4751403046491, 27.973742036453817],
+            [-82.47675060315287, 27.974351531260133],
+            [-82.47569274851492, 27.977361844134354],
+          ],
+        ],
+      },
+    }
+
+describe 'GEOMETRYCENTROID', ->
+  it 'returns the centroid of the geometry', ->
+    GEOMETRYCENTROID(polygon).should.eql {
+      properties: {},
+      type: 'Feature',
+      geometry: {
+        type: 'Point'
+        coordinates: [ -82.47535602379844, 27.975157195344504 ]
+      }
+    }
+
+    GEOMETRYCENTROID(lineString).should.eql {
+      properties: {},
+      type: 'Feature',
+      geometry: {
+        type: 'Point'
+        coordinates: [ -82.47543819785022, 27.97567729151307 ]
+      }
+    }
+
+describe 'GEOMETRYCONVEX', ->
+  it 'returns a convex hull polygon for a given set of points', ->
+    points = GEOMETRYFEATURECOLLECTION(polygon.coordinates[0].map(GEOMETRYPOINT))
+
+    GEOMETRYCONVEX(points).should.eql {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-82.47508211029273, 27.973524322585376],
+            [-82.47699950483403, 27.974250052144896],
+            [-82.47576689405734, 27.977757676187323],
+            [-82.47357558600966, 27.97509673046042],
+            [-82.47508211029273, 27.973524322585376],
+          ],
+        ],
+      },
+    }
+
+describe 'GEOMETRYDISTANCE', ->
+  it 'calculates the distance between 2 points', ->
+    point1 =
+      type: 'Point'
+      coordinates: [-82.47576, 27.97775]
+
+    point2 =
+      type: 'Point'
+      coordinates: [-81.47176, 29.07775]
+
+    GEOMETRYDISTANCE(point1, point2).should.eql 156.78313989454617
+    GEOMETRYDISTANCE(point1, point2, { units: 'meters' }).should.eql 156783.13989454618
+    GEOMETRYDISTANCE(point1, point2, { units: 'miles' }).should.eql 97.42052655898688
+
+describe 'GEOMETRYFEATURE', ->
+  it 'creates a GeoJSON feature from a GeoJSON geometry', ->
+    GEOMETRYFEATURE(point, { name: 'hello' }).should.eql {
+      type: 'Feature',
+      properties: { name: 'hello' },
+      geometry: {
+        type: 'Point'
+        coordinates: [ -82.47576689405734, 27.977757676187323 ],
+      }
+    }
+
+describe 'GEOMETRYFEATURECOLLECTION', ->
+  it 'creates a GeoJSON feature collection from GeoJSON features', ->
+    GEOMETRYFEATURECOLLECTION([
+      GEOMETRYFEATURE(point, { name: 'hello point' }),
+      GEOMETRYFEATURE(polygon, { name: 'hello polygon' })
+    ]).should.eql {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: 'Feature',
+          properties: { name: 'hello point' },
+          geometry: {
+            type: 'Point'
+            coordinates: [ -82.47576689405734, 27.977757676187323 ],
+          }
+        },
+        {
+          type: 'Feature',
+          properties: { name: 'hello polygon' },
+          geometry: {
+            type: 'Polygon'
+            coordinates: [
+              [
+                [-82.47576689405734, 27.977757676187323]
+                [-82.47699950483403, 27.974250052144896]
+                [-82.47508211029273, 27.973524322585376]
+                [-82.47357558600966, 27.97509673046042]
+                [-82.47576689405734, 27.977757676187323]
+              ]
+            ]
+          }
+        }
+      ]
+    }
+
+describe 'GEOMETRYLENGTH', ->
+  it 'returns the length of a geometry', ->
+    GEOMETRYLENGTH(polygon).should.eql 1.2081368829498567
+    GEOMETRYLENGTH(lineString).should.eql 1.2081368829498567
+    GEOMETRYLENGTH(point).should.eql 0
+
+describe 'GEOMETRYLINESTRING', ->
+  it 'creates a GeoJSON LineString Feature from an array of coordinates', ->
+    GEOMETRYLINESTRING(lineString.coordinates, { name: 'line' }).should.eql {
+      type: 'Feature',
+      properties: { name: 'line' },
+      geometry: lineString
+    }
+
+describe 'GEOMETRYNEARESTPOINT', ->
+  it 'returns the point closest to the given point', ->
+    points = GEOMETRYFEATURECOLLECTION(polygon.coordinates[0].map(GEOMETRYPOINT))
+
+    targetPoint =
+      type: 'Point'
+      coordinates: [-81.47176, 29.07775]
+
+    GEOMETRYNEARESTPOINT(targetPoint, points).should.eql {
+      type: 'Feature',
+      properties: { distanceToPoint: 156.78289311309206, featureIndex: 0 },
+      geometry: {
+        coordinates: [ -82.47576689405734, 27.977757676187323 ],
+        type: 'Point'
+      }
+    }
+
+describe 'GEOMETRYNEARESTPOINTONLINE', ->
+  it 'returns the nearest point on a line', ->
+    point =
+      type: 'Point'
+      coordinates: [-82.47400033160908, 27.9766961224896]
+
+    GEOMETRYNEARESTPOINTONLINE(lineString, point).should.eql {
+      type: 'Feature',
+      properties: { dist: 0.07087037635489613, index: 3, location: 1.0106382899750093 },
+      geometry: {
+        coordinates: [ -82.47458397909747, 27.97632124076188 ],
+        type: 'Point'
+      }
+    }
+
+describe 'GEOMETRYPOINT', ->
+  it 'creates a GeoJSON Point feature from an array of coordinates', ->
+    GEOMETRYPOINT(point.coordinates, { name: 'test point' }).should.eql {
+      type: 'Feature',
+      properties: { name: 'test point' },
+      geometry: point
+    }
+
+describe 'GEOMETRYPOLYGON', ->
+  it 'creates a GeoJSON Polygon feature from an array of coordinates', ->
+    GEOMETRYPOLYGON(polygon.coordinates, { name: 'test polygon' }).should.eql {
+      type: 'Feature',
+      properties: { name: 'test polygon' },
+      geometry: polygon
+    }
+
+describe 'GEOMETRYTAG', ->
+  it 'takes a set of points and a set of polygons and/or multipolygons and performs a spatial join', ->
+    polygons = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: 'Feature',
+          properties: {
+            name: "Area 1",
+          },
+          geometry: {
+            coordinates: [
+              [
+                [-82.64183622729392, 27.80931744582226],
+                [-82.64326557402613, 27.80622328073855],
+                [-82.6428142013739, 27.80436008506105],
+                [-82.6407077956637, 27.80459298626822],
+                [-82.64183622729392, 27.80931744582226],
+              ],
+            ],
+            type: "Polygon",
+          },
+        },
+        {
+          type: 'Feature',
+          properties: {
+            name: "Area 2",
+          },
+          geometry: {
+            coordinates: [
+              [
+                [-82.64134724025435, 27.80928417569892],
+                [-82.64006835107313, 27.804792615477268],
+                [-82.63788671658746, 27.80532495824022],
+                [-82.63878946189192, 27.807554115231397],
+                [-82.64134724025435, 27.80928417569892],
+              ],
+            ],
+            type: "Polygon",
+          },
+        }
+      ]
+    }
+
+    points = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            coordinates: [-82.63973280341598, 27.807313514489366],
+            type: 'Point',
+          },
+        },
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            coordinates: [-82.63977041780413, 27.805117623971498],
+            type: 'Point',
+          },
+        },
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            coordinates: [-82.64206489545266, 27.80588286358477],
+            type: 'Point',
+          },
+        },
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            coordinates: [-82.63965757464048, 27.80372021598768],
+            type: 'Point',
+          },
+        },
+      ],
+    }
+
+    GEOMETRYTAG(points, polygons, 'name', 'name').should.eql {
+      type: 'FeatureCollection'
+      features: [
+        {
+          type: 'Feature',
+          properties: { name: 'Area 2' },
+          geometry: {
+            coordinates: [ -82.63973280341598, 27.807313514489366 ],
+            type: 'Point'
+          }
+        },
+        {
+          type: 'Feature',
+          properties: { name: 'Area 2' },
+          geometry: {
+            coordinates: [ -82.63977041780413, 27.805117623971498 ],
+            type: 'Point'
+          }
+        },
+        {
+          type: 'Feature',
+          properties: { name: 'Area 1' },
+          geometry: {
+            coordinates: [ -82.64206489545266, 27.80588286358477 ],
+            type: 'Point'
+          }
+        },
+        {
+          properties: {},
+          type: 'Feature',
+          geometry: {
+            coordinates: [ -82.63965757464048, 27.80372021598768 ],
+            type: 'Point'
+          }
+        }
+      ]
+    }
+
+describe 'GEOMETRYWITHIN', ->
+  it 'checks whether a geometry is within another geometry', ->
+    polygon = {
+      type: "Polygon",
+      coordinates: [
+        [
+          [-82.64183622729392, 27.80931744582226],
+          [-82.64326557402613, 27.80622328073855],
+          [-82.6428142013739, 27.80436008506105],
+          [-82.6407077956637, 27.80459298626822],
+          [-82.64183622729392, 27.80931744582226],
+        ],
+      ],
+    }
+
+    inside = { type: 'Point', coordinates: [ -82.64206489, 27.805882 ] }
+    outside = { type: 'Point', coordinates: [ -85.64206489, 29.805882 ] }
+
+    GEOMETRYWITHIN(inside, polygon).should.eql true
+    GEOMETRYWITHIN(outside, polygon).should.eql false
+
 describe 'LPAD', ->
   it 'pads a string on the left', ->
     LPAD('test', 5).should.be.exactly(' test')
@@ -1863,7 +2307,7 @@ describe 'SETGEOMETRY', ->
     
     runtime.results[0].key.should.eql '@geometry'
     runtime.results[0].type.should.eql 'set-value'
-    runtime.results[0].value.should.eql JSON.stringify({ "type":"Point", "coordinates": [1, 2] })
+    runtime.results[0].value.should.eql JSON.stringify({ "type":'Point', "coordinates": [1, 2] })
 
   it 'sets the geometry using a polygon', ->
     polygon =

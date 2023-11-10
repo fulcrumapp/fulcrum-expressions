@@ -623,8 +623,6 @@ type GUID = string
  type MaybeError = Error | null
  type GenericObject = { [k: string]: any }
 
- type Geometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon
-
  type FormFieldValues =
   ChoiceFieldValue
   | AddressFieldValue
@@ -2445,13 +2443,178 @@ declare function GCD(...args: string[]): number;
  */
 declare function GCD(...args: any[]): number;
 
+
+ type Coord = Feature<Point> | Point | Position;
+
+ type Id = string | number;
+
+// Geometry has GeometryCollection, but we don't want that included.
+ type GeoJSONGeometry = Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon;
 /**
  * Returns the geometry of the current record or repeatable.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometry/
  * @returns Geometry value
  */
-declare function GEOMETRY(): Geometry | null;
+declare function GEOMETRY(): GeoJSONGeometry | null;
+
+/**
+ * Takes one or more features and returns their area in square meters.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometryarea/
+ * @returns number, area
+ */
+declare function GEOMETRYAREA(geojson: Feature<any> | FeatureCollection<any> | GeoJSONGeometry): number;
+
+/**
+ * Takes two points and finds the geographic bearing between them, i.e. the angle measured in degrees from the north line (0 degrees)
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrybearing/
+ * @returns number, bearing in decimal degrees
+ */
+declare function GEOMETRYBEARING(start: Coord, end: Coord): number;
+
+/**
+ * Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrybuffer/
+ */
+interface Options {
+    units?: Units;
+    steps?: number;
+}
+declare function GEOMETRYBUFFER(feature: Feature<GeoJSONGeometry> | Point | LineString | Polygon | MultiPoint | MultiLineString | MultiPolygon, radius?: number, options?: Options): Feature<Polygon | MultiPolygon>;
+
+/**
+ * Takes one or more features and calculates the centroid using the mean of all vertices. This lessens the effect of small islands and artifacts when calculating the centroid of a set of polygons.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrycentroid/
+ */
+declare function GEOMETRYCENTROID<P extends GeoJsonProperties = GeoJsonProperties>(geojson: GeoJSON, options?: {
+    properties?: P;
+}): Feature<Point, P>;
+
+/**
+ * Takes a Feature or a FeatureCollection and returns a convex hull Polygon.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometryconvex/
+ */
+declare function GEOMETRYCONVEX<P extends GeoJsonProperties = GeoJsonProperties>(geojson: GeoJSON, options?: {
+    concavity?: number;
+    properties?: P;
+}): Feature<Polygon, P> | null;
+
+/**
+ * Calculates the distance between two points in degrees, radians, miles, or kilometers. This uses the Haversine formula to account for global curvature.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrydistance/
+ */
+declare function GEOMETRYDISTANCE(from: Coord | Point, to: Coord | Point, options?: {
+    units?: Units;
+}): number;
+
+/**
+ * Wraps a GeoJSON Geometry in a GeoJSON Feature.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometryfeature/
+ */
+declare function GEOMETRYFEATURE<G extends GeoJSONGeometry = GeoJSONGeometry, P extends GeoJsonProperties = GeoJsonProperties>(geom: G | null, properties?: P, options?: {
+    bbox?: BBox;
+    id?: Id;
+}): Feature<G, P>;
+
+/**
+ * Takes one or more Features and creates a FeatureCollection.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometryfeaturecollection/
+ */
+declare function GEOMETRYFEATURECOLLECTION<G extends GeoJSONGeometry = GeoJSONGeometry, P extends GeoJsonProperties = GeoJsonProperties>(features: Array<Feature<G, P>>, options?: {
+    bbox?: BBox;
+    id?: Id;
+}): FeatureCollection<G, P>;
+
+/**
+ * Takes a GeoJSON and measures its length in the specified units.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrylength/
+ */
+declare function GEOMETRYLENGTH(geojson: Feature<any> | FeatureCollection<any> | GeometryCollection, options?: {
+    units?: Units;
+}): number;
+
+/**
+ * Creates a LineString Feature from an Array of Positions.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrylinestring/
+ */
+declare function GEOMETRYLINESTRING<P extends GeoJsonProperties = GeoJsonProperties>(coordinates: Position[], properties?: P, options?: {
+    bbox?: BBox;
+    id?: Id;
+}): Feature<LineString, P>;
+
+/**
+ * Takes a reference point and a FeatureCollection of Features with Point geometries and returns the point from the FeatureCollection closest to the reference. This calculation is geodesic.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrynearestpoint/
+ */
+interface NearestPoint extends Feature<Point> {
+    properties: {
+        featureIndex: number;
+        distanceToPoint: number;
+        [key: string]: any;
+    };
+}
+declare function GEOMETRYNEARESTPOINT(targetPoint: Coord, points: FeatureCollection<Point>, options?: {
+    units?: Units;
+}): NearestPoint;
+
+/**
+ * Takes a Point and a LineString and calculates the closest Point on the (Multi)LineString.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrynearestpointonline/
+ */
+declare function GEOMETRYNEARESTPOINTONLINE<G extends LineString | MultiLineString>(lines: Feature<G> | G, pt: Coord, options?: {
+    units?: Units;
+}): Feature<Point, {
+    dist: number;
+    index: number;
+    location: number;
+    [key: string]: any;
+}>;
+
+/**
+ * Creates a Point Feature from a Position.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrypoint/
+ */
+declare function GEOMETRYPOINT<P extends GeoJsonProperties = GeoJsonProperties>(coordinates: Position, properties?: P, options?: {
+    bbox?: BBox;
+    id?: Id;
+}): Feature<Point, P>;
+
+/**
+ * Creates a Polygon Feature from an Array of LinearRings.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrypolygon/
+ */
+declare function GEOMETRYPOLYGON<P extends GeoJsonProperties = GeoJsonProperties>(coordinates: Position[][], properties?: P, options?: {
+    bbox?: BBox;
+    id?: Id;
+}): Feature<Polygon, P>;
+
+/**
+ * Takes a set of points and a set of polygons and/or multi-polygons and performs a spatial join.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrytag/
+ */
+declare function GEOMETRYTAG(points: FeatureCollection<Point>, polygons: FeatureCollection<Polygon | MultiPolygon>, field: string, outField: string): FeatureCollection<Point>;
+
+/**
+ * Takes a set of points and a set of polygons and/or multi-polygons and performs a spatial join.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrytag/
+ */
+declare function GEOMETRYWITHIN(feature1: Feature<any> | Geometry, feature2: Feature<any> | Geometry): boolean;
 
 /**
  * Returns the current result value for the current expression
@@ -4497,7 +4660,7 @@ declare function SETDISABLED(dataName: FieldName, value?: boolean): void;
  * // set geometry to Null Island
  * SETGEOMETRY({ type: "Point", coordinates: [ 0, 0 ]})
  */
-declare function SETGEOMETRY(geometry: Geometry | null): void;
+declare function SETGEOMETRY(geometry: GeoJSONGeometry | null): void;
 
 /**
  * Sets a field to hidden or visible.

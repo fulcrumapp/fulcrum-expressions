@@ -1,6 +1,6 @@
 {
   "name": "fulcrum-expressions",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "Expression runtime for Fulcrum",
   "author": "Fulcrum",
   "license": "BSD-3-Clause",
@@ -12,9 +12,9 @@
   "scripts": {
     "build": "yarn build:expressions && yarn build:sandbox",
     "build:debug": "yarn build:expressions:debug && yarn build:sandbox:debug",
-    "build:expressions": "mkdir -p dist && browserify -t coffeeify --extension=.coffee runtime.coffee | uglifyjs > dist/expressions.js --mangle && cp package.json dist",
+    "build:expressions": "mkdir -p dist && browserify -t coffeeify --extension=.coffee runtime.coffee | terser > dist/expressions.js --mangle && cp package.json dist",
     "build:expressions:debug": "mkdir -p dist && ./node_modules/browserify/bin/cmd.js -t coffeeify --extension=.coffee runtime.coffee > dist/expressions.js",
-    "build:sandbox": "mkdir -p dist && browserify -t coffeeify --extension=.coffee expressions-proxy.coffee | uglifyjs > dist/expressions-proxy.js --mangle && cp expressions.html dist/expressions.html",
+    "build:sandbox": "mkdir -p dist && browserify -t coffeeify --extension=.coffee expressions-proxy.coffee | terser > dist/expressions-proxy.js --mangle && cp expressions.html dist/expressions.html",
     "build:sandbox:debug": "mkdir -p dist && browserify -t coffeeify --extension=.coffee expressions-proxy.coffee > dist/expressions-proxy.js && cp expressions.html dist/expressions.html",
     "build:docs": "jsdoc -t templates/haruki docs/docs.js -d console > docs/docs.json && jsdoc -t templates/haruki docs/event_docs.js -d console > docs/event_docs.json",
     "build:help": "mkdir -p docs/output/help && mkdir -p docs/output/help/expressions/reference && mkdir -p docs/output/help/events/reference && coffee script/generate-help.coffee",
@@ -26,6 +26,7 @@
     "deploy": "yarn build:dist && ./script/deploy"
   },
   "dependencies": {
+    "@turf/turf": "^6.5.0",
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
@@ -52,7 +53,7 @@
     "mocha": "^9.2.1",
     "season": "^5.0.3",
     "should": "^8.4.0",
-    "typescript": "^4.9.5",
-    "uglify-js": "^2.4.16"
+    "terser": "^5.24.0",
+    "typescript": "^4.9.5"
   }
 }

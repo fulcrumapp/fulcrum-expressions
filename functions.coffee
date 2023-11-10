@@ -4,6 +4,30 @@ _.str = require('underscore.string')
 
 _.mixin(_.str.exports())
 
+turfArea = require('@turf/area').default
+
+turfBearing = require('@turf/bearing').default
+
+turfBooleanWithin = require('@turf/boolean-within').default
+
+turfBuffer = require('@turf/buffer').default
+
+turfConvex = require('@turf/convex').default
+
+turfCentroid = require('@turf/centroid').default
+
+turfDistance = require('@turf/distance').default
+
+turfNearestPoint = require('@turf/nearest-point').default
+
+turfNearestPointOnLine = require('@turf/nearest-point-on-line').default
+
+turfHelpers = require('@turf/helpers')
+
+turfLength = require('@turf/length').default
+
+turfTag = require('@turf/tag').default
+
 inspect = require('object-inspect')
 
 qs = require('query-string')
@@ -682,6 +706,54 @@ exports.GCD = ->
     result += num
 
   result
+
+exports.GEOMETRYAREA = (geometry) ->
+  turfArea(geometry)
+
+exports.GEOMETRYBEARING = (start, end, options) ->
+  turfBearing(start, end, options)
+
+exports.GEOMETRYBUFFER = (geometry, radius, options) ->
+  turfBuffer(geometry, radius, options)
+
+exports.GEOMETRYCENTROID = (geometry) ->
+  turfCentroid(geometry)
+
+exports.GEOMETRYCONVEX = (geojson, options) ->
+  turfConvex(geojson, options)
+
+exports.GEOMETRYDISTANCE = (fromPoint, toPoint, options) ->
+  turfDistance(fromPoint, toPoint, options)
+
+exports.GEOMETRYFEATURE = (geometry, proprties, options) ->
+  turfHelpers.feature(geometry, proprties, options)
+
+exports.GEOMETRYFEATURECOLLECTION = (features, options) ->
+  turfHelpers.featureCollection(features, options)
+
+exports.GEOMETRYLENGTH = (geometry, options) ->
+  turfLength(geometry, options)
+
+exports.GEOMETRYLINESTRING = (coordinates, properties, options) ->
+  turfHelpers.lineString(coordinates, properties, options)
+
+exports.GEOMETRYNEARESTPOINT = (targetPoint, points) ->
+  turfNearestPoint(targetPoint, points)
+
+exports.GEOMETRYNEARESTPOINTONLINE = (lines, point, options) ->
+  turfNearestPointOnLine(lines, point, options)
+
+exports.GEOMETRYPOINT = (coordinates, properties, options) ->
+  turfHelpers.point(coordinates, properties, options)
+
+exports.GEOMETRYPOLYGON = (coordinates, properties, options) ->
+  turfHelpers.polygon(coordinates, properties, options)
+
+exports.GEOMETRYTAG = (points, polygons, field, outField) ->
+  turfTag(points, polygons, field, outField)
+
+exports.GEOMETRYWITHIN = (feature1, feature2) ->
+  turfBooleanWithin(feature1, feature2)
 
 exports.GETRESULT = ->
   $$runtime.$$result
