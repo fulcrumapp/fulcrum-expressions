@@ -31,7 +31,7 @@
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
     "underscore": "^1.7.0",
-    "underscore.string": "^2.4.0"
+    "underscore.string": "^3.3.5"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.10",
