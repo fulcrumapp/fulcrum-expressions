@@ -30,7 +30,7 @@
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
-    "underscore": "^1.7.0",
+    "underscore": "^1.12.1",
     "underscore.string": "^3.3.5"
   },
   "devDependencies": {
@@ -47,7 +47,7 @@
     "html-entities": "^1.1.2",
     "intl": "^1.2.5",
     "istanbul": "^0.4.5",
-    "jsdoc": "^3.6.10",
+    "jsdoc": "^4.0.2",
     "json-stringify-safe": "^5.0.1",
     "marked": "^4.0.10",
     "mocha": "^9.2.1",
@@ -55,5 +55,10 @@
     "should": "^8.4.0",
     "terser": "^5.24.0",
     "typescript": "^4.9.5"
+  },
+  "resolutions": {
+    "minimist": "^1.2.6",
+    "elliptic": "^6.5.3",
+    "path-parse": "^1.0.7"
   }
 }
