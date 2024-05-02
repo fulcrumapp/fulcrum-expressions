@@ -89,6 +89,16 @@ class ExpressionEngine
       @respond(name: 'hostFunction', functionName: 'messageBox', argumentList: [options, callbackID])
     $$runtime["$$setTimeout"] = (delay, callbackID) =>
       @respond(name: 'hostFunction', functionName: 'setTimeout', argumentList: [delay, callbackID])
+    $$runtime["$$inference"] = (options, callbackID) =>
+      @respond(name: 'hostFunction', functionName: 'inference', argumentList: [options, callbackID])
+    $$runtime["$$loadFile"] = (options, callbackID) =>
+      @respond(name: 'hostFunction', functionName: 'loadFile', argumentList: [options, callbackID])
+    $$runtime["$$loadRecords"] = (options, callbackID) =>
+      @respond(name: 'hostFunction', functionName: 'loadRecords', argumentList: [options, callbackID])
+    $$runtime["$$loadForm"] = (options, callbackID) =>
+      @respond(name: 'hostFunction', functionName: 'loadForm', argumentList: [options, callbackID])
+    $$runtime["$$recognizeText"] = (options, callbackID) =>
+      @respond(name: 'hostFunction', functionName: 'recognizeText', argumentList: [options, callbackID])
 
 proxy = new ExpressionEngine
 

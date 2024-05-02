@@ -1173,6 +1173,138 @@ exports.MESSAGEBOX = (options, callback) ->
 
   HostFunctions.messageBox(JSON.stringify(payload), validationWrapper)
 
+
+exports.INFERENCE = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('options.photo_id must be a string') if not _.isString(options.photo_id)
+  ERROR('options.form_id must be a string') if options.form_id and not _.isString(options.form_id)
+  ERROR('options.form_name must be a string') if options.form_name and not _.isString(options.form_name)
+  ERROR('options.model must be a string') if not _.isString(options.model)
+  ERROR('options.size must be a number') if not _.isNumber(options.size)
+  ERROR('options.format must be either "hwc" or "chw"') if options.format and not _.include(['hwc', 'chw'], options.format)
+  ERROR('options.type must be either "uint8" or "float"') if options.type and not _.include(['uint8', 'float'], options.type)
+  ERROR('options.mean must be an array') if options.mean and not _.isArray(options.mean)
+  ERROR('options.std must be an array') if options.std and not _.isArray(options.std)
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  callback ?= () ->
+
+  options.form_id ?= FORM().id unless options.form_name?
+
+  args =
+    photo_id: if options.photo_id? then options.photo_id.toString() else null
+    form_id: if options.form_id? then options.form_id.toString() else null
+    form_name: if options.form_name? then options.form_name.toString() else null
+    model: if options.model? then options.model.toString() else null
+    size: if options.size? then +options.size else null
+    format: if options.format? then options.format.toString() else null
+    type: if options.type? then options.type.toString() else null
+    mean: if options.mean? then options.mean.map(NUM) else null
+    std: if options.std? then options.std.map(NUM) else null
+
+  completion = (error, result) =>
+    return callback(error) if error
+
+    for output in Object.values(result.outputs)
+      if Array.isArray(output.value)
+        output.value = FLATTEN(output.value)
+
+    callback.apply(null, [error, result])
+
+  SETTIMEOUT(->
+    HostFunctions.inference(JSON.stringify(args), completion)
+  , 1)
+
+exports.LOADFILE = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('options.name must be a string') if not _.isString(options.name)
+  ERROR('options.form_id must be a string') if options.form_id and not _.isString(options.form_id)
+  ERROR('options.form_name must be a string') if options.form_name and not _.isString(options.form_name)
+  ERROR('options.variable must be a string') if options.variable and not _.isString(options.variable)
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  callback ?= (error, data) -> data
+
+  options.form_id ?= FORM().id unless options.form_name?
+
+  args =
+    name: if options.name? then options.name.toString() else null
+    form_id: if options.form_id? then options.form_id.toString() else null
+    form_name: if options.form_name? then options.form_name.toString() else null
+
+  completion = (error, data) =>
+    return callback(error, data) if error
+
+    if options.name?.endsWith('.js')
+      data = eval("""
+        const module = { exports: {} };
+        (function () {
+          #{data}
+        })(module);
+        module.exports;
+      """)
+    else if options.name?.endsWith('.json')
+      data = JSON.parse(data)
+
+    result = callback(null, data) or data
+
+    $$runtime.global[options.variable] = result if options.variable
+
+  HostFunctions.loadFile(JSON.stringify(args), completion)
+
+exports.LOADRECORDS = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('options.ids must be an array') if options.ids and not _.isArray(options.ids)
+  ERROR('options.form_id must be a string') if options.form_id and not _.isString(options.form_id)
+  ERROR('options.form_name must be a string') if options.form_name and not _.isString(options.form_name)
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  callback ?= () ->
+
+  args =
+    ids: if options.ids? then options.ids else []
+    form_id: if options.form_id? then options.form_id.toString() else null
+    form_name: if options.form_name? then options.form_name.toString() else null
+
+  completion = (error, records) =>
+    callback(error, records)
+
+  HostFunctions.loadRecords(JSON.stringify(args), completion)
+
+exports.LOADFORM = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('options.id must be a string') if options.id and not _.isString(options.id)
+  ERROR('options.name must be a string') if options.name and not _.isString(options.name)
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  callback ?= () ->
+
+  args =
+    id: if options.id? then options.id else null
+    name: if options.name? then options.name.toString() else null
+
+  completion = (error, records) =>
+    callback(error, records)
+
+  HostFunctions.loadForm(JSON.stringify(args), completion)
+
+exports.RECOGNIZETEXT = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('options.photo_id must be a string') if not _.isString(options.photo_id)
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  callback ?= () ->
+
+  args =
+    photo_id: if options.photo_id? then options.photo_id else null
+
+  completion = (error, result) =>
+    callback(error, result)
+
+  SETTIMEOUT(->
+    HostFunctions.recognizeText(JSON.stringify(args), completion)
+  , 1)
+
 exports.MID = (value, startPosition, numberOfCharacters) ->
   startPosition = FLOOR(startPosition)
   numberOfCharacters = FLOOR(numberOfCharacters)
@@ -2261,6 +2393,46 @@ host.messageBox = (options, callback) ->
 
   if hostFunctionExists('messageBox')
     hostAsyncFunctionCall('messageBox', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.inference = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('inference')
+    hostAsyncFunctionCall('inference', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.loadFile = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('loadFile')
+    hostAsyncFunctionCall('loadFile', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.loadRecords = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('loadRecords')
+    hostAsyncFunctionCall('loadRecords', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.loadForm = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('loadForm')
+    hostAsyncFunctionCall('loadForm', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.recognizeText = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('recognizeText')
+    hostAsyncFunctionCall('recognizeText', args, callback)
   else
     callback(new Error('Not Supported'), null, null)
 

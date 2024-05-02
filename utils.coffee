@@ -28,6 +28,15 @@ class Utils
 
           Array.prototype.push.apply(flat, children)
 
+  @evalModule: (code) ->
+    new Function("""
+      const module = { exports: {} };
+      (function () {
+        #{data}
+      })(module);
+      module.exports;
+    """)()
+
   @nearestRepeatable: (element) ->
     iterator = element?.parent
 

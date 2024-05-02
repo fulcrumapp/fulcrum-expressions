@@ -356,12 +356,18 @@ class Runtime
       ALERT: true
       APPLYFIELDEFFECTS: true
       CURRENTLOCATION: true
+      INFERENCE: true
       INVALID: true
+      LOADFILE: true
+      LOADFORM: true
+      LOADRECORDS: true
+      MESSAGEBOX: true
       OFF: true
       ON: true
       OPENURL: true
       OPENEXTENSION: true
       PROGRESS: true
+      RECOGNIZETEXT: true
       REQUEST: true
       SETCHOICEFILTER: true
       SETCHOICES: true
