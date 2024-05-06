@@ -1266,8 +1266,8 @@ exports.LOADRECORDS = (options, callback) ->
     form_id: if options.form_id? then options.form_id.toString() else null
     form_name: if options.form_name? then options.form_name.toString() else null
 
-  completion = (error, records) =>
-    callback(error, records)
+  completion = (error, result) =>
+    callback(error, result)
 
   HostFunctions.loadRecords(JSON.stringify(args), completion)
 
@@ -1283,8 +1283,8 @@ exports.LOADFORM = (options, callback) ->
     id: if options.id? then options.id else null
     name: if options.name? then options.name.toString() else null
 
-  completion = (error, records) =>
-    callback(error, records)
+  completion = (error, result) =>
+    callback(error, result)
 
   HostFunctions.loadForm(JSON.stringify(args), completion)
 
