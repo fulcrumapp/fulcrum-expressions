@@ -2750,6 +2750,38 @@ declare function ISERR(value: any): boolean;
 declare function IFERROR(value: any, errorValue: any): any;
 
 /**
+ * Runs inference on an ONNX runtime model.
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/inference/
+ */
+interface InferenceOptions {
+    photo_id: string;
+    form_id?: string;
+    form_name?: string;
+    model: string;
+    size: number;
+    format: 'chw' | 'hwc';
+    type: 'float' | 'uint8';
+    std?: [number, number, number];
+    mean?: [number, number, number];
+}
+interface InferenceResult {
+    outputs: number[];
+    time: number;
+    original: {
+        width: number;
+        height: number;
+        orientation: number;
+    };
+    resized: {
+        width: number;
+        height: number;
+        orientation: number;
+    };
+}
+declare function INFERENCE(options: InferenceOptions, callback: (error: Error, result: InferenceResult) => void): void;
+
+/**
  * Returns a string representation of the passed in parameter
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/inspect/
@@ -3293,6 +3325,113 @@ declare function LN(value: string): number;
  * LN(12) // returns 2.4849066497880004
  */
 declare function LN(value: any): number;
+
+/**
+ * Load a reference file into Data Events
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadfile/
+ */
+interface LoadFileOptions {
+    name?: string;
+    id?: string;
+    form_id?: string;
+    form_name?: string;
+}
+declare function LOADFILE(options: LoadFileOptions, callback: (error: Error, result: any) => void): void;
+
+/**
+ * Load a form into Data Events
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadform/
+ */
+interface LoadFormOptions {
+    ids?: string[];
+    name?: string;
+}
+interface StatusChoice {
+}
+interface StatusField {
+    type: 'StatusField';
+    label: string;
+    key: '@status';
+    description: string;
+    data_name: string;
+    default_value: string;
+    enabled: boolean;
+    read_only: boolean;
+    hidden: boolean;
+    required: boolean;
+    disabled: boolean;
+    default_previous_value: boolean;
+    choices: StatusChoice[];
+}
+type FormGeometryType = 'Point' | 'LineString' | 'Polygon';
+interface FormReportTemplate {
+    id: string;
+    name: string;
+}
+interface Form {
+    id: string;
+    name: string;
+    description: string | null;
+    version: number;
+    title_field_keys: string[];
+    status_field: StatusField;
+    status: StatusField | null;
+    auto_assign: boolean;
+    hidden_on_dashboard: boolean;
+    geometry_types: FormGeometryType[];
+    geometry_required: boolean;
+    script: string | null;
+    projects_enabled: boolean;
+    assignment_enabled: boolean;
+    attachment_ids: string[];
+    report_templates: FormReportTemplate[];
+    elements: any[];
+}
+interface LoadFormResult {
+    form: Form;
+}
+declare function LOADFORM(options: LoadFormOptions, callback: (error: Error, result: LoadFormResult) => void): void;
+
+/**
+ * Load records into Data Events
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadrecords/
+ */
+interface LoadRecordsOptions {
+    ids?: string[];
+    form_id?: string;
+    form_name?: string;
+}
+interface Record {
+    id: string;
+    form_id: string;
+    created_at: string;
+    updated_at: string;
+    client_created_at: string;
+    client_updated_at: string;
+    latitude: number | null;
+    longitude: number | null;
+    altitude: number | null;
+    assigned_to_id: string | null;
+    horizontal_accuracy: number | null;
+    vertical_accuracy: number | null;
+    version: number;
+    status: string | null;
+    project_id: string | null;
+    geometry: {
+        type: string;
+        coordinates: number[];
+    } | null;
+    form_values: {
+        [key: string]: any;
+    };
+}
+interface LoadRecordsResult {
+    records: Record[];
+}
+declare function LOADRECORDS(options: LoadRecordsOptions, callback: (error: Error, result: LoadRecordsResult) => void): void;
 
 /**
  * Returns the locale of a record.
@@ -4306,6 +4445,19 @@ declare function RADIANS(degrees: any): number;
  * @returns random integer within specified range
  */
 declare function RANDBETWEEN(low: number, high: number): number;
+
+/**
+ * Recognize text in a photo
+ *
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/recognizetext/
+ */
+interface RecognizeTextOptions {
+    photo_id: string;
+}
+interface RecognizeTextResult {
+    text: string;
+}
+declare function RECOGNIZETEXT(options: RecognizeTextOptions, callback: (error: Error, result: RecognizeTextResult) => void): void;
 
 /**
  * Returns the current record's id from the form configuration obejct.
