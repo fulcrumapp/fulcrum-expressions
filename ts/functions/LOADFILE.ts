@@ -5,9 +5,21 @@
  */
 
 interface LoadFileOptions {
+  /**
+   * The name of the file to load. e.g. "data.json"
+   */
   name?: string;
+  /**
+   * The ID of the reference file
+   */
   id?: string;
+  /**
+   * The form ID that contains the reference file. If no form_id or form_name is passed, the current form_id is used.
+   */
   form_id?: string;
+  /**
+   * The form name that contains the reference file. If no form_id or form_name is passed, the current form_id is used.
+   */
   form_name?: string;
 }
 

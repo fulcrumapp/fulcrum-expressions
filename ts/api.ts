@@ -2750,20 +2750,47 @@ declare function ISERR(value: any): boolean;
 declare function IFERROR(value: any, errorValue: any): any;
 
 /**
- * Runs inference on an ONNX runtime model.
+ * Runs inference on a photo using an ONNX runtime model.
  *
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/inference/
  */
 interface InferenceOptions {
+    /**
+     * The photo ID to run inference on
+     */
     photo_id: string;
+    /**
+     * The form ID that contains the .ort model Reference File
+     */
     form_id?: string;
+    /**
+     * The form name that contains the .ort model Reference File
+     */
     form_name?: string;
+    /**
+     * The model file name to use for inference. e.g. "model.ort"
+     */
     model: string;
+    /**
+     * The size of the image to resize to before running inference
+     */
     size: number;
+    /**
+     * The model input image format, either "chw" (Channel-Width-Height) or "hwc" (Height-Width-Channel).
+     */
     format: 'chw' | 'hwc';
+    /**
+     * The model input image data type, either "float" or "uint8".
+     */
     type: 'float' | 'uint8';
-    std?: [number, number, number];
+    /**
+     * The model input image mean
+     */
     mean?: [number, number, number];
+    /**
+     * The model input image standard deviation
+     */
+    std?: [number, number, number];
 }
 interface InferenceResult {
     outputs: number[];
@@ -3332,9 +3359,21 @@ declare function LN(value: any): number;
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadfile/
  */
 interface LoadFileOptions {
+    /**
+     * The name of the file to load. e.g. "data.json"
+     */
     name?: string;
+    /**
+     * The ID of the reference file
+     */
     id?: string;
+    /**
+     * The form ID that contains the reference file. If no form_id or form_name is passed, the current form_id is used.
+     */
     form_id?: string;
+    /**
+     * The form name that contains the reference file. If no form_id or form_name is passed, the current form_id is used.
+     */
     form_name?: string;
 }
 declare function LOADFILE(options: LoadFileOptions, callback: (error: Error, result: any) => void): void;
@@ -3345,10 +3384,13 @@ declare function LOADFILE(options: LoadFileOptions, callback: (error: Error, res
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadform/
  */
 interface LoadFormOptions {
-    ids?: string[];
+    id?: string;
     name?: string;
 }
 interface StatusChoice {
+    label: string;
+    value: string;
+    color: string;
 }
 interface StatusField {
     type: 'StatusField';
@@ -3400,11 +3442,20 @@ declare function LOADFORM(options: LoadFormOptions, callback: (error: Error, res
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadrecords/
  */
 interface LoadRecordsOptions {
+    /**
+     * The record IDs to load
+     */
     ids?: string[];
+    /**
+     * The form ID that contains the records. If no form_id or form_name is passed, the current form_id is used.
+     */
     form_id?: string;
+    /**
+     * The form name that contains the records. If no form_id or form_name is passed, the current form_id is used.
+     */
     form_name?: string;
 }
-interface Record {
+interface RecordAttributes {
     id: string;
     form_id: string;
     created_at: string;
@@ -3420,16 +3471,13 @@ interface Record {
     version: number;
     status: string | null;
     project_id: string | null;
-    geometry: {
-        type: string;
-        coordinates: number[];
-    } | null;
+    geometry: GeoJSONGeometry | null;
     form_values: {
         [key: string]: any;
     };
 }
 interface LoadRecordsResult {
-    records: Record[];
+    records: RecordAttributes[];
 }
 declare function LOADRECORDS(options: LoadRecordsOptions, callback: (error: Error, result: LoadRecordsResult) => void): void;
 

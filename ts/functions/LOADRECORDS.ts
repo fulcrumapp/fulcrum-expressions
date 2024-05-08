@@ -4,13 +4,24 @@
  * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/loadrecords/
  */
 
+import { GeoJSONGeometry } from "../types/geometry";
+
 interface LoadRecordsOptions {
+  /**
+   * The record IDs to load
+   */
   ids?: string[];
+  /**
+   * The form ID that contains the records. If no form_id or form_name is passed, the current form_id is used.
+   */
   form_id?: string;
+  /**
+   * The form name that contains the records. If no form_id or form_name is passed, the current form_id is used.
+   */
   form_name?: string;
 }
 
-interface Record {
+interface RecordAttributes {
   id: string;
   form_id: string;
   created_at: string;
@@ -26,17 +37,14 @@ interface Record {
   version: number;
   status: string | null;
   project_id: string | null;
-  geometry: {
-    type: string;
-    coordinates: number[];
-  } | null;
+  geometry: GeoJSONGeometry | null;
   form_values: {
     [key: string]: any;
   };
 }
 
 interface LoadRecordsResult {
-  records: Record[];
+  records: RecordAttributes[];
 }
 
 export default function LOADRECORDS(

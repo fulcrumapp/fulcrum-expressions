@@ -5,11 +5,14 @@
  */
 
 interface LoadFormOptions {
-  ids?: string[];
+  id?: string;
   name?: string;
 }
 
 interface StatusChoice {
+  label: string;
+  value: string;
+  color: string;
 }
 
 interface StatusField {
