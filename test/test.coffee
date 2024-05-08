@@ -31,6 +31,12 @@ runtime.form = variables.form
 runtime.values = variables.values.form_values
 runtime.prepare()
 
+mockHostFunction = (name, values) ->
+  runtime["$$#{name}"] = () ->
+    runtime.callbackID = arguments[arguments.length - 1]
+    runtime.callbackArguments = values
+    runtime.finishAsync()
+
 shouldBeNull = (value) ->
   (value is null).should.be.true()
 
@@ -1578,7 +1584,7 @@ describe 'GEOMETRYBUFFER', ->
             [-82.47709591512027, 27.974221103875827],
             [-82.47708698777632, 27.974204025418025],
             [-82.47707423310902, 27.974188960603243],
-            [-82.47705820912836, 27.97417656850749],
+            [-82.47705820912836, 27.974176568507488],
             [-82.47703961687392, 27.97416739127676],
             [-82.47512222353201, 27.97344166227335],
             [-82.47510160745033, 27.973436054413277],
@@ -1619,7 +1625,7 @@ describe 'GEOMETRYBUFFER', ->
             [-82.47341087627726, 27.97520252001451],
             [-82.4756021824108, 27.977863468351135],
             [-82.47565705526041, 27.977893132191117],
-            [-82.47570652634803, 27.97792945763053],
+            [-82.47570652634803, 27.977929457630527],
             [-82.47572193443348, 27.97792820532338],
             [-82.47573513143665, 27.977935339505162],
             [-82.47579768376471, 27.97792204869732],
@@ -2568,3 +2574,99 @@ describe "SETMODE", ->
     SETMODE('edit')
     MODE().should.eql('edit')
  
+ describe 'INFERENCE', ->
+  it 'calls inference', ->
+    params =
+      photo_id: 'photo-id'
+      model: 'test.ort'
+      size: 640
+      format: 'chw'
+      type: 'float'
+
+    mockHostFunction('setTimeout', [])
+    mockHostFunction('inference', [ null, { outputs: [1, 2, 3] } ])
+
+    INFERENCE params, (error, { outputs }) ->
+      outputs.should.eql([1, 2, 3])
+
+  it 'fails if called without a photo', ->
+    params =
+      model: 'test.ort'
+      size: 640
+      format: 'chw'
+      type: 'float'
+
+    (-> INFERENCE params).should.throw('options.photo_id must be a string')
+
+  it 'fails if called without a size', ->
+    params =
+      photo_id: 'photo-id'
+      model: 'test.ort'
+      format: 'chw'
+      type: 'float'
+
+    (-> INFERENCE params).should.throw('options.size must be a number')
+
+
+  describe 'LOADFILE', ->
+    it 'calls loadFile', ->
+      params =
+        name: 'test.txt'
+
+      mockHostFunction('loadFile', [ null, 'test' ])
+
+      LOADFILE params, (error, result) ->
+        result.should.eql('test')
+
+    it 'calls loadFile with parsed json', ->
+      params =
+        name: 'test.json'
+
+      mockHostFunction('loadFile', [ null, '{"hello":"world"}' ])
+
+      LOADFILE params, (error, result) ->
+        result.hello.should.eql('world')
+
+    it 'calls loadFile with loaded js', ->
+      params =
+        name: 'test.js'
+
+      mockHostFunction('loadFile', [ null, 'module.exports = { hello: "world" }' ])
+
+      LOADFILE params, (error, result) ->
+        result.hello.should.eql('world')
+
+    it 'fails without a file name', ->
+      mockHostFunction('loadFile', [ null, 'test' ])
+
+      (-> LOADFILE {}).should.throw('options.name must be a string')
+
+  describe 'LOADRECORDS', ->
+    it 'calls loadRecords', ->
+      params =
+        form_id: 'form-id'
+
+      mockHostFunction('loadRecords', [ null, { records: [ { id: 'test1' }, { id: 'test2' } ] } ])
+
+      LOADRECORDS params, (error, { records }) ->
+        records.length.should.eql(2)
+
+  describe 'LOADFORM', ->
+    it 'calls loadForm', ->
+      params =
+        id: 'form-id'
+
+      mockHostFunction('loadForm', [ null, { form: { id: 'test1' } } ])
+
+      LOADFORM params, (error, { form }) ->
+        form.id.should.eql('test1')
+
+  describe 'RECOGNIZETEXT', ->
+    it 'calls recognizeText', ->
+      params =
+        photo_id: 'photo-id'
+
+      mockHostFunction('recognizeText', [ null, { text: 'hello' } ])
+
+      RECOGNIZETEXT params, (error, { text }) ->
+        text.should.eql('hello')
