@@ -19,6 +19,10 @@ interface LoadRecordsOptions {
    * The form name that contains the records. If no form_id or form_name is passed, the current form_id is used.
    */
   form_name?: string;
+  /**
+   * The maximum number of records to return.
+   */
+  limit?: number;
 }
 
 interface RecordAttributes {
