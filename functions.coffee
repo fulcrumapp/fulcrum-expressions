@@ -1261,7 +1261,7 @@ exports.LOADRECORDS = (options, callback) ->
   ERROR('options.sort must be an object') if options.sort and not _.isObject(options.sort)
   ERROR('options.sort.data_names must be an array') if options.sort and options.sort.data_names and not _.isArray(options.sort.data_names)
   ERROR('options.sort.data_names must be strings') if options.sort and options.sort.data_names and not _.every(options.sort.data_names, _.isString)
-  ERROR('options.sort.direction must be a string ') if options.sort and options.sort.direction and not _.isString(options.sort.data_names)
+  ERROR('options.sort.direction must be a string ') if options.sort and options.sort.direction and not _.isString(options.sort.direction)
   ERROR('options.where_clauses must be an array') if options.where_clauses and not _.isArray(options.where_clauses)
   ERROR('options.where_clauses must be strings') if options.where_clauses and not _.every(options.where_clauses, _.isString)
   ERROR('callback must be a function') if callback and not _.isFunction(callback)
