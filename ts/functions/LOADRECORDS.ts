@@ -19,6 +19,21 @@ interface LoadRecordsOptions {
    * The form name that contains the records. If no form_id or form_name is passed, the current form_id is used.
    */
   form_name?: string;
+  /**
+   * The maximum number of records to return.
+   */
+  limit?: number;
+  /**
+   * The sort order.
+   */
+  sort?: {
+    data_names: string[];
+    direction: 'asc' | 'desc';
+  };
+  /**
+   * The where clauses to filter the records. These should be in the form "data_name = 'value'".
+   */
+  where_clauses?: string[];
 }
 
 interface RecordAttributes {

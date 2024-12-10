@@ -54,7 +54,10 @@ To deploy to your user's preview environment:
 aws sso login (or however you login to the chaos aws account)
 yarn deploy
 ```
-(Remember to update fulcrum's config to point at your S3 bucket's files)
+You will need to update fulcrum's config to point at your S3 bucket's files. The
+[skaffold.yaml file in fulcrum](https://github.com/fulcrumapp/fulcrum/blob/main/skaffold.yaml)
+has a configuration for the "fulcrum.rails.config.expression_sandbox_url" value which can
+be uncommented.
 
 To deploy to production (requires fulcrum production access):
 ```sh

@@ -1257,6 +1257,13 @@ exports.LOADRECORDS = (options, callback) ->
   ERROR('options.ids must be an array') if options.ids and not _.isArray(options.ids)
   ERROR('options.form_id must be a string') if options.form_id and not _.isString(options.form_id)
   ERROR('options.form_name must be a string') if options.form_name and not _.isString(options.form_name)
+  ERROR('options.limit must be a number') if options.limit and not _.isNumber(options.limit)
+  ERROR('options.sort must be an object') if options.sort and not _.isObject(options.sort)
+  ERROR('options.sort.data_names must be an array') if options.sort and options.sort.data_names and not _.isArray(options.sort.data_names)
+  ERROR('options.sort.data_names must be strings') if options.sort and options.sort.data_names and not _.every(options.sort.data_names, _.isString)
+  ERROR('options.sort.direction must be a string ') if options.sort and options.sort.direction and not _.isString(options.sort.direction)
+  ERROR('options.where_clauses must be an array') if options.where_clauses and not _.isArray(options.where_clauses)
+  ERROR('options.where_clauses must be strings') if options.where_clauses and not _.every(options.where_clauses, _.isString)
   ERROR('callback must be a function') if callback and not _.isFunction(callback)
 
   callback ?= () ->
@@ -1265,6 +1272,9 @@ exports.LOADRECORDS = (options, callback) ->
     ids: if options.ids? then options.ids else []
     form_id: if options.form_id? then options.form_id.toString() else null
     form_name: if options.form_name? then options.form_name.toString() else null
+    limit: if options.limit? then options.limit else null
+    sort: if options.sort? then options.sort else null
+    where_clauses: if options.where_clauses? then options.where_clauses else []
 
   completion = (error, result) =>
     callback(error, result)
