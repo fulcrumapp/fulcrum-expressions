@@ -2350,7 +2350,7 @@ declare function FIXED(num: any): string | undefined;
 /**
  * Returns the current form object.
  *
- * View Documentatino - https://learn.fulcrumapp.com/dev/expressions/reference/form/
+ * View Documentation - https://docs.fulcrumapp.com/docs/calculations-ref-form
  */
 declare function FORM(): {};
 
