@@ -23,6 +23,17 @@ interface LoadRecordsOptions {
    * The maximum number of records to return.
    */
   limit?: number;
+  /**
+   * The sort order.
+   */
+  sort?: {
+    data_names: string[];
+    direction: 'asc' | 'desc';
+  };
+  /**
+   * The where clauses to filter the records. These should be in the form "data_name = 'value'".
+   */
+  where_clauses?: string[];
 }
 
 interface RecordAttributes {
