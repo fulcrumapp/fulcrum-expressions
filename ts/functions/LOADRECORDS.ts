@@ -24,16 +24,29 @@ interface LoadRecordsOptions {
    */
   limit?: number;
   /**
-   * The sort order.
+   * The offset of the records to return.
    */
-  sort?: {
-    data_names: string[];
-    direction: 'asc' | 'desc';
-  };
+  offset?: number;
+    /**
+   * The sort order. Either a string or an array like "order: [['data_name_1', 'asc'], ['data_name_2', 'desc']]"
+   */
+  order?: string | string[][];
   /**
-   * The where clauses to filter the records. These should be in the form "data_name = 'value'".
-   */
-  where_clauses?: string[];
+  * The where clauses to filter the records. Either a string or an object like
+  * "where: {
+  *   operator: 'and',
+  *   predicates: [
+  *    { field_name: 'data_name_1', operator: 'contains', value: 'value' }
+  *    { field_name: 'data_name_2', operator: 'contains', value: 'value' }
+  *    { operator: 'or',
+  *      predicates: [
+  *        { field_name: 'data_name_3', operator: 'contains', value: 'value' }
+  *      ]
+  *    }
+  *  ]
+  * }
+  */
+  where?: string | { operator: string, predicates: any[]};
 }
 
 interface RecordAttributes {
