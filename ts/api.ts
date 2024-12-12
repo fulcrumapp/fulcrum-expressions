@@ -3481,7 +3481,10 @@ interface LoadRecordsOptions {
      *  ]
      * }
      */
-    where?: string | { operator: string, predicates: any[]};
+    where?: string | {
+      operator: string;
+      predicates: any[];
+    };
 }
 interface RecordAttributes {
     id: string;
