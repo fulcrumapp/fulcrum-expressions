@@ -19,6 +19,34 @@ interface LoadRecordsOptions {
    * The form name that contains the records. If no form_id or form_name is passed, the current form_id is used.
    */
   form_name?: string;
+  /**
+   * The maximum number of records to return.
+   */
+  limit?: number;
+  /**
+   * The offset of the records to return.
+   */
+  offset?: number;
+    /**
+   * The sort order. Either a string or an array like "order: [['data_name_1', 'asc'], ['data_name_2', 'desc']]"
+   */
+  order?: string | string[][];
+  /**
+  * The where clauses to filter the records. Either a string or an object like
+  * "where: {
+  *   operator: 'and',
+  *   predicates: [
+  *    { field_name: 'data_name_1', operator: 'contains', value: 'value' }
+  *    { field_name: 'data_name_2', operator: 'contains', value: 'value' }
+  *    { operator: 'or',
+  *      predicates: [
+  *        { field_name: 'data_name_3', operator: 'contains', value: 'value' }
+  *      ]
+  *    }
+  *  ]
+  * }
+  */
+  where?: string | { operator: string, predicates: any[]};
 }
 
 interface RecordAttributes {
