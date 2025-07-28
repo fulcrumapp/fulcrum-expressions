@@ -539,13 +539,10 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
 
   suppressGroupingSeparator = !!suppressGroupingSeparator
 
-  power = Math.pow(10, decimals)
-
-  scaled = parseInt(number * power)
-
   machineDecimalSeparator = '.'
 
   machineValue = number.toFixed(decimals)
+  isNegative = machineValue[0] is '-'
 
   index = machineValue.indexOf(machineDecimalSeparator)
 
@@ -579,6 +576,11 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
       parts.push(integerPart.toString())
 
     integerString = parts.reverse().join(groupingSeparator)
+
+  if isNegative and integerString.indexOf('-') isnt 0
+    # the integer parts of small, negative decimals, 0 > x > -1, will lose their negative sign
+    # when converted to a string; re-add it here to maintain its true value
+    integerString = '-' + integerString
 
   if decimals < 1
     integerString

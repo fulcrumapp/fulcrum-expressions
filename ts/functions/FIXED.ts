@@ -35,11 +35,8 @@ export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator 
 
   suppressGroupingSeparator = !!suppressGroupingSeparator
 
-  // both of these were present in the previous function but never used
-  // const power: number = Math.pow(10, decimals)
-  // const scaled: number = num * power
-
   const machineValue: string = num.toFixed(decimals)
+  const isNegative: boolean = machineValue[0] === '-'
 
   const index: number = machineValue.indexOf(".")
 
@@ -76,6 +73,12 @@ export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator 
     }
 
     integerString = parts.reverse().join(groupingSeparator)
+  }
+
+  if (isNegative && integerString.indexOf('-') !== 0) {
+    // the integer parts of small, negative decimals, 0 > x > -1, will lose their negative sign
+    // when converted to a string; re-add it here to maintain its true value
+    integerString = '-' + integerString
   }
 
   return integerString + DECIMALSEPARATOR() + fractionPart.toString()

@@ -1335,6 +1335,7 @@ describe 'FIXED', ->
     FIXED(1000000001, 10).should.eql('1,000,000,001.0000000000')
     FIXED(9999999999, 10).should.eql('9,999,999,999.0000000000')
     FIXED(9999999999.001, 3).should.eql('9,999,999,999.001')
+    FIXED(19 - 19.5, 3).should.eql('-0.500')
 
     CONFIGURE(decimalSeparator: ',', groupingSeparator: '.')
 
@@ -1345,6 +1346,7 @@ describe 'FIXED', ->
     FIXED(13.371337, 3).should.eql('13,371')
     FIXED(3 * 3.2, 1).should.eql('9,6')
     FIXED(0).should.eql('0,00')
+    FIXED(-0.044).should.eql('-0,04')
     FIXED(1, 10).should.eql('1,0000000000')
     FIXED(100000, 10).should.eql('100.000,0000000000')
     FIXED(1000000001, 10).should.eql('1.000.000.001,0000000000')
