@@ -75,7 +75,7 @@ export default function FIXED(num: any, decimals = 2, suppressGroupingSeparator 
     integerString = parts.reverse().join(groupingSeparator)
   }
 
-if (isNegative && !integerString.startsWith('-')) {
+if (isNegative && integerString[0] !== '-') {
     // the integer parts of small, negative decimals, 0 > x > -1, will lose their negative sign
     // when converted to a string; re-add it here to maintain its true value
     integerString = '-' + integerString

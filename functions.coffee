@@ -577,7 +577,7 @@ exports.FIXED = (number, decimals=2, suppressGroupingSeparator=false) ->
 
     integerString = parts.reverse().join(groupingSeparator)
 
-  if isNegative and integerString.indexOf('-') isnt 0
+  if isNegative and integerString[0] isnt '-'
     # the integer parts of small, negative decimals, 0 > x > -1, will lose their negative sign
     # when converted to a string; re-add it here to maintain its true value
     integerString = '-' + integerString
