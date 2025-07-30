@@ -61,7 +61,10 @@ be uncommented.
 
 To deploy to production (requires fulcrum production access):
 ```sh
+yarn
+yarn build:dist   # Not strictly necessary, it's done in the deploy.  But it's better to know it builds and passes tests before doing that.
 aws sso login (or however you login to the readonly fulcrum aws account)
+mongoose
 yarn deploy production
 ```
 **Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
