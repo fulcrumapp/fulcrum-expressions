@@ -176,6 +176,17 @@ class Runtime
 
     $$runtime.results
 
+  doWith: -> (scriptToEval, vars) =>
+    paramNames = Object.keys(vars)
+    paramValues = paramNames.map (name) => vars[name]
+
+    try
+      evalFunc = new Function(paramNames..., scriptToEval)
+      evalFunc(paramValues...)
+    catch e
+      console.log "Error evaluating script: #{e.toString()}"
+      raise e
+
   initializeScriptIfNecessary: ->
     return if @scriptInitialized
 
@@ -188,7 +199,9 @@ class Runtime
         #{script}
       """
 
-    `with (this.variables) { eval(script) }`
+    console.log "Calling 'doWith' without return"
+    @doWith(script, this.variables)
+    console.log "Called 'doWith' without return"
 
     ON 'extension-message', (event) =>
       functions.extensionMessageHandlers[event.id]?(event)
@@ -272,9 +285,9 @@ class Runtime
       stringValue = rawValue = $$runtime.$$result = undefined
 
       if context.expression and context.expression.length > 0
-        evalResult = undefined
-
-        `with (variables) { evalResult = eval(context.expression) }`
+        console.log "Calling 'doWith' with return"
+        evalResult = @doWith("return #{context.expression}", variables)
+        console.log "Called 'doWith' with return"
 
         rawValue = @coalesce($$runtime.$$result, evalResult)
 
