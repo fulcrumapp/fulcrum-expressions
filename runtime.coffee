@@ -199,9 +199,8 @@ class Runtime
         #{script}
       """
 
-    console.log "Calling 'doWith' without return"
     @doWith(script, this.variables)
-    console.log "Called 'doWith' without return"
+    console.debug "Called 'doWith' without return"
 
     ON 'extension-message', (event) =>
       functions.extensionMessageHandlers[event.id]?(event)
@@ -285,9 +284,8 @@ class Runtime
       stringValue = rawValue = $$runtime.$$result = undefined
 
       if context.expression and context.expression.length > 0
-        console.log "Calling 'doWith' with return"
         evalResult = @doWith("return #{context.expression}", variables)
-        console.log "Called 'doWith' with return"
+        console.debug "Called 'doWith' with return"
 
         rawValue = @coalesce($$runtime.$$result, evalResult)
 
