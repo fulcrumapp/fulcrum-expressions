@@ -176,7 +176,7 @@ class Runtime
 
     $$runtime.results
 
-  doWith: -> (scriptToEval, vars) =>
+  doWith: (scriptToEval, vars) =>
     paramNames = Object.keys(vars)
     paramValues = paramNames.map (name) => vars[name]
 
