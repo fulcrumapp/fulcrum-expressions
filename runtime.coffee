@@ -185,7 +185,7 @@ class Runtime
       evalFunc(paramValues...)
     catch e
       console.log "Error evaluating script: #{e.toString()}"
-      raise e
+      throw e
 
   initializeScriptIfNecessary: ->
     return if @scriptInitialized
