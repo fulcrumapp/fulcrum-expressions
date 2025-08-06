@@ -200,7 +200,6 @@ class Runtime
       """
 
     @doWith(script, this.variables)
-    console.debug "Called 'doWith' without return"
 
     ON 'extension-message', (event) =>
       functions.extensionMessageHandlers[event.id]?(event)
@@ -285,7 +284,6 @@ class Runtime
 
       if context.expression and context.expression.length > 0
         evalResult = @doWith("return #{context.expression}", variables)
-        console.debug "Called 'doWith' with return"
 
         rawValue = @coalesce($$runtime.$$result, evalResult)
 
