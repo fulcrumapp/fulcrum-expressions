@@ -9,7 +9,7 @@ import { isNaN } from "lodash"
  * NUM('1') // returns 1
  */
 
-export default function NUM(value: any) {
+export default function NUM(value?: any) {
   if (isNaN(value)) { return NaN }
   return parseFloat(value)
 }
