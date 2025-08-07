@@ -283,7 +283,7 @@ class Runtime
       stringValue = rawValue = $$runtime.$$result = undefined
 
       if context.expression and context.expression.length > 0
-        evalResult = @doWith("return #{context.expression}", variables)
+        evalResult = @doWith(context.expression, variables)
 
         rawValue = @coalesce($$runtime.$$result, evalResult)
 
