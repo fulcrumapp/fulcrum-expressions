@@ -3,6 +3,7 @@ import { GeoJSONGeometry } from './geometry';
 export type FormFieldValues =
   ChoiceFieldValue
   | AddressFieldValue
+  
 export type TextFieldValue = string | null | undefined
 
 export type YesNoFieldValue = string | null | undefined
