@@ -12,6 +12,7 @@ export type PhotoFieldName = string /* noexport */
 export type AudioFieldName = string /* noexport */
 export type VideoFieldName = string /* noexport */
 export type SignatureFieldName = string /* noexport */
+export type SketchFieldName = string /* noexport */
 export type RecordLinkFieldName = string /* noexport */
 export type AddressFieldName = string /* noexport */
 
@@ -32,6 +33,7 @@ export type FormFieldTypes =
   | "Repeatable"
   | "AddressField"
   | "SignatureField"
+  | "SketchField"
   | "HyperlinkField"
   | "CalculatedField"
   | "RecordLinkField"
@@ -53,6 +55,7 @@ export type FormFields =
   | Label
   | AddressField
   | SignatureField
+  | SketchField
   | HyperlinkField
   | CalculatedField
   | RecordLinkField
@@ -279,6 +282,12 @@ interface SignatureField extends FormField {
   type: "SignatureField"
   /** The text that appears below the signature line. */
   agreement_text?: string
+}
+
+interface SketchField extends FormField {
+  type: "SketchField"
+  /** Optional array of background image URLs that the user can choose from. */
+  backgrounds?: string[]
 }
 
 interface HyperlinkField extends FormField {

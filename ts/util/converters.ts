@@ -25,6 +25,10 @@ export interface RecordLinkIds {
   record_id: string
 }
 
+export interface SketchIds {
+  sketch_id: string
+}
+
 /** Object containing functions to convert values to appropriate format for $$HOST.
  * Functions are accessed according to FieldType.
  * @example
@@ -137,5 +141,13 @@ export const converters: Converter = {
     let ids: string[] = map(value, (id) => "" + id)
     ids = filter(ids, (id: string) => UUID_REGEX.test(id))
     return map(ids, (id) => ({ record_id: id }) )
+  },
+
+  SketchField: (value: string[]): SketchIds[]|null => {
+    if (!isArray(value)) { return null }
+
+    let ids: string[] = map(value, (id) => "" + id)
+    ids = filter(ids, (id: string) => UUID_REGEX.test(id))
+    return map(ids, (id) => ({ sketch_id: id }) )
   },
 }
