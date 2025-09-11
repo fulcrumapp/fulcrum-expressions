@@ -55,7 +55,7 @@ export interface SignatureFieldValue {
 }
 
 export interface SketchFieldItem {
-  sketch_id: string,
+  sketch_id: string
 }
 
 export type SketchFieldValue = Array<SketchFieldItem> | null | undefined
