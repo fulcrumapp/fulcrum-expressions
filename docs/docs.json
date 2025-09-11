@@ -610,7 +610,7 @@
                 }
             ],
             "examples": [
-                "// returns [\"name\",\"items\",\"cost\",\"choice_value\",\"child_items\",\"child_item_cost\",\"grandchild_items\",\"grandchild_item_cost\",\"choice_field\",\"checklist\"]\nDATANAMES()",
+                "// returns [\"name\",\"items\",\"cost\",\"choice_value\",\"child_items\",\"child_item_cost\",\"grandchild_items\",\"grandchild_item_cost\",\"choice_field\",\"checklist\",\"sketch_field\"]\nDATANAMES()",
                 "// returns [\"items\",\"child_items\",\"grandchild_items\"]\nDATANAMES('Repeatable')"
             ],
             "returns": {

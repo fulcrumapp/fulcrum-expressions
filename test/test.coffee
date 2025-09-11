@@ -2109,7 +2109,7 @@ describe 'REPEATABLESUM', ->
 describe 'DATANAMES', ->
   it 'returns the data names of the form fields', ->
     names = DATANAMES()
-    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'grandchild_items', 'grandchild_item_cost', 'choice_field', 'checklist' ])
+    names.should.eql([ 'name', 'items', 'cost', 'choice_value', 'child_items', 'child_item_cost', 'grandchild_items', 'grandchild_item_cost', 'choice_field', 'checklist', 'sketch_field' ])
 
     names = DATANAMES('Repeatable')
     names.should.eql([ 'items', 'child_items', 'grandchild_items' ])
@@ -2340,6 +2340,41 @@ describe 'SETVALUE', ->
     runtime.results.length.should.eql(2)
     _.each runtime.results, (res) ->
       res.value.should.eql('[]')
+
+  it 'sets sketch field values with valid UUIDs', ->
+    validUUID1 = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+    validUUID2 = 'f1e2d3c4-b5a6-9870-dcba-fe0987654321'
+    
+    SETVALUE('sketch_field', [validUUID1, validUUID2])
+    
+    runtime.results[0].key.should.eql 'sk01'
+    runtime.results[0].type.should.eql 'set-value'
+    
+    expectedValue = JSON.stringify([
+      {sketch_id: validUUID1},
+      {sketch_id: validUUID2}
+    ])
+    runtime.results[0].value.should.eql expectedValue
+
+  it 'filters out invalid UUIDs for sketch field', ->
+    validUUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+    invalidUUID1 = 'not-a-uuid'
+    invalidUUID2 = 'a1b2c3d4-e5f6-7890-abcd'  # too short
+    
+    SETVALUE('sketch_field', [validUUID, invalidUUID1, invalidUUID2])
+    
+    runtime.results[0].key.should.eql 'sk01'
+    runtime.results[0].type.should.eql 'set-value'
+    
+    expectedValue = JSON.stringify([{sketch_id: validUUID}])
+    runtime.results[0].value.should.eql expectedValue
+
+  it 'returns null for non-array values in sketch field', ->
+    SETVALUE('sketch_field', 'not-an-array')
+    
+    runtime.results[0].key.should.eql 'sk01'
+    runtime.results[0].type.should.eql 'set-value'
+    runtime.results[0].value.should.eql 'null'
 
 describe 'SETGEOMETRY', ->
   it 'sets the geometry using a point', ->

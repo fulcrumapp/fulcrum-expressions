@@ -304,6 +304,22 @@ form:
       required_conditions_type: null,
       required_conditions: null
   }
+  {
+    type: "SketchField",
+    key: "sk01",
+    label: "Sketch Field",
+    description: null,
+    required: false,
+    disabled: false,
+    hidden: false,
+    data_name: "sketch_field",
+    default_value: null,
+    visible_conditions_type: null,
+    visible_conditions_behavior: "clear",
+    visible_conditions: null,
+    required_conditions_type: null,
+    required_conditions: null
+  }
   ]
   image: null
   name: "Fire Hydrant Inspection Form"
