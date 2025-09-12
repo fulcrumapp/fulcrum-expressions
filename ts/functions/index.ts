@@ -4,6 +4,7 @@ import ACOSH from "./ACOSH"
 import ALERT from "./ALERT"
 import ALTITUDE from "./ALTITUDE"
 import AND from "./AND"
+import APPLYFIELDEFFECTS from "./APPLYFIELDEFFECTS"
 import APPLICATION from "./APPLICATION"
 import APPLICATIONBUILD from "./APPLICATIONBUILD"
 import APPLICATIONINFO from "./APPLICATIONINFO"
@@ -46,6 +47,7 @@ import DESCRIPTION from "./DESCRIPTION"
 import DEVICEINFO from "./DEVICEINFO"
 import DEVICEMANUFACTURER from "./DEVICEMANUFACTURER"
 import DEVICEMODEL from "./DEVICEMODEL"
+import DOLLAR from "./DOLLAR"
 import EMAIL from "./EMAIL"
 import ERROR from "./ERROR"
 import EVEN from "./EVEN"
@@ -59,6 +61,7 @@ import FIELD from "./FIELD"
 import FIELDNAMES from "./FIELDNAMES"
 import FIELDS from "./FIELDS"
 import FIELDTYPE from "./FIELDTYPE"
+import FIND from "./FIND"
 import FIRST from "./FIRST"
 import FIXED from "./FIXED"
 import FLATTEN from "./FLATTEN"
@@ -123,8 +126,10 @@ import MID from "./MID"
 import MIN from "./MIN"
 import MINA from "./MINA"
 import MOD from "./MOD"
+import MODE from "./MODE"
 import MONTH from "./MONTH"
 import N from "./N"
+import NO_VALUE from "./NO_VALUE"
 import NOT from "./NOT"
 import NUM from "./NUM"
 import NUMS from "./NUMS"
@@ -133,6 +138,7 @@ import OFF from "./OFF"
 import ON from "./ON"
 import ONCE from "./ONCE"
 import OPENURL from "./OPENURL"
+import OR from "./OR"
 import OTHER from "./OTHER"
 import PI from "./PI"
 import PLATFORM from "./PLATFORM"
@@ -157,6 +163,7 @@ import REPEATABLEID from "./REPEATABLEID"
 import REPEATABLENUMBER from "./REPEATABLENUMBER"
 import REPEATABLESUM from "./REPEATABLESUM"
 import REPEATABLEVALUES from "./REPEATABLEVALUES"
+import REPLACE from "./REPLACE"
 import RIGHT from "./RIGHT"
 import ROLE from "./ROLE"
 import ROUND from "./ROUND"
@@ -233,6 +240,7 @@ export const functions: FunctionMap = {
   ALERT,
   ALTITUDE,
   AND,
+  APPLYFIELDEFFECTS,
   APPLICATION,
   APPLICATIONBUILD,
   APPLICATIONINFO,
@@ -275,6 +283,7 @@ export const functions: FunctionMap = {
   DEVICEINFO,
   DEVICEMANUFACTURER,
   DEVICEMODEL,
+  DOLLAR,
   EMAIL,
   ERROR,
   EVEN,
@@ -288,6 +297,7 @@ export const functions: FunctionMap = {
   FIELDNAMES,
   FIELDS,
   FIELDTYPE,
+  FIND,
   FIRST,
   FIXED,
   FLATTEN,
@@ -352,9 +362,10 @@ export const functions: FunctionMap = {
   MIN,
   MINA,
   MOD,
+  MODE,
   MONTH,
   N,
-  NO_VALUE: undefined,
+  NO_VALUE,
   NOT,
   NUM,
   NUMS,
@@ -363,6 +374,7 @@ export const functions: FunctionMap = {
   ON,
   ONCE,
   OPENURL,
+  OR,
   OTHER,
   PI,
   PLATFORM,
@@ -387,6 +399,7 @@ export const functions: FunctionMap = {
   REPEATABLENUMBER,
   REPEATABLESUM,
   REPEATABLEVALUES,
+  REPLACE,
   REQUEST,
   RPAD,
   RESETCONFIG,
