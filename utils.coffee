@@ -235,4 +235,11 @@ class Utils
       ids = _.select ids, (id) => Utils.UUID_REGEX.test(id)
       ids.map((id) => { record_id: id })
 
+    SketchField: (value) ->
+      return null unless _.isArray(value)
+
+      ids = value.map((id) => '' + id)
+      ids = _.select ids, (id) => Utils.UUID_REGEX.test(id)
+      ids.map((id) => { sketch_id: id })
+
 module.exports = Utils

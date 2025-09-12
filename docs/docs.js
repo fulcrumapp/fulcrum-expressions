@@ -420,7 +420,7 @@ function CURRENCYSYMBOL() {}
  * @param {String} [type=any] Optional field type
  * @returns {Array}
  * @example
- * // returns ["name","items","cost","choice_value","child_items","child_item_cost","grandchild_items","grandchild_item_cost","choice_field","checklist"]
+ * // returns ["name","items","cost","choice_value","child_items","child_item_cost","grandchild_items","grandchild_item_cost","choice_field","checklist","sketch_field"]
  * DATANAMES()
  * @example
  * // returns ["items","child_items","grandchild_items"]

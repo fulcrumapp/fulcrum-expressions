@@ -3,7 +3,7 @@ import { GeoJSONGeometry } from './geometry';
 export type FormFieldValues =
   ChoiceFieldValue
   | AddressFieldValue
-
+  
 export type TextFieldValue = string | null | undefined
 
 export type YesNoFieldValue = string | null | undefined
@@ -53,6 +53,12 @@ export interface SignatureFieldValue {
   signature_id: string,
   timestamp: string
 }
+
+export interface SketchFieldItem {
+  sketch_id: string
+}
+
+export type SketchFieldValue = Array<SketchFieldItem> | null | undefined
 
 export interface RecordLinkItem {
   record_id: string
