@@ -260,10 +260,17 @@ export default class Runtime {
   constructor() {
     try {
       // This is the shorthand for getting direct access to the global scope. If it does not work
-      // we need to fall back to just `window`.
+      // we need to fall back to just `window` or `global` for Node.js.
       this.global = Function("return this")()
     } catch (e) {
-      this.global = window as unknown as WindowWithRuntime
+      if (typeof window !== 'undefined') {
+        this.global = window as unknown as WindowWithRuntime
+      } else if (typeof global !== 'undefined') {
+        this.global = global as unknown as WindowWithRuntime
+      } else {
+        // Fallback for other environments
+        this.global = {} as unknown as WindowWithRuntime
+      }
     }
 
     // Wire up the global functions on initialization time.

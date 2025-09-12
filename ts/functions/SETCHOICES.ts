@@ -1,6 +1,5 @@
-import { isArray, isNull, isNumber, isObject, isString } from "lodash"
+import { isArray, isNull, isNumber, isObject, isString, isUndefined } from "lodash"
 import SETFORMATTRIBUTES from "./SETFORMATTRIBUTES"
-import { isUndefined } from "util";
 import { ChoiceFieldName } from "../types/fields"
 
 interface ChoicesInterface {

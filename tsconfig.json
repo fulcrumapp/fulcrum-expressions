@@ -11,7 +11,9 @@
     "skipLibCheck": true,
     "lib": ["es5", "dom", "es2015"],
     "types": ["node"],
-    "noImplicitReturns": false
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": [
     "ts/**/*",
@@ -21,6 +23,7 @@
     "node_modules",
     "dist",
     "test",
-    "ts/test"
+    "ts/test",
+    "ts/functions/GEOMETRY*.ts"
   ]
 }

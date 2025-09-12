@@ -9,8 +9,10 @@ import {
   some,
 } from "lodash"
 
-import { isRegExp } from "util"
 import RIGHT from "../functions/RIGHT"
+
+// Simple isRegExp implementation since it's not available in older util
+const isRegExp = (value: any): value is RegExp => value instanceof RegExp
 
 const nullish = (value: any) => some([
   isUndefined,

@@ -7,7 +7,7 @@ interface Message {
   [key: string]: any
 }
 
-interface RuntimeGlobal extends NodeJS.Global {
+interface RuntimeGlobal {
   $$runtime: any
   $$prepare: () => void
   $$evaluate: () => any[]
@@ -121,28 +121,28 @@ class ExpressionEngine {
   }
 
   setupHostFunctions(): void {
-    global.$$runtime["$$httpRequest"] = (options: any, callbackID: string) => {
+    (global as any).$$runtime["$$httpRequest"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'httpRequest', argumentList: [options, callbackID] })
     }
-    global.$$runtime["$$messageBox"] = (options: any, callbackID: string) => {
+    ;(global as any).$$runtime["$$messageBox"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'messageBox', argumentList: [options, callbackID] })
     }
-    global.$$runtime["$$setTimeout"] = (delay: number, callbackID: string) => {
+    ;(global as any).$$runtime["$$setTimeout"] = (delay: number, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'setTimeout', argumentList: [delay, callbackID] })
     }
-    global.$$runtime["$$inference"] = (options: any, callbackID: string) => {
+    ;(global as any).$$runtime["$$inference"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'inference', argumentList: [options, callbackID] })
     }
-    global.$$runtime["$$loadFile"] = (options: any, callbackID: string) => {
+    ;(global as any).$$runtime["$$loadFile"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'loadFile', argumentList: [options, callbackID] })
     }
-    global.$$runtime["$$loadRecords"] = (options: any, callbackID: string) => {
+    ;(global as any).$$runtime["$$loadRecords"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'loadRecords', argumentList: [options, callbackID] })
     }
-    global.$$runtime["$$loadForm"] = (options: any, callbackID: string) => {
+    ;(global as any).$$runtime["$$loadForm"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'loadForm', argumentList: [options, callbackID] })
     }
-    global.$$runtime["$$recognizeText"] = (options: any, callbackID: string) => {
+    ;(global as any).$$runtime["$$recognizeText"] = (options: any, callbackID: number) => {
       this.respond({ name: 'hostFunction', functionName: 'recognizeText', argumentList: [options, callbackID] })
     }
   }
