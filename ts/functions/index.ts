@@ -75,6 +75,7 @@ import GROUPINGSIZE from "./GROUPINGSIZE"
 import HASOTHER from "./HASOTHER"
 import IF from "./IF"
 import IFERROR from "./IFERROR"
+import INFERENCE from "./INFERENCE"
 import INSPECT from "./INSPECT"
 import INT from "./INT"
 import INVALID from "./INVALID"
@@ -103,6 +104,9 @@ import LCM from "./LCM"
 import LEFT from "./LEFT"
 import LEN from "./LEN"
 import LN from "./LN"
+import LOADFILE from "./LOADFILE"
+import LOADFORM from "./LOADFORM"
+import LOADRECORDS from "./LOADRECORDS"
 import LOCALE from "./LOCALE"
 import LOG from "./LOG"
 import LOG10 from "./LOG10"
@@ -147,6 +151,7 @@ import QUOTIENT from "./QUOTIENT"
 import RADIANS from "./RADIANS"
 import RAND from "./RAND"
 import RANDBETWEEN from "./RANDBETWEEN"
+import RECOGNIZETEXT from "./RECOGNIZETEXT"
 import RECORDID from "./RECORDID"
 import REPEATABLEID from "./REPEATABLEID"
 import REPEATABLENUMBER from "./REPEATABLENUMBER"
@@ -299,6 +304,7 @@ export const functions: FunctionMap = {
   HASOTHER,
   IF,
   IFERROR,
+  INFERENCE,
   INSPECT,
   INT,
   INVALID,
@@ -327,6 +333,9 @@ export const functions: FunctionMap = {
   LEFT,
   LEN,
   LN,
+  LOADFILE,
+  LOADFORM,
+  LOADRECORDS,
   LOCALE,
   LOG,
   LOG10,
@@ -372,6 +381,7 @@ export const functions: FunctionMap = {
   RADIANS,
   RAND,
   RANDBETWEEN,
+  RECOGNIZETEXT,
   RECORDID,
   REPEATABLEID,
   REPEATABLENUMBER,
