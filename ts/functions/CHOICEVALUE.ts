@@ -3,6 +3,8 @@ import { MaybeString } from "../types/primitives"
 import { ChoiceFieldValue } from "../types/values"
 import CHOICEVALUES from "./CHOICEVALUES"
 
+declare const NO_VALUE: any;
+
 /**
  * Returns the first choice value in the choice field value passed to the function
  * 
@@ -18,8 +20,8 @@ export default function CHOICEVALUE(field: any): MaybeString
 export default function CHOICEVALUE(field: any): MaybeString {
   const values = CHOICEVALUES(field)
 
-  if (!isArray(values)) { return undefined }
-  if (values.length === 0) { return undefined }
+  if (!isArray(values)) { return NO_VALUE }
+  if (values.length === 0) { return NO_VALUE }
 
   return values[0]
 }

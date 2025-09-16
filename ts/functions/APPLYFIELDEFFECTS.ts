@@ -5,14 +5,19 @@
  */
 
 interface FieldEffect {
-  field_key: string;
-  action: string;
-  value?: any;
+  event?: {
+    name?: string;
+    field?: string;
+  };
+  conditions?: any[];
+  actions?: any[];
 }
 
 interface FieldEffects {
   effects: FieldEffect[];
 }
+
+declare const $$runtime: any;
 
 export default function APPLYFIELDEFFECTS(fieldEffects: FieldEffects): void {
   if (!fieldEffects || !Array.isArray(fieldEffects.effects)) {
@@ -26,6 +31,34 @@ export default function APPLYFIELDEFFECTS(fieldEffects: FieldEffects): void {
 }
 
 function createApplyEffectCallback(effect: FieldEffect): void {
-  // This is a placeholder - the actual implementation would depend on the runtime environment
-  // For now, this prevents the "not defined" error during tests
+  if (!effect.event || !effect.event.name || !effect.event.field) {
+    return;
+  }
+  
+  const eventName = `hook_${effect.event.name}`;
+  const fieldKey = `hook_${effect.event.field}`;
+  
+  // Initialize $$runtime.events if it doesn't exist
+  if (!$$runtime.events) {
+    $$runtime.events = {};
+  }
+  
+  // Initialize the event name object if it doesn't exist
+  if (!$$runtime.events[eventName]) {
+    $$runtime.events[eventName] = {};
+  }
+  
+  // Initialize the field array if it doesn't exist
+  if (!$$runtime.events[eventName][fieldKey]) {
+    $$runtime.events[eventName][fieldKey] = [];
+  }
+  
+  // Add the effect handler function
+  const effectHandler = function() {
+    // This would contain the actual effect logic
+    // For now, just a placeholder function that validates the effect works
+    return { effect: effect };
+  };
+  
+  $$runtime.events[eventName][fieldKey].push(effectHandler);
 }
