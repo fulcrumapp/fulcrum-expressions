@@ -1,4 +1,4 @@
-import { isFinite } from "lodash"
+import NUM from "./NUM"
 
 /**
  * Returns a boolean value indicating if value passed in is a numeric value
@@ -10,5 +10,5 @@ import { isFinite } from "lodash"
  * ISNUMBER(8) // returns true
  */
 export default function ISNUMBER(value: any): boolean {
-  return isFinite(value)
+  return !isNaN(NUM(value))
 }

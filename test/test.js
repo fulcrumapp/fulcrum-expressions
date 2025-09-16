@@ -48,15 +48,15 @@
   };
 
   shouldBeNull = function(value) {
-    return (value === null).should.be["true"]();
+    return (value === null).should.be.true();
   };
 
   shouldHaveNoValue = function(value) {
-    return (value === NO_VALUE).should.be["true"]();
+    return (value === NO_VALUE).should.be.true();
   };
 
   shouldBeUndefined = function(value) {
-    return (value === void 0).should.be["true"]();
+    return (value === void 0).should.be.true();
   };
 
   beforeEach(function() {
@@ -108,10 +108,10 @@
 
   describe('ISNAN', function() {
     return it('tests whether the input is not a number', function() {
-      ISNAN(1).should.be["false"]();
-      ISNAN('1').should.be["false"]();
-      ISNAN('a7').should.be["true"]();
-      return ISNAN({}).should.be["true"]();
+      ISNAN(1).should.be.false();
+      ISNAN('1').should.be.false();
+      ISNAN('a7').should.be.true();
+      return ISNAN({}).should.be.true();
     });
   });
 
@@ -140,13 +140,13 @@
 
   describe('AND', function() {
     return it('returns true if all of the parameters evaluate truthy', function() {
-      AND(1.11).should.be["true"]();
-      AND(1 > 0, 2 > 1, 3 > 2).should.be["true"]();
-      AND(1 > 0, 2 > 1, '').should.be["false"]();
-      AND(0, 0, 0).should.be["false"]();
-      AND(1, 1, 1).should.be["true"]();
-      AND(true, false).should.be["false"]();
-      return AND({}, []).should.be["true"]();
+      AND(1.11).should.be.true();
+      AND(1 > 0, 2 > 1, 3 > 2).should.be.true();
+      AND(1 > 0, 2 > 1, '').should.be.false();
+      AND(0, 0, 0).should.be.false();
+      AND(1, 1, 1).should.be.true();
+      AND(true, false).should.be.false();
+      return AND({}, []).should.be.true();
     });
   });
 
@@ -246,19 +246,19 @@
 
   describe('CONTAINS', function() {
     return it('returns whether an array or string contains a string', function() {
-      CONTAINS(['1', '2', '3'], '1').should.be["true"]();
-      CONTAINS(['1', '2', '3'], '3').should.be["true"]();
-      CONTAINS(['1', '2', '3'], '4').should.be["false"]();
-      CONTAINS([1, 2, 3], 3).should.be["true"]();
-      CONTAINS('123', '1').should.be["true"]();
-      CONTAINS('123', '3').should.be["true"]();
-      CONTAINS('123', '123').should.be["true"]();
-      CONTAINS('123', 1).should.be["true"]();
-      CONTAINS([null, 1], null).should.be["true"]();
-      CONTAINS([null, 1], '').should.be["false"]();
-      CONTAINS([null, 1], void 0).should.be["false"]();
-      CONTAINS([null, void 0], void 0).should.be["true"]();
-      return CONTAINS(null, null).should.be["false"]();
+      CONTAINS(['1', '2', '3'], '1').should.be.true();
+      CONTAINS(['1', '2', '3'], '3').should.be.true();
+      CONTAINS(['1', '2', '3'], '4').should.be.false();
+      CONTAINS([1, 2, 3], 3).should.be.true();
+      CONTAINS('123', '1').should.be.true();
+      CONTAINS('123', '3').should.be.true();
+      CONTAINS('123', '123').should.be.true();
+      CONTAINS('123', 1).should.be.true();
+      CONTAINS([null, 1], null).should.be.true();
+      CONTAINS([null, 1], '').should.be.false();
+      CONTAINS([null, 1], void 0).should.be.false();
+      CONTAINS([null, void 0], void 0).should.be.true();
+      return CONTAINS(null, null).should.be.false();
     });
   });
 
@@ -444,22 +444,22 @@
     return it('returns true if the field has an other value set', function() {
       HASOTHER({
         other_values: ['test']
-      }).should.be["true"]();
+      }).should.be.true();
       HASOTHER({
         other_values: []
-      }).should.be["false"]();
+      }).should.be.false();
       HASOTHER({
         other_values: null
-      }).should.be["false"]();
-      HASOTHER().should.be["false"]();
-      HASOTHER(null).should.be["false"]();
+      }).should.be.false();
+      HASOTHER().should.be.false();
+      HASOTHER(null).should.be.false();
       HASOTHER({
         choice_values: ['1']
-      }).should.be["false"]();
+      }).should.be.false();
       return HASOTHER({
         choice_values: ['1'],
         other_values: ['2']
-      }).should.be["true"]();
+      }).should.be.true();
     });
   });
 
@@ -474,15 +474,15 @@
       }).should.eql('2');
       (OTHER({
         other_values: []
-      }) === NO_VALUE).should.be["true"]();
+      }) === NO_VALUE).should.be.true();
       (OTHER({
         other_values: null
-      }) === NO_VALUE).should.be["true"]();
-      (OTHER() === NO_VALUE).should.be["true"]();
-      (OTHER(null) === NO_VALUE).should.be["true"]();
+      }) === NO_VALUE).should.be.true();
+      (OTHER() === NO_VALUE).should.be.true();
+      (OTHER(null) === NO_VALUE).should.be.true();
       return (OTHER({
         choice_values: ['1']
-      }) === NO_VALUE).should.be["true"]();
+      }) === NO_VALUE).should.be.true();
     });
   });
 
@@ -507,9 +507,9 @@
     return it('compacts an array', function() {
       COMPACT([1, 2, 3]).should.eql([1, 2, 3]);
       COMPACT([]).should.eql([]);
-      (COMPACT(null) === void 0).should.be["true"]();
-      (COMPACT(void 0) === void 0).should.be["true"]();
-      (COMPACT({}) === void 0).should.be["true"]();
+      (COMPACT(null) === void 0).should.be.true();
+      (COMPACT(void 0) === void 0).should.be.true();
+      (COMPACT({}) === void 0).should.be.true();
       COMPACT([void 0]).should.eql([]);
       COMPACT([null]).should.eql([]);
       COMPACT([0]).should.eql([0]);
@@ -591,41 +591,41 @@
 
   describe('EXACT', function() {
     return it('checks to see if two text values are identical', function() {
-      EXACT('', '').should.be["true"]();
-      EXACT('test', 'test').should.be["true"]();
-      EXACT(1, 1).should.be["true"]();
-      EXACT([], []).should.be["true"]();
-      EXACT({}, {}).should.be["true"]();
-      EXACT(void 0, void 0).should.be["true"]();
-      EXACT(1, void 0).should.be["false"]();
-      EXACT(0/0, 0/0).should.be["true"]();
-      return EXACT(1, 0/0).should.be["false"]();
+      EXACT('', '').should.be.true();
+      EXACT('test', 'test').should.be.true();
+      EXACT(1, 1).should.be.true();
+      EXACT([], []).should.be.true();
+      EXACT({}, {}).should.be.true();
+      EXACT(void 0, void 0).should.be.true();
+      EXACT(1, void 0).should.be.false();
+      EXACT(0/0, 0/0).should.be.true();
+      return EXACT(1, 0/0).should.be.false();
     });
   });
 
   describe('EXISTS', function() {
     return it('checks whether a value exists', function() {
-      EXISTS(0).should.be["true"]();
-      EXISTS(-1).should.be["true"]();
-      EXISTS(true).should.be["true"]();
-      EXISTS(false).should.be["true"]();
-      EXISTS('test').should.be["true"]();
-      EXISTS([1]).should.be["true"]();
+      EXISTS(0).should.be.true();
+      EXISTS(-1).should.be.true();
+      EXISTS(true).should.be.true();
+      EXISTS(false).should.be.true();
+      EXISTS('test').should.be.true();
+      EXISTS([1]).should.be.true();
       EXISTS({
         test: 1
-      }).should.be["true"]();
-      EXISTS(1, 2).should.be["true"]();
-      EXISTS(1, 2, 'test').should.be["true"]();
-      EXISTS(new Date).should.be["true"]();
-      EXISTS(/test/).should.be["true"]();
-      EXISTS([]).should.be["false"]();
-      EXISTS({}).should.be["false"]();
-      EXISTS('').should.be["false"]();
-      EXISTS(0/0).should.be["false"]();
-      EXISTS(null).should.be["false"]();
-      EXISTS(void 0).should.be["false"]();
-      EXISTS(void 0, null).should.be["false"]();
-      return EXISTS(1, null).should.be["false"]();
+      }).should.be.true();
+      EXISTS(1, 2).should.be.true();
+      EXISTS(1, 2, 'test').should.be.true();
+      EXISTS(new Date).should.be.true();
+      EXISTS(/test/).should.be.true();
+      EXISTS([]).should.be.false();
+      EXISTS({}).should.be.false();
+      EXISTS('').should.be.false();
+      EXISTS(0/0).should.be.false();
+      EXISTS(null).should.be.false();
+      EXISTS(void 0).should.be.false();
+      EXISTS(void 0, null).should.be.false();
+      return EXISTS(1, null).should.be.false();
     });
   });
 
@@ -773,126 +773,126 @@
 
   describe('ISBLANK', function() {
     return it('tests if a value is blank', function() {
-      ISBLANK('').should.be["true"]();
-      ISBLANK(null).should.be["true"]();
-      ISBLANK(void 0).should.be["true"]();
-      ISBLANK(0/0).should.be["true"]();
-      ISBLANK([]).should.be["true"]();
-      ISBLANK({}).should.be["true"]();
+      ISBLANK('').should.be.true();
+      ISBLANK(null).should.be.true();
+      ISBLANK(void 0).should.be.true();
+      ISBLANK(0/0).should.be.true();
+      ISBLANK([]).should.be.true();
+      ISBLANK({}).should.be.true();
       ISBLANK({
         test: 1
-      }).should.be["false"]();
-      ISBLANK(7).should.be["false"]();
-      ISBLANK(true).should.be["false"]();
-      ISBLANK('test').should.be["false"]();
-      ISBLANK(new Date).should.be["false"]();
+      }).should.be.false();
+      ISBLANK(7).should.be.false();
+      ISBLANK(true).should.be.false();
+      ISBLANK('test').should.be.false();
+      ISBLANK(new Date).should.be.false();
       ISBLANK({
         choice_values: null
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         choice_values: []
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         choice_values: [],
         other_values: []
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         choice_values: [],
         other_values: null
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         choice_values: null,
         other_values: null
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         choice_values: null,
         other_values: []
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         other_values: null
-      }).should.be["true"]();
+      }).should.be.true();
       ISBLANK({
         choice_values: ['a'],
         other_values: []
-      }).should.be["false"]();
+      }).should.be.false();
       ISBLANK({
         choice_values: ['a'],
         other_values: ['b']
-      }).should.be["false"]();
+      }).should.be.false();
       ISBLANK({
         choice_values: [],
         other_values: ['b']
-      }).should.be["false"]();
+      }).should.be.false();
       return ISBLANK({
         choice_values: null,
         other_values: ['b']
-      }).should.be["false"]();
+      }).should.be.false();
     });
   });
 
   describe('ISERR', function() {
     return it('tests for an error', function() {
-      ISERR(EVEN(null)).should.be["true"]();
-      ISERR(EVEN(7)).should.be["false"]();
-      return ISERR(new Error).should.be["true"]();
+      ISERR(EVEN(null)).should.be.true();
+      ISERR(EVEN(7)).should.be.false();
+      return ISERR(new Error).should.be.true();
     });
   });
 
   describe('ISLOGICAL', function() {
     return it('tests for a logical value', function() {
-      ISLOGICAL(true).should.be["true"]();
-      ISLOGICAL(false).should.be["true"]();
-      return ISLOGICAL('').should.be["false"]();
+      ISLOGICAL(true).should.be.true();
+      ISLOGICAL(false).should.be.true();
+      return ISLOGICAL('').should.be.false();
     });
   });
 
   describe('ISNONTEXT', function() {
     return it('tests for a non-text value', function() {
-      ISNONTEXT(true).should.be["true"]();
-      ISNONTEXT(false).should.be["true"]();
-      return ISNONTEXT('').should.be["false"]();
+      ISNONTEXT(true).should.be.true();
+      ISNONTEXT(false).should.be.true();
+      return ISNONTEXT('').should.be.false();
     });
   });
 
   describe('ISNUMBER', function() {
     return it('tests for a number value', function() {
-      ISNUMBER(1).should.be["true"]();
-      ISNUMBER('1').should.be["true"]();
-      return ISNUMBER(true).should.be["false"]();
+      ISNUMBER(1).should.be.true();
+      ISNUMBER('1').should.be.true();
+      return ISNUMBER(true).should.be.false();
     });
   });
 
   describe('ISODD', function() {
     return it('tests for an odd number', function() {
-      ISODD(0).should.be["false"]();
-      ISODD(1).should.be["true"]();
-      ISODD(2).should.be["false"]();
-      ISODD('1').should.be["true"]();
-      ISODD(true).should.be["false"]();
-      ISODD(false).should.be["false"]();
-      ISODD(void 0).should.be["false"]();
-      return ISODD(null).should.be["false"]();
+      ISODD(0).should.be.false();
+      ISODD(1).should.be.true();
+      ISODD(2).should.be.false();
+      ISODD('1').should.be.true();
+      ISODD(true).should.be.false();
+      ISODD(false).should.be.false();
+      ISODD(void 0).should.be.false();
+      return ISODD(null).should.be.false();
     });
   });
 
   describe('ISEVEN', function() {
     return it('tests for an even number', function() {
-      ISEVEN(0).should.be["true"]();
-      ISEVEN(1).should.be["false"]();
-      ISEVEN(2).should.be["true"]();
-      ISEVEN('2').should.be["true"]();
-      ISEVEN(true).should.be["false"]();
-      ISEVEN(false).should.be["false"]();
-      ISEVEN(void 0).should.be["false"]();
-      return ISEVEN(null).should.be["false"]();
+      ISEVEN(0).should.be.true();
+      ISEVEN(1).should.be.false();
+      ISEVEN(2).should.be.true();
+      ISEVEN('2').should.be.true();
+      ISEVEN(true).should.be.false();
+      ISEVEN(false).should.be.false();
+      ISEVEN(void 0).should.be.false();
+      return ISEVEN(null).should.be.false();
     });
   });
 
   describe('ISTEXT', function() {
     return it('tests for a text value', function() {
-      ISTEXT(true).should.be["false"]();
-      ISTEXT(false).should.be["false"]();
-      return ISTEXT('').should.be["true"]();
+      ISTEXT(true).should.be.false();
+      ISTEXT(false).should.be.false();
+      return ISTEXT('').should.be.true();
     });
   });
 
@@ -1189,14 +1189,14 @@
 
   describe('NOT', function() {
     return it('returns the negation of a value', function() {
-      NOT(false).should.be["true"]();
-      NOT(true).should.be["false"]();
-      NOT(1).should.be["false"]();
-      NOT(0/0).should.be["true"]();
-      NOT(void 0).should.be["true"]();
-      NOT(null).should.be["true"]();
-      NOT(new Date).should.be["false"]();
-      return NOT().should.be["true"]();
+      NOT(false).should.be.true();
+      NOT(true).should.be.false();
+      NOT(1).should.be.false();
+      NOT(0/0).should.be.true();
+      NOT(void 0).should.be.true();
+      NOT(null).should.be.true();
+      NOT(new Date).should.be.false();
+      return NOT().should.be.true();
     });
   });
 
@@ -1243,20 +1243,20 @@
 
   describe('OR', function() {
     return it('returns true if any argument is truthy', function() {
-      OR(true, false).should.be["true"]();
-      OR(true, true).should.be["true"]();
-      OR(false, true).should.be["true"]();
-      OR(false, false).should.be["false"]();
-      OR(1, 0).should.be["true"]();
-      OR(0, 0).should.be["false"]();
-      OR(true).should.be["true"]();
-      OR(false).should.be["false"]();
-      OR(void 0).should.be["false"]();
-      OR(null).should.be["false"]();
-      OR(0/0).should.be["false"]();
-      OR(new Date).should.be["true"]();
-      OR([]).should.be["true"]();
-      return OR({}).should.be["true"]();
+      OR(true, false).should.be.true();
+      OR(true, true).should.be.true();
+      OR(false, true).should.be.true();
+      OR(false, false).should.be.false();
+      OR(1, 0).should.be.true();
+      OR(0, 0).should.be.false();
+      OR(true).should.be.true();
+      OR(false).should.be.false();
+      OR(void 0).should.be.false();
+      OR(null).should.be.false();
+      OR(0/0).should.be.false();
+      OR(new Date).should.be.true();
+      OR([]).should.be.true();
+      return OR({}).should.be.true();
     });
   });
 
@@ -1664,38 +1664,38 @@
     return it('returns true if a choice value is selected', function() {
       ISSELECTED({
         choice_values: ['test']
-      }, 'test').should.be["true"]();
+      }, 'test').should.be.true();
       ISSELECTED({
         choice_values: ['1', '2']
-      }, '1').should.be["true"]();
+      }, '1').should.be.true();
       ISSELECTED({
         choice_values: ['1', '2']
-      }, ['1', '2']).should.be["true"]();
+      }, ['1', '2']).should.be.true();
       ISSELECTED({
         choice_values: ['1', '2']
-      }, ['1', '2', '3']).should.be["false"]();
+      }, ['1', '2', '3']).should.be.false();
       ISSELECTED({
         other_values: ['test']
-      }, 'test').should.be["true"]();
+      }, 'test').should.be.true();
       ISSELECTED({
         other_values: []
-      }, 'test').should.be["false"]();
+      }, 'test').should.be.false();
       ISSELECTED({
         other_values: null
-      }, 'test').should.be["false"]();
-      ISSELECTED().should.be["false"]();
-      ISSELECTED(null).should.be["false"]();
+      }, 'test').should.be.false();
+      ISSELECTED().should.be.false();
+      ISSELECTED(null).should.be.false();
       ISSELECTED({
         choice_values: ['1']
-      }).should.be["false"]();
+      }).should.be.false();
       ISSELECTED({
         choice_values: ['1'],
         other_values: ['2']
-      }, '1').should.be["true"]();
+      }, '1').should.be.true();
       return ISSELECTED({
         choice_values: ['1'],
         other_values: ['2']
-      }, '2').should.be["true"]();
+      }, '2').should.be.true();
     });
   });
 
@@ -3026,19 +3026,19 @@
       CONFIGURE({
         platform: 'iOS'
       });
-      ISMOBILE().should.be["true"]();
+      ISMOBILE().should.be.true();
       CONFIGURE({
         platform: 'Android'
       });
-      ISMOBILE().should.be["true"]();
+      ISMOBILE().should.be.true();
       CONFIGURE({
         platform: 'Mac OS'
       });
-      ISMOBILE().should.be["false"]();
+      ISMOBILE().should.be.false();
       CONFIGURE({
         platform: null
       });
-      return ISMOBILE().should.be["false"]();
+      return ISMOBILE().should.be.false();
     });
   });
 
@@ -3047,18 +3047,18 @@
       CONFIGURE({
         featureIsNew: true
       });
-      ISNEW().should.be["true"]();
-      ISUPDATE().should.be["false"]();
+      ISNEW().should.be.true();
+      ISUPDATE().should.be.false();
       CONFIGURE({
         featureIsNew: false
       });
-      ISNEW().should.be["false"]();
-      ISUPDATE().should.be["true"]();
+      ISNEW().should.be.false();
+      ISUPDATE().should.be.true();
       CONFIGURE({
         featureIsNew: void 0
       });
-      ISNEW().should.be["false"]();
-      return ISUPDATE().should.be["true"]();
+      ISNEW().should.be.false();
+      return ISUPDATE().should.be.true();
     });
   });
 
