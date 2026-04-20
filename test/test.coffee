@@ -2,9 +2,6 @@ global.Intl = require 'intl'
 
 _ = require 'underscore'
 
-path = require 'path'
-CSON = require 'season'
-
 DIST = process.env.DIST or false
 
 if DIST
@@ -16,7 +13,7 @@ else
   runtime = require '../runtime'
   Utils = require '../utils'
 
-variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
+variables = require('./variables.json')
 
 CONFIGURE(variables)
 
@@ -42,6 +39,22 @@ shouldBeNull = (value) ->
 
 shouldHaveNoValue = (value) ->
   (value is NO_VALUE).should.be.true()
+
+# Rounds all numbers in a nested structure to the given precision.
+# Useful for comparing geometry results where floating-point drift
+# at the 15th decimal place is expected and irrelevant.
+roundDeep = (obj, precision = 10) ->
+  if typeof obj is 'number'
+    parseFloat(obj.toFixed(precision))
+  else if Array.isArray(obj)
+    obj.map((item) -> roundDeep(item, precision))
+  else if typeof obj is 'object' and obj isnt null
+    result = {}
+    for key, value of obj
+      result[key] = roundDeep(value, precision)
+    result
+  else
+    obj
 
 shouldBeUndefined = (value) ->
   (value is undefined).should.be.true()
@@ -1561,7 +1574,7 @@ describe 'GEOMETRYBEARING', ->
 
 describe 'GEOMETRYBUFFER', ->
   it 'buffers a geometry', ->
-    GEOMETRYBUFFER(polygon, 10, { units: 'meters' }).should.eql {
+    roundDeep(GEOMETRYBUFFER(polygon, 10, { units: 'meters' })).should.eql roundDeep({
       type: 'Feature',
       properties: {},
       geometry: {
@@ -1607,9 +1620,9 @@ describe 'GEOMETRYBUFFER', ->
           ],
         ],
       },
-    }
+    })
 
-    GEOMETRYBUFFER(lineString, 20, { units: 'meters', steps: 2 }).should.eql {
+    roundDeep(GEOMETRYBUFFER(lineString, 20, { units: 'meters', steps: 2 })).should.eql roundDeep({
       type: 'Feature',
       properties: {},
       geometry: {
@@ -1647,7 +1660,7 @@ describe 'GEOMETRYBUFFER', ->
           ],
         ],
       },
-    }
+    })
 
 describe 'GEOMETRYCENTROID', ->
   it 'returns the centroid of the geometry', ->
