@@ -42,7 +42,7 @@ shouldHaveNoValue = (value) ->
 
 # Rounds all numbers in a nested structure to the given precision.
 # Useful for comparing geometry results where floating-point drift
-# at the 15th decimal place is expected and irrelevant.
+# beyond the default 10 decimal places is expected and irrelevant.
 roundDeep = (obj, precision = 10) ->
   if typeof obj is 'number'
     parseFloat(obj.toFixed(precision))

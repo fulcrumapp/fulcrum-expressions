@@ -1,6 +1,5 @@
 fs = require 'fs'
 _ = require 'underscore'
-path = require 'path'
 Utils = require '../utils'
 
 global.Intl = require 'intl'
