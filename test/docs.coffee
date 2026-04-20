@@ -1,9 +1,6 @@
 fs = require 'fs'
 _ = require 'underscore'
-path = require 'path'
-CSON = require 'season'
 Utils = require '../utils'
-stringify = require 'json-stringify-safe'
 
 global.Intl = require 'intl'
 
@@ -17,7 +14,7 @@ else
   console.log 'Running debug'
   runtime = require '../runtime'
 
-variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
+variables = require('./variables.json')
 
 CONFIGURE(variables)
 
@@ -52,7 +49,7 @@ describe 'Documentation', ->
         (-> eval(example)).should.not.throw
 
         result = eval(example)
-        actual = stringify(result)
+        actual = JSON.stringify(result)
 
         if _.isUndefined(result)
           actual = 'undefined'
