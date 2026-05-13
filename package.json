@@ -32,8 +32,8 @@
   },
   "scripts": {
     "build": "tsdown && node -e \"const fs=require('fs'),p=require('path'),d='dist';fs.readdirSync(d).forEach(f=>{if(/\\.d\\.[cm]?ts$/.test(f)&&/-/.test(f)){const n=f.replace(/-[^.]+/,'');fs.renameSync(p.join(d,f),p.join(d,n))}if(/\\.d\\.[cm]?ts\\.map$/.test(f)&&/-/.test(f)){const n=f.replace(/-[^.]+/,'');fs.renameSync(p.join(d,f),p.join(d,n))}})\"",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "mocha",
+    "test:watch": "mocha --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn clean && yarn build"
@@ -59,9 +59,13 @@
     "query-string": "^9.1.1"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.3",
     "@types/lodash": "^4.17.16",
+    "@types/mocha": "^10.0.10",
+    "chai": "^6.2.2",
+    "mocha": "^11.7.5",
     "tsdown": "^0.12.5",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.1"
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.3"
   }
 }
