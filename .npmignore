@@ -1,9 +1,0 @@
-.tool-versions
-ci
-console
-docs
-*.coffee
-*.md
-script
-test
-coverage
