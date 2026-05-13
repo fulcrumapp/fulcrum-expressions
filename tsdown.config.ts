@@ -1,0 +1,32 @@
+import { defineConfig } from "tsdown";
+
+export default defineConfig({
+  entry: { index: "src/index.ts" },
+  format: ["esm", "cjs"],
+  dts: true,
+  clean: true,
+  sourcemap: true,
+  splitting: false,
+  target: "es2022",
+  outDir: "dist",
+  external: [
+    "@turf/along",
+    "@turf/area",
+    "@turf/bearing",
+    "@turf/boolean-intersects",
+    "@turf/boolean-within",
+    "@turf/buffer",
+    "@turf/centroid",
+    "@turf/convex",
+    "@turf/distance",
+    "@turf/helpers",
+    "@turf/length",
+    "@turf/nearest-point",
+    "@turf/nearest-point-on-line",
+    "@turf/tag",
+    "encodeurl",
+    "object-inspect",
+    "query-string",
+    "lodash",
+  ],
+});
