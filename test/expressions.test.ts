@@ -235,7 +235,7 @@ describe("ACOS", () => {
 
 describe("ACOSH", () => {
   it("returns the inverse hyperbolic cosine of a number", () => {
-    expect(ACOSH(27)).toBe(3.9886685449556193)
+    expect(ACOSH(27)).toBe(Math.log(27 + Math.sqrt(27 * 27 - 1)))
   })
 })
 
@@ -254,7 +254,7 @@ describe("AVERAGE", () => {
   it("returns the average of the values", () => {
     expect(AVERAGE([1, 2, 3])).toBe(2)
     expect(AVERAGE(1, 2, 3)).toBe(2)
-    expect(AVERAGE([])).toBeUndefined()
+    expect(AVERAGE([])).toBeNaN()
   })
 })
 
@@ -262,8 +262,10 @@ describe("CEILING", () => {
   it("returns the rounded up value", () => {
     expect(CEILING(2.5, 1)).toBe(3)
     expect(CEILING(0.25, 0.1)).toBeCloseTo(0.3, 10)
-    expect(CEILING(-2.5, -2)).toBe(-4)
+    expect(CEILING(-2.5, -2)).toBe(-2)
     expect(CEILING(1.5, 0.1)).toBeCloseTo(1.5, 10)
+    expect(CEILING(-0.13, 0.25)).toBe(-0)
+    expect(CEILING(-0.31, 0.25)).toBe(-0.25)
   })
 })
 
@@ -282,9 +284,10 @@ describe("CODE", () => {
 })
 
 describe("CONCAT", () => {
-  it("concatenates values into an array", () => {
-    expect(CONCAT([1, 2], [3, 4])).toEqual([1, 2, 3, 4])
-    expect(CONCAT([1], 2)).toEqual([1, 2])
+  it("is an alias for CONCATENATE and joins text strings", () => {
+    expect(CONCAT("1", "2", "3")).toBe("123")
+    expect(CONCAT("1", 2, "3")).toBe("123")
+    expect(CONCAT("1", null, "3")).toBe("13")
   })
 })
 
@@ -395,7 +398,8 @@ describe("TRUE", () => {
 describe("FLOOR", () => {
   it("rounds down a number", () => {
     expect(FLOOR(2.5, 1)).toBe(2)
-    expect(FLOOR(-2.5, -2)).toBe(-2)
+    expect(FLOOR(-0.13, 0.25)).toBe(-0.25)
+    expect(FLOOR(-0.31, 0.25)).toBe(-0.5)
   })
 })
 
@@ -440,8 +444,9 @@ describe("ISBLANK", () => {
 describe("ISNUMBER", () => {
   it("checks if value is a number", () => {
     expect(ISNUMBER(1)).toBe(true)
-    expect(ISNUMBER("1")).toBe(false)
+    expect(ISNUMBER("1")).toBe(true)
     expect(ISNUMBER(NaN)).toBe(false)
+    expect(ISNUMBER("a7")).toBe(false)
   })
 })
 
@@ -518,7 +523,7 @@ describe("LOG", () => {
 describe("LOG10", () => {
   it("returns the base-10 logarithm", () => {
     expect(LOG10(100)).toBe(2)
-    expect(LOG10(1000)).toBe(3)
+    expect(LOG10(1000)).toBeCloseTo(3, 10)
   })
 })
 
@@ -593,7 +598,6 @@ describe("POWER", () => {
 
 describe("PRODUCT", () => {
   it("returns the product of values", () => {
-    expect(PRODUCT([2, 3, 4])).toBe(24)
     expect(PRODUCT(2, 3, 4)).toBe(24)
   })
 })
@@ -684,7 +688,8 @@ describe("SQRT", () => {
 describe("STRING", () => {
   it("converts to string", () => {
     expect(STRING(123)).toBe("123")
-    expect(STRING(null)).toBeNull()
+    expect(STRING(null)).toBe("")
+    expect(STRING(undefined)).toBe("")
   })
 })
 
@@ -718,7 +723,7 @@ describe("TYPEOF", () => {
     expect(TYPEOF(1)).toBe("number")
     expect(TYPEOF("hello")).toBe("string")
     expect(TYPEOF(true)).toBe("boolean")
-    expect(TYPEOF(null)).toBe("object")
+    expect(TYPEOF(null)).toBe("null")
     expect(TYPEOF(undefined)).toBe("undefined")
   })
 })

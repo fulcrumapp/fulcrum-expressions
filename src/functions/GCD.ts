@@ -23,7 +23,7 @@ export default function GCD(...args: any[]): number {
   let result: number = numbers[0]
 
   for (let i = 1; i < numbers.length; i++) {
-    if (numbers[i] < 1) { return NaN }
+    if (numbers[i] < 0) { return NaN }
 
     let num: number = numbers[i]
 

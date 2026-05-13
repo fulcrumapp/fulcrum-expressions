@@ -8,6 +8,7 @@ import APPLICATION from "./APPLICATION"
 import APPLICATIONBUILD from "./APPLICATIONBUILD"
 import APPLICATIONINFO from "./APPLICATIONINFO"
 import APPLICATIONVERSION from "./APPLICATIONVERSION"
+import APPLYFIELDEFFECTS from "./APPLYFIELDEFFECTS"
 import ARRAY from "./ARRAY"
 import AVERAGE from "./AVERAGE"
 import CEILING from "./CEILING"
@@ -46,6 +47,7 @@ import DESCRIPTION from "./DESCRIPTION"
 import DEVICEINFO from "./DEVICEINFO"
 import DEVICEMANUFACTURER from "./DEVICEMANUFACTURER"
 import DEVICEMODEL from "./DEVICEMODEL"
+import DOLLAR from "./DOLLAR"
 import EMAIL from "./EMAIL"
 import ERROR from "./ERROR"
 import EVEN from "./EVEN"
@@ -59,6 +61,7 @@ import FIELD from "./FIELD"
 import FIELDNAMES from "./FIELDNAMES"
 import FIELDS from "./FIELDS"
 import FIELDTYPE from "./FIELDTYPE"
+import FIND from "./FIND"
 import FIRST from "./FIRST"
 import FIXED from "./FIXED"
 import FLATTEN from "./FLATTEN"
@@ -68,6 +71,25 @@ import FORMAT from "./FORMAT"
 import FORMATADDRESS from "./FORMATADDRESS"
 import FORMATNUMBER from "./FORMATNUMBER"
 import GCD from "./GCD"
+import GEOMETRY from "./GEOMETRY"
+import GEOMETRYALONG from "./GEOMETRYALONG"
+import GEOMETRYAREA from "./GEOMETRYAREA"
+import GEOMETRYBEARING from "./GEOMETRYBEARING"
+import GEOMETRYBUFFER from "./GEOMETRYBUFFER"
+import GEOMETRYCENTROID from "./GEOMETRYCENTROID"
+import GEOMETRYCONVEX from "./GEOMETRYCONVEX"
+import GEOMETRYDISTANCE from "./GEOMETRYDISTANCE"
+import GEOMETRYFEATURE from "./GEOMETRYFEATURE"
+import GEOMETRYFEATURECOLLECTION from "./GEOMETRYFEATURECOLLECTION"
+import GEOMETRYINTERSECTS from "./GEOMETRYINTERSECTS"
+import GEOMETRYLENGTH from "./GEOMETRYLENGTH"
+import GEOMETRYLINESTRING from "./GEOMETRYLINESTRING"
+import GEOMETRYNEARESTPOINT from "./GEOMETRYNEARESTPOINT"
+import GEOMETRYNEARESTPOINTONLINE from "./GEOMETRYNEARESTPOINTONLINE"
+import GEOMETRYPOINT from "./GEOMETRYPOINT"
+import GEOMETRYPOLYGON from "./GEOMETRYPOLYGON"
+import GEOMETRYTAG from "./GEOMETRYTAG"
+import GEOMETRYWITHIN from "./GEOMETRYWITHIN"
 import GETRESULT from "./GETRESULT"
 import GROUP from "./GROUP"
 import GROUPINGSEPARATOR from "./GROUPINGSEPARATOR"
@@ -75,6 +97,7 @@ import GROUPINGSIZE from "./GROUPINGSIZE"
 import HASOTHER from "./HASOTHER"
 import IF from "./IF"
 import IFERROR from "./IFERROR"
+import INFERENCE from "./INFERENCE"
 import INSPECT from "./INSPECT"
 import INT from "./INT"
 import INVALID from "./INVALID"
@@ -103,6 +126,9 @@ import LCM from "./LCM"
 import LEFT from "./LEFT"
 import LEN from "./LEN"
 import LN from "./LN"
+import LOADFILE from "./LOADFILE"
+import LOADFORM from "./LOADFORM"
+import LOADRECORDS from "./LOADRECORDS"
 import LOCALE from "./LOCALE"
 import LOG from "./LOG"
 import LOG10 from "./LOG10"
@@ -119,6 +145,7 @@ import MID from "./MID"
 import MIN from "./MIN"
 import MINA from "./MINA"
 import MOD from "./MOD"
+import MODE from "./MODE"
 import MONTH from "./MONTH"
 import N from "./N"
 import NOT from "./NOT"
@@ -128,7 +155,9 @@ import ODD from "./ODD"
 import OFF from "./OFF"
 import ON from "./ON"
 import ONCE from "./ONCE"
+import OPENEXTENSION from "./OPENEXTENSION"
 import OPENURL from "./OPENURL"
+import OR from "./OR"
 import OTHER from "./OTHER"
 import PI from "./PI"
 import PLATFORM from "./PLATFORM"
@@ -137,6 +166,7 @@ import PLATFORMVERSION from "./PLATFORMVERSION"
 import PLUCK from "./PLUCK"
 import POWER from "./POWER"
 import PRECISION from "./PRECISION"
+import PREVENTDEFAULT from "./PREVENTDEFAULT"
 import PRODUCT from "./PRODUCT"
 import PROGRESS from "./PROGRESS"
 import PROJECTID from "./PROJECTID"
@@ -147,18 +177,21 @@ import QUOTIENT from "./QUOTIENT"
 import RADIANS from "./RADIANS"
 import RAND from "./RAND"
 import RANDBETWEEN from "./RANDBETWEEN"
+import RECOGNIZETEXT from "./RECOGNIZETEXT"
 import RECORDID from "./RECORDID"
 import REPEATABLEID from "./REPEATABLEID"
 import REPEATABLENUMBER from "./REPEATABLENUMBER"
 import REPEATABLESUM from "./REPEATABLESUM"
 import REPEATABLEVALUES from "./REPEATABLEVALUES"
+import REPLACE from "./REPLACE"
+import REQUEST from "./REQUEST"
 import RIGHT from "./RIGHT"
 import ROLE from "./ROLE"
 import ROUND from "./ROUND"
 import ROUNDDOWN from "./ROUNDDOWN"
 import ROUNDUP from "./ROUNDUP"
-import REQUEST from "./REQUEST"
 import RPAD from "./RPAD"
+import SAVE from "./SAVE"
 import SEARCH from "./SEARCH"
 import SETASSIGNMENT from "./SETASSIGNMENT"
 import SETFORMATTRIBUTES from "./SETFORMATTRIBUTES"
@@ -173,6 +206,7 @@ import SETMAXLENGTH from "./SETMAXLENGTH"
 import SETMINLENGTH from "./SETMINLENGTH"
 import SETHIDDEN from "./SETHIDDEN"
 import SETINTERVAL from "./SETINTERVAL"
+import SETMODE from "./SETMODE"
 import SETREQUIRED from "./SETREQUIRED"
 import SETRESULT from "./SETRESULT"
 import SHOWERRORS from "./SHOWERRORS"
@@ -182,11 +216,12 @@ import SETREADONLY from "./SETREADONLY"
 import SETSTATUSREADONLY from "./SETSTATUSREADONLY"
 import SETDESCRIPTION from "./SETDESCRIPTION"
 import SETPROJECT from "./SETPROJECT"
-import SETPROJECTHIDDEN from './SETPROJECTHIDDEN'
-import SETPROJECTREADONLY from './SETPROJECTREADONLY'
+import SETPROJECTHIDDEN from "./SETPROJECTHIDDEN"
+import SETPROJECTREADONLY from "./SETPROJECTREADONLY"
 import SETSTATUSFILTER from "./SETSTATUSFILTER"
 import SETDISABLED from "./SETDISABLED"
 import SETVALUE from "./SETVALUE"
+import SHUFFLE from "./SHUFFLE"
 import SIGN from "./SIGN"
 import SIN from "./SIN"
 import SINH from "./SINH"
@@ -195,10 +230,10 @@ import STATUS from "./STATUS"
 import STATUSLABEL from "./STATUSLABEL"
 import STORAGE from "./STORAGE"
 import STRING from "./STRING"
-import SUBSTITUTE from "./SUBSTITUTE"
-import SUM from "./SUM"
 import SQRT from "./SQRT"
 import SQRTPI from "./SQRTPI"
+import SUBSTITUTE from "./SUBSTITUTE"
+import SUM from "./SUM"
 import SUMSQ from "./SUMSQ"
 import T from "./T"
 import TIMEADD from "./TIMEADD"
@@ -232,6 +267,7 @@ export const functions: FunctionMap = {
   APPLICATIONBUILD,
   APPLICATIONINFO,
   APPLICATIONVERSION,
+  APPLYFIELDEFFECTS,
   ARRAY,
   AVERAGE,
   CEILING,
@@ -270,6 +306,7 @@ export const functions: FunctionMap = {
   DEVICEINFO,
   DEVICEMANUFACTURER,
   DEVICEMODEL,
+  DOLLAR,
   EMAIL,
   ERROR,
   EVEN,
@@ -283,6 +320,7 @@ export const functions: FunctionMap = {
   FIELDNAMES,
   FIELDS,
   FIELDTYPE,
+  FIND,
   FIRST,
   FIXED,
   FLATTEN,
@@ -292,6 +330,25 @@ export const functions: FunctionMap = {
   FORMATADDRESS,
   FORMATNUMBER,
   GCD,
+  GEOMETRY,
+  GEOMETRYALONG,
+  GEOMETRYAREA,
+  GEOMETRYBEARING,
+  GEOMETRYBUFFER,
+  GEOMETRYCENTROID,
+  GEOMETRYCONVEX,
+  GEOMETRYDISTANCE,
+  GEOMETRYFEATURE,
+  GEOMETRYFEATURECOLLECTION,
+  GEOMETRYINTERSECTS,
+  GEOMETRYLENGTH,
+  GEOMETRYLINESTRING,
+  GEOMETRYNEARESTPOINT,
+  GEOMETRYNEARESTPOINTONLINE,
+  GEOMETRYPOINT,
+  GEOMETRYPOLYGON,
+  GEOMETRYTAG,
+  GEOMETRYWITHIN,
   GETRESULT,
   GROUP,
   GROUPINGSEPARATOR,
@@ -299,6 +356,7 @@ export const functions: FunctionMap = {
   HASOTHER,
   IF,
   IFERROR,
+  INFERENCE,
   INSPECT,
   INT,
   INVALID,
@@ -327,6 +385,9 @@ export const functions: FunctionMap = {
   LEFT,
   LEN,
   LN,
+  LOADFILE,
+  LOADFORM,
+  LOADRECORDS,
   LOCALE,
   LOG,
   LOG10,
@@ -343,6 +404,7 @@ export const functions: FunctionMap = {
   MIN,
   MINA,
   MOD,
+  MODE,
   MONTH,
   N,
   NO_VALUE: undefined,
@@ -353,7 +415,9 @@ export const functions: FunctionMap = {
   OFF,
   ON,
   ONCE,
+  OPENEXTENSION,
   OPENURL,
+  OR,
   OTHER,
   PI,
   PLATFORM,
@@ -362,6 +426,7 @@ export const functions: FunctionMap = {
   PLUCK,
   POWER,
   PRECISION,
+  PREVENTDEFAULT,
   PRODUCT,
   PROGRESS,
   PROJECTID,
@@ -372,19 +437,22 @@ export const functions: FunctionMap = {
   RADIANS,
   RAND,
   RANDBETWEEN,
+  RECOGNIZETEXT,
   RECORDID,
   REPEATABLEID,
   REPEATABLENUMBER,
   REPEATABLESUM,
   REPEATABLEVALUES,
+  REPLACE,
   REQUEST,
-  RPAD,
   RESETCONFIG,
   RIGHT,
   ROLE,
   ROUND,
   ROUNDDOWN,
   ROUNDUP,
+  RPAD,
+  SAVE,
   SEARCH,
   SETASSIGNMENT,
   SETFORMATTRIBUTES,
@@ -398,6 +466,7 @@ export const functions: FunctionMap = {
   SETMINLENGTH,
   SETHIDDEN,
   SETINTERVAL,
+  SETMODE,
   SETSTATUS,
   SETSTATUSHIDDEN,
   SETTIMEOUT,
@@ -413,6 +482,7 @@ export const functions: FunctionMap = {
   SETREQUIRED,
   SETRESULT,
   SHOWERRORS,
+  SHUFFLE,
   SIGN,
   SIN,
   SINH,

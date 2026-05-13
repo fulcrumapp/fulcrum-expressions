@@ -30,5 +30,9 @@ export default function FLOOR(value?: any, multiple = 1): number {
   if (ISNAN(num) || isUndefined(num)) { return NaN }
   if (significance === 0) { return 0 }
 
-  return ROUND(Math.floor(num / significance) * significance, precision)
+  if (num >= 0) {
+    return ROUND(Math.floor(num / significance) * significance, precision)
+  } else {
+    return -ROUND(Math.ceil(Math.abs(num) / significance) * significance, precision)
+  }
 }
