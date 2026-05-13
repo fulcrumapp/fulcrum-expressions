@@ -806,3 +806,90 @@ describe("ERROR", () => {
     expect(() => ERROR("test error")).toThrow("test error")
   })
 })
+
+describe("OR", () => {
+  it("returns true if any argument is truthy", () => {
+    expect(g.OR(true, true)).toBe(true)
+    expect(g.OR(true, false)).toBe(true)
+    expect(g.OR(false, false)).toBe(false)
+    expect(g.OR(1, 0)).toBe(true)
+    expect(g.OR(0, 0)).toBe(false)
+  })
+})
+
+describe("FIND", () => {
+  it("finds one string within another", () => {
+    expect(g.FIND("world", "hello world")).toBe(7)
+    expect(g.FIND("xyz", "hello world")).toBeUndefined()
+    expect(g.FIND("l", "hello world", 5)).toBe(10)
+    expect(g.FIND(null, "hello")).toBeUndefined()
+  })
+})
+
+describe("REPLACE", () => {
+  it("replaces part of a text string", () => {
+    expect(g.REPLACE("hello world", 7, 5, "earth")).toBe("hello earth")
+    expect(g.REPLACE("abc", 2, 1, "X")).toBe("aXc")
+    expect(g.REPLACE(null, 1, 1, "x")).toBeUndefined()
+    expect(g.REPLACE("abc", 0, 1, "x")).toBeUndefined()
+  })
+})
+
+describe("DOLLAR", () => {
+  it("formats a number as currency", () => {
+    const result = g.DOLLAR(1234.56)
+    expect(typeof result).toBe("string")
+  })
+})
+
+describe("MODE", () => {
+  it("returns the current runtime mode", () => {
+    const result = g.MODE()
+    // mode is undefined initially
+    expect(result).toBeUndefined()
+  })
+})
+
+describe("SETMODE", () => {
+  it("sets the runtime mode", () => {
+    g.SETMODE("edit")
+    expect(g.MODE()).toBe("edit")
+  })
+
+  it("throws if mode is not a string", () => {
+    expect(() => g.SETMODE(null)).toThrow()
+  })
+})
+
+describe("SAVE", () => {
+  it("does not throw when called", () => {
+    expect(() => g.SAVE()).not.toThrow()
+  })
+})
+
+describe("PREVENTDEFAULT", () => {
+  it("does not throw when called", () => {
+    expect(() => g.PREVENTDEFAULT()).not.toThrow()
+  })
+})
+
+describe("function parity", () => {
+  it("exports all 253 functions from the CoffeeScript version", () => {
+    expect(Object.keys(functions).length).toBe(253)
+  })
+
+  it("includes all key functions", () => {
+    const required = [
+      "ABS", "ARRAY", "AVERAGE", "CEILING", "CONCAT", "CONCATENATE",
+      "CONFIG", "CONFIGURE", "DOLLAR", "ERROR", "FIND", "FLOOR",
+      "FORMAT", "GEOMETRY", "GEOMETRYALONG", "GEOMETRYAREA",
+      "IF", "INFERENCE", "ISBLANK", "ISNUMBER", "LOADRECORDS",
+      "MODE", "NUM", "OR", "PREVENTDEFAULT", "REPLACE",
+      "REQUEST", "RESETCONFIG", "SAVE", "SETMODE", "SHUFFLE",
+      "SUM", "TYPEOF", "VALUE",
+    ]
+    for (const fn of required) {
+      expect(functions).toHaveProperty(fn)
+    }
+  })
+})

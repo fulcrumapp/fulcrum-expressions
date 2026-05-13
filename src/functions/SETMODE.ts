@@ -7,7 +7,7 @@ import ERROR from "./ERROR"
  * @param mode (String, required): the mode to set
  */
 export default function SETMODE(mode: string): void {
-  if (mode == null || !isString(mode)) {
+  if (mode === null || mode === undefined || !isString(mode)) {
     ERROR("mode must be a string")
   }
   ($$runtime as any).mode = mode
