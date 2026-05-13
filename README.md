@@ -5,7 +5,7 @@ Expression runtime for Fulcrum. TypeScript-first, dual ESM/CJS package.
 ### Install
 
 ```sh
-npm install @fulcrumapp/expressions
+yarn add @fulcrumapp/expressions
 ```
 
 ### Usage
@@ -29,19 +29,19 @@ functions.SUM(1, 2, 3) // 6
 
 ```sh
 # Install dependencies
-npm install
+yarn
 
 # Type check
-npm run typecheck
+yarn typecheck
 
 # Build (ESM + CJS)
-npm run build
+yarn build
 
 # Run tests
-npm test
+yarn test
 
 # Watch tests
-npm run test:watch
+yarn test:watch
 ```
 
 ### Publishing
