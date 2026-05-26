@@ -1,0 +1,5 @@
+node-option:
+  - import=tsx
+spec: "test/**/*.test.ts"
+reporter: list
+timeout: 10000

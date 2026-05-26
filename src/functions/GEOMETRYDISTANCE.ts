@@ -1,0 +1,21 @@
+/**
+ * Calculates the distance between two points in degrees, radians, miles, or kilometers. This uses the Haversine formula to account for global curvature.
+ * 
+ * View Documentation - https://learn.fulcrumapp.com/dev/expressions/reference/geometrydistance/
+ */
+
+import distance from "@turf/distance"
+import type { Point } from "../types/geojson"
+import type { Coord } from "../types/geometry"
+import type { Units } from "../types/geometry"
+
+export default function GEOMETRYDISTANCE(
+  from: Coord | Point,
+  to: Coord | Point,
+  options: {
+    units?: Units;
+  } = {}
+): number
+{
+  return distance(from, to, options as any)
+}
