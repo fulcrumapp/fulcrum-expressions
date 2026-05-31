@@ -1285,7 +1285,7 @@ exports.INFERENCE = (options, callback) ->
     if options.config.stopTokens?
       ERROR('options.config.stopTokens must be an array') if not _.isArray(options.config.stopTokens)
       for token in options.config.stopTokens
-        ERROR('options.config.stopTokens must be an array of strings') if token? and not _.isString(token)
+        ERROR('options.config.stopTokens must be an array of strings') if not token? or not _.isString(token) or token is ''
 
     args.photo_id = null
     args.config =
@@ -1296,7 +1296,7 @@ exports.INFERENCE = (options, callback) ->
       topP: if options.config.topP? then +options.config.topP else null
       maxTokens: if options.config.maxTokens? then +options.config.maxTokens else null
       contextSize: if options.config.contextSize? then +options.config.contextSize else null
-      stopTokens: if options.config.stopTokens? then options.config.stopTokens.map((t) -> if t? then t.toString() else '') else null
+      stopTokens: if options.config.stopTokens? then options.config.stopTokens.map((t) -> t.toString()) else null
 
   completion = (error, result) =>
     return callback(error) if error

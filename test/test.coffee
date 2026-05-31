@@ -2858,6 +2858,32 @@ describe "SETMODE", ->
 
         (-> INFERENCE params).should.throw('options.config.stopTokens must be an array of strings')
 
+      it 'fails if stopTokens contains null or undefined', ->
+        params1 =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', null]
+
+        (-> INFERENCE params1).should.throw('options.config.stopTokens must be an array of strings')
+
+        params2 =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', undefined]
+
+        (-> INFERENCE params2).should.throw('options.config.stopTokens must be an array of strings')
+
+      it 'fails if stopTokens contains empty strings', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', '']
+
+        (-> INFERENCE params).should.throw('options.config.stopTokens must be an array of strings')
+
       it 'fails if config contains both vision (size) and generative (prompt) parameters', ->
         params =
           model: 'llama3.gguf'
