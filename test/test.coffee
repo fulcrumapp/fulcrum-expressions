@@ -2858,6 +2858,15 @@ describe "SETMODE", ->
 
         (-> INFERENCE params).should.throw('options.config.stopTokens must be an array of strings')
 
+      it 'fails if config contains both vision (size) and generative (prompt) parameters', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            size: 224
+
+        (-> INFERENCE params).should.throw('options.config cannot contain both size (Vision ML) and prompt/systemPrompt (Generative LLM)')
+
 
   describe 'LOADFILE', ->
     it 'calls loadFile', ->

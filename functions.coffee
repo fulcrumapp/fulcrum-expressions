@@ -1191,9 +1191,15 @@ exports.INFERENCE = (options, callback) ->
   # Route mode
   mode = null
   if options.config?
-    if options.config.size?
+    hasSize = options.config.size?
+    hasPrompt = options.config.prompt? or options.config.systemPrompt?
+
+    if hasSize and hasPrompt
+      ERROR('options.config cannot contain both size (Vision ML) and prompt/systemPrompt (Generative LLM)')
+
+    if hasSize
       mode = 'modern_ml'
-    else if options.config.prompt? or options.config.systemPrompt?
+    else if hasPrompt
       mode = 'modern_llm'
     else if options.photo_id?
       mode = 'modern_ml'
