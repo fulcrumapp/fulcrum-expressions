@@ -2643,6 +2643,23 @@ describe "SETMODE", ->
           (error is null).should.be.true()
           result.outputs.out.value.should.eql([1, 2, 3])
 
+      it 'calls legacy inference successfully with numeric strings in mean and std', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          format: 'chw'
+          type: 'float'
+          mean: ['0.5', '0.5', '0.5']
+          std: ['0.5', '0.5', '0.5']
+
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { outputs: { out: { value: [1, 2, 3], shape: [1, 3] } } } ])
+
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.out.value.should.eql([1, 2, 3])
+
       it 'fails if photo_id is not a string', ->
         params =
           photo_id: 123
@@ -2714,6 +2731,24 @@ describe "SETMODE", ->
             inputType: 'int8'
             mean: [127.5, 127.5, 127.5]
             std: [127.5, 127.5, 127.5]
+
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { outputs: { out: { value: [4, 5, 6], shape: [1, 3] } } } ])
+
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.out.value.should.eql([4, 5, 6])
+
+      it 'calls modern ML inference successfully with numeric strings in mean and std', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            size: 224
+            format: 'hwc'
+            inputType: 'int8'
+            mean: ['127.5', '127.5', '127.5']
+            std: ['127.5', '127.5', '127.5']
 
         mockHostFunction('setTimeout', [])
         mockHostFunction('inference', [ null, { outputs: { out: { value: [4, 5, 6], shape: [1, 3] } } } ])

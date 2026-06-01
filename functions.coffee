@@ -1221,11 +1221,11 @@ exports.INFERENCE = (options, callback) ->
     
     if options.mean?
       ERROR('options.mean must be an array') if not _.isArray(options.mean)
-      ERROR('options.mean must have exactly 3 numbers') if options.mean.length isnt 3 or not _.isNumber(options.mean[0]) or not _.isNumber(options.mean[1]) or not _.isNumber(options.mean[2])
+      ERROR('options.mean must have exactly 3 numbers') if options.mean.length isnt 3 or _.some(options.mean, (v) -> not ISNUMBER(v))
 
     if options.std?
       ERROR('options.std must be an array') if not _.isArray(options.std)
-      ERROR('options.std must have exactly 3 numbers') if options.std.length isnt 3 or not _.isNumber(options.std[0]) or not _.isNumber(options.std[1]) or not _.isNumber(options.std[2])
+      ERROR('options.std must have exactly 3 numbers') if options.std.length isnt 3 or _.some(options.std, (v) -> not ISNUMBER(v))
 
     args.photo_id = options.photo_id.toString()
     args.size = +options.size
@@ -1244,11 +1244,11 @@ exports.INFERENCE = (options, callback) ->
 
     if options.config.mean?
       ERROR('options.config.mean must be an array') if not _.isArray(options.config.mean)
-      ERROR('options.config.mean must have exactly 3 numbers') if options.config.mean.length isnt 3 or not _.isNumber(options.config.mean[0]) or not _.isNumber(options.config.mean[1]) or not _.isNumber(options.config.mean[2])
+      ERROR('options.config.mean must have exactly 3 numbers') if options.config.mean.length isnt 3 or _.some(options.config.mean, (v) -> not ISNUMBER(v))
 
     if options.config.std?
       ERROR('options.config.std must be an array') if not _.isArray(options.config.std)
-      ERROR('options.config.std must have exactly 3 numbers') if options.config.std.length isnt 3 or not _.isNumber(options.config.std[0]) or not _.isNumber(options.config.std[1]) or not _.isNumber(options.config.std[2])
+      ERROR('options.config.std must have exactly 3 numbers') if options.config.std.length isnt 3 or _.some(options.config.std, (v) -> not ISNUMBER(v))
 
     args.photo_id = options.photo_id.toString()
     args.config =
