@@ -2809,6 +2809,10 @@ interface LegacyMLInferenceOptions {
      * Context form name holding the model as a reference file.
      */
     form_name?: string;
+    /**
+     * config is not supported in Legacy ML.
+     */
+    config?: never;
 }
 interface ModernMLInferenceOptions {
     /**
@@ -2846,6 +2850,14 @@ interface ModernMLInferenceOptions {
          * Normalization standard deviation. Must be an array of exactly 3 numbers.
          */
         std?: [number, number, number];
+        /**
+         * prompt is not supported in Vision ML.
+         */
+        prompt?: never;
+        /**
+         * systemPrompt is not supported in Vision ML.
+         */
+        systemPrompt?: never;
     };
     /**
      * Context form details.
@@ -2912,13 +2924,18 @@ interface ModernLLMInferenceOptions {
      */
     model: string;
     /**
-     * photo_id is not required for text-only LLM inference.
+     * photo_id must not be supplied for text-only LLM inference.
      */
-    photo_id?: never | null;
+    photo_id?: never;
     /**
      * Generative LLM generation parameters. Enforces that at least one of prompt or systemPrompt must be provided.
      */
-    config: LLMInferenceConfig;
+    config: LLMInferenceConfig & {
+        /**
+         * size is not supported in text-only LLM inference.
+         */
+        size?: never;
+    };
     /**
      * Context form details.
      */
@@ -2932,7 +2949,7 @@ interface MLInferenceResult {
             value: number[];
             shape: number[];
             type?: string;
-        } | any;
+        };
     };
     time: number;
     original: {

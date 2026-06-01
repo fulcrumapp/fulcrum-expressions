@@ -1204,7 +1204,7 @@ exports.INFERENCE = (options, callback) ->
     else if options.photo_id?
       mode = 'modern_ml'
     else
-      mode = 'modern_llm'
+      ERROR('cannot determine inference mode: please provide options.config.size for Modern ML or options.config.prompt/systemPrompt for Modern LLM')
   else
     mode = 'legacy_ml'
 
@@ -1285,7 +1285,8 @@ exports.INFERENCE = (options, callback) ->
     if options.config.stopTokens?
       ERROR('options.config.stopTokens must be an array') if not _.isArray(options.config.stopTokens)
       for token in options.config.stopTokens
-        ERROR('options.config.stopTokens must be an array of strings') if not token? or not _.isString(token) or token is ''
+        ERROR('options.config.stopTokens must be an array of strings') if not token? or not _.isString(token)
+        ERROR('options.config.stopTokens must not contain empty strings') if token is ''
 
     args.photo_id = null
     args.config =

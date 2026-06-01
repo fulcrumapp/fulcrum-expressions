@@ -2803,7 +2803,7 @@ describe "SETMODE", ->
           config:
             temperature: 0.7
 
-        (-> INFERENCE params).should.throw('options.config.prompt or options.config.systemPrompt must be provided')
+        (-> INFERENCE params).should.throw('cannot determine inference mode: please provide options.config.size for Modern ML or options.config.prompt/systemPrompt for Modern LLM')
 
       it 'fails if temperature is negative', ->
         params =
@@ -2882,7 +2882,7 @@ describe "SETMODE", ->
             prompt: 'Hi'
             stopTokens: ['ok', '']
 
-        (-> INFERENCE params).should.throw('options.config.stopTokens must be an array of strings')
+        (-> INFERENCE params).should.throw('options.config.stopTokens must not contain empty strings')
 
       it 'fails if config contains both vision (size) and generative (prompt) parameters', ->
         params =
