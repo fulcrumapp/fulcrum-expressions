@@ -59,6 +59,7 @@
     "elliptic": "^6.5.3",
     "path-parse": "^1.0.7",
     "lodash": "^4.17.21",
-    "handlebars": "^4.7.9"
+    "handlebars": "^4.7.9",
+    "concaveman": "1.2.1"
   }
 }

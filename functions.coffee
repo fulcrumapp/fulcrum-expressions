@@ -1178,38 +1178,134 @@ exports.MESSAGEBOX = (options, callback) ->
 
 exports.INFERENCE = (options, callback) ->
   ERROR('options must be provided') unless options?
-  ERROR('options.photo_id must be a string') if not _.isString(options.photo_id)
-  ERROR('options.form_id must be a string') if options.form_id and not _.isString(options.form_id)
-  ERROR('options.form_name must be a string') if options.form_name and not _.isString(options.form_name)
-  ERROR('options.model must be a string') if not _.isString(options.model)
-  ERROR('options.size must be a number') if not _.isNumber(options.size)
-  ERROR('options.format must be either "hwc" or "chw"') if options.format and not _.include(['hwc', 'chw'], options.format)
-  ERROR('options.type must be either "uint8" or "float"') if options.type and not _.include(['uint8', 'float'], options.type)
-  ERROR('options.mean must be an array') if options.mean and not _.isArray(options.mean)
-  ERROR('options.std must be an array') if options.std and not _.isArray(options.std)
   ERROR('callback must be a function') if callback and not _.isFunction(callback)
 
   callback ?= () ->
 
+  ERROR('options.model must be a string') if not options.model? or not _.isString(options.model)
+  ERROR('options.form_id must be a string') if options.form_id? and not _.isString(options.form_id)
+  ERROR('options.form_name must be a string') if options.form_name? and not _.isString(options.form_name)
+
   options.form_id ?= FORM().id unless options.form_name?
 
+  # Route mode
+  mode = null
+  if options.config?
+    hasSize = options.config.size?
+    hasPrompt = options.config.prompt? or options.config.systemPrompt?
+
+    if hasSize and hasPrompt
+      ERROR('options.config cannot contain both size (Vision ML) and prompt/systemPrompt (Generative LLM)')
+
+    if hasSize
+      mode = 'modern_ml'
+    else if hasPrompt
+      mode = 'modern_llm'
+    else if options.photo_id?
+      mode = 'modern_ml'
+    else
+      ERROR('cannot determine inference mode: please provide options.config.size for Modern ML or options.config.prompt/systemPrompt for Modern LLM')
+  else
+    mode = 'legacy_ml'
+
   args =
-    photo_id: if options.photo_id? then options.photo_id.toString() else null
     form_id: if options.form_id? then options.form_id.toString() else null
     form_name: if options.form_name? then options.form_name.toString() else null
     model: if options.model? then options.model.toString() else null
-    size: if options.size? then +options.size else null
-    format: if options.format? then options.format.toString() else null
-    type: if options.type? then options.type.toString() else null
-    mean: if options.mean? then options.mean.map(NUM) else null
-    std: if options.std? then options.std.map(NUM) else null
+
+  if mode is 'legacy_ml'
+    ERROR('options.photo_id must be a string') if not options.photo_id? or not _.isString(options.photo_id)
+    ERROR('options.size must be a number') if not options.size? or not _.isNumber(options.size)
+    ERROR('options.format must be either "hwc" or "chw"') if options.format? and not _.include(['hwc', 'chw'], options.format)
+    ERROR('options.type must be either "uint8" or "float"') if options.type? and not _.include(['uint8', 'float'], options.type)
+    
+    if options.mean?
+      ERROR('options.mean must be an array') if not _.isArray(options.mean)
+      ERROR('options.mean must have exactly 3 numbers') if options.mean.length isnt 3 or _.some(options.mean, (v) -> not ISNUMBER(v))
+
+    if options.std?
+      ERROR('options.std must be an array') if not _.isArray(options.std)
+      ERROR('options.std must have exactly 3 numbers') if options.std.length isnt 3 or _.some(options.std, (v) -> not ISNUMBER(v))
+
+    args.photo_id = options.photo_id.toString()
+    args.size = +options.size
+    args.format = if options.format? then options.format.toString() else null
+    args.type = if options.type? then options.type.toString() else null
+    args.mean = if options.mean? then options.mean.map(NUM) else null
+    args.std = if options.std? then options.std.map(NUM) else null
+
+  else if mode is 'modern_ml'
+    ERROR('options.photo_id must be a string') if not options.photo_id? or not _.isString(options.photo_id)
+    ERROR('options.config must be an object') if not _.isObject(options.config) or _.isArray(options.config)
+    ERROR('options.config.size must be a number') if not options.config.size? or not _.isNumber(options.config.size)
+    ERROR('options.config.size must be greater than 0') if options.config.size <= 0
+    ERROR('options.config.format must be either "hwc" or "chw"') if options.config.format? and not _.include(['hwc', 'chw'], options.config.format)
+    ERROR('options.config.inputType must be either "int8" or "float"') if options.config.inputType? and not _.include(['int8', 'float'], options.config.inputType)
+
+    if options.config.mean?
+      ERROR('options.config.mean must be an array') if not _.isArray(options.config.mean)
+      ERROR('options.config.mean must have exactly 3 numbers') if options.config.mean.length isnt 3 or _.some(options.config.mean, (v) -> not ISNUMBER(v))
+
+    if options.config.std?
+      ERROR('options.config.std must be an array') if not _.isArray(options.config.std)
+      ERROR('options.config.std must have exactly 3 numbers') if options.config.std.length isnt 3 or _.some(options.config.std, (v) -> not ISNUMBER(v))
+
+    args.photo_id = options.photo_id.toString()
+    args.config =
+      size: +options.config.size
+      format: if options.config.format? then options.config.format.toString() else null
+      inputType: if options.config.inputType? then options.config.inputType.toString() else null
+      mean: if options.config.mean? then options.config.mean.map(NUM) else null
+      std: if options.config.std? then options.config.std.map(NUM) else null
+
+  else if mode is 'modern_llm'
+    ERROR('options.photo_id must be null or undefined') if options.photo_id?
+    ERROR('options.config must be an object') if not _.isObject(options.config) or _.isArray(options.config)
+    
+    if options.config.prompt?
+      ERROR('options.config.prompt must be a string') if not _.isString(options.config.prompt)
+    if options.config.systemPrompt?
+      ERROR('options.config.systemPrompt must be a string') if not _.isString(options.config.systemPrompt)
+    
+    ERROR('options.config.prompt or options.config.systemPrompt must be provided') if not options.config.prompt? and not options.config.systemPrompt?
+
+    ERROR('options.config.temperature must be non-negative') if options.config.temperature? and (not _.isNumber(options.config.temperature) or options.config.temperature < 0)
+    
+    if options.config.topK?
+      ERROR('options.config.topK must be a positive integer') if not _.isNumber(options.config.topK) or options.config.topK <= 0 or options.config.topK % 1 isnt 0
+    
+    ERROR('options.config.topP must be non-negative') if options.config.topP? and (not _.isNumber(options.config.topP) or options.config.topP < 0)
+    
+    if options.config.maxTokens?
+      ERROR('options.config.maxTokens must be a positive integer') if not _.isNumber(options.config.maxTokens) or options.config.maxTokens <= 0 or options.config.maxTokens % 1 isnt 0
+    
+    if options.config.contextSize?
+      ERROR('options.config.contextSize must be a positive integer') if not _.isNumber(options.config.contextSize) or options.config.contextSize <= 0 or options.config.contextSize % 1 isnt 0
+
+    if options.config.stopTokens?
+      ERROR('options.config.stopTokens must be an array') if not _.isArray(options.config.stopTokens)
+      for token in options.config.stopTokens
+        ERROR('options.config.stopTokens must be an array of strings') if not token? or not _.isString(token)
+        ERROR('options.config.stopTokens must not contain empty strings') if token is ''
+
+    args.photo_id = null
+    args.config =
+      prompt: if options.config.prompt? then options.config.prompt.toString() else null
+      systemPrompt: if options.config.systemPrompt? then options.config.systemPrompt.toString() else null
+      temperature: if options.config.temperature? then +options.config.temperature else null
+      topK: if options.config.topK? then +options.config.topK else null
+      topP: if options.config.topP? then +options.config.topP else null
+      maxTokens: if options.config.maxTokens? then +options.config.maxTokens else null
+      contextSize: if options.config.contextSize? then +options.config.contextSize else null
+      stopTokens: if options.config.stopTokens? then options.config.stopTokens.map((t) -> t.toString()) else null
 
   completion = (error, result) =>
     return callback(error) if error
 
-    for output in Object.values(result.outputs)
-      if Array.isArray(output.value)
-        output.value = FLATTEN(output.value)
+    if result?.outputs? and not (result.modelType is 'LLM')
+      for output in Object.values(result.outputs)
+        if output? and Array.isArray(output.value)
+          output.value = FLATTEN(output.value)
 
     callback.apply(null, [error, result])
 
