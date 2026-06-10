@@ -2,9 +2,6 @@ global.Intl = require 'intl'
 
 _ = require 'underscore'
 
-path = require 'path'
-CSON = require 'season'
-
 DIST = process.env.DIST or false
 
 if DIST
@@ -16,7 +13,7 @@ else
   runtime = require '../runtime'
   Utils = require '../utils'
 
-variables = CSON.readFileSync(path.join(__dirname, 'variables.cson'))
+variables = require('./variables.json')
 
 CONFIGURE(variables)
 
@@ -42,6 +39,22 @@ shouldBeNull = (value) ->
 
 shouldHaveNoValue = (value) ->
   (value is NO_VALUE).should.be.true()
+
+# Rounds all numbers in a nested structure to the given precision.
+# Useful for comparing geometry results where floating-point drift
+# beyond the default 10 decimal places is expected and irrelevant.
+roundDeep = (obj, precision = 10) ->
+  if typeof obj is 'number'
+    parseFloat(obj.toFixed(precision))
+  else if Array.isArray(obj)
+    obj.map((item) -> roundDeep(item, precision))
+  else if typeof obj is 'object' and obj isnt null
+    result = {}
+    for key, value of obj
+      result[key] = roundDeep(value, precision)
+    result
+  else
+    obj
 
 shouldBeUndefined = (value) ->
   (value is undefined).should.be.true()
@@ -1561,7 +1574,7 @@ describe 'GEOMETRYBEARING', ->
 
 describe 'GEOMETRYBUFFER', ->
   it 'buffers a geometry', ->
-    GEOMETRYBUFFER(polygon, 10, { units: 'meters' }).should.eql {
+    roundDeep(GEOMETRYBUFFER(polygon, 10, { units: 'meters' })).should.eql roundDeep({
       type: 'Feature',
       properties: {},
       geometry: {
@@ -1607,9 +1620,9 @@ describe 'GEOMETRYBUFFER', ->
           ],
         ],
       },
-    }
+    })
 
-    GEOMETRYBUFFER(lineString, 20, { units: 'meters', steps: 2 }).should.eql {
+    roundDeep(GEOMETRYBUFFER(lineString, 20, { units: 'meters', steps: 2 })).should.eql roundDeep({
       type: 'Feature',
       properties: {},
       geometry: {
@@ -1647,7 +1660,7 @@ describe 'GEOMETRYBUFFER', ->
           ],
         ],
       },
-    }
+    })
 
 describe 'GEOMETRYCENTROID', ->
   it 'returns the centroid of the geometry', ->
@@ -2611,38 +2624,309 @@ describe "SETMODE", ->
     SETMODE('edit')
     MODE().should.eql('edit')
  
- describe 'INFERENCE', ->
-  it 'calls inference', ->
-    params =
-      photo_id: 'photo-id'
-      model: 'test.ort'
-      size: 640
-      format: 'chw'
-      type: 'float'
+  describe 'INFERENCE', ->
+    describe 'Legacy ML (Vision)', ->
+      it 'calls legacy inference successfully', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          format: 'chw'
+          type: 'float'
+          mean: [0.5, 0.5, 0.5]
+          std: [0.5, 0.5, 0.5]
 
-    mockHostFunction('setTimeout', [])
-    mockHostFunction('inference', [ null, { outputs: [1, 2, 3] } ])
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { outputs: { out: { value: [1, 2, 3], shape: [1, 3] } } } ])
 
-    INFERENCE params, (error, { outputs }) ->
-      outputs.should.eql([1, 2, 3])
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.out.value.should.eql([1, 2, 3])
 
-  it 'fails if called without a photo', ->
-    params =
-      model: 'test.ort'
-      size: 640
-      format: 'chw'
-      type: 'float'
+      it 'calls legacy inference successfully with numeric strings in mean and std', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          format: 'chw'
+          type: 'float'
+          mean: ['0.5', '0.5', '0.5']
+          std: ['0.5', '0.5', '0.5']
 
-    (-> INFERENCE params).should.throw('options.photo_id must be a string')
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { outputs: { out: { value: [1, 2, 3], shape: [1, 3] } } } ])
 
-  it 'fails if called without a size', ->
-    params =
-      photo_id: 'photo-id'
-      model: 'test.ort'
-      format: 'chw'
-      type: 'float'
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.out.value.should.eql([1, 2, 3])
 
-    (-> INFERENCE params).should.throw('options.size must be a number')
+      it 'fails if photo_id is not a string', ->
+        params =
+          photo_id: 123
+          model: 'test.ort'
+          size: 640
+
+        (-> INFERENCE params).should.throw('options.photo_id must be a string')
+
+      it 'fails if size is not a number', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 'not-a-number'
+
+        (-> INFERENCE params).should.throw('options.size must be a number')
+
+      it 'fails if format is invalid', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          format: 'invalid'
+
+        (-> INFERENCE params).should.throw('options.format must be either "hwc" or "chw"')
+
+      it 'fails if type is invalid', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          type: 'invalid'
+
+        (-> INFERENCE params).should.throw('options.type must be either "uint8" or "float"')
+
+      it 'fails if mean is not an array', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          mean: 'not-an-array'
+
+        (-> INFERENCE params).should.throw('options.mean must be an array')
+
+      it 'fails if mean does not have exactly 3 numbers', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          mean: [1, 2]
+
+        (-> INFERENCE params).should.throw('options.mean must have exactly 3 numbers')
+
+        params2 =
+          photo_id: 'photo-id'
+          model: 'test.ort'
+          size: 640
+          mean: [1, 2, 'three']
+
+        (-> INFERENCE params2).should.throw('options.mean must have exactly 3 numbers')
+
+    describe 'Modern ML (Vision)', ->
+      it 'calls modern ML inference successfully', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            size: 224
+            format: 'hwc'
+            inputType: 'int8'
+            mean: [127.5, 127.5, 127.5]
+            std: [127.5, 127.5, 127.5]
+
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { outputs: { out: { value: [4, 5, 6], shape: [1, 3] } } } ])
+
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.out.value.should.eql([4, 5, 6])
+
+      it 'calls modern ML inference successfully with numeric strings in mean and std', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            size: 224
+            format: 'hwc'
+            inputType: 'int8'
+            mean: ['127.5', '127.5', '127.5']
+            std: ['127.5', '127.5', '127.5']
+
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { outputs: { out: { value: [4, 5, 6], shape: [1, 3] } } } ])
+
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.out.value.should.eql([4, 5, 6])
+
+      it 'fails if config is not an object', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config: 'not-an-object'
+
+        (-> INFERENCE params).should.throw('options.config must be an object')
+
+      it 'fails if config.size is missing', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            format: 'chw'
+
+        (-> INFERENCE params).should.throw('options.config.size must be a number')
+
+      it 'fails if config.size is <= 0', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            size: 0
+
+        (-> INFERENCE params).should.throw('options.config.size must be greater than 0')
+
+      it 'fails if config.format is invalid', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            size: 224
+            format: 'invalid'
+
+        (-> INFERENCE params).should.throw('options.config.format must be either "hwc" or "chw"')
+
+      it 'fails if config.inputType is invalid', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'test.tflite'
+          config:
+            size: 224
+            inputType: 'invalid'
+
+        (-> INFERENCE params).should.throw('options.config.inputType must be either "int8" or "float"')
+
+    describe 'Modern LLM (Text)', ->
+      it 'calls modern LLM inference successfully with prompt', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hello AI'
+            temperature: 0.8
+            topK: 50
+            topP: 0.9
+            maxTokens: 100
+            contextSize: 2048
+            stopTokens: ['<eos>', 'STOP']
+
+        mockHostFunction('setTimeout', [])
+        mockHostFunction('inference', [ null, { modelType: 'LLM', outputs: { text: 'Hello human!' } } ])
+
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.text.should.eql('Hello human!')
+
+      it 'fails if photo_id is provided', ->
+        params =
+          photo_id: 'photo-id'
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hello AI'
+
+        (-> INFERENCE params).should.throw('options.photo_id must be null or undefined')
+
+      it 'fails if prompt and systemPrompt are both missing', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            temperature: 0.7
+
+        (-> INFERENCE params).should.throw('cannot determine inference mode: please provide options.config.size for Modern ML or options.config.prompt/systemPrompt for Modern LLM')
+
+      it 'fails if temperature is negative', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            temperature: -0.5
+
+        (-> INFERENCE params).should.throw('options.config.temperature must be non-negative')
+
+      it 'fails if topK is not a positive integer', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            topK: -5
+
+        (-> INFERENCE params).should.throw('options.config.topK must be a positive integer')
+
+        params2 =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            topK: 1.5
+
+        (-> INFERENCE params2).should.throw('options.config.topK must be a positive integer')
+
+      it 'fails if topP is negative', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            topP: -0.1
+
+        (-> INFERENCE params).should.throw('options.config.topP must be non-negative')
+
+      it 'fails if stopTokens is not an array', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: 'not-an-array'
+
+        (-> INFERENCE params).should.throw('options.config.stopTokens must be an array')
+
+      it 'fails if stopTokens contains non-strings', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', 123]
+
+        (-> INFERENCE params).should.throw('options.config.stopTokens must be an array of strings')
+
+      it 'fails if stopTokens contains null or undefined', ->
+        params1 =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', null]
+
+        (-> INFERENCE params1).should.throw('options.config.stopTokens must be an array of strings')
+
+        params2 =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', undefined]
+
+        (-> INFERENCE params2).should.throw('options.config.stopTokens must be an array of strings')
+
+      it 'fails if stopTokens contains empty strings', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            stopTokens: ['ok', '']
+
+        (-> INFERENCE params).should.throw('options.config.stopTokens must not contain empty strings')
+
+      it 'fails if config contains both vision (size) and generative (prompt) parameters', ->
+        params =
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hi'
+            size: 224
+
+        (-> INFERENCE params).should.throw('options.config cannot contain both size (Vision ML) and prompt/systemPrompt (Generative LLM)')
 
 
   describe 'LOADFILE', ->
