@@ -167,9 +167,10 @@ export interface ModernLLMInferenceOptions {
    */
   model: string;
   /**
-   * photo_id must not be supplied for text-only LLM inference.
+   * The photo ID of the image to run inference on.
+   * Optional for multimodal LLM inference.
    */
-  photo_id?: never;
+  photo_id?: string;
   /**
    * Generative LLM generation parameters. Enforces that at least one of prompt or systemPrompt must be provided.
    */
