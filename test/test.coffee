@@ -2823,14 +2823,35 @@ describe "SETMODE", ->
           (error is null).should.be.true()
           result.outputs.text.should.eql('Hello human!')
 
-      it 'fails if photo_id is provided', ->
+      it 'fails if photo_id is not a string', ->
+        params =
+          photo_id: 123
+          model: 'llama3.gguf'
+          config:
+            prompt: 'Hello AI'
+
+        (-> INFERENCE params).should.throw('options.photo_id must be a string')
+
+      it 'allows string photo_id for multimodal LLM', ->
         params =
           photo_id: 'photo-id'
           model: 'llama3.gguf'
           config:
             prompt: 'Hello AI'
 
-        (-> INFERENCE params).should.throw('options.photo_id must be null or undefined')
+        mockHostFunction('setTimeout', [])
+        
+        inferenceArgs = null
+        runtime.$$inference = (options) ->
+          inferenceArgs = JSON.parse(options)
+          runtime.callbackID = arguments[arguments.length - 1]
+          runtime.callbackArguments = [ null, { modelType: 'LLM', outputs: { text: 'Hello human!' } } ]
+          runtime.finishAsync()
+
+        INFERENCE params, (error, result) ->
+          (error is null).should.be.true()
+          result.outputs.text.should.eql('Hello human!')
+          inferenceArgs.photo_id.should.eql('photo-id')
 
       it 'fails if prompt and systemPrompt are both missing', ->
         params =
