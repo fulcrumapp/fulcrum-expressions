@@ -1289,7 +1289,7 @@ exports.INFERENCE = (options, callback) ->
         ERROR('options.config.stopTokens must be an array of strings') if not token? or not _.isString(token)
         ERROR('options.config.stopTokens must not contain empty strings') if token is ''
 
-    args.photo_id = if options.photo_id? then options.photo_id.toString() else null
+    args.photo_id = if options.photo_id? then options.photo_id else null
     args.config =
       prompt: if options.config.prompt? then options.config.prompt.toString() else null
       systemPrompt: if options.config.systemPrompt? then options.config.systemPrompt.toString() else null

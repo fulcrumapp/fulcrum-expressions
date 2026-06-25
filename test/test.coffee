@@ -2840,11 +2840,18 @@ describe "SETMODE", ->
             prompt: 'Hello AI'
 
         mockHostFunction('setTimeout', [])
-        mockHostFunction('inference', [ null, { modelType: 'LLM', outputs: { text: 'Hello human!' } } ])
+        
+        inferenceArgs = null
+        runtime.$$inference = (options) ->
+          inferenceArgs = JSON.parse(options)
+          runtime.callbackID = arguments[arguments.length - 1]
+          runtime.callbackArguments = [ null, { modelType: 'LLM', outputs: { text: 'Hello human!' } } ]
+          runtime.finishAsync()
 
         INFERENCE params, (error, result) ->
           (error is null).should.be.true()
           result.outputs.text.should.eql('Hello human!')
+          inferenceArgs.photo_id.should.eql('photo-id')
 
       it 'fails if prompt and systemPrompt are both missing', ->
         params =
