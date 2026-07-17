@@ -1,83 +1,111 @@
-## Fulcrum Expressions
-This implements the runtime for javascript expressions in Fulcrum.
+# Fulcrum Expressions
 
-The current implementation uses coffeescript.
+This repository contains the Fulcrum expression runtime and its related distribution assets.
 
-There is a typescript implementation (latest version is likely in fulcrum-components/src/expressions, but there is also a typescript branch on this repo) that is currently being used in fulcrum-components to provide types to the monaco editor used to edit data events, calculations, etc.
-Eventually, this repo should contain that implementation, and ideally move off the coffeescript implementation once we are confident the typescript implementation works.
-Right now, we haven't determined the best way to distribute those types from this package. Until then, any type updates that need to be made (new public facing functions or otherwise) will need to be made in the typescript implementation.
+The runtime that ships today is still built from CoffeeScript. This repository also contains the TypeScript source used to generate the published API and type definitions consumed by Fulcrum tooling.
 
-### Setup
-Install dependencies
+In the main Fulcrum app today:
+
+- `@fulcrumapp/fulcrum-expressions` is installed as a package and used for TypeScript APIs and type definitions.
+- The sandbox runtime is still loaded from `expressions.html` and its related assets via Fulcrum's `expression_sandbox_url` configuration.
+
+If you add or change public expression APIs, update both the runtime behavior and the TypeScript definitions in this repository.
+
+## Setup
+
+Install dependencies:
+
 ```sh
 yarn
 ```
 
-### Build
-Build expressions.js and sandbox (expressions-proxy.js and expressions.html)
+## Build
+
+Build `expressions.js` and the sandbox assets (`expressions-proxy.js` and `expressions.html`):
+
 ```sh
 yarn build
 ```
-Build debug versions
+
+Build debug versions:
+
 ```sh
 yarn build:debug
 ```
 
-### Generate Documentation
-Make changes to `docs.js` and `event_docs.js`.
+## Generate Documentation
+
+Make changes in `docs/docs.js` and `docs/event_docs.js`, then rebuild the generated docs:
+
 ```sh
 yarn build:docs
 ```
 
-### Distribute
-Builds everything for distribution
+## Distribute
+
+Build everything needed for distribution, including generated types:
+
 ```sh
 yarn build:dist
 ```
 
-### Tests
+## Tests
+
 ```sh
 yarn test
 ```
 
-### Console
-Starts an interactive node terminal with the functions available to call
+## Console
+
+Start an interactive node terminal with the expression functions available to call:
+
 ```sh
 yarn console
 ```
 
-### Deploy
-Currently all projects pull the expression.js lib produced by this repo from https://assets.fulcrumapp.com/expv1/expressions.js. Until we are able to move projects over to using the published npm library, we will need to manually deploy by copying the dist/expressions.js file to that S3 bucket for others to see changes.
+## Deploy
 
-To deploy to your user's preview environment:
+Fulcrum currently uses this repository in two ways:
+
+- the published npm package for TypeScript APIs and type definitions
+- hosted sandbox assets for runtime evaluation in the browser
+
+Deploying from this repository is primarily about publishing updated sandbox assets.
+
+To deploy to your preview environment:
+
 ```sh
-aws sso login (or however you login to the chaos aws account)
+awslogin
 yarn deploy
 ```
-You will need to update fulcrum's config to point at your S3 bucket's files. The
-[skaffold.yaml file in fulcrum](https://github.com/fulcrumapp/fulcrum/blob/main/skaffold.yaml)
-has a configuration for the "fulcrum.rails.config.expression_sandbox_url" value which can
-be uncommented.
 
-To deploy to production (requires fulcrum production access):
+Then update Fulcrum to point at your sandbox assets by uncommenting the `fulcrum.rails.config.expression_sandbox_url` override in `skaffold.yaml`.
+
+To deploy to production (requires Fulcrum production access):
+
 ```sh
 yarn
-yarn build:dist   # Not strictly necessary, it's done in the deploy.  But it's better to know it builds and passes tests before doing that.
-aws sso login (or however you login to the readonly fulcrum aws account)
+yarn build:dist
+aws sso login
 mongoose
 yarn deploy production
 ```
-**Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
 
-### Documentation
-Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
+Please be careful while doing this. There are limited guardrails around production deploys.
 
-## Deprecated Info (NOT USED, AND PROBABLY DOESN'T WORK, BUT LEFT FOR REFERENCE)
+## Documentation
 
-### Copy files to other repositories
-Copies the build output and docs to the other repositories (each are optional, but at least one is needed).
+Documentation is generated with [JSDoc](http://usejsdoc.org/). Function docs live in [docs/docs.js](https://github.com/fulcrumapp/fulcrum-expressions/blob/main/docs/docs.js).
 
-You can define the paths to the Fulcrum repos using environment variables in your shell config:
+## Deprecated Info
+
+This section is left for reference and is probably not used anymore.
+
+## Copy Files To Other Repositories
+
+Copies the build output and docs to other repositories. Each destination is optional, but at least one is needed.
+
+You can define the paths to the Fulcrum repositories in your shell config:
 
 ```sh
 export FULCRUM_ANDROID=/path/to/android/app
@@ -86,7 +114,7 @@ export FULCRUM_WEB=/path/to/web/app
 export FULCRUM_DEV_SITE=/path/to/website
 ```
 
-Or you can assign them in the yarn command:
+Or you can assign them in the command:
 
 ```sh
 FULCRUM_DEV_SITE=$HOME/dev/fulcrumapp.com yarn build:dist && yarn copy
@@ -96,8 +124,10 @@ Once you have the environment variables set, you can run:
 
 ```sh
 yarn copy
+```
 
-or
+or:
 
-yarn build:dist && yarn copy # clean, build and deploy everything
+```sh
+yarn build:dist && yarn copy
 ```

@@ -189,6 +189,10 @@ export default class Runtime {
 
   isCalculation = false
 
+  lastTriggerHandled = false
+
+  lastTriggerHookCount = 0
+
   extraVariableNames = [
     "locale",
     "language",
@@ -574,6 +578,9 @@ export default class Runtime {
     const param: string = isUndefined(this.event.field) || isNull(this.event.field) ? NO_PARAM : this.event.field
 
     let hooks = get(this.events, [name, param])
+
+    this.lastTriggerHookCount = hooks?.length || 0
+    this.lastTriggerHandled = this.lastTriggerHookCount > 0
 
     if (isUndefined(hooks) || hooks.length === 0) {
       return this.results

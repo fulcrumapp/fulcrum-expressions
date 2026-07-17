@@ -160,6 +160,22 @@ describe 'APPLYFIELDEFFECTS', ->
     APPLYFIELDEFFECTS({ effects: [{ event: {}, conditions: [], actions: [] }]})
     runtime.events.should.eql({})
 
+describe 'trigger metadata', ->
+  it 'tracks whether a trigger matched any hooks', ->
+    runtime.event = { name: 'save-record' }
+    runtime.trigger()
+
+    runtime.lastTriggerHandled.should.be.false()
+    runtime.lastTriggerHookCount.should.eql(0)
+
+    ON('save-record', -> null)
+
+    runtime.event = { name: 'save-record' }
+    runtime.trigger()
+
+    runtime.lastTriggerHandled.should.be.true()
+    runtime.lastTriggerHookCount.should.eql(1)
+
 describe 'AVERAGE', ->
   it 'returns the average of all of the parameters', ->
     AVERAGE(1, 2, 3).should.be.exactly(2)

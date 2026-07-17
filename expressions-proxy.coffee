@@ -55,7 +55,12 @@ class ExpressionEngine
 
     results = $$trigger()
 
-    @respond(name: 'triggerDataEvent', results: results)
+    @respond(
+      name: 'triggerDataEvent'
+      results: results
+      handled: !!$$runtime.lastTriggerHandled
+      hookCount: $$runtime.lastTriggerHookCount or 0
+    )
 
   finishAsyncCallback: (event, message) ->
     $$runtime.callbackID = message.callbackID or null

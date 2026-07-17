@@ -74,6 +74,10 @@ class Runtime
 
   isCalculation: false
 
+  lastTriggerHandled: false
+
+  lastTriggerHookCount: 0
+
   extraVariableNames: [
     'locale',
     'language',
@@ -238,6 +242,9 @@ class Runtime
       [name, param] = [@event.name, null]
 
     hooks = @hooksByParams(name, param)
+
+    @lastTriggerHookCount = hooks?.length or 0
+    @lastTriggerHandled = @lastTriggerHookCount > 0
 
     return $$runtime.results unless hooks?.length
 
