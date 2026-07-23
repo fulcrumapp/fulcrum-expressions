@@ -133,6 +133,106 @@ function CONFIRM() {}
 function CURRENTLOCATION() {}
 
 
+////INFERENCE
+
+/**
+ * INFERENCE
+ * Runs inference using a Legacy ML, Modern ML, or Modern LLM model.
+ *
+ * The expression-facing contract supports three option shapes:
+ *
+ * * Legacy ML: `model`, `photo_id`, and numeric `size` at the top level. Optional image processing properties are `format` (`'chw'` or `'hwc'`), `type` (`'uint8'` or `'float'`), and three-value `mean` and `std` arrays.
+ * * Modern ML: `model`, `photo_id`, and `config.size` greater than zero. Optional image processing properties are `config.format` (`'chw'` or `'hwc'`), `config.inputType` (`'int8'` or `'float'`), and three-value `config.mean` and `config.std` arrays.
+ * * Modern LLM: `model` and `config.prompt` and/or `config.systemPrompt`. `photo_id` is optional for multimodal inference. Optional generation properties are `temperature` (non-negative), `topK` (positive integer), `topP` (non-negative), `maxTokens` (positive integer), `contextSize` (positive integer), and `stopTokens` (non-empty strings).
+ *
+ * `form_id` or `form_name` can identify the form containing the model reference file. If neither is supplied, the current form ID is used when available. `config.size` cannot be combined with `config.prompt` or `config.systemPrompt`.
+ *
+ * The callback receives `(error, result)`. ML results contain `outputs` with numeric `value` arrays and `shape` arrays, plus model timing and image metadata when supplied by the host. LLM results contain `modelType: 'LLM'`, model timing, and `outputs.text`. ML output values are flattened before the callback is invoked. Validation errors are raised synchronously; host errors are passed to the callback.
+ *
+ * This documents the expression-facing subset only. The cross-repository normative-contract work item and draft are tracked in [FLCRM-21424](https://fulcrumapp.atlassian.net/browse/FLCRM-21424) until the Fulcrum spec is merged.
+ *
+ * @param {Object} options The inference options
+ * @param {String} options.model The model filename
+ * @param {String} [options.photo_id] The photo ID for image or multimodal inference
+ * @param {Number} [options.size] Legacy ML input dimension
+ * @param {String} [options.format='chw'] Legacy ML channel layout: `'chw'` or `'hwc'`
+ * @param {String} [options.type='uint8'] Legacy ML input type: `'uint8'` or `'float'`
+ * @param {Array<Number>} [options.mean] Legacy ML channel mean; exactly three numeric values
+ * @param {Array<Number>} [options.std] Legacy ML channel standard deviation; exactly three numeric values
+ * @param {String} [options.form_id] Context form ID containing the model reference file
+ * @param {String} [options.form_name] Context form name containing the model reference file
+ * @param {Object} [options.config] Modern ML or Modern LLM configuration
+ * @param {Number} [options.config.size] Modern ML input dimension; must be greater than zero
+ * @param {String} [options.config.format='chw'] Modern ML channel layout: `'chw'` or `'hwc'`
+ * @param {String} [options.config.inputType='int8'] Modern ML input type: `'int8'` or `'float'`
+ * @param {Array<Number>} [options.config.mean] Modern ML channel mean; exactly three numeric values
+ * @param {Array<Number>} [options.config.std] Modern ML channel standard deviation; exactly three numeric values
+ * @param {String} [options.config.prompt] LLM instruction or prompt
+ * @param {String} [options.config.systemPrompt] LLM system instructions
+ * @param {Number} [options.config.temperature=0.7] LLM generation temperature; must be non-negative
+ * @param {Number} [options.config.topK=40] LLM top-K sampling value; must be a positive integer
+ * @param {Number} [options.config.topP=0.95] LLM top-P sampling value; must be non-negative
+ * @param {Number} [options.config.maxTokens] Maximum LLM output tokens; must be a positive integer
+ * @param {Number} [options.config.contextSize] LLM context window size; must be a positive integer
+ * @param {Array<String>} [options.config.stopTokens] LLM stop tokens; each token must be non-empty
+ * @param {Function} callback Invoked asynchronously with the inference result
+ * @example
+ * // Legacy ML inference
+ * INFERENCE({
+ *   model: 'leaf-classifier.ort',
+ *   photo_id: 'photo-id',
+ *   size: 640,
+ *   format: 'chw',
+ *   type: 'float',
+ *   mean: [0.5, 0.5, 0.5],
+ *   std: [0.5, 0.5, 0.5]
+ * }, function (error, result) {
+ *   if (!error) {
+ *     var scores = result.outputs.out.value;
+ *   }
+ * });
+ *
+ * @example
+ * // Modern ML inference
+ * INFERENCE({
+ *   model: 'mobile_detector.task',
+ *   photo_id: 'photo-id',
+ *   config: {
+ *     size: 224,
+ *     format: 'hwc',
+ *     inputType: 'int8',
+ *     mean: [127.5, 127.5, 127.5],
+ *     std: [127.5, 127.5, 127.5]
+ *   }
+ * }, function (error, result) {
+ *   if (!error) {
+ *     var detections = result.outputs.out.value;
+ *   }
+ * });
+ *
+ * @example
+ * // Modern LLM inference
+ * INFERENCE({
+ *   model: 'llama3.gguf',
+ *   config: {
+ *     prompt: 'Summarize this inspection photo.',
+ *     temperature: 0.8,
+ *     topK: 50,
+ *     topP: 0.9,
+ *     maxTokens: 100,
+ *     contextSize: 2048,
+ *     stopTokens: ['<eos>']
+ *   },
+ *   photo_id: 'photo-id'
+ * }, function (error, result) {
+ *   if (!error) {
+ *     var text = result.outputs.text;
+ *   }
+ * });
+ */
+function INFERENCE() {}
+
+
 ////INVALID
 
 /**

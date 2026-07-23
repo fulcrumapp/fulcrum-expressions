@@ -72,6 +72,8 @@ yarn deploy production
 ### Documentation
 Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).
 
+The expression-facing `INFERENCE` contract in this repository is an implementation reference. The cross-repository normative-contract work item and draft are tracked in [FLCRM-21424](https://fulcrumapp.atlassian.net/browse/FLCRM-21424) until the Fulcrum spec is merged.
+
 ## Deprecated Info (NOT USED, AND PROBABLY DOESN'T WORK, BUT LEFT FOR REFERENCE)
 
 ### Copy files to other repositories

@@ -111,6 +111,219 @@
             ]
         },
         {
+            "name": "INFERENCE",
+            "access": "",
+            "virtual": false,
+            "description": "INFERENCE\nRuns inference using a Legacy ML, Modern ML, or Modern LLM model.\n\nThe expression-facing contract supports three option shapes:\n\n* Legacy ML: `model`, `photo_id`, and numeric `size` at the top level. Optional image processing properties are `format` (`'chw'` or `'hwc'`), `type` (`'uint8'` or `'float'`), and three-value `mean` and `std` arrays.\n* Modern ML: `model`, `photo_id`, and `config.size` greater than zero. Optional image processing properties are `config.format` (`'chw'` or `'hwc'`), `config.inputType` (`'int8'` or `'float'`), and three-value `config.mean` and `config.std` arrays.\n* Modern LLM: `model` and `config.prompt` and/or `config.systemPrompt`. `photo_id` is optional for multimodal inference. Optional generation properties are `temperature` (non-negative), `topK` (positive integer), `topP` (non-negative), `maxTokens` (positive integer), `contextSize` (positive integer), and `stopTokens` (non-empty strings).\n\n`form_id` or `form_name` can identify the form containing the model reference file. If neither is supplied, the current form ID is used when available. `config.size` cannot be combined with `config.prompt` or `config.systemPrompt`.\n\nThe callback receives `(error, result)`. ML results contain `outputs` with numeric `value` arrays and `shape` arrays, plus model timing and image metadata when supplied by the host. LLM results contain `modelType: 'LLM'`, model timing, and `outputs.text`. ML output values are flattened before the callback is invoked. Validation errors are raised synchronously; host errors are passed to the callback.\n\nThis documents the expression-facing subset only. The cross-repository normative-contract work item and draft are tracked in [FLCRM-21424](https://fulcrumapp.atlassian.net/browse/FLCRM-21424) until the Fulcrum spec is merged.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "The inference options",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.model",
+                    "type": "String",
+                    "description": "The model filename",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.photo_id",
+                    "type": "String",
+                    "description": "The photo ID for image or multimodal inference",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.size",
+                    "type": "Number",
+                    "description": "Legacy ML input dimension",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.format",
+                    "type": "String",
+                    "description": "Legacy ML channel layout: `'chw'` or `'hwc'`",
+                    "default": "'chw'",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.type",
+                    "type": "String",
+                    "description": "Legacy ML input type: `'uint8'` or `'float'`",
+                    "default": "'uint8'",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.mean",
+                    "type": "Array.<Number>",
+                    "description": "Legacy ML channel mean; exactly three numeric values",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.std",
+                    "type": "Array.<Number>",
+                    "description": "Legacy ML channel standard deviation; exactly three numeric values",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.form_id",
+                    "type": "String",
+                    "description": "Context form ID containing the model reference file",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.form_name",
+                    "type": "String",
+                    "description": "Context form name containing the model reference file",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config",
+                    "type": "Object",
+                    "description": "Modern ML or Modern LLM configuration",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.size",
+                    "type": "Number",
+                    "description": "Modern ML input dimension; must be greater than zero",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.format",
+                    "type": "String",
+                    "description": "Modern ML channel layout: `'chw'` or `'hwc'`",
+                    "default": "'chw'",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.inputType",
+                    "type": "String",
+                    "description": "Modern ML input type: `'int8'` or `'float'`",
+                    "default": "'int8'",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.mean",
+                    "type": "Array.<Number>",
+                    "description": "Modern ML channel mean; exactly three numeric values",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.std",
+                    "type": "Array.<Number>",
+                    "description": "Modern ML channel standard deviation; exactly three numeric values",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.prompt",
+                    "type": "String",
+                    "description": "LLM instruction or prompt",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.systemPrompt",
+                    "type": "String",
+                    "description": "LLM system instructions",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.temperature",
+                    "type": "Number",
+                    "description": "LLM generation temperature; must be non-negative",
+                    "default": 0.7,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.topK",
+                    "type": "Number",
+                    "description": "LLM top-K sampling value; must be a positive integer",
+                    "default": 40,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.topP",
+                    "type": "Number",
+                    "description": "LLM top-P sampling value; must be non-negative",
+                    "default": 0.95,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.maxTokens",
+                    "type": "Number",
+                    "description": "Maximum LLM output tokens; must be a positive integer",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.contextSize",
+                    "type": "Number",
+                    "description": "LLM context window size; must be a positive integer",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.config.stopTokens",
+                    "type": "Array.<String>",
+                    "description": "LLM stop tokens; each token must be non-empty",
+                    "default": "",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "Invoked asynchronously with the inference result",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "// Legacy ML inference\nINFERENCE({\n  model: 'leaf-classifier.ort',\n  photo_id: 'photo-id',\n  size: 640,\n  format: 'chw',\n  type: 'float',\n  mean: [0.5, 0.5, 0.5],\n  std: [0.5, 0.5, 0.5]\n}, function (error, result) {\n  if (!error) {\n    var scores = result.outputs.out.value;\n  }\n});",
+                "// Modern ML inference\nINFERENCE({\n  model: 'mobile_detector.task',\n  photo_id: 'photo-id',\n  config: {\n    size: 224,\n    format: 'hwc',\n    inputType: 'int8',\n    mean: [127.5, 127.5, 127.5],\n    std: [127.5, 127.5, 127.5]\n  }\n}, function (error, result) {\n  if (!error) {\n    var detections = result.outputs.out.value;\n  }\n});",
+                "// Modern LLM inference\nINFERENCE({\n  model: 'llama3.gguf',\n  config: {\n    prompt: 'Summarize this inspection photo.',\n    temperature: 0.8,\n    topK: 50,\n    topP: 0.9,\n    maxTokens: 100,\n    contextSize: 2048,\n    stopTokens: ['<eos>']\n  },\n  photo_id: 'photo-id'\n}, function (error, result) {\n  if (!error) {\n    var text = result.outputs.text;\n  }\n});"
+            ]
+        },
+        {
             "name": "INVALID",
             "access": "",
             "virtual": false,
