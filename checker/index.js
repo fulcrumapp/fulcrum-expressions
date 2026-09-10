@@ -1,0 +1,1232 @@
+'use strict'
+
+/*
+ * Transport-neutral, source-only checker for Fulcrum Data Events and
+ * calculations.  This module deliberately does not import runtime.coffee:
+ * runtime.coffee evaluates submitted expressions and is not part of the
+ * analysis boundary.
+ */
+
+const crypto = require('crypto')
+const ts = require('typescript')
+const apiDeclarations = require('./api')
+const standardLibrary = require('./lib')
+
+const CONTRACT_VERSION = 'v1'
+const CHECKER_VERSION = '1.0.0'
+const RUNTIME_VERSION = '@fulcrumapp/fulcrum-expressions@3.0.1'
+const DECLARATION_VERSION = 'ts/api.ts@3.0.1'
+const DECLARATION_IDENTITY = `${DECLARATION_VERSION}:${crypto
+  .createHash('sha256')
+  .update(apiDeclarations)
+  .digest('hex')
+  .slice(0, 16)}`
+
+const LIMITS = Object.freeze({
+  sourceBytes: 256 * 1024,
+  formBytes: 128 * 1024,
+  astNodes: 20000,
+  astDepth: 200,
+  diagnostics: 100,
+})
+
+const DEFAULT_CHECKS = Object.freeze([
+  'syntax',
+  'typecheck',
+  'profile',
+  'field_references',
+])
+
+const SUPPORTED_CHECKS = new Set(DEFAULT_CHECKS)
+
+/*
+ * This list intentionally mirrors Runtime.setupFunctions' calculation guard
+ * in runtime.coffee.  It is kept here as a policy table rather than inferred
+ * from the TypeScript declarations: declarations describe callable APIs while
+ * the deployed runtime defines calculation restrictions.
+ */
+const CALCULATION_FORBIDDEN_APIS = new Set([
+  'ALERT',
+  'APPLYFIELDEFFECTS',
+  'CURRENTLOCATION',
+  'INFERENCE',
+  'INVALID',
+  'LOADFILE',
+  'LOADFORM',
+  'LOADRECORDS',
+  'MESSAGEBOX',
+  'OFF',
+  'ON',
+  'OPENURL',
+  'OPENEXTENSION',
+  'PROGRESS',
+  'RECOGNIZETEXT',
+  'REQUEST',
+  'SETCHOICEFILTER',
+  'SETCHOICES',
+  'SETCONFIGURATION',
+  'SETGEOMETRY',
+  'SETLOCATION',
+  'SETSTATUS',
+  'SETSTATUSFILTER',
+  'SETPROJECT',
+  'SETDESCRIPTION',
+  'SETDISABLED',
+  'SETHIDDEN',
+  'SETLABEL',
+  'SETMAXLENGTH',
+  'SETMINLENGTH',
+  'SETREQUIRED',
+  'SETTIMEOUT',
+  'CLEARTIMEOUT',
+  'SETINTERVAL',
+  'CLEARINTERVAL',
+  'SETVALUE',
+  'SETFORMATTRIBUTES',
+  'SETRESULT',
+  'SETASSIGNMENT',
+  'SETREADONLY',
+  'SETSTATUSHIDDEN',
+  'SETSTATUSREADONLY',
+  'SETPROJECTHIDDEN',
+  'SETPROJECTREADONLY',
+  'STORAGE',
+])
+
+const EVENT_NAMES = new Set([
+  'load-record',
+  'unload-record',
+  'new-record',
+  'edit-record',
+  'save-record',
+  'cancel-record',
+  'validate-record',
+  'change-geometry',
+  'change-project',
+  'change-status',
+  'change-assignment',
+  'change',
+  'focus',
+  'blur',
+  'click',
+  'load-repeatable',
+  'unload-repeatable',
+  'new-repeatable',
+  'edit-repeatable',
+  'save-repeatable',
+  'cancel-repeatable',
+  'validate-repeatable',
+  'add-photo',
+  'remove-photo',
+  'replace-photo',
+  'add-video',
+  'remove-video',
+  'add-audio',
+  'remove-audio',
+  'extension-message',
+])
+
+const FORM_EVENTS = new Set([
+  'load-record',
+  'unload-record',
+  'new-record',
+  'edit-record',
+  'save-record',
+  'cancel-record',
+  'validate-record',
+  'change-project',
+  'change-status',
+  'change-assignment',
+])
+
+const REPEATABLE_EVENTS = new Set([
+  'load-repeatable',
+  'unload-repeatable',
+  'new-repeatable',
+  'edit-repeatable',
+  'save-repeatable',
+  'cancel-repeatable',
+  'validate-repeatable',
+])
+
+const MEDIA_EVENT_TYPES = Object.freeze({
+  'add-photo': 'PhotoField',
+  'remove-photo': 'PhotoField',
+  'replace-photo': 'PhotoField',
+  'add-video': 'VideoField',
+  'remove-video': 'VideoField',
+  'add-audio': 'AudioField',
+  'remove-audio': 'AudioField',
+})
+
+const FIELD_FUNCTIONS = new Set([
+  'FIELD',
+  'FIELDS',
+  'FIELDNAMES',
+  'FIELDTYPE',
+  'LABEL',
+  'VALUE',
+  'SETVALUE',
+  'SETDESCRIPTION',
+  'SETDISABLED',
+  'SETHIDDEN',
+  'SETLABEL',
+  'SETMAXLENGTH',
+  'SETMINLENGTH',
+  'SETREADONLY',
+  'SETREQUIRED',
+  'SETCHOICEFILTER',
+  'SETCHOICES',
+  'REPEATABLEVALUES',
+  'REPEATABLESUM',
+])
+
+const TS_ONLY_KINDS = new Set([
+  ts.SyntaxKind.InterfaceDeclaration,
+  ts.SyntaxKind.TypeAliasDeclaration,
+  ts.SyntaxKind.EnumDeclaration,
+  ts.SyntaxKind.ModuleDeclaration,
+  ts.SyntaxKind.TypeAssertionExpression,
+  ts.SyntaxKind.AsExpression,
+  ts.SyntaxKind.NonNullExpression,
+  ts.SyntaxKind.TypeParameter,
+  ts.SyntaxKind.TypeQuery,
+  ts.SyntaxKind.TypeLiteral,
+  ts.SyntaxKind.IndexedAccessType,
+  ts.SyntaxKind.MappedType,
+  ts.SyntaxKind.ConditionalType,
+  ts.SyntaxKind.InferType,
+  ts.SyntaxKind.ImportType,
+  ts.SyntaxKind.Decorator,
+])
+
+function byteLength(value) {
+  return Buffer.byteLength(value, 'utf8')
+}
+
+function normalizePath(fileName) {
+  const value = String(fileName).replace(/\\/g, '/')
+  return value.startsWith('/') ? value : `/${value}`
+}
+
+function isStringLiteral(node) {
+  return Boolean(node && (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)))
+}
+
+function literalText(node) {
+  return isStringLiteral(node) ? node.text : null
+}
+
+function isFunctionLike(node) {
+  return Boolean(node && (ts.isFunctionExpression(node) || ts.isArrowFunction(node)))
+}
+
+function sourceRange(sourceFile, node) {
+  const start = sourceFile.getLineAndCharacterOfPosition(
+    Math.max(0, Math.min(node.getStart(sourceFile), sourceFile.end)),
+  )
+  const end = sourceFile.getLineAndCharacterOfPosition(
+    Math.max(0, Math.min(node.getEnd(), sourceFile.end)),
+  )
+  return {
+    start: { line: start.line + 1, column: start.character + 1 },
+    end: { line: end.line + 1, column: end.character + 1 },
+  }
+}
+
+function diagnosticPath() {
+  // Never put a source value, field name, or source excerpt in a diagnostic
+  // path.  The source range is sufficient for editor/agent navigation.
+  return '$.source'
+}
+
+function makeDiagnostic(sourceFile, node, code, severity, message, fix) {
+  const diagnostic = {
+    code,
+    severity,
+    message,
+    path: diagnosticPath(),
+    range: sourceRange(sourceFile, node || sourceFile),
+  }
+  if (fix) diagnostic.fix = fix
+  return diagnostic
+}
+
+function makeCoverage(requestedChecks) {
+  const requested = Array.isArray(requestedChecks) && requestedChecks.length > 0
+    ? requestedChecks.filter((check) => typeof check === 'string')
+    : DEFAULT_CHECKS.slice()
+  return {
+    requested,
+    completed: [],
+    skipped: [],
+    unsupported: requested
+      .filter((check) => !SUPPORTED_CHECKS.has(check))
+      .map((check) => ({ check, reason_code: 'UNSUPPORTED_CHECK' })),
+  }
+}
+
+function pushUnique(list, value) {
+  const key = JSON.stringify(value)
+  if (!list.some((item) => JSON.stringify(item) === key)) list.push(value)
+}
+
+function addCoverageSkipped(coverage, check, reasonCode) {
+  pushUnique(coverage.skipped, { check, reason_code: reasonCode })
+}
+
+function addCoverageUnsupported(coverage, check, reasonCode) {
+  pushUnique(coverage.unsupported, { check, reason_code: reasonCode })
+}
+
+function markCoverageComplete(coverage, check) {
+  if (!coverage.completed.includes(check)) coverage.completed.push(check)
+}
+
+function formType(field) {
+  return field && typeof field.type === 'string' ? field.type : ''
+}
+
+function normalizeFieldType(field) {
+  return formType(field).replace(/[\s_-]/g, '').toLowerCase()
+}
+
+function typeForField(field) {
+  const type = normalizeFieldType(field)
+  if (type.includes('number') || type.includes('numeric') || type === 'calculated') {
+    return 'number | null | undefined'
+  }
+  if (type.includes('yesno') || type === 'boolean') return 'boolean | null | undefined'
+  if (type.includes('repeatable')) return 'any[] | null | undefined'
+  return 'string | null | undefined'
+}
+
+function collectForm(form) {
+  const fields = new Map()
+  const parents = new Map()
+  let nodeCount = 0
+  const seen = new Set()
+
+  function visit(value, parentRepeatable, depth) {
+    if (!value || typeof value !== 'object' || depth > LIMITS.astDepth) return
+    if (seen.has(value)) return
+    seen.add(value)
+    nodeCount += 1
+    if (nodeCount > LIMITS.astNodes) return
+
+    const dataName =
+      typeof value.data_name === 'string'
+        ? value.data_name
+        : typeof value.dataName === 'string'
+          ? value.dataName
+          : null
+    if (dataName) {
+      fields.set(dataName, value)
+      if (parentRepeatable) parents.set(dataName, parentRepeatable)
+    }
+
+    const type = normalizeFieldType(value)
+    const nextParent = type === 'repeatable' ? dataName || parentRepeatable : parentRepeatable
+    if (Array.isArray(value.elements)) {
+      value.elements.forEach((child) => visit(child, nextParent, depth + 1))
+    }
+    if (Array.isArray(value.fields)) {
+      value.fields.forEach((child) => visit(child, nextParent, depth + 1))
+    }
+    if (Array.isArray(value.children)) {
+      value.children.forEach((child) => visit(child, nextParent, depth + 1))
+    }
+    if (Array.isArray(value.sections)) {
+      value.sections.forEach((child) => visit(child, nextParent, depth + 1))
+    }
+  }
+
+  visit(form, null, 0)
+  return { fields, parents, nodeCount }
+}
+
+function fieldDeclaration(formInfo) {
+  const lines = []
+  for (const [dataName, field] of formInfo.fields) {
+    const identifier = `$${dataName}`
+    if (/^[$A-Z_a-z][$\w]*$/.test(identifier)) {
+      lines.push(`declare const ${identifier}: ${typeForField(field)};`)
+    }
+  }
+  return lines.join('\n')
+}
+
+function repeatableScopeNames(scope) {
+  if (!scope) return []
+  if (typeof scope === 'string') return [scope]
+  if (Array.isArray(scope)) return scope.filter((name) => typeof name === 'string')
+  const values = []
+  for (const key of ['current', 'repeatable', 'repeatable_data_name']) {
+    if (typeof scope[key] === 'string') values.push(scope[key])
+  }
+
+  for (const key of ['ancestors', 'repeatables']) {
+    if (Array.isArray(scope[key])) {
+      values.push(...scope[key].filter((name) => typeof name === 'string'))
+    }
+  }
+  return values
+}
+
+function boundedObjectBytes(value, limit, seen = new Set(), total = 0) {
+  if (total > limit) return total
+  if (value === null || value === undefined) return total + 4
+  if (typeof value === 'string') return total + byteLength(value)
+  if (typeof value !== 'object') return total + 16
+  if (seen.has(value)) return total + 8
+  seen.add(value)
+  if (Array.isArray(value)) {
+    for (const child of value) {
+      total = boundedObjectBytes(child, limit, seen, total + 1)
+      if (total > limit) return total
+    }
+    return total
+  }
+  for (const [key, child] of Object.entries(value)) {
+    total = boundedObjectBytes(key, limit, seen, total + 1)
+    total = boundedObjectBytes(child, limit, seen, total + 1)
+    if (total > limit) return total
+  }
+  return total
+}
+
+function requestParts(request) {
+  const input = request && typeof request === 'object' ? request : {}
+  const artifact = input.artifact && typeof input.artifact === 'object' ? input.artifact : input
+  const source =
+    typeof input.source === 'string'
+      ? input.source
+      : typeof input.code === 'string'
+        ? input.code
+        : typeof artifact.source === 'string'
+          ? artifact.source
+          : typeof artifact.code === 'string'
+            ? artifact.code
+            : null
+  const profileValue =
+    input.profile ||
+    input.artifact_type ||
+    artifact.profile ||
+    artifact.artifact_type ||
+    artifact.type ||
+    null
+  const profile =
+    profileValue === 'data-event' || profileValue === 'dataEvent'
+      ? 'data_event'
+      : profileValue === 'calculation'
+        ? 'calculation'
+        : profileValue
+  const form =
+    input.form !== undefined
+      ? input.form
+      : artifact.form !== undefined
+        ? artifact.form
+        : null
+  return {
+    input,
+    artifact,
+    source,
+    profile,
+    form,
+    repeatableScope:
+      input.repeatable_scope !== undefined
+        ? input.repeatable_scope
+        : artifact.repeatable_scope,
+    requestedChecks: input.requested_checks || input.checks,
+  }
+}
+
+function declaredVersion(value) {
+  if (typeof value === 'string') return value
+  if (value && typeof value === 'object') {
+    if (typeof value.version === 'string') return value.version
+    if (typeof value.name === 'string') return value.name
+  }
+  return null
+}
+
+function makeVersions(profile) {
+  return {
+    validator: CHECKER_VERSION,
+    schema: DECLARATION_VERSION,
+    runtime: RUNTIME_VERSION,
+    compiler: ts.version,
+    declarations: DECLARATION_IDENTITY,
+    profile,
+  }
+}
+
+function createHost(files) {
+  const normalizedFiles = new Map()
+  for (const [fileName, text] of Object.entries(files)) {
+    normalizedFiles.set(normalizePath(fileName), text)
+  }
+
+  const options = {
+    allowJs: true,
+    checkJs: true,
+    noEmit: true,
+    noLib: false,
+    // Resolution is constrained below to the fixed virtual file map.  Do not
+    // enable noResolve: TypeScript must follow only its bundled lib references.
+    skipLibCheck: true,
+    strict: false,
+    strictNullChecks: true,
+    noImplicitAny: false,
+    target: ts.ScriptTarget.ES2020,
+    lib: ['lib.es2020.d.ts'],
+    module: ts.ModuleKind.None,
+    moduleResolution: ts.ModuleResolutionKind.Classic,
+    allowNonTsExtensions: true,
+  }
+  const defaultHost = ts.createCompilerHost(options, false)
+  const host = {
+    ...defaultHost,
+    getSourceFile(fileName, languageVersion) {
+      const normalized = normalizePath(fileName)
+      const text = normalizedFiles.get(normalized)
+      if (text === undefined) return undefined
+      const kind = normalized.endsWith('.js') ? ts.ScriptKind.JS : ts.ScriptKind.TS
+      return ts.createSourceFile(normalized, text, languageVersion, true, kind)
+    },
+    getSourceFileByPath(fileName, _path, languageVersion) {
+      return this.getSourceFile(fileName, languageVersion)
+    },
+    getDefaultLibFileName() {
+      return '/lib.es2020.d.ts'
+    },
+    getDefaultLibLocation() {
+      return '/'
+    },
+    fileExists(fileName) {
+      return normalizedFiles.has(normalizePath(fileName))
+    },
+    readFile(fileName) {
+      return normalizedFiles.get(normalizePath(fileName))
+    },
+    readDirectory() {
+      return []
+    },
+    getDirectories() {
+      return []
+    },
+    directoryExists() {
+      return false
+    },
+    getEnvironmentVariable() {
+      return undefined
+    },
+    realpath(fileName) {
+      return normalizePath(fileName)
+    },
+    resolveModuleNames(moduleNames) {
+      return moduleNames.map(() => undefined)
+    },
+    resolveTypeReferenceDirectives(typeDirectiveNames) {
+      return typeDirectiveNames.map(() => undefined)
+    },
+    writeFile() {},
+    getCurrentDirectory() {
+      return '/'
+    },
+    getCanonicalFileName(fileName) {
+      return fileName
+    },
+    useCaseSensitiveFileNames() {
+      return true
+    },
+    getNewLine() {
+      return '\n'
+    },
+  }
+  return { options, host }
+}
+
+function semanticMessage(code) {
+  switch (code) {
+    case 2304:
+      return 'A referenced name is not declared by the approved environment.'
+    case 2345:
+    case 2322:
+      return 'A call or assignment does not match the approved declaration.'
+    case 2554:
+    case 2555:
+    case 2556:
+      return 'A call has an invalid argument count.'
+    case 2339:
+      return 'A property is not present on the approved type.'
+    case 2531:
+    case 2532:
+      return 'A nullable form value is used without narrowing.'
+    case 7006:
+      return 'A callback parameter requires an approved type.'
+    default:
+      return 'Static type checking reported an error.'
+  }
+}
+
+function addDiagnostic(state, node, code, severity, message, fix) {
+  if (state.diagnostics.length >= LIMITS.diagnostics) {
+    state.limitFailure = true
+    return
+  }
+  const diagnostic = makeDiagnostic(state.sourceFile, node, code, severity, message, fix)
+  const key = JSON.stringify(diagnostic)
+  if (!state.diagnosticKeys.has(key)) {
+    state.diagnosticKeys.add(key)
+    state.diagnostics.push(diagnostic)
+  }
+}
+
+function addFailure(state, check, reasonCode, code, message) {
+  state.failure = true
+  addCoverageSkipped(state.coverage, check, reasonCode)
+  addDiagnostic(state, state.sourceFile, code, 'error', message)
+}
+
+function addFieldCheck(state, dataName, node, context) {
+  if (!state.hasForm) {
+    addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
+    return
+  }
+  if (!state.formInfo.fields.has(dataName)) {
+    addDiagnostic(
+      state,
+      node,
+      'FORM.UNKNOWN_FIELD_REFERENCE',
+      'error',
+      'A literal field reference is not present in the supplied form.',
+      'Use a field data name from the supplied form.',
+    )
+    state.artifactError = true
+    return
+  }
+
+  const parent = state.formInfo.parents.get(dataName)
+  if (parent) {
+    const scopes = repeatableScopeNames(state.repeatableScope)
+    if (!scopes.includes(parent)) {
+      addDiagnostic(
+        state,
+        node,
+        scopes.length ? 'CALCULATION.REPEATABLE_SCOPE_MISMATCH' : 'CALCULATION.REPEATABLE_SCOPE_REQUIRED',
+        'error',
+        scopes.length
+          ? 'The field reference is outside the supplied repeatable scope.'
+          : 'A repeatable scope is required for this field reference.',
+        'Supply the containing repeatable scope.',
+      )
+      state.artifactError = true
+    }
+  }
+  if (context === 'dynamic') {
+    addCoverageSkipped(state.coverage, 'field_references', 'UNVERIFIED_DYNAMIC_REFERENCE')
+  }
+}
+
+function addDynamicCoverage(state, check, reasonCode) {
+  addCoverageSkipped(state.coverage, check, reasonCode)
+  addDiagnostic(
+    state,
+    state.sourceFile,
+    'COVERAGE.UNVERIFIED_REFERENCE',
+    'warning',
+    'A dynamic reference could not be verified statically.',
+    'Use a literal field, event, or API reference for complete coverage.',
+  )
+}
+
+function validateHookCall(state, call) {
+  const name = call.expression.text
+  if (name !== 'ON' && name !== 'OFF') return
+  const args = Array.from(call.arguments)
+  const eventName = literalText(args[0])
+  if (eventName === null) {
+    addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_HOOK')
+    return
+  }
+  if (!EVENT_NAMES.has(eventName)) {
+    addDiagnostic(
+      state,
+      args[0],
+      'DATA_EVENT.UNKNOWN_HOOK',
+      'error',
+      'The literal event hook is not supported by the authoritative declarations.',
+      'Use an event name from the approved Data Event API.',
+    )
+    state.artifactError = true
+  }
+
+  const hasTarget = args.length >= 3 || (args.length === 2 && !isFunctionLike(args[1]))
+  if (hasTarget) {
+    const target = args[1]
+    const fieldName = literalText(target)
+    if (fieldName === null) {
+      addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD')
+    } else if (fieldName.startsWith('@')) {
+      if (eventName !== 'change') {
+        addDiagnostic(
+          state,
+          target,
+          'DATA_EVENT.INVALID_HOOK_TARGET',
+          'error',
+          'A magic field target is only supported for change hooks.',
+        )
+        state.artifactError = true
+      }
+    } else {
+      addFieldCheck(state, fieldName, target, 'literal')
+      const field = state.formInfo.fields.get(fieldName)
+      const expectedType = MEDIA_EVENT_TYPES[eventName]
+      if (field && expectedType && formType(field) !== expectedType) {
+        addDiagnostic(
+          state,
+          target,
+          'DATA_EVENT.INVALID_HOOK_TARGET',
+          'error',
+          'The hook target field type does not match the event hook.',
+        )
+        state.artifactError = true
+      }
+      if (field && REPEATABLE_EVENTS.has(eventName) && formType(field) !== 'Repeatable') {
+        addDiagnostic(
+          state,
+          target,
+          'DATA_EVENT.INVALID_HOOK_TARGET',
+          'error',
+          'The repeatable hook target must be a repeatable field.',
+        )
+        state.artifactError = true
+      }
+      if (field && eventName === 'click' && !['HyperlinkField', 'ButtonField'].includes(formType(field))) {
+        addDiagnostic(
+          state,
+          target,
+          'DATA_EVENT.INVALID_HOOK_TARGET',
+          'error',
+          'The click hook target must be a hyperlink or button field.',
+        )
+        state.artifactError = true
+      }
+      if (field && eventName === 'change-geometry' && formType(field) !== 'Repeatable') {
+        addDiagnostic(
+          state,
+          target,
+          'DATA_EVENT.INVALID_HOOK_TARGET',
+          'error',
+          'The geometry hook target must be a repeatable field.',
+        )
+        state.artifactError = true
+      }
+    }
+  }
+
+  const callback = args[args.length - 1]
+  if (callback && isFunctionLike(callback) && callback.parameters.length > 1) {
+    addDiagnostic(
+      state,
+      callback,
+      'DATA_EVENT.CALLBACK_SIGNATURE',
+      'error',
+      'A Data Event callback accepts at most one event argument.',
+    )
+    state.artifactError = true
+  } else if (callback && ts.isObjectLiteralExpression(callback)) {
+    addDiagnostic(
+      state,
+      callback,
+      'DATA_EVENT.CALLBACK_SIGNATURE',
+      'error',
+      'A Data Event callback must be a function.',
+    )
+    state.artifactError = true
+  }
+}
+
+function checkLiteralFieldCall(state, call) {
+  const name = call.expression.text
+  if (!FIELD_FUNCTIONS.has(name)) return
+  const args = Array.from(call.arguments)
+  const fieldArgument =
+    name === 'REPEATABLEVALUES' || name === 'REPEATABLESUM' ? args[1] : args[0]
+  if (!fieldArgument) return
+  const dataName = literalText(fieldArgument)
+  if (dataName === null) {
+    addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD')
+  } else {
+    addFieldCheck(state, dataName, fieldArgument, 'literal')
+  }
+}
+
+function validateAst(state) {
+  let nodeCount = 0
+  let tooDeep = false
+
+  function visit(node, depth) {
+    if (!node || state.limitFailure) return
+    nodeCount += 1
+    if (nodeCount > LIMITS.astNodes || depth > LIMITS.astDepth) {
+      tooDeep = true
+      return
+    }
+
+    if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node) || ts.isExportAssignment(node)) {
+      addDiagnostic(
+        state,
+        node,
+        'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
+        'error',
+        'Module imports and exports are not available in deployable expressions.',
+      )
+      state.artifactError = true
+    }
+
+    if (ts.isCallExpression(node)) {
+      if (ts.isIdentifier(node.expression)) {
+        const name = node.expression.text
+        if (name === 'require') {
+          addDiagnostic(
+            state,
+            node,
+            'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
+            'error',
+            'Filesystem and dependency imports are not available to the checker or expression runtime.',
+          )
+          state.artifactError = true
+        }
+        if (state.profile === 'calculation' && CALCULATION_FORBIDDEN_APIS.has(name)) {
+          addDiagnostic(
+            state,
+            node,
+            'CALCULATION.FORBIDDEN_API',
+            'error',
+            'This API is forbidden by the authoritative calculation runtime policy.',
+          )
+          state.artifactError = true
+        }
+        validateHookCall(state, node)
+        checkLiteralFieldCall(state, node)
+      } else if (!(
+        ts.isPropertyAccessExpression(node.expression) &&
+        ts.isIdentifier(node.expression.expression) &&
+        node.expression.expression.text === 'Math'
+      )) {
+        addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_CALL')
+      }
+    }
+
+    if (ts.isElementAccessExpression(node)) {
+      addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_PROPERTY')
+    }
+
+    if (ts.isIdentifier(node) && node.text.startsWith('$') && !node.text.startsWith('$$')) {
+      const dataName = node.text.slice(1)
+      if (state.hasForm && !state.formInfo.fields.has(dataName)) {
+        addDiagnostic(
+          state,
+          node,
+          'FORM.UNKNOWN_FIELD_REFERENCE',
+          'error',
+          'A literal form variable is not present in the supplied form.',
+          'Use a nullable form variable generated from the supplied form.',
+        )
+        state.artifactError = true
+      } else if (!state.hasForm) {
+        addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
+      }
+    }
+
+    ts.forEachChild(node, (child) => visit(child, depth + 1))
+  }
+
+  visit(state.sourceFile, 0)
+  if (tooDeep) {
+    addFailure(
+      state,
+      'typecheck',
+      'LIMIT_EXCEEDED',
+      'CHECKER.LIMIT_EXCEEDED',
+      'The source exceeded the checker AST work limit.',
+    )
+  }
+}
+
+function collectTsOnlyDiagnostics(source, sourceFile, state) {
+  const probe = ts.createSourceFile(
+    '/probe.ts',
+    source,
+    ts.ScriptTarget.ES2020,
+    true,
+    ts.ScriptKind.TS,
+  )
+  function visit(node) {
+    if (TS_ONLY_KINDS.has(node.kind)) {
+      addDiagnostic(
+        state,
+        node,
+        'JAVASCRIPT.TYPESCRIPT_SYNTAX',
+        'error',
+        'TypeScript-only syntax is not deployable expression JavaScript.',
+        'Submit deployable JavaScript without TypeScript annotations or declarations.',
+      )
+      state.artifactError = true
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(probe)
+
+  // Parsing is already complete and in-memory.  Reading parseDiagnostics
+  // avoids creating a second synthetic Program (and avoids any host calls).
+  if (sourceFile.parseDiagnostics && sourceFile.parseDiagnostics.length > 0) {
+    addDiagnostic(
+      state,
+      sourceFile,
+      'JAVASCRIPT.SYNTAX',
+      'error',
+      'The source is not valid deployable JavaScript.',
+    )
+    state.artifactError = true
+  }
+}
+
+function addSemanticDiagnostics(state, diagnostics) {
+  for (const diagnostic of diagnostics) {
+    if (!diagnostic.file || normalizePath(diagnostic.file.fileName) !== '/source.js') continue
+    const node = diagnostic.start === undefined
+      ? state.sourceFile
+      : findNodeAt(state.sourceFile, diagnostic.start)
+    const code = diagnostic.code === 2531 || diagnostic.code === 2532
+      ? 'FORM.NULLABLE_VALUE'
+      : diagnostic.code === 2304 && node && ts.isIdentifier(node) && node.text.startsWith('$')
+        ? 'FORM.UNKNOWN_FIELD_REFERENCE'
+        : diagnostic.code === 2304
+          ? 'JAVASCRIPT.UNDECLARED_NAME'
+          : 'TYPESCRIPT.TYPE_ERROR'
+    addDiagnostic(
+      state,
+      node,
+      code,
+      'error',
+      diagnostic.code === 2531 || diagnostic.code === 2532
+        ? semanticMessage(diagnostic.code)
+        : semanticMessage(diagnostic.code),
+    )
+    state.artifactError = true
+  }
+}
+
+function findNodeAt(sourceFile, position) {
+  let best = sourceFile
+  function visit(node) {
+    if (position < node.getStart(sourceFile) || position >= node.getEnd()) return
+    best = node
+    ts.forEachChild(node, visit)
+  }
+  visit(sourceFile)
+  return best
+}
+
+function emptyResult(profile, diagnostics, coverage, outcome, versions) {
+  return {
+    contract_version: CONTRACT_VERSION,
+    outcome,
+    diagnostics: diagnostics.slice(0, LIMITS.diagnostics),
+    coverage,
+    versions,
+  }
+}
+
+function validate(request) {
+  const parts = requestParts(request)
+  const coverage = makeCoverage(parts.requestedChecks)
+  const profile = parts.profile
+  const versions = makeVersions(profile || 'unknown')
+  const diagnostics = []
+
+  if (!request || typeof request !== 'object' || Array.isArray(request)) {
+    coverage.requested = DEFAULT_CHECKS.slice()
+    coverage.skipped = [{ check: 'analysis', reason_code: 'MALFORMED_REQUEST' }]
+    return emptyResult(
+      'unknown',
+      [makeDiagnostic(
+        ts.createSourceFile('/empty.js', '', ts.ScriptTarget.ES2020, true, ts.ScriptKind.JS),
+        null,
+        'REQUEST.MALFORMED',
+        'error',
+        'A complete validation request object is required.',
+      )],
+      coverage,
+      'invalid',
+      versions,
+    )
+  }
+
+  if (parts.input.contract_version && parts.input.contract_version !== CONTRACT_VERSION) {
+    diagnostics.push({
+      code: 'REQUEST.UNSUPPORTED_CONTRACT',
+      severity: 'error',
+      message: 'The requested contract version is not supported.',
+      path: '$.contract_version',
+    })
+    coverage.skipped = [{ check: 'analysis', reason_code: 'UNSUPPORTED_CONTRACT' }]
+    return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
+  }
+
+  if (!['data_event', 'calculation'].includes(profile)) {
+    diagnostics.push({
+      code: 'REQUEST.UNSUPPORTED_PROFILE',
+      severity: 'error',
+      message: 'The request must select the data_event or calculation profile.',
+      path: '$.artifact_type',
+    })
+    coverage.skipped = [{ check: 'profile', reason_code: 'UNSUPPORTED_PROFILE' }]
+    return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
+  }
+
+  if (parts.source === null) {
+    diagnostics.push({
+      code: 'REQUEST.MISSING_SOURCE',
+      severity: 'error',
+      message: 'A complete candidate must include source JavaScript.',
+      path: '$.artifact.source',
+    })
+    coverage.skipped = [{ check: 'syntax', reason_code: 'MISSING_SOURCE' }]
+    return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
+  }
+
+  const sourceBytes = byteLength(parts.source)
+  if (sourceBytes > LIMITS.sourceBytes) {
+    coverage.skipped = [{ check: 'analysis', reason_code: 'SOURCE_LIMIT_EXCEEDED' }]
+    return emptyResult(
+      profile,
+      [{
+        code: 'CHECKER.SOURCE_LIMIT',
+        severity: 'error',
+        message: 'The source exceeds the bounded checker input limit.',
+        path: '$.artifact.source',
+      }],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
+
+  if (parts.input.signal && parts.input.signal.aborted) {
+    coverage.skipped = [{ check: 'analysis', reason_code: 'CANCELLED' }]
+    return emptyResult(
+      profile,
+      [{
+        code: 'CHECKER.CANCELLED',
+        severity: 'error',
+        message: 'Static checking was cancelled before analysis started.',
+        path: '$.artifact.source',
+      }],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
+
+  const runtimeVersion = declaredVersion(
+    parts.input.runtime || parts.input.declared_runtime || parts.artifact.runtime,
+  )
+  const compilerVersion = declaredVersion(
+    parts.input.compiler || parts.input.declared_compiler,
+  )
+  const schemaVersion = declaredVersion(
+    parts.input.schema || parts.input.declared_schema || parts.artifact.schema,
+  )
+  let dependencyFailure = false
+  if (runtimeVersion && runtimeVersion !== RUNTIME_VERSION) dependencyFailure = true
+  if (compilerVersion && compilerVersion !== ts.version) dependencyFailure = true
+  if (schemaVersion && schemaVersion !== DECLARATION_VERSION) dependencyFailure = true
+  if (dependencyFailure) {
+    coverage.skipped = [{ check: 'typecheck', reason_code: 'UNSUPPORTED_VERSION_PAIRING' }]
+    return emptyResult(
+      profile,
+      [{
+        code: 'CHECKER.UNSUPPORTED_VERSION',
+        severity: 'error',
+        message: 'The declared compiler, declaration, or runtime pairing is unavailable.',
+        path: '$.versions',
+      }],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
+
+  const hasForm = parts.form !== null && parts.form !== undefined
+  const formInfo = hasForm ? collectForm(parts.form) : { fields: new Map(), parents: new Map(), nodeCount: 0 }
+  if (hasForm && boundedObjectBytes(parts.form, LIMITS.formBytes) > LIMITS.formBytes) {
+    coverage.skipped = [{ check: 'analysis', reason_code: 'FORM_LIMIT_EXCEEDED' }]
+    return emptyResult(
+      profile,
+      [{
+        code: 'CHECKER.FORM_LIMIT',
+        severity: 'error',
+        message: 'The form context exceeds the bounded checker declaration limit.',
+        path: '$.artifact.form',
+      }],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
+
+  const files = {
+    ...standardLibrary,
+    '/source.js': parts.source,
+    '/fulcrum/api.d.ts': apiDeclarations,
+    '/fulcrum/form.d.ts': fieldDeclaration(formInfo),
+    '/fulcrum/globals.d.ts': `
+      declare var window: any;
+      declare var console: any;
+    `,
+  }
+  const { options, host } = createHost(files)
+  const sourceFile = host.getSourceFile('/source.js', options.target)
+  const state = {
+    profile,
+    sourceFile,
+    hasForm,
+    formInfo,
+    repeatableScope: parts.repeatableScope,
+    coverage,
+    diagnostics,
+    diagnosticKeys: new Set(),
+    artifactError: false,
+    failure: false,
+    limitFailure: false,
+  }
+
+  try {
+    collectTsOnlyDiagnostics(parts.source, sourceFile, state)
+    if (!state.artifactError) {
+      const program = ts.createProgram(
+        ['/source.js', '/fulcrum/api.d.ts', '/fulcrum/form.d.ts', '/fulcrum/globals.d.ts'],
+        options,
+        host,
+      )
+      // Always use the Program-owned SourceFile for semantic diagnostics.
+      // Passing a separately-created SourceFile makes TypeScript 4.9's
+      // contextual callback checker dereference an unbound symbol.
+      state.sourceFile = program.getSourceFile('/source.js')
+      const sourceSyntactic = program.getSyntacticDiagnostics(state.sourceFile)
+      if (sourceSyntactic.length) {
+        addDiagnostic(
+          state,
+          sourceFile,
+          'JAVASCRIPT.SYNTAX',
+          'error',
+          'The source is not valid deployable JavaScript.',
+        )
+        state.artifactError = true
+      }
+      validateAst(state)
+      if (!state.artifactError && !state.failure) {
+        addSemanticDiagnostics(state, program.getSemanticDiagnostics(state.sourceFile))
+      }
+    }
+  } catch (_error) {
+    // Deliberately discard compiler exception text; it can contain source
+    // fragments or dependency paths.  The caller receives a bounded outcome.
+    state.failure = true
+    addCoverageSkipped(coverage, 'typecheck', 'CHECKER_EXCEPTION')
+    addDiagnostic(
+      state,
+      sourceFile,
+      'CHECKER.UNAVAILABLE',
+      'error',
+      'The static checker could not complete analysis.',
+    )
+  }
+
+  if (state.failure) {
+    addCoverageSkipped(coverage, 'analysis', state.limitFailure ? 'LIMIT_EXCEEDED' : 'CHECKER_FAILURE')
+  }
+
+  if (state.artifactError) {
+    addCoverageSkipped(coverage, 'analysis', 'INVALID_ARTIFACT')
+  }
+
+  if (!hasForm && coverage.requested.includes('field_references')) {
+    addCoverageSkipped(coverage, 'field_references', 'CONTEXT_REQUIRED')
+  }
+
+  if (
+    coverage.requested.includes('field_references') &&
+    !state.artifactError &&
+    !state.failure &&
+    !coverage.skipped.some((item) => item.check === 'field_references')
+  ) {
+    markCoverageComplete(coverage, 'field_references')
+  }
+  if (!state.artifactError && !state.failure) {
+    for (const check of ['syntax', 'typecheck', 'profile']) {
+      if (
+        coverage.requested.includes(check) &&
+        !coverage.skipped.some((item) => item.check === check)
+      ) {
+        markCoverageComplete(coverage, check)
+      }
+    }
+  } else {
+    if (state.failure) {
+      addCoverageSkipped(coverage, 'syntax', 'CHECKER_FAILURE')
+      addCoverageSkipped(coverage, 'profile', 'CHECKER_FAILURE')
+    } else {
+      addCoverageSkipped(coverage, 'profile', 'INVALID_ARTIFACT')
+    }
+  }
+
+  diagnostics.sort((left, right) => {
+    const leftLine = left.range ? left.range.start.line : Number.MAX_SAFE_INTEGER
+    const rightLine = right.range ? right.range.start.line : Number.MAX_SAFE_INTEGER
+    return leftLine - rightLine || left.code.localeCompare(right.code)
+  })
+  coverage.completed.sort(
+    (left, right) => coverage.requested.indexOf(left) - coverage.requested.indexOf(right),
+  )
+
+  const hasCoverageGap =
+    coverage.unsupported.length > 0 ||
+    coverage.skipped.some((item) => coverage.requested.includes(item.check)) ||
+    coverage.requested.some((check) => !coverage.completed.includes(check))
+  const outcome = state.artifactError
+    ? 'invalid'
+    : state.failure
+      ? 'unavailable'
+      : hasCoverageGap
+        ? 'incomplete'
+        : 'valid'
+
+  return emptyResult(profile, diagnostics, coverage, outcome, versions)
+}
+
+function checkDataEvent(input) {
+  const request = input && typeof input === 'object' ? { ...input, artifact_type: 'data_event' } : input
+  return validate(request)
+}
+
+function checkCalculation(input) {
+  const request = input && typeof input === 'object' ? { ...input, artifact_type: 'calculation' } : input
+  return validate(request)
+}
+
+module.exports = Object.freeze({
+  CONTRACT_VERSION,
+  CHECKER_VERSION,
+  RUNTIME_VERSION,
+  DECLARATION_VERSION,
+  LIMITS,
+  CALCULATION_FORBIDDEN_APIS: Object.freeze(Array.from(CALCULATION_FORBIDDEN_APIS)),
+  validate,
+  checkDataEvent,
+  checkCalculation,
+})

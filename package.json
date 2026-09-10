@@ -5,6 +5,11 @@
   "author": "Fulcrum",
   "license": "BSD-3-Clause",
   "main": "dist/expressions.js",
+  "exports": {
+    ".": "./dist/expressions.js",
+    "./checker": "./checker/index.js"
+  },
+  "checker": "checker/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/fulcrumapp/fulcrum-expressions.git"
@@ -13,7 +18,8 @@
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
-    "build": "yarn build:expressions && yarn build:sandbox",
+    "build": "yarn build:checker && yarn build:expressions && yarn build:sandbox",
+    "build:checker": "node checker/generate-api.js",
     "build:debug": "yarn build:expressions:debug && yarn build:sandbox:debug",
     "build:expressions": "mkdir -p dist && browserify -t coffeeify --extension=.coffee runtime.coffee | terser > dist/expressions.js --mangle && cp package.json dist",
     "build:expressions:debug": "mkdir -p dist && ./node_modules/browserify/bin/cmd.js -t coffeeify --extension=.coffee runtime.coffee > dist/expressions.js",
@@ -33,6 +39,7 @@
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
+    "typescript": "^4.9.5",
     "underscore": "^1.12.1",
     "underscore.string": "^3.3.5"
   },
@@ -54,8 +61,7 @@
     "marked": "^4.0.10",
     "mocha": "^11.1.0",
     "should": "^8.4.0",
-    "terser": "^5.24.0",
-    "typescript": "^4.9.5"
+    "terser": "^5.24.0"
   },
   "resolutions": {
     "minimist": "^1.2.6",

@@ -1,0 +1,25 @@
+FLCRM-22122 validation evidence
+==============================
+
+Toolchain:
+- Node.js 20.20.2
+- Yarn 1.22.22
+- TypeScript 4.9.5
+- dts-generator 3.0.0 (lockfile)
+- CoffeeScript 1.12.7 (lockfile)
+- Browserify 13.0.1
+
+Passed:
+- yarn install --frozen-lockfile
+- yarn build:checker
+- targeted checker Mocha: 12 passing
+- yarn test: 397 passing
+- yarn build
+- static checker smoke: valid/invalid/incomplete/unavailable outcomes, no source execution, and no filesystem/network candidate resolution
+
+Blocked/environment limitation:
+- make types: dts-generator completed and wrote dist/api.raw.d.ts, but script/build.rb could not run because asdf has no configured Ruby 3.2.0 installation in this worktree environment. ts/api.ts was restored from the checked-in generated declaration and checker/api.js was regenerated from it.
+
+Not available:
+- No dedicated repository lint script exists in package.json.
+- No HTTP/auth adapter, package publication, tag, deployment, or merge was run.

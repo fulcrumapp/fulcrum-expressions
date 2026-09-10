@@ -1,4 +1,5 @@
 .tool-versions
+.agents
 ci
 console
 docs
