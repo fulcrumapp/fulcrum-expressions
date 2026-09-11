@@ -68,6 +68,14 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('incomplete')
     codes(result).should.containEql('COVERAGE.UNVERIFIED_REFERENCE')
 
+  it 'does not mark ordinary computed property access as dynamic API coverage', ->
+    result = checker.checkDataEvent({
+      source: 'const index = 0; ["status"][index];'
+      form
+    })
+
+    result.outcome.should.eql('valid')
+
   it 'keeps dynamic field coverage incomplete rather than warning-only valid', ->
     result = checker.checkDataEvent({
       source: 'const name = "status"; VALUE(name);'
@@ -130,6 +138,16 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('unavailable')
     codes(result).should.containEql('CHECKER.SOURCE_LIMIT')
+
+  it 'uses one canonical failure reason when the AST work limit is exceeded', ->
+    result = checker.checkDataEvent({
+      source: ('let value = 0;\n').repeat(6000)
+      form
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.coverage.failures.length.should.be.above(0)
+    result.coverage.failures.every((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()
 
   it 'reports nullable form variables instead of inventing non-null values', ->
     result = checker.checkDataEvent({ source: '$status.toUpperCase();', form })

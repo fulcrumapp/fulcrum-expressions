@@ -19,8 +19,10 @@ The exact exported API from
 - `checkCalculation`
 
 The package adds only the additive `exports["./checker"]` subpath; the existing
-`main: dist/expressions.js` is preserved. No production runtime asset or
-unscoped package boundary is changed.
+`main: dist/expressions.js` is preserved. The compatibility `exports["./*"]`
+pattern keeps historical deep imports resolvable while retaining the explicit
+checker entrypoint. No production runtime asset or unscoped package boundary is
+changed.
 
 ## Canonical requests
 
@@ -55,8 +57,8 @@ Data Event profile.
 
 - `yarn build:checker` — passed
 - `yarn build` — passed
-- `yarn test` — **403 passing**
-- Focused checker tests — **18 passing**
+- `yarn test` — **411 passing**
+- Focused checker tests — **26 passing**
 - `node --check` — passed
 - `npm pack --dry-run` — passed; package boundary verified without creating an
   archive

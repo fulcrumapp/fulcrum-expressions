@@ -927,14 +927,6 @@ function validateAst(state) {
       }
     }
 
-    if (
-      ts.isElementAccessExpression(node) &&
-      !ts.isStringLiteral(node.argumentExpression) &&
-      !ts.isNumericLiteral(node.argumentExpression)
-    ) {
-      addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_PROPERTY', node)
-    }
-
     if (ts.isIdentifier(node) && node.text.startsWith('$') && !node.text.startsWith('$$')) {
       const dataName = node.text.slice(1)
       if (state.hasForm && !state.formInfo.fields.has(dataName)) {
@@ -960,7 +952,7 @@ function validateAst(state) {
     addFailure(
       state,
       'typecheck',
-      'LIMIT_EXCEEDED',
+      'INPUT_LIMIT_EXCEEDED',
       'CHECKER.LIMIT_EXCEEDED',
       'The source exceeded the checker AST work limit.',
     )
