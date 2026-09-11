@@ -23,20 +23,29 @@ validate({
   artifact_type: 'data_event', // or 'calculation'
   operation: 'validate',
   artifact: {
-    source: 'ON("change", "status", (event) => ALERT(event.value));',
+    source: 'ON("change", "status", (event) => ALERT(event.value));'
+  },
+  context: {
     form: {
       elements: [
         { data_name: 'status', type: 'TextField' },
       ],
     },
   },
-  requested_checks: ['syntax', 'typecheck', 'profile', 'field_references'],
+  checks: ['syntax', 'api', 'hooks', 'fields'],
 })
 ```
 
+Calculation requests use `artifact.expression` and
+`context: { form, repeatable, feature_index }`. The repeatable value is the
+runtime repeatable element key, not an enum describing the calculation scope.
+
 `checkDataEvent` and `checkCalculation` are convenience entry points that force
-the corresponding profile. Every result uses the approved `v1` common envelope:
+the corresponding profile and also accept the legacy source/form shorthand for
+local callers. Every result uses the approved `v1` common envelope:
 `contract_version`, `outcome`, `diagnostics`, `coverage`, and `versions`.
+Coverage retains `requested`, `completed`, `skipped`, `unsupported`,
+`unverified`, and `failures`.
 `versions` reports the checker, exact TypeScript compiler, generated
 `ts/api.ts` identity, expression runtime lineage, and profile.
 

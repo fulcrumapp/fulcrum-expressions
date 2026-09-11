@@ -45,8 +45,8 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('incomplete')
     codes(result).should.containEql('COVERAGE.UNVERIFIED_REFERENCE')
-    result.coverage.skipped.should.containEql({
-      check: 'field_references'
+    result.coverage.unverified.should.containEql({
+      check: 'fields'
       reason_code: 'UNVERIFIED_DYNAMIC_FIELD'
     })
 
@@ -114,3 +114,39 @@ describe 'headless expression checker', ->
     result.versions.compiler.should.eql('4.9.5')
     result.versions.schema.should.eql('ts/api.ts@3.0.1')
     result.versions.runtime.should.eql('@fulcrumapp/fulcrum-expressions@3.0.1')
+
+  it 'accepts the canonical v1 Data Event artifact and context envelope', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'VALUE("status");' }
+      context: { form }
+    })
+
+    result.outcome.should.eql('valid')
+    result.coverage.requested.should.eql(['syntax', 'api', 'hooks', 'fields'])
+
+  it 'uses the canonical repeatable key and feature index for calculations', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'calculation'
+      operation: 'validate'
+      artifact: { expression: 'VALUE("amount");' }
+      context: { form, repeatable: 'items', feature_index: 0 }
+    })
+
+    result.outcome.should.eql('valid')
+    result.coverage.requested.should.eql(['syntax', 'api', 'scope', 'dependencies'])
+
+  it 'retains operational limits as failures without converting them to artifact errors', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'x'.repeat(checker.LIMITS.sourceBytes + 1) }
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.diagnostics.every((diagnostic) -> diagnostic.severity isnt 'error').should.be.true()
+    result.coverage.failures.should.containEql({ reason_code: 'INPUT_LIMIT_EXCEEDED' })

@@ -30,14 +30,19 @@ const LIMITS = Object.freeze({
   diagnostics: 100,
 })
 
-const DEFAULT_CHECKS = Object.freeze([
-  'syntax',
-  'typecheck',
-  'profile',
-  'field_references',
-])
+const DEFAULT_CHECKS = Object.freeze({
+  data_event: ['syntax', 'api', 'hooks', 'fields'],
+  calculation: ['syntax', 'api', 'scope', 'dependencies'],
+})
 
-const SUPPORTED_CHECKS = new Set(DEFAULT_CHECKS)
+const SUPPORTED_CHECKS = new Set([
+  'syntax',
+  'api',
+  'hooks',
+  'fields',
+  'scope',
+  'dependencies',
+])
 
 /*
  * This list intentionally mirrors Runtime.setupFunctions' calculation guard
@@ -252,18 +257,23 @@ function makeDiagnostic(sourceFile, node, code, severity, message, fix) {
   return diagnostic
 }
 
-function makeCoverage(requestedChecks) {
-  const requested = Array.isArray(requestedChecks) && requestedChecks.length > 0
+function makeCoverage(requestedChecks, profile, checksProvided) {
+  const defaults = DEFAULT_CHECKS[profile] || []
+  const requested = checksProvided
     ? requestedChecks.filter((check) => typeof check === 'string')
-    : DEFAULT_CHECKS.slice()
-  return {
+    : defaults.slice()
+  const coverage = {
     requested,
     completed: [],
     skipped: [],
     unsupported: requested
       .filter((check) => !SUPPORTED_CHECKS.has(check))
       .map((check) => ({ check, reason_code: 'UNSUPPORTED_CHECK' })),
+    unverified: [],
+    failures: [],
   }
+  Object.defineProperty(coverage, '_profile', { value: profile, enumerable: false })
+  return coverage
 }
 
 function pushUnique(list, value) {
@@ -272,15 +282,44 @@ function pushUnique(list, value) {
 }
 
 function addCoverageSkipped(coverage, check, reasonCode) {
-  pushUnique(coverage.skipped, { check, reason_code: reasonCode })
+  const entry = { reason_code: reasonCode }
+  if (check) entry.check = canonicalCheck(coverage, check)
+  pushUnique(coverage.skipped, entry)
 }
 
 function addCoverageUnsupported(coverage, check, reasonCode) {
-  pushUnique(coverage.unsupported, { check, reason_code: reasonCode })
+  const entry = { reason_code: reasonCode }
+  if (check) entry.check = canonicalCheck(coverage, check)
+  pushUnique(coverage.unsupported, entry)
 }
 
 function markCoverageComplete(coverage, check) {
-  if (!coverage.completed.includes(check)) coverage.completed.push(check)
+  const canonical = canonicalCheck(coverage, check)
+  if (!coverage.completed.includes(canonical)) coverage.completed.push(canonical)
+}
+
+function canonicalCheck(coverage, check) {
+  if (check === 'typecheck') return 'api'
+  if (check === 'field_references') {
+    return coverage._profile === 'calculation' ? 'dependencies' : 'fields'
+  }
+  if (check === 'profile') {
+    return coverage._profile === 'calculation' ? 'scope' : 'hooks'
+  }
+  return check
+}
+
+function addCoverageUnverified(coverage, check, reasonCode) {
+  pushUnique(coverage.unverified, {
+    check: canonicalCheck(coverage, check),
+    reason_code: reasonCode,
+  })
+}
+
+function addCoverageFailure(coverage, check, reasonCode) {
+  const entry = { reason_code: reasonCode }
+  if (check) entry.check = canonicalCheck(coverage, check)
+  pushUnique(coverage.failures, entry)
 }
 
 function formType(field) {
@@ -320,13 +359,19 @@ function collectForm(form) {
         : typeof value.dataName === 'string'
           ? value.dataName
           : null
+    const key =
+      typeof value.key === 'string'
+        ? value.key
+        : typeof value.element_key === 'string'
+          ? value.element_key
+          : dataName
     if (dataName) {
       fields.set(dataName, value)
       if (parentRepeatable) parents.set(dataName, parentRepeatable)
     }
 
     const type = normalizeFieldType(value)
-    const nextParent = type === 'repeatable' ? dataName || parentRepeatable : parentRepeatable
+    const nextParent = type === 'repeatable' ? key || parentRepeatable : parentRepeatable
     if (Array.isArray(value.elements)) {
       value.elements.forEach((child) => visit(child, nextParent, depth + 1))
     }
@@ -398,21 +443,12 @@ function boundedObjectBytes(value, limit, seen = new Set(), total = 0) {
 function requestParts(request) {
   const input = request && typeof request === 'object' ? request : {}
   const artifact = input.artifact && typeof input.artifact === 'object' ? input.artifact : input
-  const source =
-    typeof input.source === 'string'
-      ? input.source
-      : typeof input.code === 'string'
-        ? input.code
-        : typeof artifact.source === 'string'
-          ? artifact.source
-          : typeof artifact.code === 'string'
-            ? artifact.code
-            : null
+  const context = input.context && typeof input.context === 'object' ? input.context : {}
   const profileValue =
-    input.profile ||
     input.artifact_type ||
-    artifact.profile ||
     artifact.artifact_type ||
+    input.profile ||
+    artifact.profile ||
     artifact.type ||
     null
   const profile =
@@ -421,23 +457,50 @@ function requestParts(request) {
       : profileValue === 'calculation'
         ? 'calculation'
         : profileValue
+  const source =
+    profile === 'calculation'
+      ? typeof artifact.expression === 'string'
+        ? artifact.expression
+        : typeof input.expression === 'string'
+          ? input.expression
+          : null
+      : typeof artifact.source === 'string'
+        ? artifact.source
+        : typeof input.source === 'string'
+          ? input.source
+          : typeof input.code === 'string'
+            ? input.code
+            : typeof artifact.code === 'string'
+              ? artifact.code
+              : null
   const form =
-    input.form !== undefined
-      ? input.form
-      : artifact.form !== undefined
-        ? artifact.form
-        : null
+    context.form !== undefined
+      ? context.form
+      : input.form !== undefined
+        ? input.form
+        : artifact.form !== undefined
+          ? artifact.form
+          : null
+  const checksProvided = Array.isArray(input.checks) || Array.isArray(input.requested_checks)
   return {
     input,
     artifact,
+    context,
     source,
     profile,
     form,
     repeatableScope:
-      input.repeatable_scope !== undefined
-        ? input.repeatable_scope
-        : artifact.repeatable_scope,
-    requestedChecks: input.requested_checks || input.checks,
+      context.repeatable !== undefined
+        ? context.repeatable
+        : input.repeatable_scope !== undefined
+          ? input.repeatable_scope
+          : artifact.repeatable_scope,
+    featureIndex:
+      context.feature_index !== undefined
+        ? context.feature_index
+        : input.feature_index,
+    requestedChecks: input.checks || input.requested_checks || [],
+    checksProvided,
   }
 }
 
@@ -585,8 +648,8 @@ function addDiagnostic(state, node, code, severity, message, fix) {
 
 function addFailure(state, check, reasonCode, code, message) {
   state.failure = true
-  addCoverageSkipped(state.coverage, check, reasonCode)
-  addDiagnostic(state, state.sourceFile, code, 'error', message)
+  addCoverageFailure(state.coverage, check, reasonCode)
+  addDiagnostic(state, state.sourceFile, code, 'warning', message)
 }
 
 function addFieldCheck(state, dataName, node, context) {
@@ -630,7 +693,7 @@ function addFieldCheck(state, dataName, node, context) {
 }
 
 function addDynamicCoverage(state, check, reasonCode) {
-  addCoverageSkipped(state.coverage, check, reasonCode)
+  addCoverageUnverified(state.coverage, check, reasonCode)
   addDiagnostic(
     state,
     state.sourceFile,
@@ -943,20 +1006,20 @@ function emptyResult(profile, diagnostics, coverage, outcome, versions) {
 
 function validate(request) {
   const parts = requestParts(request)
-  const coverage = makeCoverage(parts.requestedChecks)
+  const coverage = makeCoverage(parts.requestedChecks, parts.profile, parts.checksProvided)
   const profile = parts.profile
   const versions = makeVersions(profile || 'unknown')
   const diagnostics = []
 
   if (!request || typeof request !== 'object' || Array.isArray(request)) {
-    coverage.requested = DEFAULT_CHECKS.slice()
-    coverage.skipped = [{ check: 'analysis', reason_code: 'MALFORMED_REQUEST' }]
+    coverage.requested = []
+    coverage.skipped = []
     return emptyResult(
       'unknown',
       [makeDiagnostic(
         ts.createSourceFile('/empty.js', '', ts.ScriptTarget.ES2020, true, ts.ScriptKind.JS),
         null,
-        'REQUEST.MALFORMED',
+        'VALIDATION.INVALID_REQUEST',
         'error',
         'A complete validation request object is required.',
       )],
@@ -966,14 +1029,22 @@ function validate(request) {
     )
   }
 
-  if (parts.input.contract_version && parts.input.contract_version !== CONTRACT_VERSION) {
+  const hasRequiredEnvelope =
+    parts.input.contract_version === CONTRACT_VERSION &&
+    typeof parts.input.artifact_type === 'string' &&
+    typeof parts.input.operation === 'string' &&
+    parts.input.artifact &&
+    typeof parts.input.artifact === 'object' &&
+    !Array.isArray(parts.input.artifact)
+  if (!hasRequiredEnvelope) {
     diagnostics.push({
-      code: 'REQUEST.UNSUPPORTED_CONTRACT',
+      code: 'VALIDATION.INVALID_REQUEST',
       severity: 'error',
-      message: 'The requested contract version is not supported.',
-      path: '$.contract_version',
+      message: 'The validation request must include the v1 contract, operation, artifact type, and artifact.',
+      path: '$',
     })
-    coverage.skipped = [{ check: 'analysis', reason_code: 'UNSUPPORTED_CONTRACT' }]
+    coverage.requested = []
+    coverage.skipped = []
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
@@ -984,7 +1055,8 @@ function validate(request) {
       message: 'The request must select the data_event or calculation profile.',
       path: '$.artifact_type',
     })
-    coverage.skipped = [{ check: 'profile', reason_code: 'UNSUPPORTED_PROFILE' }]
+    coverage.requested = []
+    coverage.skipped = []
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
@@ -992,23 +1064,42 @@ function validate(request) {
     diagnostics.push({
       code: 'REQUEST.MISSING_SOURCE',
       severity: 'error',
-      message: 'A complete candidate must include source JavaScript.',
-      path: '$.artifact.source',
+      message:       'A complete candidate must include deployable source JavaScript or an expression.',
+      path: '$.artifact',
     })
-    coverage.skipped = [{ check: 'syntax', reason_code: 'MISSING_SOURCE' }]
+    coverage.skipped = []
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
+  }
+
+  if (parts.featureIndex !== undefined &&
+    (!Number.isInteger(parts.featureIndex) || parts.featureIndex < 0)) {
+    diagnostics.push({
+    code: 'VALIDATION.INVALID_REQUEST',
+    severity: 'error',
+    message: 'The repeatable feature index must be a non-negative integer.',
+    path: '$.context.feature_index',
+    })
+    coverage.requested = []
+    coverage.skipped = []
+    return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
+  }
+
+  if (parts.checksProvided && parts.requestedChecks.length === 0) {
+    addCoverageSkipped(coverage, null, 'MISSING_CHECK')
+    coverage.skipped[coverage.skipped.length - 1] = { reason_code: 'MISSING_CHECK' }
+    return emptyResult(profile, diagnostics, coverage, 'incomplete', versions)
   }
 
   const sourceBytes = byteLength(parts.source)
   if (sourceBytes > LIMITS.sourceBytes) {
-    coverage.skipped = [{ check: 'analysis', reason_code: 'SOURCE_LIMIT_EXCEEDED' }]
+    addCoverageFailure(coverage, null, 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
       [{
         code: 'CHECKER.SOURCE_LIMIT',
-        severity: 'error',
+        severity: 'warning',
         message: 'The source exceeds the bounded checker input limit.',
-        path: '$.artifact.source',
+        path: '$.artifact',
       }],
       coverage,
       'unavailable',
@@ -1017,14 +1108,14 @@ function validate(request) {
   }
 
   if (parts.input.signal && parts.input.signal.aborted) {
-    coverage.skipped = [{ check: 'analysis', reason_code: 'CANCELLED' }]
+    addCoverageFailure(coverage, null, 'CHECK_TIMEOUT')
     return emptyResult(
       profile,
       [{
         code: 'CHECKER.CANCELLED',
-        severity: 'error',
+        severity: 'warning',
         message: 'Static checking was cancelled before analysis started.',
-        path: '$.artifact.source',
+        path: '$.artifact',
       }],
       coverage,
       'unavailable',
@@ -1033,27 +1124,37 @@ function validate(request) {
   }
 
   const runtimeVersion = declaredVersion(
-    parts.input.runtime || parts.input.declared_runtime || parts.artifact.runtime,
+    parts.input.runtime_version ||
+    parts.input.runtime ||
+    parts.input.declared_runtime ||
+    parts.artifact.runtime_version ||
+    parts.artifact.runtime,
   )
   const compilerVersion = declaredVersion(
-    parts.input.compiler || parts.input.declared_compiler,
+    parts.input.compiler_version ||
+    parts.input.compiler ||
+    parts.input.declared_compiler,
   )
   const schemaVersion = declaredVersion(
-    parts.input.schema || parts.input.declared_schema || parts.artifact.schema,
+    parts.input.schema_version ||
+    parts.input.schema ||
+    parts.input.declared_schema ||
+    parts.artifact.schema_version ||
+    parts.artifact.schema,
   )
   let dependencyFailure = false
   if (runtimeVersion && runtimeVersion !== RUNTIME_VERSION) dependencyFailure = true
   if (compilerVersion && compilerVersion !== ts.version) dependencyFailure = true
   if (schemaVersion && schemaVersion !== DECLARATION_VERSION) dependencyFailure = true
   if (dependencyFailure) {
-    coverage.skipped = [{ check: 'typecheck', reason_code: 'UNSUPPORTED_VERSION_PAIRING' }]
+    addCoverageFailure(coverage, 'api', 'VERSION_MISMATCH')
     return emptyResult(
       profile,
       [{
         code: 'CHECKER.UNSUPPORTED_VERSION',
-        severity: 'error',
+        severity: 'warning',
         message: 'The declared compiler, declaration, or runtime pairing is unavailable.',
-        path: '$.versions',
+        path: '$.artifact',
       }],
       coverage,
       'unavailable',
@@ -1064,14 +1165,14 @@ function validate(request) {
   const hasForm = parts.form !== null && parts.form !== undefined
   const formInfo = hasForm ? collectForm(parts.form) : { fields: new Map(), parents: new Map(), nodeCount: 0 }
   if (hasForm && boundedObjectBytes(parts.form, LIMITS.formBytes) > LIMITS.formBytes) {
-    coverage.skipped = [{ check: 'analysis', reason_code: 'FORM_LIMIT_EXCEEDED' }]
+    addCoverageFailure(coverage, null, 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
       [{
         code: 'CHECKER.FORM_LIMIT',
-        severity: 'error',
+        severity: 'warning',
         message: 'The form context exceeds the bounded checker declaration limit.',
-        path: '$.artifact.form',
+        path: '$.context.form',
       }],
       coverage,
       'unavailable',
@@ -1137,51 +1238,64 @@ function validate(request) {
     // Deliberately discard compiler exception text; it can contain source
     // fragments or dependency paths.  The caller receives a bounded outcome.
     state.failure = true
-    addCoverageSkipped(coverage, 'typecheck', 'CHECKER_EXCEPTION')
+    addCoverageFailure(coverage, 'api', 'DEPENDENCY_UNAVAILABLE')
     addDiagnostic(
       state,
       sourceFile,
       'CHECKER.UNAVAILABLE',
-      'error',
+      'warning',
       'The static checker could not complete analysis.',
     )
   }
 
   if (state.failure) {
-    addCoverageSkipped(coverage, 'analysis', state.limitFailure ? 'LIMIT_EXCEEDED' : 'CHECKER_FAILURE')
+    addCoverageFailure(
+      coverage,
+      null,
+      state.limitFailure ? 'INPUT_LIMIT_EXCEEDED' : 'DEPENDENCY_UNAVAILABLE',
+    )
   }
 
   if (state.artifactError) {
-    addCoverageSkipped(coverage, 'analysis', 'INVALID_ARTIFACT')
+    addCoverageSkipped(coverage, null, 'INVALID_ARTIFACT')
   }
 
-  if (!hasForm && coverage.requested.includes('field_references')) {
+  const fieldCheck = canonicalCheck(coverage, 'field_references')
+  const profileCheck = canonicalCheck(coverage, 'profile')
+  const typeCheck = canonicalCheck(coverage, 'typecheck')
+
+  if (!hasForm && coverage.requested.includes(fieldCheck)) {
     addCoverageSkipped(coverage, 'field_references', 'CONTEXT_REQUIRED')
   }
 
   if (
-    coverage.requested.includes('field_references') &&
+    coverage.requested.includes(fieldCheck) &&
     !state.artifactError &&
     !state.failure &&
-    !coverage.skipped.some((item) => item.check === 'field_references')
+    !coverage.skipped.some((item) => item.check === fieldCheck) &&
+    !coverage.unverified.some((item) => item.check === fieldCheck) &&
+    !coverage.failures.some((item) => item.check === fieldCheck)
   ) {
     markCoverageComplete(coverage, 'field_references')
   }
   if (!state.artifactError && !state.failure) {
-    for (const check of ['syntax', 'typecheck', 'profile']) {
+    for (const check of ['syntax', typeCheck, profileCheck]) {
       if (
         coverage.requested.includes(check) &&
         !coverage.skipped.some((item) => item.check === check)
+        && !coverage.unverified.some((item) => item.check === check)
+        && !coverage.failures.some((item) => item.check === check)
       ) {
         markCoverageComplete(coverage, check)
       }
     }
   } else {
     if (state.failure) {
-      addCoverageSkipped(coverage, 'syntax', 'CHECKER_FAILURE')
-      addCoverageSkipped(coverage, 'profile', 'CHECKER_FAILURE')
+      addCoverageFailure(coverage, 'syntax', 'DEPENDENCY_UNAVAILABLE')
+      addCoverageFailure(coverage, typeCheck, 'DEPENDENCY_UNAVAILABLE')
+      addCoverageFailure(coverage, profileCheck, 'DEPENDENCY_UNAVAILABLE')
     } else {
-      addCoverageSkipped(coverage, 'profile', 'INVALID_ARTIFACT')
+      addCoverageSkipped(coverage, profileCheck, 'INVALID_ARTIFACT')
     }
   }
 
@@ -1196,7 +1310,9 @@ function validate(request) {
 
   const hasCoverageGap =
     coverage.unsupported.length > 0 ||
-    coverage.skipped.some((item) => coverage.requested.includes(item.check)) ||
+    coverage.skipped.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
+    coverage.unverified.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
+    coverage.failures.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
     coverage.requested.some((check) => !coverage.completed.includes(check))
   const outcome = state.artifactError
     ? 'invalid'
@@ -1210,12 +1326,44 @@ function validate(request) {
 }
 
 function checkDataEvent(input) {
-  const request = input && typeof input === 'object' ? { ...input, artifact_type: 'data_event' } : input
+  const request = input && typeof input === 'object' && input.artifact
+    ? { ...input, artifact_type: 'data_event' }
+    : input && typeof input === 'object'
+      ? {
+          contract_version: CONTRACT_VERSION,
+          artifact_type: 'data_event',
+          operation: 'validate',
+          artifact: { source: input.source || input.code || '' },
+          context: { form: input.form },
+          checks: input.checks || input.requested_checks,
+          runtime_version: input.runtime_version || input.runtime,
+          schema_version: input.schema_version || input.schema,
+        }
+      : input
   return validate(request)
 }
 
 function checkCalculation(input) {
-  const request = input && typeof input === 'object' ? { ...input, artifact_type: 'calculation' } : input
+  const request = input && typeof input === 'object' && input.artifact
+    ? { ...input, artifact_type: 'calculation' }
+    : input && typeof input === 'object'
+      ? {
+          contract_version: CONTRACT_VERSION,
+          artifact_type: 'calculation',
+          operation: 'validate',
+          artifact: { expression: input.expression || input.source || input.code || '' },
+          context: {
+            form: input.form,
+            repeatable: input.repeatable_scope && typeof input.repeatable_scope === 'string'
+              ? input.repeatable_scope
+              : input.repeatable_scope && input.repeatable_scope.current,
+            feature_index: input.feature_index,
+          },
+          checks: input.checks || input.requested_checks,
+          runtime_version: input.runtime_version || input.runtime,
+          schema_version: input.schema_version || input.schema,
+        }
+      : input
   return validate(request)
 }
 
