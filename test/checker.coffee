@@ -172,6 +172,24 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('unavailable')
     result.diagnostics.every((diagnostic) -> diagnostic.severity isnt 'error').should.be.true()
     result.coverage.failures.every((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()
+    result.diagnostics[0].range.should.have.keys('start', 'end')
+
+  it 'does not turn version-mismatched declarations into artifact errors', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'UNDECLARED_API();' }
+      context: { form }
+      compiler_version: 'different-compiler'
+    })
+
+    result.outcome.should.eql('incomplete')
+    codes(result).should.not.containEql('JAVASCRIPT.UNDECLARED_NAME')
+    result.coverage.skipped.should.containEql({
+      check: 'api'
+      reason_code: 'VERSION_MISMATCH'
+    })
 
   it 'keeps unaffected checks complete for a runtime mismatch', ->
     result = checker.validate({

@@ -246,10 +246,6 @@ function diagnosticPath(profile) {
   return profile === 'calculation' ? '$.expression' : '$.source'
 }
 
-function artifactPath(profile) {
-  return profile === 'calculation' ? '$.expression' : '$.source'
-}
-
 function makeDiagnostic(sourceFile, node, code, severity, message, fix, profile) {
   const diagnostic = {
     code,
@@ -880,6 +876,7 @@ function validateAst(state) {
     nodeCount += 1
     if (nodeCount > LIMITS.astNodes || depth > LIMITS.astDepth) {
       tooDeep = true
+      state.limitFailure = true
       return
     }
 
@@ -1047,7 +1044,7 @@ function emptyResult(profile, diagnostics, coverage, outcome, versions) {
   }
 }
 
-function makeRequestDiagnostic(code, message, profile = 'unknown') {
+function makeRequestDiagnostic(code, message, profile = 'unknown', severity = 'error') {
   const sourceFile = ts.createSourceFile(
     '/request.js',
     '',
@@ -1055,7 +1052,7 @@ function makeRequestDiagnostic(code, message, profile = 'unknown') {
     true,
     ts.ScriptKind.JS,
   )
-  return makeDiagnostic(sourceFile, null, code, 'error', message, undefined, profile)
+  return makeDiagnostic(sourceFile, null, code, severity, message, undefined, profile)
 }
 
 function validate(request) {
@@ -1144,12 +1141,12 @@ function validate(request) {
     addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
-      [{
-        code: 'CHECKER.SOURCE_LIMIT',
-        severity: 'warning',
-        message: 'The source exceeds the bounded checker input limit.',
-        path: artifactPath(profile),
-      }],
+      [makeRequestDiagnostic(
+        'CHECKER.SOURCE_LIMIT',
+        'The source exceeds the bounded checker input limit.',
+        profile,
+        'warning',
+      )],
       coverage,
       'unavailable',
       versions,
@@ -1160,12 +1157,12 @@ function validate(request) {
     addCoverageToRequested(coverage, 'failures', 'CHECK_TIMEOUT')
     return emptyResult(
       profile,
-      [{
-        code: 'CHECKER.CANCELLED',
-        severity: 'warning',
-        message: 'Static checking was cancelled before analysis started.',
-        path: artifactPath(profile),
-      }],
+      [makeRequestDiagnostic(
+        'CHECKER.CANCELLED',
+        'Static checking was cancelled before analysis started.',
+        profile,
+        'warning',
+      )],
       coverage,
       'unavailable',
       versions,
@@ -1194,6 +1191,7 @@ function validate(request) {
   const compilerMismatch = compilerVersion && compilerVersion !== ts.version
   const schemaMismatch = schemaVersion && schemaVersion !== DECLARATION_VERSION
   const runtimeMismatch = runtimeVersion && runtimeVersion !== RUNTIME_VERSION
+  const apiMismatch = Boolean(compilerMismatch || schemaMismatch || runtimeMismatch)
   if (compilerMismatch || schemaMismatch || runtimeMismatch) {
     addCoverageSkipped(coverage, 'api', 'VERSION_MISMATCH')
   }
@@ -1207,12 +1205,12 @@ function validate(request) {
     addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
-      [{
-        code: 'CHECKER.FORM_LIMIT',
-        severity: 'warning',
-        message: 'The form context exceeds the bounded checker declaration limit.',
-        path: '$',
-      }],
+      [makeRequestDiagnostic(
+        'CHECKER.FORM_LIMIT',
+        'The form context exceeds the bounded checker declaration limit.',
+        profile,
+        'warning',
+      )],
       coverage,
       'unavailable',
       versions,
@@ -1269,7 +1267,7 @@ function validate(request) {
         state.artifactError = true
       }
       validateAst(state)
-      if (!state.artifactError && !state.failure) {
+      if (!state.artifactError && !state.failure && !apiMismatch) {
         addSemanticDiagnostics(state, program.getSemanticDiagnostics(state.sourceFile))
       }
     }
