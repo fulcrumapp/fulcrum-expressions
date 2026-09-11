@@ -37,6 +37,20 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
 
+  it 'does not apply calculation repeatable scope rules to Data Events', ->
+    result = checker.checkDataEvent({ source: 'VALUE("amount");', form })
+
+    result.outcome.should.eql('valid')
+    codes(result).should.not.containEql('CALCULATION.REPEATABLE_SCOPE_REQUIRED')
+
+  it 'accepts a named Data Event callback in the two-argument overload', ->
+    result = checker.checkDataEvent({
+      source: 'const callback = (event) => ALERT(event.value); ON("change", callback);'
+      form
+    })
+
+    result.outcome.should.eql('valid')
+
   it 'keeps dynamic field coverage incomplete rather than warning-only valid', ->
     result = checker.checkDataEvent({
       source: 'const name = "status"; VALUE(name);'
@@ -113,6 +127,10 @@ describe 'headless expression checker', ->
     result.versions.compiler.should.eql('4.9.5')
     result.versions.schema.should.eql('ts/api.ts@3.0.1')
     result.versions.runtime.should.eql('@fulcrumapp/fulcrum-expressions@3.0.1')
+
+  it 'reports missing shorthand artifacts as invalid requests', ->
+    checker.checkDataEvent({ form }).outcome.should.eql('invalid')
+    checker.checkCalculation({ form }).outcome.should.eql('invalid')
 
   it 'accepts the canonical v1 Data Event artifact and context envelope', ->
     result = checker.validate({

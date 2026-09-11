@@ -713,7 +713,7 @@ function addFieldCheck(state, dataName, node, context) {
   }
 
   const parent = state.formInfo.parents.get(dataName)
-  if (parent) {
+  if (parent && state.profile === 'calculation') {
     const scopes = repeatableScopeNames(state.repeatableScope)
     if (!scopes.includes(parent)) {
       addDiagnostic(
@@ -770,7 +770,7 @@ function validateHookCall(state, call) {
     state.artifactError = true
   }
 
-  const hasTarget = args.length >= 3 || (args.length === 2 && !isFunctionLike(args[1]))
+  const hasTarget = args.length >= 3
   if (hasTarget) {
     const target = args[1]
     const fieldName = literalText(target)
@@ -1378,7 +1378,13 @@ function checkDataEvent(input) {
           contract_version: CONTRACT_VERSION,
           artifact_type: 'data_event',
           operation: 'validate',
-          artifact: { source: input.source || input.code || '' },
+          artifact: {
+            source: input.source !== undefined
+              ? input.source
+              : input.code !== undefined
+                ? input.code
+                : undefined,
+          },
           context: { form: input.form },
           checks: input.checks || input.requested_checks,
           runtime_version: input.runtime_version || input.runtime,
@@ -1396,7 +1402,15 @@ function checkCalculation(input) {
           contract_version: CONTRACT_VERSION,
           artifact_type: 'calculation',
           operation: 'validate',
-          artifact: { expression: input.expression || input.source || input.code || '' },
+          artifact: {
+            expression: input.expression !== undefined
+              ? input.expression
+              : input.source !== undefined
+                ? input.source
+                : input.code !== undefined
+                  ? input.code
+                  : undefined,
+          },
           context: {
             form: input.form,
             repeatable: input.repeatable_scope && typeof input.repeatable_scope === 'string'
