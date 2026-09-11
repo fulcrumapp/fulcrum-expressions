@@ -162,7 +162,7 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('incomplete')
     result.coverage.completed.should.containEql('syntax')
-    result.coverage.completed.should.containEql('api')
+    result.coverage.completed.should.containEql('dependencies')
     result.coverage.skipped.should.containEql({
       check: 'scope'
       reason_code: 'VERSION_MISMATCH'
@@ -179,3 +179,6 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('invalid')
     result.diagnostics[0].path.should.eql('$')
+
+  it 'uses checker-wide paths for non-object requests', ->
+    checker.validate(null).diagnostics[0].path.should.eql('$')

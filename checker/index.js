@@ -242,6 +242,7 @@ function sourceRange(sourceFile, node) {
 function diagnosticPath(profile) {
   // Never put a source value, field name, or source excerpt in a diagnostic
   // path.  The source range is sufficient for editor/agent navigation.
+  if (profile !== 'data_event' && profile !== 'calculation') return '$'
   return profile === 'calculation' ? '$.expression' : '$.source'
 }
 
@@ -1196,7 +1197,7 @@ function validate(request) {
   const compilerMismatch = compilerVersion && compilerVersion !== ts.version
   const schemaMismatch = schemaVersion && schemaVersion !== DECLARATION_VERSION
   const runtimeMismatch = runtimeVersion && runtimeVersion !== RUNTIME_VERSION
-  if (compilerMismatch || schemaMismatch) {
+  if (compilerMismatch || schemaMismatch || runtimeMismatch) {
     addCoverageSkipped(coverage, 'api', 'VERSION_MISMATCH')
   }
   if (runtimeMismatch) {
