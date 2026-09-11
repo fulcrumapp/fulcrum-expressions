@@ -129,8 +129,13 @@ describe 'headless expression checker', ->
     result.versions.runtime.should.eql('@fulcrumapp/fulcrum-expressions@3.0.1')
 
   it 'reports missing shorthand artifacts as invalid requests', ->
-    checker.checkDataEvent({ form }).outcome.should.eql('invalid')
-    checker.checkCalculation({ form }).outcome.should.eql('invalid')
+    dataEvent = checker.checkDataEvent({ form })
+    calculation = checker.checkCalculation({ form })
+
+    dataEvent.outcome.should.eql('invalid')
+    calculation.outcome.should.eql('invalid')
+    dataEvent.diagnostics[0].range.should.have.keys('start', 'end')
+    calculation.diagnostics[0].range.should.have.keys('start', 'end')
 
   it 'accepts the canonical v1 Data Event artifact and context envelope', ->
     result = checker.validate({

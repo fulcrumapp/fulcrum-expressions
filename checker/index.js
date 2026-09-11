@@ -1020,9 +1020,7 @@ function addSemanticDiagnostics(state, diagnostics) {
       node,
       code,
       'error',
-      diagnostic.code === 2531 || diagnostic.code === 2532
-        ? semanticMessage(diagnostic.code)
-        : semanticMessage(diagnostic.code),
+      semanticMessage(diagnostic.code),
     )
     state.artifactError = true
   }
@@ -1049,6 +1047,17 @@ function emptyResult(profile, diagnostics, coverage, outcome, versions) {
   }
 }
 
+function makeRequestDiagnostic(code, message, profile = 'unknown') {
+  const sourceFile = ts.createSourceFile(
+    '/request.js',
+    '',
+    ts.ScriptTarget.ES2020,
+    true,
+    ts.ScriptKind.JS,
+  )
+  return makeDiagnostic(sourceFile, null, code, 'error', message, undefined, profile)
+}
+
 function validate(request) {
   const parts = requestParts(request)
   const coverage = makeCoverage(parts.requestedChecks, parts.profile, parts.checksProvided)
@@ -1060,11 +1069,8 @@ function validate(request) {
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(
       'unknown',
-      [makeDiagnostic(
-        ts.createSourceFile('/empty.js', '', ts.ScriptTarget.ES2020, true, ts.ScriptKind.JS),
-        null,
+      [makeRequestDiagnostic(
         'VALIDATION.INVALID_REQUEST',
-        'error',
         'A complete validation request object is required.',
       )],
       coverage,
@@ -1081,57 +1087,48 @@ function validate(request) {
     typeof parts.input.artifact === 'object' &&
     !Array.isArray(parts.input.artifact)
   if (!hasRequiredEnvelope) {
-    diagnostics.push({
-      code: 'VALIDATION.INVALID_REQUEST',
-      severity: 'error',
-      message: 'The validation request must include the v1 contract, operation, artifact type, and artifact.',
-      path: '$',
-    })
+    diagnostics.push(makeRequestDiagnostic(
+      'VALIDATION.INVALID_REQUEST',
+      'The validation request must include the v1 contract, operation, artifact type, and artifact.',
+    ))
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
   if (parts.input.operation !== 'validate' || !parts.checksValid) {
-    diagnostics.push({
-      code: 'VALIDATION.INVALID_REQUEST',
-      severity: 'error',
-      message: 'The operation must be validate and checks must be an array of strings.',
-      path: '$',
-    })
+    diagnostics.push(makeRequestDiagnostic(
+      'VALIDATION.INVALID_REQUEST',
+      'The operation must be validate and checks must be an array of strings.',
+    ))
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
   if (!['data_event', 'calculation'].includes(profile)) {
-    diagnostics.push({
-      code: 'REQUEST.UNSUPPORTED_PROFILE',
-      severity: 'error',
-      message: 'The request must select the data_event or calculation profile.',
-      path: '$',
-    })
+    diagnostics.push(makeRequestDiagnostic(
+      'REQUEST.UNSUPPORTED_PROFILE',
+      'The request must select the data_event or calculation profile.',
+    ))
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
   if (parts.source === null) {
-    diagnostics.push({
-      code: 'REQUEST.MISSING_SOURCE',
-      severity: 'error',
-      message:       'A complete candidate must include deployable source JavaScript or an expression.',
-      path: artifactPath(profile),
-    })
+    diagnostics.push(makeRequestDiagnostic(
+      'REQUEST.MISSING_SOURCE',
+      'A complete candidate must include deployable source JavaScript or an expression.',
+      profile,
+    ))
     addCoverageToRequested(coverage, 'skipped', 'INVALID_ARTIFACT')
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
   }
 
   if (parts.featureIndex !== undefined &&
     (!Number.isInteger(parts.featureIndex) || parts.featureIndex < 0)) {
-    diagnostics.push({
-    code: 'VALIDATION.INVALID_REQUEST',
-    severity: 'error',
-    message: 'The repeatable feature index must be a non-negative integer.',
-    path: '$',
-    })
+    diagnostics.push(makeRequestDiagnostic(
+      'VALIDATION.INVALID_REQUEST',
+      'The repeatable feature index must be a non-negative integer.',
+    ))
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
   }
