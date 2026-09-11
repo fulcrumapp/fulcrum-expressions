@@ -45,10 +45,9 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('incomplete')
     codes(result).should.containEql('COVERAGE.UNVERIFIED_REFERENCE')
-    result.coverage.unverified.should.containEql({
-      check: 'fields'
-      reason_code: 'UNVERIFIED_DYNAMIC_FIELD'
-    })
+    result.coverage.unverified[0].check.should.eql('fields')
+    result.coverage.unverified[0].reason_code.should.eql('UNVERIFIED_DYNAMIC_FIELD')
+    result.coverage.unverified[0].path.should.eql('$.source')
 
   it 'rejects calculation-only forbidden APIs while keeping profiles separate', ->
     result = checker.checkCalculation({ source: 'SETVALUE("status", "changed");', form })
@@ -149,4 +148,4 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('unavailable')
     result.diagnostics.every((diagnostic) -> diagnostic.severity isnt 'error').should.be.true()
-    result.coverage.failures.should.containEql({ reason_code: 'INPUT_LIMIT_EXCEEDED' })
+    result.coverage.failures.every((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()

@@ -239,18 +239,22 @@ function sourceRange(sourceFile, node) {
   }
 }
 
-function diagnosticPath() {
+function diagnosticPath(profile) {
   // Never put a source value, field name, or source excerpt in a diagnostic
   // path.  The source range is sufficient for editor/agent navigation.
-  return '$.source'
+  return profile === 'calculation' ? '$.expression' : '$.source'
 }
 
-function makeDiagnostic(sourceFile, node, code, severity, message, fix) {
+function artifactPath(profile) {
+  return profile === 'calculation' ? '$.expression' : '$.source'
+}
+
+function makeDiagnostic(sourceFile, node, code, severity, message, fix, profile) {
   const diagnostic = {
     code,
     severity,
     message,
-    path: diagnosticPath(),
+    path: diagnosticPath(profile),
     range: sourceRange(sourceFile, node || sourceFile),
   }
   if (fix) diagnostic.fix = fix
@@ -309,17 +313,42 @@ function canonicalCheck(coverage, check) {
   return check
 }
 
-function addCoverageUnverified(coverage, check, reasonCode) {
-  pushUnique(coverage.unverified, {
+function addCoverageUnverified(coverage, check, reasonCode, location) {
+  const entry = {
     check: canonicalCheck(coverage, check),
     reason_code: reasonCode,
-  })
+  }
+  if (location && location.path) entry.path = location.path
+  if (location && location.range) entry.range = location.range
+  pushUnique(coverage.unverified, entry)
 }
 
 function addCoverageFailure(coverage, check, reasonCode) {
   const entry = { reason_code: reasonCode }
   if (check) entry.check = canonicalCheck(coverage, check)
   pushUnique(coverage.failures, entry)
+}
+
+function addCoverageToRequested(coverage, bucket, reasonCode) {
+  for (const check of coverage.requested) {
+    if (
+      coverage.completed.includes(check) ||
+      coverage.skipped.some((item) => item.check === check) ||
+      coverage.unsupported.some((item) => item.check === check) ||
+      coverage.unverified.some((item) => item.check === check) ||
+      coverage.failures.some((item) => item.check === check)
+    ) continue
+    pushUnique(coverage[bucket], { check, reason_code: reasonCode })
+  }
+}
+
+function clearCoverageForInvalidRequest(coverage) {
+  coverage.requested = []
+  coverage.completed = []
+  coverage.skipped = []
+  coverage.unsupported = []
+  coverage.unverified = []
+  coverage.failures = []
 }
 
 function formType(field) {
@@ -481,7 +510,8 @@ function requestParts(request) {
         : artifact.form !== undefined
           ? artifact.form
           : null
-  const checksProvided = Array.isArray(input.checks) || Array.isArray(input.requested_checks)
+  const rawChecks = input.checks !== undefined ? input.checks : input.requested_checks
+  const checksProvided = rawChecks !== undefined
   return {
     input,
     artifact,
@@ -499,8 +529,11 @@ function requestParts(request) {
       context.feature_index !== undefined
         ? context.feature_index
         : input.feature_index,
-    requestedChecks: input.checks || input.requested_checks || [],
+    requestedChecks: Array.isArray(rawChecks) ? rawChecks : [],
     checksProvided,
+    checksValid:
+      rawChecks === undefined ||
+      (Array.isArray(rawChecks) && rawChecks.every((check) => typeof check === 'string')),
   }
 }
 
@@ -638,7 +671,15 @@ function addDiagnostic(state, node, code, severity, message, fix) {
     state.limitFailure = true
     return
   }
-  const diagnostic = makeDiagnostic(state.sourceFile, node, code, severity, message, fix)
+  const diagnostic = makeDiagnostic(
+    state.sourceFile,
+    node,
+    code,
+    severity,
+    message,
+    fix,
+    state.profile,
+  )
   const key = JSON.stringify(diagnostic)
   if (!state.diagnosticKeys.has(key)) {
     state.diagnosticKeys.add(key)
@@ -692,8 +733,11 @@ function addFieldCheck(state, dataName, node, context) {
   }
 }
 
-function addDynamicCoverage(state, check, reasonCode) {
-  addCoverageUnverified(state.coverage, check, reasonCode)
+function addDynamicCoverage(state, check, reasonCode, node) {
+  addCoverageUnverified(state.coverage, check, reasonCode, {
+    path: state.profile === 'calculation' ? '$.expression' : '$.source',
+    range: sourceRange(state.sourceFile, node || state.sourceFile),
+  })
   addDiagnostic(
     state,
     state.sourceFile,
@@ -710,7 +754,7 @@ function validateHookCall(state, call) {
   const args = Array.from(call.arguments)
   const eventName = literalText(args[0])
   if (eventName === null) {
-    addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_HOOK')
+    addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_HOOK', args[0])
     return
   }
   if (!EVENT_NAMES.has(eventName)) {
@@ -730,7 +774,7 @@ function validateHookCall(state, call) {
     const target = args[1]
     const fieldName = literalText(target)
     if (fieldName === null) {
-      addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD')
+      addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', target)
     } else if (fieldName.startsWith('@')) {
       if (eventName !== 'change') {
         addDiagnostic(
@@ -820,7 +864,7 @@ function checkLiteralFieldCall(state, call) {
   if (!fieldArgument) return
   const dataName = literalText(fieldArgument)
   if (dataName === null) {
-    addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD')
+    addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', fieldArgument)
   } else {
     addFieldCheck(state, dataName, fieldArgument, 'literal')
   }
@@ -879,12 +923,12 @@ function validateAst(state) {
         ts.isIdentifier(node.expression.expression) &&
         node.expression.expression.text === 'Math'
       )) {
-        addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_CALL')
+        addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_CALL', node)
       }
     }
 
     if (ts.isElementAccessExpression(node)) {
-      addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_PROPERTY')
+      addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_PROPERTY', node)
     }
 
     if (ts.isIdentifier(node) && node.text.startsWith('$') && !node.text.startsWith('$$')) {
@@ -1012,8 +1056,7 @@ function validate(request) {
   const diagnostics = []
 
   if (!request || typeof request !== 'object' || Array.isArray(request)) {
-    coverage.requested = []
-    coverage.skipped = []
+    clearCoverageForInvalidRequest(coverage)
     return emptyResult(
       'unknown',
       [makeDiagnostic(
@@ -1043,8 +1086,18 @@ function validate(request) {
       message: 'The validation request must include the v1 contract, operation, artifact type, and artifact.',
       path: '$',
     })
-    coverage.requested = []
-    coverage.skipped = []
+    clearCoverageForInvalidRequest(coverage)
+    return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
+  }
+
+  if (parts.input.operation !== 'validate' || !parts.checksValid) {
+    diagnostics.push({
+      code: 'VALIDATION.INVALID_REQUEST',
+      severity: 'error',
+      message: 'The operation must be validate and checks must be an array of strings.',
+      path: parts.input.operation !== 'validate' ? '$.operation' : '$.checks',
+    })
+    clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
@@ -1055,8 +1108,7 @@ function validate(request) {
       message: 'The request must select the data_event or calculation profile.',
       path: '$.artifact_type',
     })
-    coverage.requested = []
-    coverage.skipped = []
+    clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
   }
 
@@ -1065,9 +1117,9 @@ function validate(request) {
       code: 'REQUEST.MISSING_SOURCE',
       severity: 'error',
       message:       'A complete candidate must include deployable source JavaScript or an expression.',
-      path: '$.artifact',
+      path: artifactPath(profile),
     })
-    coverage.skipped = []
+    addCoverageToRequested(coverage, 'skipped', 'INVALID_ARTIFACT')
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
   }
 
@@ -1079,8 +1131,7 @@ function validate(request) {
     message: 'The repeatable feature index must be a non-negative integer.',
     path: '$.context.feature_index',
     })
-    coverage.requested = []
-    coverage.skipped = []
+    clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
   }
 
@@ -1092,14 +1143,14 @@ function validate(request) {
 
   const sourceBytes = byteLength(parts.source)
   if (sourceBytes > LIMITS.sourceBytes) {
-    addCoverageFailure(coverage, null, 'INPUT_LIMIT_EXCEEDED')
+    addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
       [{
         code: 'CHECKER.SOURCE_LIMIT',
         severity: 'warning',
         message: 'The source exceeds the bounded checker input limit.',
-        path: '$.artifact',
+        path: artifactPath(profile),
       }],
       coverage,
       'unavailable',
@@ -1108,14 +1159,14 @@ function validate(request) {
   }
 
   if (parts.input.signal && parts.input.signal.aborted) {
-    addCoverageFailure(coverage, null, 'CHECK_TIMEOUT')
+    addCoverageToRequested(coverage, 'failures', 'CHECK_TIMEOUT')
     return emptyResult(
       profile,
       [{
         code: 'CHECKER.CANCELLED',
         severity: 'warning',
         message: 'Static checking was cancelled before analysis started.',
-        path: '$.artifact',
+        path: artifactPath(profile),
       }],
       coverage,
       'unavailable',
@@ -1142,30 +1193,18 @@ function validate(request) {
     parts.artifact.schema_version ||
     parts.artifact.schema,
   )
-  let dependencyFailure = false
-  if (runtimeVersion && runtimeVersion !== RUNTIME_VERSION) dependencyFailure = true
-  if (compilerVersion && compilerVersion !== ts.version) dependencyFailure = true
-  if (schemaVersion && schemaVersion !== DECLARATION_VERSION) dependencyFailure = true
-  if (dependencyFailure) {
-    addCoverageFailure(coverage, 'api', 'VERSION_MISMATCH')
-    return emptyResult(
-      profile,
-      [{
-        code: 'CHECKER.UNSUPPORTED_VERSION',
-        severity: 'warning',
-        message: 'The declared compiler, declaration, or runtime pairing is unavailable.',
-        path: '$.artifact',
-      }],
-      coverage,
-      'unavailable',
-      versions,
-    )
+  const versionMismatch =
+    (runtimeVersion && runtimeVersion !== RUNTIME_VERSION) ||
+    (compilerVersion && compilerVersion !== ts.version) ||
+    (schemaVersion && schemaVersion !== DECLARATION_VERSION)
+  if (versionMismatch) {
+    addCoverageSkipped(coverage, 'api', 'VERSION_MISMATCH')
   }
 
   const hasForm = parts.form !== null && parts.form !== undefined
   const formInfo = hasForm ? collectForm(parts.form) : { fields: new Map(), parents: new Map(), nodeCount: 0 }
   if (hasForm && boundedObjectBytes(parts.form, LIMITS.formBytes) > LIMITS.formBytes) {
-    addCoverageFailure(coverage, null, 'INPUT_LIMIT_EXCEEDED')
+    addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
       [{
@@ -1238,7 +1277,6 @@ function validate(request) {
     // Deliberately discard compiler exception text; it can contain source
     // fragments or dependency paths.  The caller receives a bounded outcome.
     state.failure = true
-    addCoverageFailure(coverage, 'api', 'DEPENDENCY_UNAVAILABLE')
     addDiagnostic(
       state,
       sourceFile,
@@ -1249,15 +1287,15 @@ function validate(request) {
   }
 
   if (state.failure) {
-    addCoverageFailure(
+    addCoverageToRequested(
       coverage,
-      null,
+      'failures',
       state.limitFailure ? 'INPUT_LIMIT_EXCEEDED' : 'DEPENDENCY_UNAVAILABLE',
     )
   }
 
   if (state.artifactError) {
-    addCoverageSkipped(coverage, null, 'INVALID_ARTIFACT')
+    addCoverageToRequested(coverage, 'skipped', 'INVALID_ARTIFACT')
   }
 
   const fieldCheck = canonicalCheck(coverage, 'field_references')
@@ -1290,19 +1328,23 @@ function validate(request) {
       }
     }
   } else {
-    if (state.failure) {
-      addCoverageFailure(coverage, 'syntax', 'DEPENDENCY_UNAVAILABLE')
-      addCoverageFailure(coverage, typeCheck, 'DEPENDENCY_UNAVAILABLE')
-      addCoverageFailure(coverage, profileCheck, 'DEPENDENCY_UNAVAILABLE')
-    } else {
-      addCoverageSkipped(coverage, profileCheck, 'INVALID_ARTIFACT')
-    }
+    if (!state.failure) addCoverageToRequested(coverage, 'skipped', 'INVALID_ARTIFACT')
   }
 
+  const severityOrder = { error: 0, warning: 1, info: 2 }
   diagnostics.sort((left, right) => {
+    const pathOrder = String(left.path || '').localeCompare(String(right.path || ''))
+    if (pathOrder) return pathOrder
     const leftLine = left.range ? left.range.start.line : Number.MAX_SAFE_INTEGER
     const rightLine = right.range ? right.range.start.line : Number.MAX_SAFE_INTEGER
-    return leftLine - rightLine || left.code.localeCompare(right.code)
+    if (leftLine !== rightLine) return leftLine - rightLine
+    const leftColumn = left.range ? left.range.start.column : Number.MAX_SAFE_INTEGER
+    const rightColumn = right.range ? right.range.start.column : Number.MAX_SAFE_INTEGER
+    if (leftColumn !== rightColumn) return leftColumn - rightColumn
+    const severity = (severityOrder[left.severity] || 99) - (severityOrder[right.severity] || 99)
+    if (severity) return severity
+    return String(left.code || '').localeCompare(String(right.code || '')) ||
+      String(left.message || '').localeCompare(String(right.message || ''))
   })
   coverage.completed.sort(
     (left, right) => coverage.requested.indexOf(left) - coverage.requested.indexOf(right),
