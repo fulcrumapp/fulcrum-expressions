@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited HEAD: `463393c22cb72818d80ee2c0eb76dcfb7e517579`
+- Audited HEAD: `b74f95d5f851fb6f99e5f8b1f20164e28a679af8`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -92,6 +92,9 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 - **Package boundary:** `npm pack --dry-run --json` passed with 297 files,
   including `checker/index.js` and `dist/expressions.js`; no archive was
   created and the scoped runtime package was not aliased to another package.
+  The explicit `./checker`, `./dist/*`, and `./package.json` exports preserve
+  the supported checker and runtime compatibility paths without a broad
+  wildcard export.
 - **Isolation:** focused/full tests passed throwing and global-mutation canaries,
   filesystem/module-resolution rejection, profile separation, redaction, and
   deterministic repeated analysis. The checker uses a fixed virtual host and
@@ -112,7 +115,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `463393c22cb72818d80ee2c0eb76dcfb7e517579` |
+| `git rev-parse HEAD` | `b74f95d5f851fb6f99e5f8b1f20164e28a679af8` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | focused checker Mocha | **30 passing** |
