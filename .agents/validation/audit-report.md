@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited HEAD: `b74f95d5f851fb6f99e5f8b1f20164e28a679af8`
+- Audited HEAD: `a88491728bd8424b1e3b287fb5f63d7c8d0a20d4`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -16,9 +16,9 @@
   (`git ls-remote` and `gh api` both resolved this exact SHA)
 
 This report replaces the stale report for `c36eb3a` and audits the exact current
-HEAD. The two implementation changes in this HEAD are the final version-mismatch
-partition and checker-wide request-path fixes. No production file was changed by
-the audit; only this report and `.agents/state.json` are lifecycle metadata.
+HEAD. Earlier SHAs in the revision history are superseded implementation
+checkpoints, not alternate audited heads. No production file was changed by the
+audit; only this report and `.agents/state.json` are lifecycle metadata.
 
 ## Prior findings F-01 through F-06
 
@@ -115,11 +115,11 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `b74f95d5f851fb6f99e5f8b1f20164e28a679af8` |
+| `git rev-parse HEAD` | `a88491728bd8424b1e3b287fb5f63d7c8d0a20d4` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| focused checker Mocha | **30 passing** |
-| `yarn test` | **415 passing** |
+| focused checker Mocha | **32 passing** |
+| `yarn test` | **417 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
@@ -132,7 +132,7 @@ tracked working tree contains only `.agents/state.json` and this audit report.
 
 ## Gate result
 
-`PR_READY` for audited HEAD `1d54e8684fa40143cf064fa54cc4aaf5207bb5c4`.
+`PR_READY` for audited HEAD `a88491728bd8424b1e3b287fb5f63d7c8d0a20d4`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, merging, and PR
 creation remain unauthorized and were not performed.

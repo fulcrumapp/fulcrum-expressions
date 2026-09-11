@@ -212,6 +212,33 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('valid')
     result.coverage.requested.should.eql(['syntax', 'api', 'hooks', 'fields'])
 
+  it 'deduplicates explicitly requested checks', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'VALUE("status");' }
+      context: { form }
+      checks: ['syntax', 'api', 'api', 'fields', 'syntax']
+    })
+
+    result.coverage.requested.should.eql(['syntax', 'api', 'fields'])
+    result.outcome.should.eql('valid')
+
+  it 'normalizes hook target field type spellings', ->
+    normalizedForm = {
+      elements: [
+        { data_name: 'photos', type: ' photo field ' }
+        { data_name: 'rows', type: 'REPEATABLE' }
+      ]
+    }
+    result = checker.checkDataEvent({
+      source: 'ON("add-photo", "photos", () => {}); ON("load-repeatable", "rows", () => {});'
+      form: normalizedForm
+    })
+
+    result.outcome.should.eql('valid')
+
   it 'uses the canonical repeatable key and feature index for calculations', ->
     result = checker.validate({
       contract_version: 'v1'

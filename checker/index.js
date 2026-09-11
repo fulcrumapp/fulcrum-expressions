@@ -261,9 +261,11 @@ function makeDiagnostic(sourceFile, node, code, severity, message, fix, profile)
 
 function makeCoverage(requestedChecks, profile, checksProvided) {
   const defaults = DEFAULT_CHECKS[profile] || []
-  const requested = checksProvided
-    ? requestedChecks.filter((check) => typeof check === 'string')
-    : defaults.slice()
+  const requested = Array.from(new Set(
+    checksProvided
+      ? requestedChecks.filter((check) => typeof check === 'string')
+      : defaults,
+  ))
   const coverage = {
     requested,
     completed: [],
@@ -355,6 +357,10 @@ function formType(field) {
 
 function normalizeFieldType(field) {
   return formType(field).replace(/[\s_-]/g, '').toLowerCase()
+}
+
+function normalizedTypeName(type) {
+  return String(type).replace(/[\s_-]/g, '').toLowerCase()
 }
 
 function typeForField(field) {
@@ -791,7 +797,7 @@ function validateHookCall(state, call) {
       addFieldCheck(state, fieldName, target, 'literal')
       const field = state.formInfo.fields.get(fieldName)
       const expectedType = MEDIA_EVENT_TYPES[eventName]
-      if (field && expectedType && formType(field) !== expectedType) {
+      if (field && expectedType && normalizeFieldType(field) !== normalizedTypeName(expectedType)) {
         addDiagnostic(
           state,
           target,
@@ -801,7 +807,7 @@ function validateHookCall(state, call) {
         )
         state.artifactError = true
       }
-      if (field && REPEATABLE_EVENTS.has(eventName) && formType(field) !== 'Repeatable') {
+      if (field && REPEATABLE_EVENTS.has(eventName) && normalizeFieldType(field) !== normalizedTypeName('Repeatable')) {
         addDiagnostic(
           state,
           target,
@@ -811,7 +817,11 @@ function validateHookCall(state, call) {
         )
         state.artifactError = true
       }
-      if (field && eventName === 'click' && !['HyperlinkField', 'ButtonField'].includes(formType(field))) {
+      if (
+        field &&
+        eventName === 'click' &&
+        !['HyperlinkField', 'ButtonField'].map(normalizedTypeName).includes(normalizeFieldType(field))
+      ) {
         addDiagnostic(
           state,
           target,
@@ -821,7 +831,7 @@ function validateHookCall(state, call) {
         )
         state.artifactError = true
       }
-      if (field && eventName === 'change-geometry' && formType(field) !== 'Repeatable') {
+      if (field && eventName === 'change-geometry' && normalizeFieldType(field) !== normalizedTypeName('Repeatable')) {
         addDiagnostic(
           state,
           target,
