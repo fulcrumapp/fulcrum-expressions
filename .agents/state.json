@@ -35,7 +35,7 @@
   "pr_number": 114,
   "pr_url": "https://github.com/fulcrumapp/fulcrum-expressions/pull/114",
   "pr_head_branch": "treyhyde-psychic-system",
-  "pr_head_sha": "1d54e8684fa40143cf064fa54cc4aaf5207bb5c4",
+  "pr_head_sha": "bf63981a18cf05735c90d34f4c7524c4ce9160c1",
   "pr_title": "FLCRM-22122: Add headless expression checker",
   "pr_body": ".agents/implementations/pr-description.md",
   "pr_base_branch": "main",
