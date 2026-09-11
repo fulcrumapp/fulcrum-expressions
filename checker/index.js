@@ -726,7 +726,10 @@ function addFieldCheck(state, dataName, node, context) {
     }
   }
   if (context === 'dynamic') {
-    addCoverageSkipped(state.coverage, 'field_references', 'UNVERIFIED_DYNAMIC_REFERENCE')
+    addCoverageUnverified(state.coverage, 'field_references', 'UNVERIFIED_DYNAMIC_REFERENCE', {
+      path: state.profile === 'calculation' ? '$.expression' : '$.source',
+      range: sourceRange(state.sourceFile, node || state.sourceFile),
+    })
   }
 }
 
@@ -916,16 +919,19 @@ function validateAst(state) {
         }
         validateHookCall(state, node)
         checkLiteralFieldCall(state, node)
-      } else if (!(
-        ts.isPropertyAccessExpression(node.expression) &&
-        ts.isIdentifier(node.expression.expression) &&
-        node.expression.expression.text === 'Math'
-      )) {
+      } else if (
+        ts.isElementAccessExpression(node.expression) ||
+        ts.isCallExpression(node.expression)
+      ) {
         addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_CALL', node)
       }
     }
 
-    if (ts.isElementAccessExpression(node)) {
+    if (
+      ts.isElementAccessExpression(node) &&
+      !ts.isStringLiteral(node.argumentExpression) &&
+      !ts.isNumericLiteral(node.argumentExpression)
+    ) {
       addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_PROPERTY', node)
     }
 
@@ -1132,7 +1138,6 @@ function validate(request) {
 
   if (parts.checksProvided && parts.requestedChecks.length === 0) {
     addCoverageSkipped(coverage, null, 'MISSING_CHECK')
-    coverage.skipped[coverage.skipped.length - 1] = { reason_code: 'MISSING_CHECK' }
     return emptyResult(profile, diagnostics, coverage, 'incomplete', versions)
   }
 

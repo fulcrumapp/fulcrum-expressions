@@ -51,6 +51,23 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('valid')
 
+  it 'does not mark ordinary property method calls as dynamic API references', ->
+    result = checker.checkDataEvent({
+      source: 'const value = "status"; value.toUpperCase();'
+      form
+    })
+
+    result.outcome.should.eql('valid')
+
+  it 'marks computed calls as unverified dynamic references', ->
+    result = checker.checkDataEvent({
+      source: 'const method = "log"; console[method]("status");'
+      form
+    })
+
+    result.outcome.should.eql('incomplete')
+    codes(result).should.containEql('COVERAGE.UNVERIFIED_REFERENCE')
+
   it 'keeps dynamic field coverage incomplete rather than warning-only valid', ->
     result = checker.checkDataEvent({
       source: 'const name = "status"; VALUE(name);'

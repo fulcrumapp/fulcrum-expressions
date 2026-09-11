@@ -23,7 +23,7 @@
     "build": "yarn build:checker && yarn build:expressions && yarn build:sandbox",
     "build:checker": "node checker/generate-api.js",
     "build:debug": "yarn build:expressions:debug && yarn build:sandbox:debug",
-    "build:expressions": "mkdir -p dist && browserify -t coffeeify --extension=.coffee runtime.coffee | terser > dist/expressions.js --mangle && cp package.json dist",
+    "build:expressions": "mkdir -p dist && browserify -t coffeeify --extension=.coffee runtime.coffee | terser > dist/expressions.js --mangle && node checker/write-dist-package.js",
     "build:expressions:debug": "mkdir -p dist && ./node_modules/browserify/bin/cmd.js -t coffeeify --extension=.coffee runtime.coffee > dist/expressions.js",
     "build:sandbox": "mkdir -p dist && browserify -t coffeeify --extension=.coffee expressions-proxy.coffee | terser > dist/expressions-proxy.js --mangle && cp expressions.html dist/expressions.html",
     "build:sandbox:debug": "mkdir -p dist && browserify -t coffeeify --extension=.coffee expressions-proxy.coffee > dist/expressions-proxy.js && cp expressions.html dist/expressions.html",
