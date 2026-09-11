@@ -9,11 +9,12 @@
 
 const crypto = require('crypto')
 const ts = require('typescript')
+const packageMetadata = require('../package.json')
 const apiDeclarations = require('./api')
 const standardLibrary = require('./lib')
 
 const CONTRACT_VERSION = 'v1'
-const CHECKER_VERSION = '1.0.0'
+const CHECKER_VERSION = packageMetadata.version
 const RUNTIME_VERSION = '@fulcrumapp/fulcrum-expressions@3.0.1'
 const DECLARATION_VERSION = 'ts/api.ts@3.0.1'
 const DECLARATION_IDENTITY = `${DECLARATION_VERSION}:${crypto
@@ -740,7 +741,7 @@ function addDynamicCoverage(state, check, reasonCode, node) {
   })
   addDiagnostic(
     state,
-    state.sourceFile,
+    node || state.sourceFile,
     'COVERAGE.UNVERIFIED_REFERENCE',
     'warning',
     'A dynamic reference could not be verified statically.',
@@ -895,7 +896,16 @@ function validateAst(state) {
     }
 
     if (ts.isCallExpression(node)) {
-      if (ts.isIdentifier(node.expression)) {
+      if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+        addDiagnostic(
+          state,
+          node,
+          'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
+          'error',
+          'Dynamic module imports are not available in deployable expressions.',
+        )
+        state.artifactError = true
+      } else if (ts.isIdentifier(node.expression)) {
         const name = node.expression.text
         if (name === 'require') {
           addDiagnostic(
@@ -923,7 +933,7 @@ function validateAst(state) {
         ts.isElementAccessExpression(node.expression) ||
         ts.isCallExpression(node.expression)
       ) {
-        addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_CALL', node)
+        addDynamicCoverage(state, 'api', 'UNVERIFIED_DYNAMIC_CALL', node)
       }
     }
 
@@ -968,7 +978,7 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
     ts.ScriptKind.TS,
   )
   function visit(node) {
-    if (TS_ONLY_KINDS.has(node.kind)) {
+    if (TS_ONLY_KINDS.has(node.kind) || (ts.isTypeNode(node) && !TS_ONLY_KINDS.has(node.kind))) {
       addDiagnostic(
         state,
         node,
@@ -1003,6 +1013,15 @@ function addSemanticDiagnostics(state, diagnostics) {
     const node = diagnostic.start === undefined
       ? state.sourceFile
       : findNodeAt(state.sourceFile, diagnostic.start)
+    if (
+      !state.hasForm &&
+      node &&
+      ts.isIdentifier(node) &&
+      node.text.startsWith('$')
+    ) {
+      addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
+      continue
+    }
     const code = diagnostic.code === 2531 || diagnostic.code === 2532
       ? 'FORM.NULLABLE_VALUE'
       : diagnostic.code === 2304 && node && ts.isIdentifier(node) && node.text.startsWith('$')

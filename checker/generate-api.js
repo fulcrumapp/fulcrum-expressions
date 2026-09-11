@@ -40,7 +40,7 @@ writeIfChanged(
 
 const libraryDirectory = path.dirname(require.resolve('typescript'))
 const library = {}
-for (const filePath of ts.sys.readDirectory(libraryDirectory)) {
+for (const filePath of ts.sys.readDirectory(libraryDirectory, ['.d.ts'])) {
   const fileName = path.basename(filePath)
   if (/^lib\..+\.d\.ts$/.test(fileName)) {
     library[`/${fileName}`] = fs.readFileSync(filePath, 'utf8')

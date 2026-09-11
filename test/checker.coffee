@@ -31,6 +31,12 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('JAVASCRIPT.TYPESCRIPT_SYNTAX')
 
+  it 'rejects TypeScript type annotations', ->
+    result = checker.checkDataEvent({ source: 'const value: number = 1;', form })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('JAVASCRIPT.TYPESCRIPT_SYNTAX')
+
   it 'catches unknown literal fields despite permissive declarations', ->
     result = checker.checkDataEvent({ source: 'VALUE("not_in_form")', form })
 
@@ -67,6 +73,16 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('incomplete')
     codes(result).should.containEql('COVERAGE.UNVERIFIED_REFERENCE')
+
+  it 'attributes dynamic call coverage to the API check', ->
+    result = checker.checkDataEvent({
+      source: 'const method = "log"; console[method]("status");'
+      form
+      checks: ['api']
+    })
+
+    result.outcome.should.eql('incomplete')
+    result.coverage.unverified[0].check.should.eql('api')
 
   it 'does not mark ordinary computed property access as dynamic API coverage', ->
     result = checker.checkDataEvent({
@@ -129,6 +145,18 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('JAVASCRIPT.MODULE_NOT_DEPLOYABLE')
+
+  it 'rejects dynamic module imports', ->
+    result = checker.checkDataEvent({ source: 'import("fs");', form })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('JAVASCRIPT.MODULE_NOT_DEPLOYABLE')
+
+  it 'treats missing form context as incomplete for form variables', ->
+    result = checker.checkDataEvent({ source: '$status;', checks: ['syntax', 'api', 'hooks', 'fields'] })
+
+    result.outcome.should.eql('incomplete')
+    codes(result).should.not.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
 
   it 'returns bounded unavailable results for oversized candidates', ->
     result = checker.checkCalculation({

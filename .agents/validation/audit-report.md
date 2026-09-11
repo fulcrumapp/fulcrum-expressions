@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited HEAD: `1d54e8684fa40143cf064fa54cc4aaf5207bb5c4`
+- Audited HEAD: `463393c22cb72818d80ee2c0eb76dcfb7e517579`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -97,7 +97,8 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
   deterministic repeated analysis. The checker uses a fixed virtual host and
   does not initialize `runtime.coffee`, execute submitted source, resolve
   arbitrary files/packages, or make network calls.
-- **Version provenance:** results report validator `1.0.0`, TypeScript `4.9.5`,
+- **Version provenance:** results report validator `3.0.1` (derived from the
+  package version), TypeScript `4.9.5`,
   `ts/api.ts@3.0.1` declarations, runtime
   `@fulcrumapp/fulcrum-expressions@3.0.1`, declaration identity, profile, and
   contract `v1`.
@@ -111,11 +112,11 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `1d54e8684fa40143cf064fa54cc4aaf5207bb5c4` |
+| `git rev-parse HEAD` | `463393c22cb72818d80ee2c0eb76dcfb7e517579` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| focused checker Mocha | **18 passing** |
-| `yarn test` | **403 passing**, `Done in 2.06s` |
+| focused checker Mocha | **30 passing** |
+| `yarn test` | **415 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
