@@ -1095,7 +1095,7 @@ function validate(request) {
       code: 'VALIDATION.INVALID_REQUEST',
       severity: 'error',
       message: 'The operation must be validate and checks must be an array of strings.',
-      path: parts.input.operation !== 'validate' ? '$.operation' : '$.checks',
+      path: '$',
     })
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
@@ -1106,7 +1106,7 @@ function validate(request) {
       code: 'REQUEST.UNSUPPORTED_PROFILE',
       severity: 'error',
       message: 'The request must select the data_event or calculation profile.',
-      path: '$.artifact_type',
+      path: '$',
     })
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile || 'unknown', diagnostics, coverage, 'invalid', versions)
@@ -1129,7 +1129,7 @@ function validate(request) {
     code: 'VALIDATION.INVALID_REQUEST',
     severity: 'error',
     message: 'The repeatable feature index must be a non-negative integer.',
-    path: '$.context.feature_index',
+    path: '$',
     })
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
@@ -1193,12 +1193,14 @@ function validate(request) {
     parts.artifact.schema_version ||
     parts.artifact.schema,
   )
-  const versionMismatch =
-    (runtimeVersion && runtimeVersion !== RUNTIME_VERSION) ||
-    (compilerVersion && compilerVersion !== ts.version) ||
-    (schemaVersion && schemaVersion !== DECLARATION_VERSION)
-  if (versionMismatch) {
+  const compilerMismatch = compilerVersion && compilerVersion !== ts.version
+  const schemaMismatch = schemaVersion && schemaVersion !== DECLARATION_VERSION
+  const runtimeMismatch = runtimeVersion && runtimeVersion !== RUNTIME_VERSION
+  if (compilerMismatch || schemaMismatch) {
     addCoverageSkipped(coverage, 'api', 'VERSION_MISMATCH')
+  }
+  if (runtimeMismatch) {
+    addCoverageSkipped(coverage, 'profile', 'VERSION_MISMATCH')
   }
 
   const hasForm = parts.form !== null && parts.form !== undefined
@@ -1211,7 +1213,7 @@ function validate(request) {
         code: 'CHECKER.FORM_LIMIT',
         severity: 'warning',
         message: 'The form context exceeds the bounded checker declaration limit.',
-        path: '$.context.form',
+        path: '$',
       }],
       coverage,
       'unavailable',
@@ -1341,7 +1343,7 @@ function validate(request) {
     const leftColumn = left.range ? left.range.start.column : Number.MAX_SAFE_INTEGER
     const rightColumn = right.range ? right.range.start.column : Number.MAX_SAFE_INTEGER
     if (leftColumn !== rightColumn) return leftColumn - rightColumn
-    const severity = (severityOrder[left.severity] || 99) - (severityOrder[right.severity] || 99)
+    const severity = (severityOrder[left.severity] ?? 99) - (severityOrder[right.severity] ?? 99)
     if (severity) return severity
     return String(left.code || '').localeCompare(String(right.code || '')) ||
       String(left.message || '').localeCompare(String(right.message || ''))

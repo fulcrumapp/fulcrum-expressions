@@ -149,3 +149,33 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('unavailable')
     result.diagnostics.every((diagnostic) -> diagnostic.severity isnt 'error').should.be.true()
     result.coverage.failures.every((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()
+
+  it 'keeps unaffected checks complete for a runtime mismatch', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'calculation'
+      operation: 'validate'
+      artifact: { expression: 'VALUE("status");' }
+      context: { form, repeatable: null, feature_index: 0 }
+      runtime_version: 'different-runtime'
+    })
+
+    result.outcome.should.eql('incomplete')
+    result.coverage.completed.should.containEql('syntax')
+    result.coverage.completed.should.containEql('api')
+    result.coverage.skipped.should.containEql({
+      check: 'scope'
+      reason_code: 'VERSION_MISMATCH'
+    })
+
+  it 'uses checker-wide paths for malformed request metadata', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'unsupported'
+      artifact: { source: 'VALUE("status");' }
+      checks: [1]
+    })
+
+    result.outcome.should.eql('invalid')
+    result.diagnostics[0].path.should.eql('$')
