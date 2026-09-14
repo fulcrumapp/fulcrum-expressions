@@ -99,7 +99,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
   `checkCalculation`, plus version/limit metadata; `package.json` preserves
   `main: dist/expressions.js` and exposes only the owner-approved
   `./checker: ./checker/index.js` subpath.
-- **Package boundary:** `npm pack --dry-run --json` passed with 297 files,
+- **Package boundary:** `npm pack --dry-run --json` passed with 298 files,
   including `checker/index.js` and `dist/expressions.js`; no archive was
   created and the scoped runtime package was not aliased to another package.
   The explicit `./checker`, `./dist/*`, and `./package.json` exports preserve
