@@ -29,8 +29,10 @@ const DECLARATION_IDENTITY = `${DECLARATION_VERSION}:${crypto
 const LIMITS = Object.freeze({
   sourceBytes: 256 * 1024,
   formBytes: 128 * 1024,
-  astNodes: 20000,
-  astDepth: 200,
+  sourceAstNodes: 20000,
+  sourceAstDepth: 200,
+  formNodes: 20000,
+  formDepth: 200,
   diagnostics: 100,
   coverageEntries: 256,
 })
@@ -448,14 +450,14 @@ function collectForm(form) {
 
   function visit(value, parentRepeatable, depth) {
     if (!value || typeof value !== 'object') return
-    if (depth > LIMITS.astDepth) {
+    if (depth > LIMITS.formDepth) {
       truncated = true
       return
     }
     if (seen.has(value)) return
     seen.add(value)
     nodeCount += 1
-    if (nodeCount > LIMITS.astNodes) {
+    if (nodeCount > LIMITS.formNodes) {
       truncated = true
       return
     }
@@ -1021,7 +1023,7 @@ function validateAst(state) {
   function visit(node, depth) {
     if (!node || state.limitFailure) return
     nodeCount += 1
-    if (nodeCount > LIMITS.astNodes || depth > LIMITS.astDepth) {
+    if (nodeCount > LIMITS.sourceAstNodes || depth > LIMITS.sourceAstDepth) {
       tooDeep = true
       state.limitFailure = true
       return

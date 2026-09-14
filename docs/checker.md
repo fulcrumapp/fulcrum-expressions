@@ -8,7 +8,9 @@ modules, access the filesystem, or make network requests.
 The checker uses the pinned TypeScript compiler at runtime. It is declared as
 an optional dependency so runtime-only consumers can install the package with
 optional dependencies omitted; those deployments must not invoke the checker
-subpath.
+subpath. It is also listed in `devDependencies` so repository builds and
+lockfile-based development installs remain deterministic even when a package
+manager is configured to omit optional dependencies.
 
 ## Public API
 
@@ -68,10 +70,11 @@ cannot result in warning-only `valid` output. Calculation restrictions mirror
 the deployed `runtime.coffee` calculation guard and are separate from Data
 Event API checking.
 
-The default bounds are 256 KiB of source, 128 KiB of form context, 20,000 AST
-nodes, depth 200, and 100 diagnostics. These are local pure-core bounds; HTTP,
-authentication, worker resource isolation, package publication, and deployment
-remain separate lifecycle gates.
+The default bounds are 256 KiB of source, 128 KiB of form context, 20,000
+source AST nodes at depth 200, 20,000 form nodes at depth 200, and 100
+diagnostics. These are local pure-core bounds; HTTP, authentication, worker
+resource isolation, package publication, and deployment remain separate
+lifecycle gates.
 
 Build the fixed declaration module after changing generated declarations:
 

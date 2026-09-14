@@ -8,6 +8,7 @@
   "exports": {
     ".": "./dist/expressions.js",
     "./checker": "./checker/index.js",
+    "./dist": "./dist/expressions.js",
     "./dist/*": "./dist/*",
     "./package.json": "./package.json"
   },
