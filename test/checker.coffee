@@ -226,6 +226,32 @@ describe 'headless expression checker', ->
     exact.outcome.should.eql('valid')
     over.outcome.should.eql('unavailable')
 
+  it 'uses JSON-compatible bytes for undefined form values', ->
+    exactForm = formAtBytes(checker.LIMITS.formBytes, {
+      elements: []
+      omitted: undefined
+      values: [undefined]
+    })
+    overForm = formAtBytes(checker.LIMITS.formBytes + 1, {
+      elements: []
+      omitted: undefined
+      values: [undefined]
+    })
+    exact = checker.checkDataEvent({
+      source: '1;'
+      form: exactForm
+      checks: ['fields']
+    })
+    over = checker.checkDataEvent({
+      source: '1;'
+      form: overForm
+      checks: ['fields']
+    })
+
+    JSON.stringify(exactForm).should.not.containEql('"omitted"')
+    exact.outcome.should.eql('valid')
+    over.outcome.should.eql('unavailable')
+
   it 'normalizes envelope defaults in convenience wrappers', ->
     result = checker.checkDataEvent({
       artifact: { source: '$status;' }

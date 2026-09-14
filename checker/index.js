@@ -451,7 +451,8 @@ function collectForm(form) {
 
   function primitiveBytes(value) {
     if (value === null) return 4
-    if (value === undefined) return 9
+    // JSON.stringify serializes undefined array entries as null.
+    if (value === undefined) return 4
     if (typeof value === 'string') return byteLength(JSON.stringify(value))
     if (typeof value === 'boolean') return value ? 4 : 5
     if (typeof value === 'number') {
@@ -492,7 +493,8 @@ function collectForm(form) {
       return bytes + 1
     }
 
-    const entries = Object.entries(value)
+    // JSON.stringify omits undefined-valued object properties.
+    const entries = Object.entries(value).filter(([, child]) => child !== undefined)
     if (discoverFields) {
       const dataName =
         typeof value.data_name === 'string'
@@ -1215,7 +1217,7 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
   ) {
     addDiagnostic(
       state,
-      sourceFile,
+      state.sourceFile,
       'JAVASCRIPT.SYNTAX',
       'error',
       'The source is not valid deployable JavaScript.',
@@ -1554,7 +1556,7 @@ function validate(request) {
     state.failure = true
     addDiagnostic(
       state,
-      sourceFile,
+      state.sourceFile,
       'CHECKER.UNAVAILABLE',
       'warning',
       'The static checker could not complete analysis.',
