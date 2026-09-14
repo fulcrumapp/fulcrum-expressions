@@ -492,6 +492,7 @@ function collectForm(form) {
       return bytes + 1
     }
 
+    const entries = Object.entries(value)
     if (discoverFields) {
       const dataName =
         typeof value.data_name === 'string'
@@ -512,7 +513,9 @@ function collectForm(form) {
 
       const type = normalizeFieldType(value)
       const nextParent = type === 'repeatable' ? key || parentRepeatable : parentRepeatable
-      for (const [childKey, child] of Object.entries(value)) {
+      for (let index = 0; index < entries.length; index += 1) {
+        const [childKey, child] = entries[index]
+        bytes += index ? 1 : 0
         bytes += byteLength(JSON.stringify(childKey)) + 1
         bytes += visit(
           child,
@@ -526,7 +529,9 @@ function collectForm(form) {
         }
       }
     } else {
-      for (const [childKey, child] of Object.entries(value)) {
+      for (let index = 0; index < entries.length; index += 1) {
+        const [childKey, child] = entries[index]
+        bytes += index ? 1 : 0
         bytes += byteLength(JSON.stringify(childKey)) + 1
         bytes += visit(child, parentRepeatable, depth + 1, false)
         if (bytes > LIMITS.formBytes) {
@@ -539,7 +544,8 @@ function collectForm(form) {
     return bytes + 1
   }
 
-  visit(form, null, 0, true)
+  const bytes = visit(form, null, 0, true)
+  if (bytes > LIMITS.formBytes) byteExceeded = true
   return { fields, parents, nodeCount, truncated, byteExceeded }
 }
 
@@ -642,9 +648,18 @@ function requestParts(request) {
 function declaredVersion(value) {
   if (typeof value === 'string') return value
   if (value && typeof value === 'object') {
-    if (typeof value.version === 'string') return value.version
+    if (typeof value.version === 'string') {
+      if (typeof value.name === 'string' && value.name.length > 0) {
+        return `${value.name}@${value.version}`
+      }
+      return value.version
+    }
   }
   return null
+}
+
+function versionMatches(actual, expected, name) {
+  return actual === expected || actual === `${name}@${expected}`
 }
 
 function makeVersions(profile) {
@@ -1432,9 +1447,11 @@ function validate(request) {
     parts.artifact.schema_version ||
     parts.artifact.schema,
   )
-  const compilerMismatch = compilerVersion && compilerVersion !== ts.version
-  const schemaMismatch = schemaVersion && schemaVersion !== DECLARATION_VERSION
-  const runtimeMismatch = runtimeVersion && runtimeVersion !== RUNTIME_VERSION
+  const compilerMismatch = compilerVersion && !versionMatches(compilerVersion, ts.version, 'typescript')
+  const schemaMismatch = schemaVersion && !versionMatches(schemaVersion, DECLARATION_VERSION, 'ts/api.ts')
+  const runtimeMismatch =
+    runtimeVersion &&
+    !versionMatches(runtimeVersion, RUNTIME_VERSION, '@fulcrumapp/fulcrum-expressions')
   const apiMismatch = Boolean(compilerMismatch || schemaMismatch || runtimeMismatch)
   if (coverage.requested.includes('api') && (compilerMismatch || schemaMismatch || runtimeMismatch)) {
     addCoverageSkipped(coverage, 'api', 'VERSION_MISMATCH')

@@ -15,6 +15,11 @@ form = {
 
 codes = (result) -> result.diagnostics.map (diagnostic) -> diagnostic.code
 
+formAtBytes = (target, value) ->
+  value.padding = ''
+  value.padding = 'x'.repeat(target - Buffer.byteLength(JSON.stringify(value)))
+  value
+
 describe 'headless expression checker', ->
   it 'accepts a deployable Data Event without executing its callback', ->
     result = checker.checkDataEvent({
@@ -166,6 +171,60 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('unavailable')
     result.diagnostics[0].path.should.eql('$')
+
+  it 'enforces exact form byte boundaries including object delimiters and commas', ->
+    exact = checker.checkDataEvent({
+      source: '1;'
+      form: formAtBytes(checker.LIMITS.formBytes, { elements: [] })
+      checks: ['fields']
+    })
+    plusOne = checker.checkDataEvent({
+      source: '1;'
+      form: formAtBytes(checker.LIMITS.formBytes + 1, { elements: [] })
+      checks: ['fields']
+    })
+    plusTwo = checker.checkDataEvent({
+      source: '1;'
+      form: formAtBytes(checker.LIMITS.formBytes + 2, { elements: [] })
+      checks: ['fields']
+    })
+
+    exact.outcome.should.eql('valid')
+    plusOne.outcome.should.eql('unavailable')
+    plusTwo.outcome.should.eql('unavailable')
+    plusOne.coverage.failures.should.containEql({
+      check: 'fields'
+      reason_code: 'INPUT_LIMIT_EXCEEDED'
+    })
+
+  it 'counts commas, escaped values, and multibyte nested form objects', ->
+    wideForm = {
+      elements: [
+        {
+          data_name: 'status'
+          type: 'TextField'
+          label: 'é,"\\'
+          options: { labels: ['uno', 'dos'], metadata: { note: '東京' } }
+        }
+      ]
+      metadata: {
+        title: 'café'
+        nested: { children: [{ key: 'α' }, { key: 'β' }] }
+      }
+    }
+    exact = checker.checkDataEvent({
+      source: '1;'
+      form: formAtBytes(checker.LIMITS.formBytes, wideForm)
+      checks: ['fields']
+    })
+    over = checker.checkDataEvent({
+      source: '1;'
+      form: formAtBytes(checker.LIMITS.formBytes + 1, wideForm)
+      checks: ['fields']
+    })
+
+    exact.outcome.should.eql('valid')
+    over.outcome.should.eql('unavailable')
 
   it 'normalizes envelope defaults in convenience wrappers', ->
     result = checker.checkDataEvent({
@@ -586,6 +645,24 @@ describe 'headless expression checker', ->
       artifact: { source: 'VALUE("status");' }
       context: { form }
       compiler_version: { name: 'typescript' }
+    })
+
+    result.outcome.should.eql('valid')
+    result.coverage.skipped.should.eql([])
+
+  it 'normalizes named version metadata before compatibility checks', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'VALUE("status");' }
+      context: { form }
+      compiler_version: { name: 'typescript', version: require('typescript').version }
+      schema_version: { name: 'ts/api.ts', version: checker.CHECKER_VERSION }
+      runtime_version: {
+        name: '@fulcrumapp/fulcrum-expressions'
+        version: checker.CHECKER_VERSION
+      }
     })
 
     result.outcome.should.eql('valid')
