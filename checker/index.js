@@ -313,6 +313,14 @@ function canonicalCheck(coverage, check) {
   return check
 }
 
+function isCheckEnabled(state, check) {
+  const canonical = canonicalCheck(state.coverage, check)
+  return state.coverage.requested.includes(canonical) &&
+    !state.coverage.skipped.some((item) => item.check === canonical) &&
+    !state.coverage.unsupported.some((item) => item.check === canonical) &&
+    !state.coverage.failures.some((item) => item.check === canonical)
+}
+
 function addCoverageUnverified(coverage, check, reasonCode, location) {
   const entry = {
     check: canonicalCheck(coverage, check),
@@ -698,6 +706,8 @@ function addFailure(state, check, reasonCode, code, message) {
 }
 
 function addFieldCheck(state, dataName, node, context) {
+  const fieldCheck = state.profile === 'calculation' ? 'dependencies' : 'fields'
+  if (!isCheckEnabled(state, fieldCheck)) return
   if (!state.hasForm) {
     addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
     return
@@ -716,7 +726,7 @@ function addFieldCheck(state, dataName, node, context) {
   }
 
   const parent = state.formInfo.parents.get(dataName)
-  if (parent && state.profile === 'calculation') {
+  if (parent && state.profile === 'calculation' && isCheckEnabled(state, 'profile')) {
     const scopes = repeatableScopeNames(state.repeatableScope)
     if (!scopes.includes(parent)) {
       addDiagnostic(
@@ -741,6 +751,7 @@ function addFieldCheck(state, dataName, node, context) {
 }
 
 function addDynamicCoverage(state, check, reasonCode, node) {
+  if (!isCheckEnabled(state, check)) return
   addCoverageUnverified(state.coverage, check, reasonCode, {
     path: state.profile === 'calculation' ? '$.expression' : '$.source',
     range: sourceRange(state.sourceFile, node || state.sourceFile),
@@ -756,6 +767,7 @@ function addDynamicCoverage(state, check, reasonCode, node) {
 }
 
 function validateHookCall(state, call) {
+  if (!isCheckEnabled(state, 'profile')) return
   const name = call.expression.text
   if (name !== 'ON' && name !== 'OFF') return
   const args = Array.from(call.arguments)
@@ -867,6 +879,7 @@ function validateHookCall(state, call) {
 }
 
 function checkLiteralFieldCall(state, call) {
+  if (!isCheckEnabled(state, 'field_references')) return
   const name = call.expression.text
   if (!FIELD_FUNCTIONS.has(name)) return
   const args = Array.from(call.arguments)
@@ -907,6 +920,7 @@ function validateAst(state) {
 
     if (ts.isCallExpression(node)) {
       if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+        if (!isCheckEnabled(state, 'api')) return
         addDiagnostic(
           state,
           node,
@@ -918,6 +932,7 @@ function validateAst(state) {
       } else if (ts.isIdentifier(node.expression)) {
         const name = node.expression.text
         if (name === 'require') {
+          if (!isCheckEnabled(state, 'api')) return
           addDiagnostic(
             state,
             node,
@@ -928,6 +943,7 @@ function validateAst(state) {
           state.artifactError = true
         }
         if (state.profile === 'calculation' && CALCULATION_FORBIDDEN_APIS.has(name)) {
+          if (!isCheckEnabled(state, 'api')) return
           addDiagnostic(
             state,
             node,
@@ -948,6 +964,10 @@ function validateAst(state) {
     }
 
     if (ts.isIdentifier(node) && node.text.startsWith('$') && !node.text.startsWith('$$')) {
+      if (!isCheckEnabled(state, 'field_references')) {
+        ts.forEachChild(node, (child) => visit(child, depth + 1))
+        return
+      }
       const dataName = node.text.slice(1)
       if (state.hasForm && !state.formInfo.fields.has(dataName)) {
         addDiagnostic(
@@ -971,7 +991,7 @@ function validateAst(state) {
   if (tooDeep) {
     addFailure(
       state,
-      'typecheck',
+      null,
       'INPUT_LIMIT_EXCEEDED',
       'CHECKER.LIMIT_EXCEEDED',
       'The source exceeded the checker AST work limit.',
@@ -1018,6 +1038,7 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
 }
 
 function addSemanticDiagnostics(state, diagnostics) {
+  if (!isCheckEnabled(state, 'api')) return
   for (const diagnostic of diagnostics) {
     if (!diagnostic.file || normalizePath(diagnostic.file.fileName) !== '/source.js') continue
     const node = diagnostic.start === undefined

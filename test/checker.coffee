@@ -43,6 +43,28 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
 
+  it 'does not run field policies for syntax-only requests', ->
+    result = checker.checkDataEvent({
+      source: 'VALUE("not_in_form"); ON("not-an-event", () => {});'
+      form
+      checks: ['syntax']
+    })
+
+    result.outcome.should.eql('valid')
+    result.diagnostics.should.eql([])
+    result.coverage.requested.should.eql(['syntax'])
+
+  it 'does not report calculation API policies outside requested coverage', ->
+    result = checker.checkCalculation({
+      source: 'SETVALUE("not_in_form", "changed");'
+      form
+      checks: ['syntax']
+    })
+
+    result.outcome.should.eql('valid')
+    result.diagnostics.should.eql([])
+    result.coverage.failures.should.eql([])
+
   it 'does not apply calculation repeatable scope rules to Data Events', ->
     result = checker.checkDataEvent({ source: 'VALUE("amount");', form })
 
@@ -176,6 +198,15 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('unavailable')
     result.coverage.failures.length.should.be.above(0)
     result.coverage.failures.every((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()
+
+  it 'does not attach AST limit failures to unrequested checks', ->
+    result = checker.checkDataEvent({
+      source: ('let value = 0;\n').repeat(6000)
+      checks: ['syntax']
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.coverage.failures.every((failure) -> not failure.check or failure.check is 'syntax').should.be.true()
 
   it 'reports nullable form variables instead of inventing non-null values', ->
     result = checker.checkDataEvent({ source: '$status.toUpperCase();', form })
