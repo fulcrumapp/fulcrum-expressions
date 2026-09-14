@@ -311,6 +311,24 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
 
+  it 'validates dynamic hook signatures after marking the event unverified', ->
+    missing = checker.checkDataEvent({
+      source: 'const eventName = "change"; ON(eventName);'
+      checks: ['hooks']
+    })
+    nonFunction = checker.checkDataEvent({
+      source: 'const eventName = "change"; ON(eventName, 1);'
+      checks: ['hooks']
+    })
+
+    missing.outcome.should.eql('invalid')
+    nonFunction.outcome.should.eql('invalid')
+    codes(missing).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
+    codes(nonFunction).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
+    missing.coverage.unverified.some((entry) ->
+      entry.check is 'hooks' and entry.reason_code is 'UNVERIFIED_DYNAMIC_HOOK'
+    ).should.be.true()
+
   it 'rejects provably non-function hook callbacks', ->
     for callback in ['1', 'null', 'true', '[]', '`callback`']
       result = checker.checkDataEvent({

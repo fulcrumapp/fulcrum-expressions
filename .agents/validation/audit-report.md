@@ -51,8 +51,8 @@ requested checks are bounded, missing optional TypeScript returns a structured
 unavailable result, semantic diagnostics are skipped when API coverage is not
 requested, explicit empty check selections remain incomplete, and missing hook
 names are invalid. No runtime or public transport boundary changed. The
-focused suite passed **65 tests** on the committed implementation/test head; the
-full suite passed **450 tests**. The AST budget regression confirms suppressed
+focused suite passed **66 tests** on the committed implementation/test head; the
+full suite passed **451 tests**. The AST budget regression confirms suppressed
 API policies do not bypass traversal limits. Chained calls are no longer mislabeled as dynamic API
 references, the valid local `$` identifier is not treated as a form field, and
 the pinned compiler is present in devDependencies for deterministic builds.
@@ -178,8 +178,8 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 | `git rev-parse HEAD` | `36e8bad1b767836edc3570e8cc4da536e9b4d9d1` |
 | pinned app-mcp contract fixture | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` (fixture snapshot; not the live PR head) |
 | live app-mcp PR 34 head observed by coordinator | `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa` |
-| focused checker Mocha | **65 passing** |
-| `yarn test` | **450 passing** |
+| focused checker Mocha | **66 passing** |
+| `yarn test` | **451 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |

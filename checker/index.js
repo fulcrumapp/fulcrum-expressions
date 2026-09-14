@@ -892,9 +892,7 @@ function validateHookCall(state, call) {
   const eventName = literalText(args[0])
   if (eventName === null) {
     addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_HOOK', args[0])
-    return
-  }
-  if (!EVENT_NAMES.has(eventName)) {
+  } else if (!EVENT_NAMES.has(eventName)) {
     addDiagnostic(
       state,
       args[0],
