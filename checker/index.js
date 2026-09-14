@@ -15,8 +15,8 @@ const standardLibrary = require('./lib')
 
 const CONTRACT_VERSION = 'v1'
 const CHECKER_VERSION = packageMetadata.version
-const RUNTIME_VERSION = '@fulcrumapp/fulcrum-expressions@3.0.1'
-const DECLARATION_VERSION = 'ts/api.ts@3.0.1'
+const RUNTIME_VERSION = `@fulcrumapp/fulcrum-expressions@${packageMetadata.version}`
+const DECLARATION_VERSION = `ts/api.ts@${packageMetadata.version}`
 const DECLARATION_IDENTITY = `${DECLARATION_VERSION}:${crypto
   .createHash('sha256')
   .update(apiDeclarations)
@@ -280,9 +280,19 @@ function makeCoverage(requestedChecks, profile, checksProvided) {
   return coverage
 }
 
+const uniqueListKeys = new WeakMap()
+
 function pushUnique(list, value) {
   const key = JSON.stringify(value)
-  if (!list.some((item) => JSON.stringify(item) === key)) list.push(value)
+  let keys = uniqueListKeys.get(list)
+  if (!keys) {
+    keys = new Set(list.map((item) => JSON.stringify(item)))
+    uniqueListKeys.set(list, keys)
+  }
+  if (!keys.has(key)) {
+    keys.add(key)
+    list.push(value)
+  }
 }
 
 function addCoverageSkipped(coverage, check, reasonCode) {
@@ -385,14 +395,22 @@ function collectForm(form) {
   const fields = new Map()
   const parents = new Map()
   let nodeCount = 0
+  let truncated = false
   const seen = new Set()
 
   function visit(value, parentRepeatable, depth) {
-    if (!value || typeof value !== 'object' || depth > LIMITS.astDepth) return
+    if (!value || typeof value !== 'object') return
+    if (depth > LIMITS.astDepth) {
+      truncated = true
+      return
+    }
     if (seen.has(value)) return
     seen.add(value)
     nodeCount += 1
-    if (nodeCount > LIMITS.astNodes) return
+    if (nodeCount > LIMITS.astNodes) {
+      truncated = true
+      return
+    }
 
     const dataName =
       typeof value.data_name === 'string'
@@ -428,7 +446,7 @@ function collectForm(form) {
   }
 
   visit(form, null, 0)
-  return { fields, parents, nodeCount }
+  return { fields, parents, nodeCount, truncated }
 }
 
 function fieldDeclaration(formInfo) {
@@ -461,24 +479,34 @@ function repeatableScopeNames(scope) {
 
 function boundedObjectBytes(value, limit, seen = new Set(), total = 0) {
   if (total > limit) return total
-  if (value === null || value === undefined) return total + 4
-  if (typeof value === 'string') return total + byteLength(value)
-  if (typeof value !== 'object') return total + 16
-  if (seen.has(value)) return total + 8
+  if (value === null) return total + 4
+  if (value === undefined) return total + 9
+  if (typeof value === 'string') return total + byteLength(JSON.stringify(value))
+  if (typeof value === 'boolean') return total + (value ? 4 : 5)
+  if (typeof value === 'number') {
+    const serialized = JSON.stringify(value)
+    return total + byteLength(serialized === undefined ? 'null' : serialized)
+  }
+  if (typeof value !== 'object') return limit + 1
+  if (seen.has(value)) return limit + 1
   seen.add(value)
   if (Array.isArray(value)) {
-    for (const child of value) {
-      total = boundedObjectBytes(child, limit, seen, total + 1)
+    total += 1
+    for (let index = 0; index < value.length; index += 1) {
+      total = boundedObjectBytes(value[index], limit, seen, total + (index ? 1 : 0))
       if (total > limit) return total
     }
-    return total
+    return total + 1
   }
+  total += 1
+  let index = 0
   for (const [key, child] of Object.entries(value)) {
-    total = boundedObjectBytes(key, limit, seen, total + 1)
+    total = boundedObjectBytes(key, limit, seen, total + (index ? 1 : 0))
     total = boundedObjectBytes(child, limit, seen, total + 1)
     if (total > limit) return total
+    index += 1
   }
-  return total
+  return total + 1
 }
 
 function requestParts(request) {
@@ -767,7 +795,7 @@ function addDynamicCoverage(state, check, reasonCode, node) {
 }
 
 function validateHookCall(state, call) {
-  if (!isCheckEnabled(state, 'profile')) return
+  if (state.profile !== 'data_event' || !isCheckEnabled(state, 'hooks')) return
   const name = call.expression.text
   if (name !== 'ON' && name !== 'OFF') return
   const args = Array.from(call.arguments)
@@ -803,67 +831,79 @@ function validateHookCall(state, call) {
   const hasTarget = args.length >= 3
   if (hasTarget) {
     const target = args[1]
-    const fieldName = literalText(target)
-    if (fieldName === null) {
-      addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', target)
-    } else if (fieldName.startsWith('@')) {
-      if (eventName !== 'change') {
-        addDiagnostic(
-          state,
-          target,
-          'DATA_EVENT.INVALID_HOOK_TARGET',
-          'error',
-          'A magic field target is only supported for change hooks.',
-        )
-        state.artifactError = true
-      }
+    const targetAllowed = !FORM_EVENTS.has(eventName) && eventName !== 'extension-message'
+    if (!targetAllowed) {
+      addDiagnostic(
+        state,
+        target,
+        'DATA_EVENT.INVALID_HOOK_TARGET',
+        'error',
+        'This event hook does not accept a field target.',
+      )
+      state.artifactError = true
     } else {
-      addFieldCheck(state, fieldName, target, 'literal')
-      const field = state.formInfo.fields.get(fieldName)
-      const expectedType = MEDIA_EVENT_TYPES[eventName]
-      if (field && expectedType && normalizeFieldType(field) !== normalizedTypeName(expectedType)) {
-        addDiagnostic(
-          state,
-          target,
-          'DATA_EVENT.INVALID_HOOK_TARGET',
-          'error',
-          'The hook target field type does not match the event hook.',
-        )
-        state.artifactError = true
-      }
-      if (field && REPEATABLE_EVENTS.has(eventName) && normalizeFieldType(field) !== normalizedTypeName('Repeatable')) {
-        addDiagnostic(
-          state,
-          target,
-          'DATA_EVENT.INVALID_HOOK_TARGET',
-          'error',
-          'The repeatable hook target must be a repeatable field.',
-        )
-        state.artifactError = true
-      }
-      if (
-        field &&
-        eventName === 'click' &&
-        !['HyperlinkField', 'ButtonField'].map(normalizedTypeName).includes(normalizeFieldType(field))
-      ) {
-        addDiagnostic(
-          state,
-          target,
-          'DATA_EVENT.INVALID_HOOK_TARGET',
-          'error',
-          'The click hook target must be a hyperlink or button field.',
-        )
-        state.artifactError = true
-      }
-      if (field && eventName === 'change-geometry' && normalizeFieldType(field) !== normalizedTypeName('Repeatable')) {
-        addDiagnostic(
-          state,
-          target,
-          'DATA_EVENT.INVALID_HOOK_TARGET',
-          'error',
-          'The geometry hook target must be a repeatable field.',
-        )
-        state.artifactError = true
+      const fieldName = literalText(target)
+      if (fieldName === null) {
+        addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', target)
+      } else if (fieldName.startsWith('@')) {
+        if (eventName !== 'change') {
+          addDiagnostic(
+            state,
+            target,
+            'DATA_EVENT.INVALID_HOOK_TARGET',
+            'error',
+            'A magic field target is only supported for change hooks.',
+          )
+          state.artifactError = true
+        }
+      } else {
+        addFieldCheck(state, fieldName, target, 'literal')
+        const field = state.formInfo.fields.get(fieldName)
+        const expectedType = MEDIA_EVENT_TYPES[eventName]
+        if (field && expectedType && normalizeFieldType(field) !== normalizedTypeName(expectedType)) {
+          addDiagnostic(
+            state,
+            target,
+            'DATA_EVENT.INVALID_HOOK_TARGET',
+            'error',
+            'The hook target field type does not match the event hook.',
+          )
+          state.artifactError = true
+        }
+        if (field && REPEATABLE_EVENTS.has(eventName) && normalizeFieldType(field) !== normalizedTypeName('Repeatable')) {
+          addDiagnostic(
+            state,
+            target,
+            'DATA_EVENT.INVALID_HOOK_TARGET',
+            'error',
+            'The repeatable hook target must be a repeatable field.',
+          )
+          state.artifactError = true
+        }
+        if (
+          field &&
+          eventName === 'click' &&
+          !['HyperlinkField', 'ButtonField'].map(normalizedTypeName).includes(normalizeFieldType(field))
+        ) {
+          addDiagnostic(
+            state,
+            target,
+            'DATA_EVENT.INVALID_HOOK_TARGET',
+            'error',
+            'The click hook target must be a hyperlink or button field.',
+          )
+          state.artifactError = true
+        }
+        if (field && eventName === 'change-geometry' && normalizeFieldType(field) !== normalizedTypeName('Repeatable')) {
+          addDiagnostic(
+            state,
+            target,
+            'DATA_EVENT.INVALID_HOOK_TARGET',
+            'error',
+            'The geometry hook target must be a repeatable field.',
+          )
+          state.artifactError = true
+        }
       }
     }
   }
@@ -929,14 +969,16 @@ function validateAst(state) {
     }
 
     if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node) || ts.isExportAssignment(node)) {
-      addDiagnostic(
-        state,
-        node,
-        'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
-        'error',
-        'Module imports and exports are not available in deployable expressions.',
-      )
-      state.artifactError = true
+      if (isCheckEnabled(state, 'api')) {
+        addDiagnostic(
+          state,
+          node,
+          'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
+          'error',
+          'Module imports and exports are not available in deployable expressions.',
+        )
+        state.artifactError = true
+      }
     }
 
     if (ts.isCallExpression(node)) {
@@ -1272,6 +1314,22 @@ function validate(request) {
 
   const hasForm = parts.form !== null && parts.form !== undefined
   const formInfo = hasForm ? collectForm(parts.form) : { fields: new Map(), parents: new Map(), nodeCount: 0 }
+  const formCheck = profile === 'calculation' ? 'dependencies' : 'fields'
+  if (hasForm && formInfo.truncated && coverage.requested.includes(formCheck)) {
+    addCoverageFailure(coverage, formCheck, 'INPUT_LIMIT_EXCEEDED')
+    return emptyResult(
+      profile,
+      [makeRequestDiagnostic(
+        'CHECKER.FORM_LIMIT',
+        'The form context exceeds the bounded checker declaration traversal limit.',
+        profile,
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
   if (hasForm && boundedObjectBytes(parts.form, LIMITS.formBytes) > LIMITS.formBytes) {
     addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(

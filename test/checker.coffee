@@ -95,6 +95,57 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
 
+  it 'suppresses import syntax policies outside requested API coverage', ->
+    result = checker.checkDataEvent({
+      source: 'import dependency from "dependency"; $missing;'
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.eql(['FORM.UNKNOWN_FIELD_REFERENCE'])
+
+  it 'does not apply Data Event hook policies to calculations', ->
+    result = checker.checkCalculation({
+      source: 'ON("not-an-event", "status", () => {});'
+      form
+      checks: ['scope']
+    })
+
+    result.outcome.should.eql('valid')
+    codes(result).should.eql([])
+
+  it 'rejects targets on form-level hooks', ->
+    result = checker.checkDataEvent({
+      source: 'ON("load-record", "status", () => {});'
+      form
+      checks: ['hooks']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('DATA_EVENT.INVALID_HOOK_TARGET')
+
+  it 'reports truncated form traversal as unavailable field coverage', ->
+    deepForm = { elements: [] }
+    cursor = deepForm
+    for index in [0...202]
+      child = { elements: [] }
+      cursor.elements = [child]
+      cursor = child
+    cursor.elements = [{ data_name: 'deep', type: 'TextField' }]
+
+    result = checker.checkDataEvent({
+      source: '$deep;'
+      form: deepForm
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.coverage.failures.should.containEql({
+      check: 'fields'
+      reason_code: 'INPUT_LIMIT_EXCEEDED'
+    })
+
   it 'keeps the AST budget across suppressed nested API policies', ->
     result = checker.checkDataEvent({
       source: ('require($status);\n').repeat(10000)
