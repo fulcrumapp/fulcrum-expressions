@@ -59,8 +59,8 @@ Data Event profile.
 
 - `yarn build:checker` — passed
 - `yarn build` — passed
-- `yarn test` — **443 passing**
-- Focused checker tests — **58 passing**
+- `yarn test` — **445 passing**
+- Focused checker tests — **60 passing**
 - `node --check` — passed
 - `npm pack --dry-run` — passed; package boundary verified without creating an
   archive

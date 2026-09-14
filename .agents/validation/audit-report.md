@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited implementation/test HEAD: `1d4faf6217e16bdcc813d84aefe7c9f3efd24dd9`
+- Audited implementation/test HEAD: `179c100da3a61f7ed90fb469848a428f8e995eb6`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -24,7 +24,7 @@ HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
 
-## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9` -> `da19385` -> `db4d14f` -> `3689dd2` -> `1fe4835` -> `58657fe` -> `27a0d99` -> `ebdc72c` -> `1d4faf6`
+## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9` -> `da19385` -> `db4d14f` -> `3689dd2` -> `1fe4835` -> `58657fe` -> `27a0d99` -> `ebdc72c` -> `1d4faf6` -> `179c100`
 
 The registered PR head adds only requested-check normalization, hook-target type
 normalization, requested-coverage gating, required Data Event callbacks, and
@@ -51,8 +51,8 @@ requested checks are bounded, missing optional TypeScript returns a structured
 unavailable result, semantic diagnostics are skipped when API coverage is not
 requested, explicit empty check selections remain incomplete, and missing hook
 names are invalid. No runtime or public transport boundary changed. The
-focused suite passed **58 tests** on the committed implementation/test head; the
-full suite passed **443 tests**. The AST budget regression confirms suppressed
+focused suite passed **60 tests** on the committed implementation/test head; the
+full suite passed **445 tests**. The AST budget regression confirms suppressed
 API policies do not bypass traversal limits. Chained calls are no longer mislabeled as dynamic API
 references, the valid local `$` identifier is not treated as a form field, and
 the pinned compiler is present in devDependencies for deterministic builds.
@@ -68,6 +68,9 @@ Hook policies now reject extra arguments beyond the supported two- and
 three-argument overloads, and calculation wrappers preserve object-shaped
 repeatable scopes. The published README includes the minimal checker entry
 point while detailed checker documentation remains repository-side.
+Form byte accounting now has an explicit depth bound, the TypeScript probe is
+skipped when syntax is not requested and shares source AST limits when active,
+and global-state isolation cleanup is exception-safe.
 The package explicitly preserves the bare `dist` subpath, and source AST and
 form traversal use separately named resource limits. The duplicate TypeScript
 declarations are documented as intentional: optional at runtime, pinned in
@@ -169,18 +172,18 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `1d4faf6217e16bdcc813d84aefe7c9f3efd24dd9` |
+| `git rev-parse HEAD` | `179c100da3a61f7ed90fb469848a428f8e995eb6` |
 | pinned app-mcp contract fixture | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` (fixture snapshot; not the live PR head) |
 | live app-mcp PR 34 head observed by coordinator | `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa` |
-| focused checker Mocha | **58 passing** |
-| `yarn test` | **443 passing** |
+| focused checker Mocha | **60 passing** |
+| `yarn test` | **445 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
 | committed package export smoke | passed; `@fulcrumapp/fulcrum-expressions/checker` resolves the three public functions and no broad `./*` export exists |
 | `npm pack --dry-run --json` | passed; 298 files; checker and runtime entries present; no archive |
 | installed packed-package smoke | passed from tarball SHA-256 `a73251238865ecaacabf8823cf22267a89871ed9f6e30e2401e33def98d5575d`; checker exports, `checker/api.js`, `checker/lib.js`, `dist/expressions.js`, bare `dist`, and version metadata resolved |
-| current-head installed packed-package smoke | passed from tarball SHA-256 `f95f4f845d530f16998e3249724cbad3e20f86d2370f2a31a62b526c2e30569b`; all four public checker invocations and installed assets resolved |
+| current-head installed packed-package smoke | passed from tarball SHA-256 `8fcbacccd06d4d8107c27279e6cc2f5ab8e2374dfca05b701db7f1b506b8a65e`; all four public checker invocations and installed assets resolved |
 | `git diff --check` | passed; only lifecycle metadata modified |
 | `make types` | **environment-blocked**, exit 2 after dts-generator; asdf has no configured Ruby 3.2.x, so `script/build.rb` could not run |
 

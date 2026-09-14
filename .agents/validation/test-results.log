@@ -12,14 +12,15 @@ Toolchain:
 Passed:
 - yarn install --frozen-lockfile
 - yarn build:checker
-- targeted checker Mocha: 58 passing
-- yarn test: 443 passing
+- targeted checker Mocha: 60 passing
+- yarn test: 445 passing
 - yarn build
 - static checker smoke: valid/invalid/incomplete/unavailable outcomes, no source execution, and no filesystem/network candidate resolution
 - review regressions: non-function literal hook callbacks are rejected; syntax and TypeScript-only diagnostics are gated by requested `syntax` coverage
 - package compatibility smoke: `@fulcrumapp/fulcrum-expressions/dist` and `/checker` subpaths resolve
 - installed packed-package smoke: tarball SHA-256 `a73251238865ecaacabf8823cf22267a89871ed9f6e30e2401e33def98d5575d`; checker exports, declarations, runtime asset, metadata, and both public profile wrappers resolved
-- current-head packed-package smoke: tarball SHA-256 `f95f4f845d530f16998e3249724cbad3e20f86d2370f2a31a62b526c2e30569b`; all four public checker invocations, bare `dist`, README package entry, declarations, and runtime asset resolved
+- current-head packed-package smoke: tarball SHA-256 `8fcbacccd06d4d8107c27279e6cc2f5ab8e2374dfca05b701db7f1b506b8a65e`; all four public checker invocations, bare `dist`, README package entry, declarations, and runtime asset resolved
+- traversal-bound regressions: deeply nested form byte accounting is bounded; syntax probe is skipped outside requested syntax coverage; probe and source AST budgets share bounded failure semantics; global canary cleanup is exception-safe
 
 Blocked/environment limitation:
 - make types: dts-generator completed and wrote dist/api.raw.d.ts, but script/build.rb could not run because asdf has no configured Ruby 3.2.0 installation in this worktree environment. ts/api.ts was restored from the checked-in generated declaration and checker/api.js was regenerated from it.
