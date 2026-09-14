@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited HEAD: `a88491728bd8424b1e3b287fb5f63d7c8d0a20d4`
+- Audited HEAD: `d1c81866e826a4d94335ca831fcfb433daa2e275`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -19,6 +19,16 @@ This report replaces the stale report for `c36eb3a` and audits the exact current
 HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
+
+## Narrow delta audit: `a884917` -> `d1c8186`
+
+The registered PR head adds only requested-check normalization and hook-target
+type normalization, plus focused regressions and lifecycle evidence updates.
+Duplicate requested checks are de-duplicated in first-seen order before coverage
+accounting. Hook target comparisons use the existing normalized field-type
+representation, covering casing, spaces, and separators without changing the
+runtime or public transport boundary. The focused suite passed **32 tests** on
+the committed head; the previously recorded full suite passed **417 tests**.
 
 ## Prior findings F-01 through F-06
 
@@ -108,14 +118,15 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 - **No lint script:** `package.json` has no dedicated lint script. This is
   recorded as an evidence limitation; build, syntax, focused, and full tests
   were run instead.
-- **No release actions:** no PR, publication, deployment, tag, merge, Jira
-  mutation, HTTP/auth adapter, or worker integration was created or run.
+- **No release actions:** PR #114 exists and targets `main`; no package
+  publication, deployment, tag, merge, Jira mutation, HTTP/auth adapter, or
+  worker integration was created or run.
 
 ## Commands and exact results
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `a88491728bd8424b1e3b287fb5f63d7c8d0a20d4` |
+| `git rev-parse HEAD` | `d1c81866e826a4d94335ca831fcfb433daa2e275` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | focused checker Mocha | **32 passing** |
@@ -123,16 +134,19 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
-| `npm pack --dry-run --json` | passed; 297 files; no archive |
+| committed package export smoke | passed; `@fulcrumapp/fulcrum-expressions/checker` resolves the three public functions and no broad `./*` export exists |
+| `npm pack --dry-run --json` | passed; 298 files; checker and runtime entries present; no archive |
 | `git diff --check` | passed; only lifecycle metadata modified |
 | `make types` | **environment-blocked**, exit 2 after dts-generator; asdf has no configured Ruby 3.2.x, so `script/build.rb` could not run |
 
-After `make types`, checked-in `ts/api.ts` was restored unchanged. The final
-tracked working tree contains only `.agents/state.json` and this audit report.
+After `make types`, checked-in `ts/api.ts` was restored unchanged. The Ruby
+3.2.x regeneration limitation remains explicit; it is not a checker runtime
+failure.
 
 ## Gate result
 
-`PR_READY` for audited HEAD `a88491728bd8424b1e3b287fb5f63d7c8d0a20d4`.
+`PR_READY` for audited HEAD `d1c81866e826a4d94335ca831fcfb433daa2e275`.
 Environment limitations are explicitly recorded and do not identify an
-implementation defect. Publication, deployment, tagging, merging, and PR
-creation remain unauthorized and were not performed.
+implementation defect. Publication, deployment, tagging, and merging remain
+outside this audit and were not performed. Formal GitHub approval remains a
+human-controlled blocker.
