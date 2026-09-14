@@ -8,7 +8,13 @@
  */
 
 const crypto = require('crypto')
-const ts = require('typescript')
+let ts
+let typescriptLoadError
+try {
+  ts = require('typescript')
+} catch (error) {
+  typescriptLoadError = error
+}
 const packageMetadata = require('../package.json')
 const apiDeclarations = require('./api')
 const standardLibrary = require('./lib')
@@ -29,6 +35,7 @@ const LIMITS = Object.freeze({
   astNodes: 20000,
   astDepth: 200,
   diagnostics: 100,
+  coverageEntries: 256,
 })
 
 const DEFAULT_CHECKS = Object.freeze({
@@ -187,24 +194,26 @@ const FIELD_FUNCTIONS = new Set([
   'REPEATABLESUM',
 ])
 
-const TS_ONLY_KINDS = new Set([
-  ts.SyntaxKind.InterfaceDeclaration,
-  ts.SyntaxKind.TypeAliasDeclaration,
-  ts.SyntaxKind.EnumDeclaration,
-  ts.SyntaxKind.ModuleDeclaration,
-  ts.SyntaxKind.TypeAssertionExpression,
-  ts.SyntaxKind.AsExpression,
-  ts.SyntaxKind.NonNullExpression,
-  ts.SyntaxKind.TypeParameter,
-  ts.SyntaxKind.TypeQuery,
-  ts.SyntaxKind.TypeLiteral,
-  ts.SyntaxKind.IndexedAccessType,
-  ts.SyntaxKind.MappedType,
-  ts.SyntaxKind.ConditionalType,
-  ts.SyntaxKind.InferType,
-  ts.SyntaxKind.ImportType,
-  ts.SyntaxKind.Decorator,
-])
+const TS_ONLY_KINDS = ts
+  ? new Set([
+      ts.SyntaxKind.InterfaceDeclaration,
+      ts.SyntaxKind.TypeAliasDeclaration,
+      ts.SyntaxKind.EnumDeclaration,
+      ts.SyntaxKind.ModuleDeclaration,
+      ts.SyntaxKind.TypeAssertionExpression,
+      ts.SyntaxKind.AsExpression,
+      ts.SyntaxKind.NonNullExpression,
+      ts.SyntaxKind.TypeParameter,
+      ts.SyntaxKind.TypeQuery,
+      ts.SyntaxKind.TypeLiteral,
+      ts.SyntaxKind.IndexedAccessType,
+      ts.SyntaxKind.MappedType,
+      ts.SyntaxKind.ConditionalType,
+      ts.SyntaxKind.InferType,
+      ts.SyntaxKind.ImportType,
+      ts.SyntaxKind.Decorator,
+    ])
+  : new Set()
 
 function byteLength(value) {
   return Buffer.byteLength(value, 'utf8')
@@ -263,7 +272,7 @@ function makeCoverage(requestedChecks, profile, checksProvided) {
   const defaults = DEFAULT_CHECKS[profile] || []
   const requested = Array.from(new Set(
     checksProvided
-      ? requestedChecks.filter((check) => typeof check === 'string')
+      ? requestedChecks.filter((check) => typeof check === 'string').slice(0, LIMITS.coverageEntries)
       : defaults,
   ))
   const coverage = {
@@ -289,7 +298,13 @@ function pushUnique(list, value) {
     keys = new Set(list.map((item) => JSON.stringify(item)))
     uniqueListKeys.set(list, keys)
   }
-  if (!keys.has(key)) {
+  if (!keys.has(key) && list.length >= LIMITS.coverageEntries) {
+    const truncated = JSON.stringify({ reason_code: 'COVERAGE_LIMIT_EXCEEDED' })
+    if (!keys.has(truncated)) {
+      keys.add(truncated)
+      list.push({ reason_code: 'COVERAGE_LIMIT_EXCEEDED' })
+    }
+  } else if (!keys.has(key)) {
     keys.add(key)
     list.push(value)
   }
@@ -591,7 +606,7 @@ function makeVersions(profile) {
     validator: CHECKER_VERSION,
     schema: DECLARATION_VERSION,
     runtime: RUNTIME_VERSION,
-    compiler: ts.version,
+    compiler: ts ? ts.version : null,
     declarations: DECLARATION_IDENTITY,
     profile,
   }
@@ -799,6 +814,17 @@ function validateHookCall(state, call) {
   const name = call.expression.text
   if (name !== 'ON' && name !== 'OFF') return
   const args = Array.from(call.arguments)
+  if (args.length === 0) {
+    addDiagnostic(
+      state,
+      call,
+      'DATA_EVENT.CALLBACK_SIGNATURE',
+      'error',
+      'A Data Event hook requires an event name and callback function.',
+    )
+    state.artifactError = true
+    return
+  }
   const eventName = literalText(args[0])
   if (eventName === null) {
     addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_HOOK', args[0])
@@ -1159,6 +1185,18 @@ function emptyResult(profile, diagnostics, coverage, outcome, versions) {
 }
 
 function makeRequestDiagnostic(code, message, profile = 'unknown', severity = 'error') {
+  if (!ts) {
+    return {
+      code,
+      severity,
+      message,
+      path: '$',
+      range: {
+        start: { line: 1, column: 1 },
+        end: { line: 1, column: 1 },
+      },
+    }
+  }
   const sourceFile = ts.createSourceFile(
     '/request.js',
     '',
@@ -1175,6 +1213,22 @@ function validate(request) {
   const profile = parts.profile
   const versions = makeVersions(profile || 'unknown')
   const diagnostics = []
+
+  if (!ts) {
+    addCoverageToRequested(coverage, 'failures', 'DEPENDENCY_UNAVAILABLE')
+    return emptyResult(
+      profile || 'unknown',
+      [makeRequestDiagnostic(
+        'CHECKER.TYPESCRIPT_UNAVAILABLE',
+        'The optional TypeScript dependency is required to run the checker.',
+        'unknown',
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
 
   if (!request || typeof request !== 'object' || Array.isArray(request)) {
     clearCoverageForInvalidRequest(coverage)
@@ -1396,7 +1450,7 @@ function validate(request) {
         state.artifactError = true
       }
       validateAst(state)
-      if (!state.artifactError && !state.failure && !apiMismatch) {
+      if (!state.artifactError && !state.failure && !apiMismatch && isCheckEnabled(state, 'api')) {
         addSemanticDiagnostics(state, program.getSemanticDiagnostics(state.sourceFile))
       }
     }
@@ -1517,7 +1571,7 @@ function checkDataEvent(input) {
                 : undefined,
           },
           context: { form: input.form },
-          checks: input.checks || input.requested_checks,
+          checks: input.checks !== undefined ? input.checks : input.requested_checks,
           runtime_version: input.runtime_version || input.runtime,
           schema_version: input.schema_version || input.schema,
         }
@@ -1556,7 +1610,7 @@ function checkCalculation(input) {
               : input.repeatable_scope && input.repeatable_scope.current,
             feature_index: input.feature_index,
           },
-          checks: input.checks || input.requested_checks,
+          checks: input.checks !== undefined ? input.checks : input.requested_checks,
           runtime_version: input.runtime_version || input.runtime,
           schema_version: input.schema_version || input.schema,
         }

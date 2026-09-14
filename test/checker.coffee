@@ -166,6 +166,32 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('valid')
 
+  it 'preserves explicitly empty checks in convenience wrappers', ->
+    dataEvent = checker.checkDataEvent({ source: '$status;', form, checks: [] })
+    calculation = checker.checkCalculation({ expression: '$status;', form, checks: [] })
+
+    dataEvent.outcome.should.eql('incomplete')
+    dataEvent.coverage.skipped.should.containEql({ reason_code: 'MISSING_CHECK' })
+    calculation.outcome.should.eql('incomplete')
+    calculation.coverage.skipped.should.containEql({ reason_code: 'MISSING_CHECK' })
+
+  it 'rejects hooks with no event name or callback', ->
+    result = checker.checkDataEvent({
+      source: 'ON();'
+      checks: ['hooks']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
+
+  it 'bounds repeated coverage entries', ->
+    result = checker.checkDataEvent({
+      source: "const fn = {}; const index = 'status';\n" + ('fn[index]();\n').repeat(1000)
+      checks: ['api']
+    })
+
+    (result.coverage.unverified.length <= 257).should.be.true()
+
   it 'keeps the AST budget across suppressed nested API policies', ->
     result = checker.checkDataEvent({
       source: ('require($status);\n').repeat(10000)
