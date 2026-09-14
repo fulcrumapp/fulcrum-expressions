@@ -65,6 +65,16 @@ describe 'headless expression checker', ->
     result.diagnostics.should.eql([])
     result.coverage.failures.should.eql([])
 
+  it 'does not run syntax policies outside requested coverage', ->
+    result = checker.checkDataEvent({
+      source: 'const value: number = 1;'
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('valid')
+    result.diagnostics.should.eql([])
+
   it 'continues field analysis inside unrequested module calls', ->
     result = checker.checkDataEvent({
       source: 'require($missing);'
@@ -215,6 +225,16 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
+
+  it 'rejects provably non-function hook callbacks', ->
+    for callback in ['1', 'null', 'true', '[]', '`callback`']
+      result = checker.checkDataEvent({
+        source: "ON('change', #{callback});"
+        checks: ['hooks']
+      })
+
+      result.outcome.should.eql('invalid')
+      codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
     codes(result).should.not.containEql('CALCULATION.REPEATABLE_SCOPE_REQUIRED')
 
   it 'accepts a named Data Event callback in the two-argument overload', ->

@@ -233,6 +233,20 @@ function isFunctionLike(node) {
   return Boolean(node && (ts.isFunctionExpression(node) || ts.isArrowFunction(node)))
 }
 
+function isDefinitelyNonFunction(node) {
+  return Boolean(
+    node &&
+    (
+      ts.isNumericLiteral(node) ||
+      ts.isArrayLiteralExpression(node) ||
+      ts.isNoSubstitutionTemplateLiteral(node) ||
+      node.kind === ts.SyntaxKind.NullKeyword ||
+      node.kind === ts.SyntaxKind.TrueKeyword ||
+      node.kind === ts.SyntaxKind.FalseKeyword
+    ),
+  )
+}
+
 function isFormIdentifier(node) {
   if (
     !node ||
@@ -972,7 +986,7 @@ function validateHookCall(state, call) {
       'A Data Event callback must be a function.',
     )
     state.artifactError = true
-  } else if (callback && literalText(callback) !== null) {
+  } else if (callback && (literalText(callback) !== null || isDefinitelyNonFunction(callback))) {
     addDiagnostic(
       state,
       callback,
@@ -1118,7 +1132,10 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
     ts.ScriptKind.TS,
   )
   function visit(node) {
-    if (TS_ONLY_KINDS.has(node.kind) || (ts.isTypeNode(node) && !TS_ONLY_KINDS.has(node.kind))) {
+    if (
+      isCheckEnabled(state, 'syntax') &&
+      (TS_ONLY_KINDS.has(node.kind) || (ts.isTypeNode(node) && !TS_ONLY_KINDS.has(node.kind)))
+    ) {
       addDiagnostic(
         state,
         node,
@@ -1137,7 +1154,11 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
 
   // Parsing is already complete and in-memory.  Reading parseDiagnostics
   // avoids creating a second synthetic Program (and avoids any host calls).
-  if (sourceFile.parseDiagnostics && sourceFile.parseDiagnostics.length > 0) {
+  if (
+    isCheckEnabled(state, 'syntax') &&
+    sourceFile.parseDiagnostics &&
+    sourceFile.parseDiagnostics.length > 0
+  ) {
     addDiagnostic(
       state,
       sourceFile,
@@ -1456,7 +1477,7 @@ function validate(request) {
       // contextual callback checker dereference an unbound symbol.
       state.sourceFile = program.getSourceFile('/source.js')
       const sourceSyntactic = program.getSyntacticDiagnostics(state.sourceFile)
-      if (sourceSyntactic.length) {
+      if (sourceSyntactic.length && isCheckEnabled(state, 'syntax')) {
         addDiagnostic(
           state,
           sourceFile,
