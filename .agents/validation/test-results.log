@@ -12,8 +12,8 @@ Toolchain:
 Passed:
 - yarn install --frozen-lockfile
 - yarn build:checker
-- targeted checker Mocha: 49 passing
-- yarn test: 434 passing
+- targeted checker Mocha: 51 passing
+- yarn test: 436 passing
 - yarn build
 - static checker smoke: valid/invalid/incomplete/unavailable outcomes, no source execution, and no filesystem/network candidate resolution
 
