@@ -6,8 +6,10 @@ The app-MCP integration needs reusable static preflight for Data Events and
 calculations without executing submitted artifacts or rewriting the production
 runtime. This PR implements the approved transport-neutral pure validator from
 [FLCRM-22116](https://fulcrumapp.atlassian.net/browse/FLCRM-22116) comment
-205727, against canonical app-mcp PR 34 head
-`0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4`.
+205727, against the pinned app-mcp contract fixture
+`0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4`. The live app-mcp PR 34 head
+observed by the integration coordinator is `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa`;
+the fixture SHA is not a live-head claim.
 
 ## Public API and package boundary
 

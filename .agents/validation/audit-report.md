@@ -12,8 +12,12 @@
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
 - QA scenarios: `.agents/validation/qa-scenarios.md`
-- Canonical app-mcp PR 34 head: `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4`
-  (`git ls-remote` and `gh api` both resolved this exact SHA)
+- Pinned app-mcp contract fixture used by this checker:
+  `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4`
+- Live app-mcp PR 34 head observed by the integration coordinator:
+  `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa`
+  (the live head differs from the pinned fixture; fixture consumers must not
+  treat the fixture SHA as the live PR head)
 
 This report replaces the stale report for `c36eb3a` and audits the exact current
 HEAD. Earlier SHAs in the revision history are superseded implementation
@@ -162,8 +166,8 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 | Command/check | Result |
 | --- | --- |
 | `git rev-parse HEAD` | `ebdc72c6180ded99005a1b7fbd09d357ab728460` |
-| `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
+| pinned app-mcp contract fixture | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` (fixture snapshot; not the live PR head) |
+| live app-mcp PR 34 head observed by coordinator | `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa` |
 | focused checker Mocha | **56 passing** |
 | `yarn test` | **441 passing** |
 | `yarn build:checker` | passed |
@@ -171,6 +175,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
 | committed package export smoke | passed; `@fulcrumapp/fulcrum-expressions/checker` resolves the three public functions and no broad `./*` export exists |
 | `npm pack --dry-run --json` | passed; 298 files; checker and runtime entries present; no archive |
+| installed packed-package smoke | passed from tarball SHA-256 `a73251238865ecaacabf8823cf22267a89871ed9f6e30e2401e33def98d5575d`; checker exports, `checker/api.js`, `checker/lib.js`, `dist/expressions.js`, bare `dist`, and version metadata resolved |
 | `git diff --check` | passed; only lifecycle metadata modified |
 | `make types` | **environment-blocked**, exit 2 after dts-generator; asdf has no configured Ruby 3.2.x, so `script/build.rb` could not run |
 
