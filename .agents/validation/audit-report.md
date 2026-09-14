@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited implementation/test HEAD: `db4d14f497363f2bc40e4bfdcb37a467bcba0b4d`
+- Audited implementation/test HEAD: `3689dd204413ee763ac910c885e8a82caf66ad0a`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -20,7 +20,7 @@ HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
 
-## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9` -> `da19385` -> `db4d14f`
+## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9` -> `da19385` -> `db4d14f` -> `3689dd2`
 
 The registered PR head adds only requested-check normalization, hook-target type
 normalization, requested-coverage gating, required Data Event callbacks, and
@@ -42,11 +42,14 @@ of producing partial-form diagnostics. Context-limit diagnostics use the
 checker-level `$` path. Convenience wrappers normalize missing v1 envelope
 defaults. Runtime and declaration versions derive from package metadata, the
 TypeScript compiler remains pinned but is optional for runtime-only installs,
-and the non-standard package `checker` field was removed. No runtime or public
-transport boundary changed. The focused suite passed **46 tests** on the
-committed implementation/test head; the full suite passed **431 tests**. The
-AST budget regression confirms suppressed API policies do not bypass traversal
-limits.
+and the non-standard package `checker` field was removed. Coverage buckets and
+requested checks are bounded, missing optional TypeScript returns a structured
+unavailable result, semantic diagnostics are skipped when API coverage is not
+requested, explicit empty check selections remain incomplete, and missing hook
+names are invalid. No runtime or public transport boundary changed. The
+focused suite passed **49 tests** on the committed implementation/test head; the
+full suite passed **434 tests**. The AST budget regression confirms suppressed
+API policies do not bypass traversal limits.
 
 ## Prior findings F-01 through F-06
 
@@ -144,11 +147,11 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `db4d14f497363f2bc40e4bfdcb37a467bcba0b4d` |
+| `git rev-parse HEAD` | `3689dd204413ee763ac910c885e8a82caf66ad0a` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| focused checker Mocha | **46 passing** |
-| `yarn test` | **431 passing** |
+| focused checker Mocha | **49 passing** |
+| `yarn test` | **434 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
@@ -164,7 +167,7 @@ failure.
 ## Gate result
 
 `PR_READY` for audited implementation/test HEAD
-`db4d14f497363f2bc40e4bfdcb37a467bcba0b4d`.
+`3689dd204413ee763ac910c885e8a82caf66ad0a`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
