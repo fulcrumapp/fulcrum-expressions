@@ -12,8 +12,8 @@ Toolchain:
 Passed:
 - yarn install --frozen-lockfile
 - yarn build:checker
-- targeted checker Mocha: 60 passing
-- yarn test: 445 passing
+- targeted checker Mocha: 61 passing
+- yarn test: 446 passing
 - yarn build
 - static checker smoke: valid/invalid/incomplete/unavailable outcomes, no source execution, and no filesystem/network candidate resolution
 - review regressions: non-function literal hook callbacks are rejected; syntax and TypeScript-only diagnostics are gated by requested `syntax` coverage
@@ -21,6 +21,8 @@ Passed:
 - installed packed-package smoke: tarball SHA-256 `a73251238865ecaacabf8823cf22267a89871ed9f6e30e2401e33def98d5575d`; checker exports, declarations, runtime asset, metadata, and both public profile wrappers resolved
 - current-head packed-package smoke: tarball SHA-256 `8fcbacccd06d4d8107c27279e6cc2f5ab8e2374dfca05b701db7f1b506b8a65e`; all four public checker invocations, bare `dist`, README package entry, declarations, and runtime asset resolved
 - traversal-bound regressions: deeply nested form byte accounting is bounded; syntax probe is skipped outside requested syntax coverage; probe and source AST budgets share bounded failure semantics; global canary cleanup is exception-safe
+- metadata/package regressions: non-version metadata names do not trigger mismatches; form accounting is consolidated into collection; extensionless `dist/expressions` and `dist/expressions-proxy` exports resolve
+- latest-head packed-package smoke: tarball SHA-256 `3918e09d2fe83adc32d09a68e30805c053ba23eb91d2fc533e8d55b26a565f07`; checker, bare/extensionless runtime subpaths, and metadata smoke passed
 
 Blocked/environment limitation:
 - make types: dts-generator completed and wrote dist/api.raw.d.ts, but script/build.rb could not run because asdf has no configured Ruby 3.2.0 installation in this worktree environment. ts/api.ts was restored from the checked-in generated declaration and checker/api.js was regenerated from it.
