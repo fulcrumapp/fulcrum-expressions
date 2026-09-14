@@ -22,6 +22,12 @@ const {
 } = require('@fulcrumapp/fulcrum-expressions/checker')
 ```
 
+The package export map preserves the runtime entry (`.`), the bare `dist`
+compatibility path, `dist/*` runtime assets, `package.json`, and the checker
+subpath. Other source and build files are implementation details rather than
+supported package imports; consumers should use the runtime entry or the
+checker subpath instead of relying on arbitrary deep imports.
+
 `validate(request)` accepts a complete candidate request:
 
 ```js
