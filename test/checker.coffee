@@ -161,6 +161,33 @@ describe 'headless expression checker', ->
       reason_code: 'INPUT_LIMIT_EXCEEDED'
     })
 
+  it 'classifies every requested check when form traversal is truncated', ->
+    deepForm = { elements: [] }
+    cursor = deepForm
+    for index in [0...202]
+      child = { elements: [] }
+      cursor.elements = [child]
+      cursor = child
+    cursor.elements = [{ data_name: 'deep', type: 'TextField' }]
+
+    result = checker.checkDataEvent({
+      source: 'ON("change", "status", () => {});'
+      form: deepForm
+    })
+    classified = result.coverage.completed.concat(
+      result.coverage.skipped.map((entry) -> entry.check)
+    ).concat(
+      result.coverage.unsupported.map((entry) -> entry.check)
+    ).concat(
+      result.coverage.unverified.map((entry) -> entry.check)
+    ).concat(
+      result.coverage.failures.map((entry) -> entry.check)
+    )
+
+    result.outcome.should.eql('unavailable')
+    for check in result.coverage.requested
+      classified.should.containEql(check)
+
   it 'uses checker-level paths for form limit diagnostics', ->
     oversizedForm = { elements: [{ data_name: 'status', type: 'TextField', label: 'x'.repeat(140000) }] }
     result = checker.checkDataEvent({

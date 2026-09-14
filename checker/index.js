@@ -1464,7 +1464,7 @@ function validate(request) {
   const formInfo = hasForm ? collectForm(parts.form) : { fields: new Map(), parents: new Map(), nodeCount: 0 }
   const formCheck = profile === 'calculation' ? 'dependencies' : 'fields'
   if (hasForm && formInfo.truncated && coverage.requested.includes(formCheck)) {
-    addCoverageFailure(coverage, formCheck, 'INPUT_LIMIT_EXCEEDED')
+    addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,
       [makeRequestDiagnostic(
