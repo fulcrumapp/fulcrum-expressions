@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited implementation HEAD: `e2c130661c1ac4a24037a57acab95f26b10de92e`
+- Audited implementation/test HEAD: `70882f9413b41cc89279bbab20ba9264c70efff0`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -20,7 +20,7 @@ HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
 
-## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306`
+## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9`
 
 The registered PR head adds only requested-check normalization, hook-target type
 normalization, requested-coverage gating, required Data Event callbacks, and
@@ -37,8 +37,9 @@ inside `require`, dynamic imports, and forbidden calculation APIs. The
 `change-geometry` target remains intentionally restricted to `Repeatable` when
 provided, matching checked-in declarations, runtime, and event documentation.
 No runtime or public transport boundary changed. The focused suite passed
-**39 tests** on the committed implementation head; the full suite passed
-**424 tests**.
+**40 tests** on the committed implementation/test head; the full suite passed
+**425 tests**. The AST budget regression confirms suppressed API policies do
+not bypass traversal limits.
 
 ## Prior findings F-01 through F-06
 
@@ -136,11 +137,11 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `e2c130661c1ac4a24037a57acab95f26b10de92e` |
+| `git rev-parse HEAD` | `70882f9413b41cc89279bbab20ba9264c70efff0` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| focused checker Mocha | **39 passing** |
-| `yarn test` | **424 passing** |
+| focused checker Mocha | **40 passing** |
+| `yarn test` | **425 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
@@ -155,8 +156,8 @@ failure.
 
 ## Gate result
 
-`PR_READY` for audited implementation HEAD
-`e2c130661c1ac4a24037a57acab95f26b10de92e`.
+`PR_READY` for audited implementation/test HEAD
+`70882f9413b41cc89279bbab20ba9264c70efff0`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
