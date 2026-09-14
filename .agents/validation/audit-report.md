@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited HEAD: `8149841668a433df918d126f6c668faecc9a4c3a`
+- Audited implementation HEAD: `e2c130661c1ac4a24037a57acab95f26b10de92e`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -20,21 +20,25 @@ HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
 
-## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841`
+## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306`
 
 The registered PR head adds only requested-check normalization, hook-target type
-normalization, requested-coverage gating, and required Data Event callbacks,
-plus focused regressions and lifecycle evidence updates. Duplicate requested
-checks are de-duplicated in first-seen order before coverage accounting. Hook
-target comparisons use the existing normalized field-type representation,
-covering casing, spaces, and separators. Profile, field, API, semantic, and
-AST-limit policies now emit coverage or diagnostics only for enabled requested
-checks; AST-limit failures remain unscoped until requested coverage is
-populated. Hooks now reject missing or literal non-function callbacks. The
+normalization, requested-coverage gating, required Data Event callbacks, and
+nested coverage traversal, plus focused regressions and lifecycle evidence
+updates. Duplicate requested checks are de-duplicated in first-seen order
+before coverage accounting. Hook target comparisons use the existing normalized
+field-type representation, covering casing, spaces, and separators. Profile,
+field, API, semantic, and AST-limit policies now emit coverage or diagnostics
+only for enabled requested checks; AST-limit failures remain unscoped until
+requested coverage is populated. Hooks now reject missing or literal
+non-function callbacks. API-policy suppression no longer returns early from AST
+traversal, so requested field/dependency checks still inspect nested arguments
+inside `require`, dynamic imports, and forbidden calculation APIs. The
 `change-geometry` target remains intentionally restricted to `Repeatable` when
 provided, matching checked-in declarations, runtime, and event documentation.
 No runtime or public transport boundary changed. The focused suite passed
-**36 tests** on the committed head; the full suite passed **421 tests**.
+**39 tests** on the committed implementation head; the full suite passed
+**424 tests**.
 
 ## Prior findings F-01 through F-06
 
@@ -132,11 +136,11 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `8149841668a433df918d126f6c668faecc9a4c3a` |
+| `git rev-parse HEAD` | `e2c130661c1ac4a24037a57acab95f26b10de92e` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| focused checker Mocha | **36 passing** |
-| `yarn test` | **421 passing** |
+| focused checker Mocha | **39 passing** |
+| `yarn test` | **424 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
@@ -151,7 +155,8 @@ failure.
 
 ## Gate result
 
-`PR_READY` for audited HEAD `8149841668a433df918d126f6c668faecc9a4c3a`.
+`PR_READY` for audited implementation HEAD
+`e2c130661c1ac4a24037a57acab95f26b10de92e`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
