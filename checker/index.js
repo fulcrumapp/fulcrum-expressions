@@ -527,8 +527,9 @@ function repeatableScopeNames(scope) {
   return values
 }
 
-function boundedObjectBytes(value, limit, seen = new Set(), total = 0) {
+function boundedObjectBytes(value, limit, seen = new Set(), total = 0, depth = 0) {
   if (total > limit) return total
+  if (depth > LIMITS.formDepth) return limit + 1
   if (value === null) return total + 4
   if (value === undefined) return total + 9
   if (typeof value === 'string') return total + byteLength(JSON.stringify(value))
@@ -543,7 +544,7 @@ function boundedObjectBytes(value, limit, seen = new Set(), total = 0) {
   if (Array.isArray(value)) {
     total += 1
     for (let index = 0; index < value.length; index += 1) {
-      total = boundedObjectBytes(value[index], limit, seen, total + (index ? 1 : 0))
+      total = boundedObjectBytes(value[index], limit, seen, total + (index ? 1 : 0), depth + 1)
       if (total > limit) return total
     }
     return total + 1
@@ -551,8 +552,8 @@ function boundedObjectBytes(value, limit, seen = new Set(), total = 0) {
   total += 1
   let index = 0
   for (const [key, child] of Object.entries(value)) {
-    total = boundedObjectBytes(key, limit, seen, total + (index ? 1 : 0))
-    total = boundedObjectBytes(child, limit, seen, total + 1)
+    total = boundedObjectBytes(key, limit, seen, total + (index ? 1 : 0), depth + 1)
+    total = boundedObjectBytes(child, limit, seen, total + 1, depth + 1)
     if (total > limit) return total
     index += 1
   }
@@ -779,6 +780,7 @@ function addDiagnostic(state, node, code, severity, message, fix, sourceFileOver
 
 function addFailure(state, check, reasonCode, code, message) {
   state.failure = true
+  if (reasonCode === 'INPUT_LIMIT_EXCEEDED') state.limitFailure = true
   addCoverageFailure(state.coverage, check, reasonCode)
   addDiagnostic(state, state.sourceFile, code, 'warning', message)
 }
@@ -1138,6 +1140,7 @@ function validateAst(state) {
 }
 
 function collectTsOnlyDiagnostics(source, sourceFile, state) {
+  if (!isCheckEnabled(state, 'syntax')) return
   const probe = ts.createSourceFile(
     '/probe.ts',
     source,
@@ -1145,11 +1148,23 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
     true,
     ts.ScriptKind.TS,
   )
-  function visit(node) {
-    if (
-      isCheckEnabled(state, 'syntax') &&
-      (TS_ONLY_KINDS.has(node.kind) || (ts.isTypeNode(node) && !TS_ONLY_KINDS.has(node.kind)))
-    ) {
+  let nodeCount = 0
+  let tooDeep = false
+  function visit(node, depth) {
+    if (tooDeep) return
+    nodeCount += 1
+    if (nodeCount > LIMITS.sourceAstNodes || depth > LIMITS.sourceAstDepth) {
+      tooDeep = true
+      addFailure(
+        state,
+        null,
+        'INPUT_LIMIT_EXCEEDED',
+        'CHECKER.LIMIT_EXCEEDED',
+        'The source exceeded the checker AST work limit.',
+      )
+      return
+    }
+    if (TS_ONLY_KINDS.has(node.kind) || (ts.isTypeNode(node) && !TS_ONLY_KINDS.has(node.kind))) {
       addDiagnostic(
         state,
         node,
@@ -1162,9 +1177,9 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
       )
       state.artifactError = true
     }
-    ts.forEachChild(node, visit)
+    ts.forEachChild(node, (child) => visit(child, depth + 1))
   }
-  visit(probe)
+  visit(probe, 0)
 
   // Parsing is already complete and in-memory.  Reading parseDiagnostics
   // avoids creating a second synthetic Program (and avoids any host calls).
@@ -1480,7 +1495,7 @@ function validate(request) {
 
   try {
     collectTsOnlyDiagnostics(parts.source, sourceFile, state)
-    if (!state.artifactError) {
+    if (!state.artifactError && !state.failure) {
       const program = ts.createProgram(
         ['/source.js', '/fulcrum/api.d.ts', '/fulcrum/form.d.ts', '/fulcrum/globals.d.ts'],
         options,

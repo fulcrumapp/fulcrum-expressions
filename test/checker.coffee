@@ -391,15 +391,42 @@ describe 'headless expression checker', ->
 
   it 'does not evaluate source or mutate process state', ->
     global.__fulcrum_checker_canary = 0
+    try
+      result = checker.checkDataEvent({
+        source: 'globalThis.__fulcrum_checker_canary = 1; throw new Error("secret-token");'
+        form
+      })
+
+      result.outcome.should.eql('valid')
+      global.__fulcrum_checker_canary.should.eql(0)
+      JSON.stringify(result).should.not.containEql('secret-token')
+    finally
+      delete global.__fulcrum_checker_canary
+
+  it 'bounds deeply nested form context during byte accounting', ->
+    deeplyNested = {}
+    current = deeplyNested
+    for index in [0...checker.LIMITS.formDepth + 2]
+      current.child = {}
+      current = current.child
+
     result = checker.checkDataEvent({
-      source: 'globalThis.__fulcrum_checker_canary = 1; throw new Error("secret-token");'
+      source: '1;'
+      form: deeplyNested
+      checks: ['syntax']
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.coverage.failures.some((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()
+
+  it 'does not run the TypeScript probe when syntax is not requested', ->
+    result = checker.checkDataEvent({
+      source: 'const value: number = 1;'
       form
+      checks: ['fields']
     })
 
     result.outcome.should.eql('valid')
-    global.__fulcrum_checker_canary.should.eql(0)
-    JSON.stringify(result).should.not.containEql('secret-token')
-    delete global.__fulcrum_checker_canary
 
   it 'does not resolve filesystem modules', ->
     result = checker.checkDataEvent({ source: 'require("fs");', form })
