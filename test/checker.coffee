@@ -245,6 +245,28 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('valid')
 
+  it 'rejects extra hook arguments when hooks are requested alone', ->
+    result = checker.checkDataEvent({
+      source: 'ON("change", "status", () => {}, "extra");'
+      form
+      checks: ['hooks']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
+
+  it 'preserves object-shaped repeatable scopes in the calculation wrapper', ->
+    result = checker.checkCalculation({
+      expression: 'VALUE("amount");'
+      form
+      repeatable_scope: {
+        ancestors: ['items']
+        repeatables: ['items']
+      }
+    })
+
+    result.outcome.should.eql('valid')
+
   it 'does not mark ordinary property method calls as dynamic API references', ->
     result = checker.checkDataEvent({
       source: 'const value = "status"; value.toUpperCase();'

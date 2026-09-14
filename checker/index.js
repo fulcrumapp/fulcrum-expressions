@@ -889,6 +889,18 @@ function validateHookCall(state, call) {
     return
   }
 
+  if (args.length > 3) {
+    addDiagnostic(
+      state,
+      call,
+      'DATA_EVENT.CALLBACK_SIGNATURE',
+      'error',
+      'A Data Event hook accepts only an event name, an optional field target, and a callback function.',
+    )
+    state.artifactError = true
+    return
+  }
+
   const hasTarget = args.length >= 3
   if (hasTarget) {
     const target = args[1]
@@ -1645,9 +1657,7 @@ function checkCalculation(input) {
           },
           context: {
             form: input.form,
-            repeatable: input.repeatable_scope && typeof input.repeatable_scope === 'string'
-              ? input.repeatable_scope
-              : input.repeatable_scope && input.repeatable_scope.current,
+            repeatable: input.repeatable_scope,
             feature_index: input.feature_index,
           },
           checks: input.checks !== undefined ? input.checks : input.requested_checks,

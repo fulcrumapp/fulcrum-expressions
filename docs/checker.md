@@ -26,7 +26,9 @@ The package export map preserves the runtime entry (`.`), the bare `dist`
 compatibility path, `dist/*` runtime assets, `package.json`, and the checker
 subpath. Other source and build files are implementation details rather than
 supported package imports; consumers should use the runtime entry or the
-checker subpath instead of relying on arbitrary deep imports.
+checker subpath instead of relying on arbitrary deep imports. This detailed
+document is repository-side API and design documentation; the published
+README contains the supported checker entry and minimal invocation example.
 
 `validate(request)` accepts a complete candidate request:
 
