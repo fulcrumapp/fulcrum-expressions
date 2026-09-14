@@ -249,6 +249,41 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('valid')
 
+  it 'validates change-geometry targets as repeatable fields', ->
+    valid = checker.checkDataEvent({
+      source: 'ON("change-geometry", "items", () => {});'
+      form
+      checks: ['hooks']
+    })
+    invalid = checker.checkDataEvent({
+      source: 'ON("change-geometry", "status", () => {});'
+      form
+      checks: ['hooks']
+    })
+
+    valid.outcome.should.eql('valid')
+    invalid.outcome.should.eql('invalid')
+    codes(invalid).should.containEql('DATA_EVENT.INVALID_HOOK_TARGET')
+
+  it 'does not validate object property names as form references', ->
+    result = checker.checkDataEvent({
+      source: 'const object = { $missing: 1 };'
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('valid')
+
+  it 'gates semantic form diagnostics behind field coverage', ->
+    result = checker.checkDataEvent({
+      source: '$missing;'
+      form
+      checks: ['api']
+    })
+
+    result.outcome.should.eql('valid')
+    codes(result).should.eql([])
+
   it 'marks computed calls as unverified dynamic references', ->
     result = checker.checkDataEvent({
       source: 'const method = "log"; console[method]("status");'

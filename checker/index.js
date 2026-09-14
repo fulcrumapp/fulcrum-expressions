@@ -233,6 +233,28 @@ function isFunctionLike(node) {
   return Boolean(node && (ts.isFunctionExpression(node) || ts.isArrowFunction(node)))
 }
 
+function isFormIdentifier(node) {
+  if (
+    !node ||
+    !ts.isIdentifier(node) ||
+    !/^\$[A-Za-z_][\w$]*$/.test(node.text) ||
+    node.text.startsWith('$$')
+  ) return false
+  const parent = node.parent
+  if (!parent) return true
+  return !(
+    (ts.isPropertyAccessExpression(parent) && parent.name === node) ||
+    (ts.isPropertyAssignment(parent) && parent.name === node) ||
+    (ts.isMethodDeclaration(parent) && parent.name === node) ||
+    (ts.isPropertyDeclaration(parent) && parent.name === node) ||
+    (ts.isPropertySignature(parent) && parent.name === node) ||
+    (ts.isVariableDeclaration(parent) && parent.name === node) ||
+    (ts.isParameter(parent) && parent.name === node) ||
+    (ts.isBindingElement(parent) && parent.name === node) ||
+    (ts.isLabeledStatement(parent) && parent.label === node)
+  )
+}
+
 function sourceRange(sourceFile, node) {
   const start = sourceFile.getLineAndCharacterOfPosition(
     Math.max(0, Math.min(node.getStart(sourceFile), sourceFile.end)),
@@ -718,13 +740,13 @@ function semanticMessage(code) {
   }
 }
 
-function addDiagnostic(state, node, code, severity, message, fix) {
+function addDiagnostic(state, node, code, severity, message, fix, sourceFileOverride) {
   if (state.diagnostics.length >= LIMITS.diagnostics) {
     state.limitFailure = true
     return
   }
   const diagnostic = makeDiagnostic(
-    state.sourceFile,
+    sourceFileOverride || state.sourceFile,
     node,
     code,
     severity,
@@ -923,7 +945,7 @@ function validateHookCall(state, call) {
             target,
             'DATA_EVENT.INVALID_HOOK_TARGET',
             'error',
-            'The geometry hook target must be a repeatable field.',
+            'A change-geometry target must be a repeatable field.',
           )
           state.artifactError = true
         }
@@ -1051,11 +1073,7 @@ function validateAst(state) {
       }
     }
 
-    if (
-      ts.isIdentifier(node) &&
-      /^\$[A-Za-z_][\w$]*$/.test(node.text) &&
-      !node.text.startsWith('$$')
-    ) {
+    if (isFormIdentifier(node)) {
       if (!isCheckEnabled(state, 'field_references')) {
         ts.forEachChild(node, (child) => visit(child, depth + 1))
         return
@@ -1108,6 +1126,8 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
         'error',
         'TypeScript-only syntax is not deployable expression JavaScript.',
         'Submit deployable JavaScript without TypeScript annotations or declarations.',
+        undefined,
+        probe,
       )
       state.artifactError = true
     }
@@ -1136,18 +1156,15 @@ function addSemanticDiagnostics(state, diagnostics) {
     const node = diagnostic.start === undefined
       ? state.sourceFile
       : findNodeAt(state.sourceFile, diagnostic.start)
-    if (
-      !state.hasForm &&
-      node &&
-      ts.isIdentifier(node) &&
-      node.text.startsWith('$')
-    ) {
+    const formReference = isFormIdentifier(node)
+    if (formReference && !isCheckEnabled(state, 'field_references')) continue
+    if (!state.hasForm && formReference) {
       addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
       continue
     }
     const code = diagnostic.code === 2531 || diagnostic.code === 2532
       ? 'FORM.NULLABLE_VALUE'
-      : diagnostic.code === 2304 && node && ts.isIdentifier(node) && node.text.startsWith('$')
+      : diagnostic.code === 2304 && formReference
         ? 'FORM.UNKNOWN_FIELD_REFERENCE'
         : diagnostic.code === 2304
           ? 'JAVASCRIPT.UNDECLARED_NAME'
@@ -1359,10 +1376,10 @@ function validate(request) {
   const schemaMismatch = schemaVersion && schemaVersion !== DECLARATION_VERSION
   const runtimeMismatch = runtimeVersion && runtimeVersion !== RUNTIME_VERSION
   const apiMismatch = Boolean(compilerMismatch || schemaMismatch || runtimeMismatch)
-  if (compilerMismatch || schemaMismatch || runtimeMismatch) {
+  if (coverage.requested.includes('api') && (compilerMismatch || schemaMismatch || runtimeMismatch)) {
     addCoverageSkipped(coverage, 'api', 'VERSION_MISMATCH')
   }
-  if (runtimeMismatch) {
+  if (coverage.requested.includes(canonicalCheck(coverage, 'profile')) && runtimeMismatch) {
     addCoverageSkipped(coverage, 'profile', 'VERSION_MISMATCH')
   }
 
