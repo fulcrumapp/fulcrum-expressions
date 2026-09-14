@@ -61,7 +61,8 @@
     "marked": "^4.0.10",
     "mocha": "^11.1.0",
     "should": "^8.4.0",
-    "terser": "^5.24.0"
+    "terser": "^5.24.0",
+    "typescript": "4.9.5"
   },
   "optionalDependencies": {
     "typescript": "4.9.5"

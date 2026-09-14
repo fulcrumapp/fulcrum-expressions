@@ -9,12 +9,9 @@
 
 const crypto = require('crypto')
 let ts
-let typescriptLoadError
 try {
   ts = require('typescript')
-} catch (error) {
-  typescriptLoadError = error
-}
+} catch (_error) {}
 const packageMetadata = require('../package.json')
 const apiDeclarations = require('./api')
 const standardLibrary = require('./lib')
@@ -1048,14 +1045,17 @@ function validateAst(state) {
         validateHookCall(state, node)
         checkLiteralFieldCall(state, node)
       } else if (
-        ts.isElementAccessExpression(node.expression) ||
-        ts.isCallExpression(node.expression)
+        ts.isElementAccessExpression(node.expression)
       ) {
         addDynamicCoverage(state, 'api', 'UNVERIFIED_DYNAMIC_CALL', node)
       }
     }
 
-    if (ts.isIdentifier(node) && node.text.startsWith('$') && !node.text.startsWith('$$')) {
+    if (
+      ts.isIdentifier(node) &&
+      /^\$[A-Za-z_][\w$]*$/.test(node.text) &&
+      !node.text.startsWith('$$')
+    ) {
       if (!isCheckEnabled(state, 'field_references')) {
         ts.forEachChild(node, (child) => visit(child, depth + 1))
         return

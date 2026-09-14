@@ -233,6 +233,22 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('valid')
 
+  it 'does not treat a local dollar variable as a form reference', ->
+    result = checker.checkDataEvent({
+      source: 'const $ = "local"; $;'
+      form
+    })
+
+    result.outcome.should.eql('valid')
+
+  it 'does not mark chained calls as dynamic API references', ->
+    result = checker.checkDataEvent({
+      source: 'const factory = () => () => "value"; factory()();'
+      form
+    })
+
+    result.outcome.should.eql('valid')
+
   it 'marks computed calls as unverified dynamic references', ->
     result = checker.checkDataEvent({
       source: 'const method = "log"; console[method]("status");'
