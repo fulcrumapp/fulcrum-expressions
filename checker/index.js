@@ -446,57 +446,101 @@ function collectForm(form) {
   const parents = new Map()
   let nodeCount = 0
   let truncated = false
+  let byteExceeded = false
   const seen = new Set()
 
-  function visit(value, parentRepeatable, depth) {
-    if (!value || typeof value !== 'object') return
+  function primitiveBytes(value) {
+    if (value === null) return 4
+    if (value === undefined) return 9
+    if (typeof value === 'string') return byteLength(JSON.stringify(value))
+    if (typeof value === 'boolean') return value ? 4 : 5
+    if (typeof value === 'number') {
+      const serialized = JSON.stringify(value)
+      return byteLength(serialized === undefined ? 'null' : serialized)
+    }
+    return LIMITS.formBytes + 1
+  }
+
+  function visit(value, parentRepeatable, depth, discoverFields) {
+    if (value === null || typeof value !== 'object') return primitiveBytes(value)
     if (depth > LIMITS.formDepth) {
       truncated = true
-      return
+      byteExceeded = true
+      return LIMITS.formBytes + 1
     }
-    if (seen.has(value)) return
+    if (seen.has(value)) {
+      byteExceeded = true
+      return LIMITS.formBytes + 1
+    }
     seen.add(value)
     nodeCount += 1
     if (nodeCount > LIMITS.formNodes) {
       truncated = true
-      return
+      byteExceeded = true
+      return LIMITS.formBytes + 1
     }
 
-    const dataName =
-      typeof value.data_name === 'string'
-        ? value.data_name
-        : typeof value.dataName === 'string'
-          ? value.dataName
-          : null
-    const key =
-      typeof value.key === 'string'
-        ? value.key
-        : typeof value.element_key === 'string'
-          ? value.element_key
-          : dataName
-    if (dataName) {
-      fields.set(dataName, value)
-      if (parentRepeatable) parents.set(dataName, parentRepeatable)
+    let bytes = 1
+    if (Array.isArray(value)) {
+      for (let index = 0; index < value.length; index += 1) {
+        bytes += visit(value[index], parentRepeatable, depth + 1, discoverFields) + (index ? 1 : 0)
+        if (bytes > LIMITS.formBytes) {
+          byteExceeded = true
+          return bytes
+        }
+      }
+      return bytes + 1
     }
 
-    const type = normalizeFieldType(value)
-    const nextParent = type === 'repeatable' ? key || parentRepeatable : parentRepeatable
-    if (Array.isArray(value.elements)) {
-      value.elements.forEach((child) => visit(child, nextParent, depth + 1))
+    if (discoverFields) {
+      const dataName =
+        typeof value.data_name === 'string'
+          ? value.data_name
+          : typeof value.dataName === 'string'
+            ? value.dataName
+            : null
+      const key =
+        typeof value.key === 'string'
+          ? value.key
+          : typeof value.element_key === 'string'
+            ? value.element_key
+            : dataName
+      if (dataName) {
+        fields.set(dataName, value)
+        if (parentRepeatable) parents.set(dataName, parentRepeatable)
+      }
+
+      const type = normalizeFieldType(value)
+      const nextParent = type === 'repeatable' ? key || parentRepeatable : parentRepeatable
+      for (const [childKey, child] of Object.entries(value)) {
+        bytes += byteLength(JSON.stringify(childKey)) + 1
+        bytes += visit(
+          child,
+          nextParent,
+          depth + 1,
+          ['elements', 'fields', 'children', 'sections'].includes(childKey),
+        )
+        if (bytes > LIMITS.formBytes) {
+          byteExceeded = true
+          return bytes
+        }
+      }
+    } else {
+      for (const [childKey, child] of Object.entries(value)) {
+        bytes += byteLength(JSON.stringify(childKey)) + 1
+        bytes += visit(child, parentRepeatable, depth + 1, false)
+        if (bytes > LIMITS.formBytes) {
+          byteExceeded = true
+          return bytes
+        }
+      }
     }
-    if (Array.isArray(value.fields)) {
-      value.fields.forEach((child) => visit(child, nextParent, depth + 1))
-    }
-    if (Array.isArray(value.children)) {
-      value.children.forEach((child) => visit(child, nextParent, depth + 1))
-    }
-    if (Array.isArray(value.sections)) {
-      value.sections.forEach((child) => visit(child, nextParent, depth + 1))
-    }
+
+    return bytes + 1
   }
 
-  visit(form, null, 0)
-  return { fields, parents, nodeCount, truncated }
+  visit(form, null, 0, true)
+  return { fields, parents, nodeCount, truncated, byteExceeded }
 }
 
 function fieldDeclaration(formInfo) {
@@ -525,39 +569,6 @@ function repeatableScopeNames(scope) {
     }
   }
   return values
-}
-
-function boundedObjectBytes(value, limit, seen = new Set(), total = 0, depth = 0) {
-  if (total > limit) return total
-  if (depth > LIMITS.formDepth) return limit + 1
-  if (value === null) return total + 4
-  if (value === undefined) return total + 9
-  if (typeof value === 'string') return total + byteLength(JSON.stringify(value))
-  if (typeof value === 'boolean') return total + (value ? 4 : 5)
-  if (typeof value === 'number') {
-    const serialized = JSON.stringify(value)
-    return total + byteLength(serialized === undefined ? 'null' : serialized)
-  }
-  if (typeof value !== 'object') return limit + 1
-  if (seen.has(value)) return limit + 1
-  seen.add(value)
-  if (Array.isArray(value)) {
-    total += 1
-    for (let index = 0; index < value.length; index += 1) {
-      total = boundedObjectBytes(value[index], limit, seen, total + (index ? 1 : 0), depth + 1)
-      if (total > limit) return total
-    }
-    return total + 1
-  }
-  total += 1
-  let index = 0
-  for (const [key, child] of Object.entries(value)) {
-    total = boundedObjectBytes(key, limit, seen, total + (index ? 1 : 0), depth + 1)
-    total = boundedObjectBytes(child, limit, seen, total + 1, depth + 1)
-    if (total > limit) return total
-    index += 1
-  }
-  return total + 1
 }
 
 function requestParts(request) {
@@ -632,7 +643,6 @@ function declaredVersion(value) {
   if (typeof value === 'string') return value
   if (value && typeof value === 'object') {
     if (typeof value.version === 'string') return value.version
-    if (typeof value.name === 'string') return value.name
   }
   return null
 }
@@ -1451,7 +1461,7 @@ function validate(request) {
       versions,
     )
   }
-  if (hasForm && boundedObjectBytes(parts.form, LIMITS.formBytes) > LIMITS.formBytes) {
+  if (hasForm && formInfo.byteExceeded) {
     addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
       profile,

@@ -578,6 +578,19 @@ describe 'headless expression checker', ->
       reason_code: 'VERSION_MISMATCH'
     })
 
+  it 'ignores metadata names that are not explicit versions', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'VALUE("status");' }
+      context: { form }
+      compiler_version: { name: 'typescript' }
+    })
+
+    result.outcome.should.eql('valid')
+    result.coverage.skipped.should.eql([])
+
   it 'keeps unaffected checks complete for a runtime mismatch', ->
     result = checker.validate({
       contract_version: 'v1'

@@ -9,6 +9,8 @@
     ".": "./dist/expressions.js",
     "./checker": "./checker/index.js",
     "./dist": "./dist/expressions.js",
+    "./dist/expressions": "./dist/expressions.js",
+    "./dist/expressions-proxy": "./dist/expressions-proxy.js",
     "./dist/*": "./dist/*",
     "./package.json": "./package.json"
   },

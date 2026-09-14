@@ -23,8 +23,9 @@ const {
 ```
 
 The package export map preserves the runtime entry (`.`), the bare `dist`
-compatibility path, `dist/*` runtime assets, `package.json`, and the checker
-subpath. Other source and build files are implementation details rather than
+compatibility path, extensionless and explicit `dist/expressions` and
+`dist/expressions-proxy` runtime assets, `dist/*` runtime assets,
+`package.json`, and the checker subpath. Other source and build files are implementation details rather than
 supported package imports; consumers should use the runtime entry or the
 checker subpath instead of relying on arbitrary deep imports. This detailed
 document is repository-side API and design documentation; the published
