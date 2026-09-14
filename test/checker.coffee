@@ -69,6 +69,15 @@ describe 'headless expression checker', ->
     result = checker.checkDataEvent({ source: 'VALUE("amount");', form })
 
     result.outcome.should.eql('valid')
+
+  it 'rejects hooks without a callback when hooks are requested', ->
+    result = checker.checkDataEvent({
+      source: 'ON("change");'
+      checks: ['hooks']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
     codes(result).should.not.containEql('CALCULATION.REPEATABLE_SCOPE_REQUIRED')
 
   it 'accepts a named Data Event callback in the two-argument overload', ->

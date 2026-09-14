@@ -788,6 +788,18 @@ function validateHookCall(state, call) {
     state.artifactError = true
   }
 
+  if (args.length < 2) {
+    addDiagnostic(
+      state,
+      call,
+      'DATA_EVENT.CALLBACK_SIGNATURE',
+      'error',
+      'A Data Event hook requires a callback function.',
+    )
+    state.artifactError = true
+    return
+  }
+
   const hasTarget = args.length >= 3
   if (hasTarget) {
     const target = args[1]
@@ -867,6 +879,15 @@ function validateHookCall(state, call) {
     )
     state.artifactError = true
   } else if (callback && ts.isObjectLiteralExpression(callback)) {
+    addDiagnostic(
+      state,
+      callback,
+      'DATA_EVENT.CALLBACK_SIGNATURE',
+      'error',
+      'A Data Event callback must be a function.',
+    )
+    state.artifactError = true
+  } else if (callback && literalText(callback) !== null) {
     addDiagnostic(
       state,
       callback,
