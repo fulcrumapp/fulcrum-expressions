@@ -175,7 +175,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `21c9295bd3dd7dc0a8113ad3fba2d33ce8bc0f32` |
+| `git rev-parse HEAD` | `7de83ba635eb35282e46cd8111250636f4d73427` |
 | pinned app-mcp contract fixture | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` (fixture snapshot; not the live PR head) |
 | live app-mcp PR 34 head observed by coordinator | `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa` |
 | focused checker Mocha | **64 passing** |
@@ -188,6 +188,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 | installed packed-package smoke | passed from tarball SHA-256 `a73251238865ecaacabf8823cf22267a89871ed9f6e30e2401e33def98d5575d`; checker exports, `checker/api.js`, `checker/lib.js`, `dist/expressions.js`, bare `dist`, and version metadata resolved |
 | current-head installed packed-package smoke | passed from tarball SHA-256 `8fcbacccd06d4d8107c27279e6cc2f5ab8e2374dfca05b701db7f1b506b8a65e`; all four public checker invocations and installed assets resolved |
 | latest-head installed packed-package smoke | passed from tarball SHA-256 `3918e09d2fe83adc32d09a68e30805c053ba23eb91d2fc533e8d55b26a565f07`; checker, bare `dist`, and extensionless runtime asset subpaths resolved |
+| review-fix-head clean-source installed packed-package smoke | passed from source commit `7de83ba635eb35282e46cd8111250636f4d73427` and tarball SHA-256 `2110d837c0dd3190509cf5aa20a74f678613182ce08306cfdb6c55114ff053ae`; seven full-response fixtures, named version metadata, exact form boundary, checker exports, declarations, and runtime assets resolved |
 | `git diff --check` | passed; only lifecycle metadata modified |
 | `make types` | **environment-blocked**, exit 2 after dts-generator; asdf has no configured Ruby 3.2.x, so `script/build.rb` could not run |
 
@@ -198,7 +199,7 @@ failure.
 ## Gate result
 
 `PR_READY` for audited implementation/test HEAD
-`21c9295bd3dd7dc0a8113ad3fba2d33ce8bc0f32`.
+`7de83ba635eb35282e46cd8111250636f4d73427`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
