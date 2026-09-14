@@ -175,7 +175,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `a7a5936cdedd14c94e4b7bf56ecabd9fe924de24` |
+| `git rev-parse HEAD` | `36e8bad1b767836edc3570e8cc4da536e9b4d9d1` |
 | pinned app-mcp contract fixture | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` (fixture snapshot; not the live PR head) |
 | live app-mcp PR 34 head observed by coordinator | `473ffe8545d6cb56d1acf43b9a6b8cc27aa6a6fa` |
 | focused checker Mocha | **64 passing** |
@@ -189,6 +189,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 | current-head installed packed-package smoke | passed from tarball SHA-256 `8fcbacccd06d4d8107c27279e6cc2f5ab8e2374dfca05b701db7f1b506b8a65e`; all four public checker invocations and installed assets resolved |
 | latest-head installed packed-package smoke | passed from tarball SHA-256 `3918e09d2fe83adc32d09a68e30805c053ba23eb91d2fc533e8d55b26a565f07`; checker, bare `dist`, and extensionless runtime asset subpaths resolved |
 | current clean-source installed packed-package smoke | passed from source commit `a7a5936cdedd14c94e4b7bf56ecabd9fe924de24` and tarball SHA-256 `2110d837c0dd3190509cf5aa20a74f678613182ce08306cfdb6c55114ff053ae`; seven full-response fixtures, named version metadata, exact form boundary, checker exports, declarations, and runtime assets resolved |
+| review-fix clean-source installed packed-package smoke | passed from source commit `36e8bad1b767836edc3570e8cc4da536e9b4d9d1` and tarball SHA-256 `2381a0ebea6483f0cc583c5246e3d161264f0f71d91fc3a18c81595abbed595b`; eight full-response fixtures, canonical and shorthand repeatable scopes, named version metadata, exact form boundary, checker exports, declarations, and runtime assets resolved |
 | `git diff --check` | passed; only lifecycle metadata modified |
 | `make types` | **environment-blocked**, exit 2 after dts-generator; asdf has no configured Ruby 3.2.x, so `script/build.rb` could not run |
 
@@ -199,7 +200,7 @@ failure.
 ## Gate result
 
 `PR_READY` for audited implementation/test HEAD
-`a7a5936cdedd14c94e4b7bf56ecabd9fe924de24`.
+`36e8bad1b767836edc3570e8cc4da536e9b4d9d1`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
