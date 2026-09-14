@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited HEAD: `d1c81866e826a4d94335ca831fcfb433daa2e275`
+- Audited HEAD: `39ad1bd0c08933745a4bf9365da655c795b49242`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -20,15 +20,18 @@ HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
 
-## Narrow delta audit: `a884917` -> `d1c8186`
+## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd`
 
-The registered PR head adds only requested-check normalization and hook-target
-type normalization, plus focused regressions and lifecycle evidence updates.
-Duplicate requested checks are de-duplicated in first-seen order before coverage
-accounting. Hook target comparisons use the existing normalized field-type
-representation, covering casing, spaces, and separators without changing the
-runtime or public transport boundary. The focused suite passed **32 tests** on
-the committed head; the previously recorded full suite passed **417 tests**.
+The registered PR head adds only requested-check normalization, hook-target type
+normalization, and requested-coverage gating, plus focused regressions and
+lifecycle evidence updates. Duplicate requested checks are de-duplicated in
+first-seen order before coverage accounting. Hook target comparisons use the
+existing normalized field-type representation, covering casing, spaces, and
+separators. Profile, field, API, semantic, and AST-limit policies now emit
+coverage or diagnostics only for enabled requested checks; AST-limit failures
+remain unscoped until requested coverage is populated. No runtime or public
+transport boundary changed. The focused suite passed **35 tests** on the
+committed head; the full suite passed **420 tests**.
 
 ## Prior findings F-01 through F-06
 
@@ -126,11 +129,11 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `d1c81866e826a4d94335ca831fcfb433daa2e275` |
+| `git rev-parse HEAD` | `39ad1bd0c08933745a4bf9365da655c795b49242` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
-| focused checker Mocha | **32 passing** |
-| `yarn test` | **417 passing** |
+| focused checker Mocha | **35 passing** |
+| `yarn test` | **420 passing** |
 | `yarn build:checker` | passed |
 | `yarn build` | passed, `Done in 2.87s` |
 | `node --check checker/index.js checker/api.js checker/generate-api.js` | passed |
@@ -145,7 +148,7 @@ failure.
 
 ## Gate result
 
-`PR_READY` for audited HEAD `d1c81866e826a4d94335ca831fcfb433daa2e275`.
+`PR_READY` for audited HEAD `39ad1bd0c08933745a4bf9365da655c795b49242`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
