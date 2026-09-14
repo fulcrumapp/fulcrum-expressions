@@ -40,7 +40,6 @@
     "encodeurl": "^1.0.1",
     "object-inspect": "^1.0.0",
     "query-string": "^3.0.0",
-    "typescript": "4.9.5",
     "underscore": "^1.12.1",
     "underscore.string": "^3.3.5"
   },
@@ -63,6 +62,9 @@
     "mocha": "^11.1.0",
     "should": "^8.4.0",
     "terser": "^5.24.0"
+  },
+  "optionalDependencies": {
+    "typescript": "4.9.5"
   },
   "resolutions": {
     "minimist": "^1.2.6",

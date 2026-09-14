@@ -146,6 +146,26 @@ describe 'headless expression checker', ->
       reason_code: 'INPUT_LIMIT_EXCEEDED'
     })
 
+  it 'uses checker-level paths for form limit diagnostics', ->
+    oversizedForm = { elements: [{ data_name: 'status', type: 'TextField', label: 'x'.repeat(140000) }] }
+    result = checker.checkDataEvent({
+      source: '$status;'
+      form: oversizedForm
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.diagnostics[0].path.should.eql('$')
+
+  it 'normalizes envelope defaults in convenience wrappers', ->
+    result = checker.checkDataEvent({
+      artifact: { source: '$status;' }
+      context: { form }
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('valid')
+
   it 'keeps the AST budget across suppressed nested API policies', ->
     result = checker.checkDataEvent({
       source: ('require($status);\n').repeat(10000)

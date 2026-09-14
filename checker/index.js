@@ -1322,7 +1322,7 @@ function validate(request) {
       [makeRequestDiagnostic(
         'CHECKER.FORM_LIMIT',
         'The form context exceeds the bounded checker declaration traversal limit.',
-        profile,
+        'unknown',
         'warning',
       )],
       coverage,
@@ -1337,7 +1337,7 @@ function validate(request) {
       [makeRequestDiagnostic(
         'CHECKER.FORM_LIMIT',
         'The form context exceeds the bounded checker declaration limit.',
-        profile,
+        'unknown',
         'warning',
       )],
       coverage,
@@ -1496,7 +1496,14 @@ function validate(request) {
 
 function checkDataEvent(input) {
   const request = input && typeof input === 'object' && input.artifact
-    ? { ...input, artifact_type: 'data_event' }
+    ? {
+        ...input,
+        contract_version: input.contract_version === undefined
+          ? CONTRACT_VERSION
+          : input.contract_version,
+        operation: input.operation === undefined ? 'validate' : input.operation,
+        artifact_type: 'data_event',
+      }
     : input && typeof input === 'object'
       ? {
           contract_version: CONTRACT_VERSION,
@@ -1520,7 +1527,14 @@ function checkDataEvent(input) {
 
 function checkCalculation(input) {
   const request = input && typeof input === 'object' && input.artifact
-    ? { ...input, artifact_type: 'calculation' }
+    ? {
+        ...input,
+        contract_version: input.contract_version === undefined
+          ? CONTRACT_VERSION
+          : input.contract_version,
+        operation: input.operation === undefined ? 'validate' : input.operation,
+        artifact_type: 'calculation',
+      }
     : input && typeof input === 'object'
       ? {
           contract_version: CONTRACT_VERSION,

@@ -5,6 +5,11 @@ Fulcrum JavaScript. It is a source-only TypeScript 4.9.5 analysis boundary; it
 does not import `runtime.coffee`, evaluate candidate code, resolve candidate
 modules, access the filesystem, or make network requests.
 
+The checker uses the pinned TypeScript compiler at runtime. It is declared as
+an optional dependency so runtime-only consumers can install the package with
+optional dependencies omitted; those deployments must not invoke the checker
+subpath.
+
 ## Public API
 
 ```js
