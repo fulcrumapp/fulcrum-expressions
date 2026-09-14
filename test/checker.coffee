@@ -65,6 +65,36 @@ describe 'headless expression checker', ->
     result.diagnostics.should.eql([])
     result.coverage.failures.should.eql([])
 
+  it 'continues field analysis inside unrequested module calls', ->
+    result = checker.checkDataEvent({
+      source: 'require($missing);'
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+
+  it 'continues dependency analysis inside unrequested forbidden APIs', ->
+    result = checker.checkCalculation({
+      source: 'SETVALUE($missing, 1);'
+      form
+      checks: ['dependencies']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+
+  it 'continues field analysis inside unrequested dynamic imports', ->
+    result = checker.checkDataEvent({
+      source: 'import($missing);'
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+
   it 'does not apply calculation repeatable scope rules to Data Events', ->
     result = checker.checkDataEvent({ source: 'VALUE("amount");', form })
 

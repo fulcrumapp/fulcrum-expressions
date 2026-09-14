@@ -941,38 +941,41 @@ function validateAst(state) {
 
     if (ts.isCallExpression(node)) {
       if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
-        if (!isCheckEnabled(state, 'api')) return
-        addDiagnostic(
-          state,
-          node,
-          'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
-          'error',
-          'Dynamic module imports are not available in deployable expressions.',
-        )
-        state.artifactError = true
-      } else if (ts.isIdentifier(node.expression)) {
-        const name = node.expression.text
-        if (name === 'require') {
-          if (!isCheckEnabled(state, 'api')) return
+        if (isCheckEnabled(state, 'api')) {
           addDiagnostic(
             state,
             node,
             'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
             'error',
-            'Filesystem and dependency imports are not available to the checker or expression runtime.',
+            'Dynamic module imports are not available in deployable expressions.',
           )
           state.artifactError = true
         }
+      } else if (ts.isIdentifier(node.expression)) {
+        const name = node.expression.text
+        if (name === 'require') {
+          if (isCheckEnabled(state, 'api')) {
+            addDiagnostic(
+              state,
+              node,
+              'JAVASCRIPT.MODULE_NOT_DEPLOYABLE',
+              'error',
+              'Filesystem and dependency imports are not available to the checker or expression runtime.',
+            )
+            state.artifactError = true
+          }
+        }
         if (state.profile === 'calculation' && CALCULATION_FORBIDDEN_APIS.has(name)) {
-          if (!isCheckEnabled(state, 'api')) return
-          addDiagnostic(
-            state,
-            node,
-            'CALCULATION.FORBIDDEN_API',
-            'error',
-            'This API is forbidden by the authoritative calculation runtime policy.',
-          )
-          state.artifactError = true
+          if (isCheckEnabled(state, 'api')) {
+            addDiagnostic(
+              state,
+              node,
+              'CALCULATION.FORBIDDEN_API',
+              'error',
+              'This API is forbidden by the authoritative calculation runtime policy.',
+            )
+            state.artifactError = true
+          }
         }
         validateHookCall(state, node)
         checkLiteralFieldCall(state, node)
