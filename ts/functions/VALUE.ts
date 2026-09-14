@@ -34,6 +34,7 @@ import {
  * @returns a form field value
  */
 
+export default function VALUE(dataName: any): any
 export default function VALUE(dataName: NumericFieldName): NumericFieldValue
 export default function VALUE(dataName: TextFieldName): TextFieldValue
 export default function VALUE(dataName: YesNoFieldName): YesNoFieldValue
@@ -46,7 +47,6 @@ export default function VALUE(dataName: SignatureFieldName): SignatureFieldValue
 export default function VALUE(dataName: RecordLinkFieldName): RecordLinkFieldValue
 export default function VALUE(dataName: FieldName): string|undefined
 export default function VALUE(dataName: string): string|undefined
-export default function VALUE(dataName: any): any
 export default function VALUE(dataName: any): any {
   if (isNull(dataName) || isUndefined(dataName)) { return }
   // @ts-ignore variables object is populated with keys according to form data names, there is no set interface
