@@ -707,7 +707,7 @@ function createHost(files) {
       return ts.createSourceFile(normalized, text, languageVersion, true, kind)
     },
     getSourceFileByPath(fileName, _path, languageVersion) {
-      return this.getSourceFile(fileName, languageVersion)
+      return host.getSourceFile(fileName, languageVersion)
     },
     getDefaultLibFileName() {
       return '/lib.es2020.d.ts'
@@ -848,7 +848,7 @@ function addFieldCheck(state, dataName, node, context) {
     }
   }
   if (context === 'dynamic') {
-    addCoverageUnverified(state.coverage, 'field_references', 'UNVERIFIED_DYNAMIC_REFERENCE', {
+    addCoverageUnverified(state.coverage, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', {
       path: state.profile === 'calculation' ? '$.expression' : '$.source',
       range: sourceRange(state.sourceFile, node || state.sourceFile),
     })
@@ -1699,7 +1699,9 @@ function checkCalculation(input) {
           },
           context: {
             form: input.form,
-            repeatable: input.repeatable_scope,
+            repeatable: input.repeatable !== undefined
+              ? input.repeatable
+              : input.repeatable_scope,
             feature_index: input.feature_index,
           },
           checks: input.checks !== undefined ? input.checks : input.requested_checks,

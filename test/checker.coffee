@@ -443,10 +443,16 @@ describe 'headless expression checker', ->
       form
       repeatable_scope: { current: 'items' }
     })
+    canonical = checker.checkCalculation({
+      source: 'VALUE("amount");'
+      form
+      repeatable: 'items'
+    })
 
     missing.outcome.should.eql('invalid')
     codes(missing).should.containEql('CALCULATION.REPEATABLE_SCOPE_REQUIRED')
     present.outcome.should.eql('valid')
+    canonical.outcome.should.eql('valid')
 
   it 'does not evaluate source or mutate process state', ->
     global.__fulcrum_checker_canary = 0
