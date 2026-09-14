@@ -12,11 +12,12 @@ Toolchain:
 Passed:
 - yarn install --frozen-lockfile
 - yarn build:checker
-- targeted checker Mocha: 67 passing
-- yarn test: 452 passing
+- targeted checker Mocha: 70 passing
+- yarn test: 455 passing
 - yarn build
 - static checker smoke: valid/invalid/incomplete/unavailable outcomes, no source execution, and no filesystem/network candidate resolution
 - review regressions: non-function literal hook callbacks are rejected; syntax and TypeScript-only diagnostics are gated by requested `syntax` coverage
+- latest review regressions: dynamic hook targets remain unverified rather than event-invalid; shorthand property uses are not form references; shared form objects are counted without false cycle failures
 - package compatibility smoke: `@fulcrumapp/fulcrum-expressions/dist` and `/checker` subpaths resolve
 - installed packed-package smoke: tarball SHA-256 `a73251238865ecaacabf8823cf22267a89871ed9f6e30e2401e33def98d5575d`; checker exports, declarations, runtime asset, metadata, and both public profile wrappers resolved
 - current-head packed-package smoke: tarball SHA-256 `8fcbacccd06d4d8107c27279e6cc2f5ab8e2374dfca05b701db7f1b506b8a65e`; all four public checker invocations, bare `dist`, README package entry, declarations, and runtime asset resolved
