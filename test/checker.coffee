@@ -95,6 +95,16 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
 
+  it 'keeps the AST budget across suppressed nested API policies', ->
+    result = checker.checkDataEvent({
+      source: ('require($status);\n').repeat(10000)
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.coverage.failures.some((failure) -> failure.check is 'fields').should.be.true()
+
   it 'does not apply calculation repeatable scope rules to Data Events', ->
     result = checker.checkDataEvent({ source: 'VALUE("amount");', form })
 
