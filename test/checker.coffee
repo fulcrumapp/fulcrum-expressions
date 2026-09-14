@@ -356,6 +356,18 @@ describe 'headless expression checker', ->
       entry.check is 'hooks' and entry.reason_code is 'UNVERIFIED_DYNAMIC_HOOK'
     ).should.be.true()
 
+  it 'does not reject event-specific targets when the hook event is dynamic', ->
+    result = checker.checkDataEvent({
+      source: 'const eventName = "change"; ON(eventName, "@magic", () => {});'
+      checks: ['hooks']
+    })
+
+    result.outcome.should.eql('incomplete')
+    codes(result).should.not.containEql('DATA_EVENT.INVALID_HOOK_TARGET')
+    result.coverage.unverified.some((entry) ->
+      entry.check is 'hooks' and entry.reason_code is 'UNVERIFIED_DYNAMIC_HOOK_TARGET'
+    ).should.be.true()
+
   it 'rejects provably non-function hook callbacks', ->
     for callback in ['1', 'null', 'true', '[]', '`callback`']
       result = checker.checkDataEvent({
@@ -441,6 +453,26 @@ describe 'headless expression checker', ->
     result = checker.checkDataEvent({
       source: 'const object = { $missing: 1 };'
       form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('valid')
+
+  it 'does not treat shorthand property uses as form references', ->
+    result = checker.checkDataEvent({
+      source: 'const $status = "local"; const object = { $status };'
+      form
+      checks: ['fields']
+    })
+
+    result.outcome.should.eql('valid')
+
+  it 'counts shared form objects each time without treating them as cycles', ->
+    sharedField = { data_name: 'status', type: 'TextField' }
+    sharedForm = { elements: [sharedField, sharedField] }
+    result = checker.checkDataEvent({
+      source: '$status;'
+      form: sharedForm
       checks: ['fields']
     })
 

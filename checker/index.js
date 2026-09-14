@@ -261,6 +261,7 @@ function isFormIdentifier(node) {
   return !(
     (ts.isPropertyAccessExpression(parent) && parent.name === node) ||
     (ts.isPropertyAssignment(parent) && parent.name === node) ||
+    (ts.isShorthandPropertyAssignment(parent) && parent.name === node) ||
     (ts.isMethodDeclaration(parent) && parent.name === node) ||
     (ts.isPropertyDeclaration(parent) && parent.name === node) ||
     (ts.isPropertySignature(parent) && parent.name === node) ||
@@ -447,7 +448,7 @@ function collectForm(form) {
   let nodeCount = 0
   let truncated = false
   let byteExceeded = false
-  const seen = new Set()
+  const visiting = new Set()
 
   function primitiveBytes(value) {
     if (value === null) return 4
@@ -469,15 +470,16 @@ function collectForm(form) {
       byteExceeded = true
       return LIMITS.formBytes + 1
     }
-    if (seen.has(value)) {
+    if (visiting.has(value)) {
       byteExceeded = true
       return LIMITS.formBytes + 1
     }
-    seen.add(value)
+    visiting.add(value)
     nodeCount += 1
     if (nodeCount > LIMITS.formNodes) {
       truncated = true
       byteExceeded = true
+      visiting.delete(value)
       return LIMITS.formBytes + 1
     }
 
@@ -487,9 +489,11 @@ function collectForm(form) {
         bytes += visit(value[index], parentRepeatable, depth + 1, discoverFields) + (index ? 1 : 0)
         if (bytes > LIMITS.formBytes) {
           byteExceeded = true
+          visiting.delete(value)
           return bytes
         }
       }
+      visiting.delete(value)
       return bytes + 1
     }
 
@@ -527,6 +531,7 @@ function collectForm(form) {
         )
         if (bytes > LIMITS.formBytes) {
           byteExceeded = true
+          visiting.delete(value)
           return bytes
         }
       }
@@ -538,11 +543,13 @@ function collectForm(form) {
         bytes += visit(child, parentRepeatable, depth + 1, false)
         if (bytes > LIMITS.formBytes) {
           byteExceeded = true
+          visiting.delete(value)
           return bytes
         }
       }
     }
 
+    visiting.delete(value)
     return bytes + 1
   }
 
@@ -931,8 +938,15 @@ function validateHookCall(state, call) {
   const hasTarget = args.length >= 3
   if (hasTarget) {
     const target = args[1]
-    const targetAllowed = !FORM_EVENTS.has(eventName) && eventName !== 'extension-message'
-    if (!targetAllowed) {
+    if (eventName === null) {
+      addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_HOOK_TARGET', target)
+      const fieldName = literalText(target)
+      if (fieldName === null) {
+        addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', target)
+      } else if (!fieldName.startsWith('@')) {
+        addFieldCheck(state, fieldName, target, 'literal')
+      }
+    } else if (FORM_EVENTS.has(eventName) || eventName === 'extension-message') {
       addDiagnostic(
         state,
         target,
