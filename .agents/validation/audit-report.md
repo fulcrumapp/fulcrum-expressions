@@ -7,7 +7,7 @@
 
 - Repository: `fulcrumapp/fulcrum-expressions`
 - Branch: `treyhyde-psychic-system`
-- Audited implementation/test HEAD: `27a0d999f6523fcaeafd93c634cc265f69856010`
+- Audited implementation/test HEAD: `ebdc72c6180ded99005a1b7fbd09d357ab728460`
 - Parent: `c36eb3abd671d42bc5a6264f8bdfad637db206b6`
 - Jira: `FLCRM-22122`
 - Locked specification: `.agents/specs/active-spec.md`
@@ -20,7 +20,7 @@ HEAD. Earlier SHAs in the revision history are superseded implementation
 checkpoints, not alternate audited heads. No production file was changed by the
 audit; only this report and `.agents/state.json` are lifecycle metadata.
 
-## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9` -> `da19385` -> `db4d14f` -> `3689dd2` -> `1fe4835` -> `58657fe` -> `27a0d99`
+## Narrow delta audit: `a884917` -> `d1c8186` -> `39ad1bd` -> `8149841` -> `e2c1306` -> `70882f9` -> `da19385` -> `db4d14f` -> `3689dd2` -> `1fe4835` -> `58657fe` -> `27a0d99` -> `ebdc72c`
 
 The registered PR head adds only requested-check normalization, hook-target type
 normalization, requested-coverage gating, required Data Event callbacks, and
@@ -60,6 +60,10 @@ gated by fields/dependencies coverage. Provably non-function hook callbacks
 (including numeric, boolean, null, array, and no-substitution template literals)
 are rejected, while syntax and TypeScript-only diagnostics are emitted only
 when `syntax` is requested.
+The package explicitly preserves the bare `dist` subpath, and source AST and
+form traversal use separately named resource limits. The duplicate TypeScript
+declarations are documented as intentional: optional at runtime, pinned in
+devDependencies for deterministic repository builds.
 
 ## Prior findings F-01 through F-06
 
@@ -157,7 +161,7 @@ unsupported checks remain explicitly unsupported and produce `incomplete`.
 
 | Command/check | Result |
 | --- | --- |
-| `git rev-parse HEAD` | `27a0d999f6523fcaeafd93c634cc265f69856010` |
+| `git rev-parse HEAD` | `ebdc72c6180ded99005a1b7fbd09d357ab728460` |
 | `git ls-remote https://github.com/fulcrumapp/app-mcp.git refs/pull/34/head` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | `gh api repos/fulcrumapp/app-mcp/pulls/34 --jq .head.sha` | `0bbd776019c79b2aa1cf0a2e6da287d8a7b767f4` |
 | focused checker Mocha | **56 passing** |
@@ -177,7 +181,7 @@ failure.
 ## Gate result
 
 `PR_READY` for audited implementation/test HEAD
-`27a0d999f6523fcaeafd93c634cc265f69856010`.
+`ebdc72c6180ded99005a1b7fbd09d357ab728460`.
 Environment limitations are explicitly recorded and do not identify an
 implementation defect. Publication, deployment, tagging, and merging remain
 outside this audit and were not performed. Formal GitHub approval remains a
