@@ -8,7 +8,15 @@
 
 const fs = require('fs')
 const path = require('path')
-const ts = require('typescript')
+let ts
+try {
+  ts = require('typescript')
+} catch (_error) {
+  console.warn(
+    'TypeScript is not installed; using the checked-in checker/api.js and checker/lib.js payloads.',
+  )
+  process.exit(0)
+}
 
 const sourcePath = path.join(__dirname, '..', 'ts', 'api.ts')
 const outputPath = path.join(__dirname, 'api.js')

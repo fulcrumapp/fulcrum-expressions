@@ -92,9 +92,19 @@ diagnostics. Form byte accounting follows JSON serialization for supported
 values: undefined object properties are omitted and undefined array entries
 count as null. Form traversal reads only own data properties; accessor-backed
 properties are ignored and non-plain object containers are rejected as
-unavailable. These are local pure-core bounds; HTTP, authentication, worker
+unavailable. Proxy-wrapped containers are rejected before reflective
+operations. These are local pure-core bounds; HTTP, authentication, worker
 resource isolation, package publication, and deployment remain separate
 lifecycle gates.
+
+The root package is the supported package boundary. `dist/package.json` is an
+internal runtime artifact for the browser bundles and is not a separately
+supported package boundary; root deep-import compatibility is defined by the
+root `package.json` export map.
+
+Runtime-only builds may omit the optional TypeScript dependency. In that case,
+`build:checker` preserves the checked-in generated declaration payload and
+prints a warning; invoking the checker still requires TypeScript 4.9.5.
 
 Build the fixed declaration module after changing generated declarations:
 

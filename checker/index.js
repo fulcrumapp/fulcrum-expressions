@@ -8,6 +8,7 @@
  */
 
 const crypto = require('crypto')
+const isProxy = require('util').types.isProxy
 let ts
 try {
   ts = require('typescript')
@@ -388,6 +389,15 @@ function isCheckEnabled(state, check) {
     !state.coverage.failures.some((item) => item.check === canonical)
 }
 
+function fieldReferenceCheck(state) {
+  if (state.profile === 'calculation') {
+    if (isCheckEnabled(state, 'dependencies')) return 'dependencies'
+    if (isCheckEnabled(state, 'scope')) return 'scope'
+    return null
+  }
+  return isCheckEnabled(state, 'fields') ? 'fields' : null
+}
+
 function addCoverageUnverified(coverage, check, reasonCode, location) {
   const entry = {
     check: canonicalCheck(coverage, check),
@@ -458,6 +468,7 @@ function collectForm(form) {
   const visiting = new Set()
 
   function safeDescriptors(value) {
+    if (isProxy(value)) return null
     let prototype
     try {
       prototype = Object.getPrototypeOf(value)
@@ -879,13 +890,30 @@ function addFailure(state, check, reasonCode, code, message) {
 }
 
 function addFieldCheck(state, dataName, node, context) {
+  const dependencyCheckEnabled =
+    state.profile === 'calculation' && isCheckEnabled(state, 'dependencies')
+  const scopeCheckEnabled =
+    state.profile === 'calculation' && isCheckEnabled(state, 'scope')
   const fieldCheck = state.profile === 'calculation' ? 'dependencies' : 'fields'
-  if (!isCheckEnabled(state, fieldCheck)) return
+  if (state.profile === 'calculation'
+    ? !dependencyCheckEnabled && !scopeCheckEnabled
+    : !isCheckEnabled(state, fieldCheck)) return
   if (!state.hasForm) {
-    addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
+    addCoverageSkipped(
+      state.coverage,
+      dependencyCheckEnabled ? 'dependencies' : scopeCheckEnabled ? 'scope' : 'field_references',
+      'CONTEXT_REQUIRED',
+    )
     return
   }
   if (!state.formInfo.fields.has(dataName)) {
+    if (state.profile === 'calculation' && !dependencyCheckEnabled) {
+      addCoverageUnverified(state.coverage, 'scope', 'UNVERIFIED_FIELD_REFERENCE', {
+        path: state.profile === 'calculation' ? '$.expression' : '$.source',
+        range: sourceRange(state.sourceFile, node || state.sourceFile),
+      })
+      return
+    }
     addDiagnostic(
       state,
       node,
@@ -1175,7 +1203,8 @@ function forbiddenApiResolution(state, expression) {
 }
 
 function checkLiteralFieldCall(state, call) {
-  if (!isCheckEnabled(state, 'field_references')) return
+  const fieldCheck = fieldReferenceCheck(state)
+  if (!fieldCheck) return
   const name = call.expression.text
   if (!FIELD_FUNCTIONS.has(name)) return
   const args = Array.from(call.arguments)
@@ -1184,7 +1213,7 @@ function checkLiteralFieldCall(state, call) {
   if (!fieldArgument) return
   const dataName = literalText(fieldArgument)
   if (dataName === null) {
-    addDynamicCoverage(state, 'field_references', 'UNVERIFIED_DYNAMIC_FIELD', fieldArgument)
+    addDynamicCoverage(state, fieldCheck, 'UNVERIFIED_DYNAMIC_FIELD', fieldArgument)
   } else {
     addFieldCheck(state, dataName, fieldArgument, 'literal')
   }
@@ -1274,7 +1303,8 @@ function validateAst(state) {
     }
 
     if (isFormIdentifier(node, state)) {
-      if (!isCheckEnabled(state, 'field_references')) {
+      const fieldCheck = fieldReferenceCheck(state)
+      if (!fieldCheck) {
         ts.forEachChild(node, (child) => visit(child, depth + 1))
         return
       }
@@ -1290,7 +1320,7 @@ function validateAst(state) {
         )
         state.artifactError = true
       } else if (!state.hasForm) {
-        addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
+        addCoverageSkipped(state.coverage, fieldCheck, 'CONTEXT_REQUIRED')
       }
     }
 
@@ -1383,9 +1413,10 @@ function addSemanticDiagnostics(state, diagnostics) {
       ? state.sourceFile
       : findNodeAt(state.sourceFile, diagnostic.start)
     const formReference = isFormIdentifier(node, state)
-    if (formReference && !isCheckEnabled(state, 'field_references')) continue
+    const fieldCheck = fieldReferenceCheck(state)
+    if (formReference && !fieldCheck) continue
     if (!state.hasForm && formReference) {
-      addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
+      addCoverageSkipped(state.coverage, fieldCheck, 'CONTEXT_REQUIRED')
       continue
     }
     const code = diagnostic.code === 2531 || diagnostic.code === 2532

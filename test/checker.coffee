@@ -700,6 +700,35 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('unavailable')
     codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
 
+  it 'rejects Proxy-wrapped form containers without invoking traps', ->
+    invoked = 0
+    proxyForm = new Proxy({ elements: [] }, {
+      getPrototypeOf: ->
+        invoked += 1
+        throw new Error('proxy trap')
+    })
+
+    result = checker.checkDataEvent({
+      source: '1;'
+      form: proxyForm
+      checks: ['syntax']
+    })
+
+    result.outcome.should.eql('unavailable')
+    codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
+    invoked.should.eql(0)
+
+  it 'enforces calculation repeatable scope when scope is requested alone', ->
+    result = checker.checkCalculation({
+      source: 'VALUE("amount");'
+      form
+      repeatable_scope: { current: 'other_repeatable' }
+      checks: ['scope']
+    })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('CALCULATION.REPEATABLE_SCOPE_MISMATCH')
+
   it 'does not run the TypeScript probe when syntax is not requested', ->
     result = checker.checkDataEvent({
       source: 'const value: number = 1;'
