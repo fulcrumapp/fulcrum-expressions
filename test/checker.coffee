@@ -379,6 +379,20 @@ describe 'headless expression checker', ->
       codes(result).should.containEql('DATA_EVENT.CALLBACK_SIGNATURE')
     codes(result).should.not.containEql('CALCULATION.REPEATABLE_SCOPE_REQUIRED')
 
+  it 'marks unresolved hook callback references incomplete without API coverage', ->
+    result = checker.checkDataEvent({
+      source: 'ON("change", callback);'
+      checks: ['hooks']
+    })
+
+    result.outcome.should.eql('incomplete')
+    codes(result).should.containEql('COVERAGE.UNVERIFIED_REFERENCE')
+    result.coverage.unverified.some((entry) ->
+      entry.check is 'hooks' and
+      entry.reason_code is 'UNVERIFIED_DYNAMIC_CALLBACK' and
+      entry.path is '$.source'
+    ).should.be.true()
+
   it 'accepts a named Data Event callback in the two-argument overload', ->
     result = checker.checkDataEvent({
       source: 'const callback = (event) => ALERT(event.value); ON("change", callback);'
@@ -535,6 +549,15 @@ describe 'headless expression checker', ->
 
   it 'rejects calculation result mutation as well as field mutation', ->
     result = checker.checkCalculation({ source: 'SETRESULT("candidate");', form })
+
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('CALCULATION.FORBIDDEN_API')
+
+  it 'rejects aliases of calculation-forbidden APIs', ->
+    result = checker.checkCalculation({
+      source: 'const mutate = SETVALUE; mutate("status", "changed");'
+      form
+    })
 
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('CALCULATION.FORBIDDEN_API')

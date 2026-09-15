@@ -1023,15 +1023,17 @@ function validateHookCall(state, call) {
   }
 
   const callback = args[args.length - 1]
-  if (callback && isFunctionLike(callback) && callback.parameters.length > 1) {
-    addDiagnostic(
-      state,
-      callback,
-      'DATA_EVENT.CALLBACK_SIGNATURE',
-      'error',
-      'A Data Event callback accepts at most one event argument.',
-    )
-    state.artifactError = true
+  if (callback && isFunctionLike(callback)) {
+    if (callback.parameters.length > 1) {
+      addDiagnostic(
+        state,
+        callback,
+        'DATA_EVENT.CALLBACK_SIGNATURE',
+        'error',
+        'A Data Event callback accepts at most one event argument.',
+      )
+      state.artifactError = true
+    }
   } else if (callback && ts.isObjectLiteralExpression(callback)) {
     addDiagnostic(
       state,
@@ -1050,7 +1052,47 @@ function validateHookCall(state, call) {
       'A Data Event callback must be a function.',
     )
     state.artifactError = true
+  } else if (callback) {
+    if (!isCheckEnabled(state, 'api')) {
+      addDynamicCoverage(state, 'profile', 'UNVERIFIED_DYNAMIC_CALLBACK', callback)
+    }
   }
+}
+
+function apiDeclarationName(symbol) {
+  if (!symbol || !symbol.declarations) return null
+  for (const declaration of symbol.declarations) {
+    if (normalizePath(declaration.getSourceFile().fileName) !== '/fulcrum/api.d.ts') continue
+    const name = declaration.name
+    if (name && ts.isIdentifier(name) && CALCULATION_FORBIDDEN_APIS.has(name.text)) {
+      return name.text
+    }
+  }
+  return null
+}
+
+function forbiddenApiName(state, expression) {
+  if (!state.typeChecker || !expression) return null
+  const visited = new Set()
+  let symbol = state.typeChecker.getSymbolAtLocation(expression)
+
+  while (symbol && !visited.has(symbol)) {
+    visited.add(symbol)
+    const apiName = apiDeclarationName(symbol)
+    if (apiName) return apiName
+
+    const declaration = (symbol.declarations || []).find(
+      (candidate) =>
+        ts.isVariableDeclaration(candidate) &&
+        candidate.initializer &&
+        candidate.name &&
+        ts.isIdentifier(candidate.name),
+    )
+    if (!declaration) return null
+    symbol = state.typeChecker.getSymbolAtLocation(declaration.initializer)
+  }
+
+  return null
 }
 
 function checkLiteralFieldCall(state, call) {
@@ -1121,7 +1163,14 @@ function validateAst(state) {
             state.artifactError = true
           }
         }
-        if (state.profile === 'calculation' && CALCULATION_FORBIDDEN_APIS.has(name)) {
+        const forbiddenName = state.profile === 'calculation'
+          ? forbiddenApiName(state, node.expression)
+          : null
+        const symbol = state.typeChecker
+          ? state.typeChecker.getSymbolAtLocation(node.expression)
+          : null
+        const isForbidden = forbiddenName || (!symbol && CALCULATION_FORBIDDEN_APIS.has(name))
+        if (state.profile === 'calculation' && isForbidden) {
           if (isCheckEnabled(state, 'api')) {
             addDiagnostic(
               state,
@@ -1546,6 +1595,7 @@ function validate(request) {
       // Passing a separately-created SourceFile makes TypeScript 4.9's
       // contextual callback checker dereference an unbound symbol.
       state.sourceFile = program.getSourceFile('/source.js')
+      state.typeChecker = program.getTypeChecker()
       const sourceSyntactic = program.getSyntacticDiagnostics(state.sourceFile)
       if (sourceSyntactic.length && isCheckEnabled(state, 'syntax')) {
         addDiagnostic(
