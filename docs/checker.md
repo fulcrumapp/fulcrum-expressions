@@ -31,14 +31,15 @@ configuration; other module internals are not part of the public contract.
 
 The package export map preserves the runtime entry (`.`), the bare `dist`
 compatibility path, extensionless and explicit `dist/expressions` and
-`dist/expressions-proxy` runtime assets, explicit `.js` runtime assets,
-`ts/*` declaration/source files, `package.json`, and the checker subpath.
-Checker build payloads under `dist/checker` are not package exports. Other
-source and build files are implementation details rather than supported package
-imports; consumers should use the runtime entry or the checker subpath instead
-of relying on arbitrary deep imports. This detailed document is repository-side
-API and design documentation; the published README contains the supported
-checker entry and minimal invocation example.
+`dist/expressions-proxy` runtime assets, the existing `dist/*` deep-import
+surface, `ts/*` declaration/source files, `package.json`, and the checker
+subpath. The generated `dist/checker` payload is explicitly blocked from that
+wildcard and is not a package export. Other source and build files are
+implementation details rather than newly supported package imports; consumers
+should use the runtime entry or the checker subpath instead of adding new
+deep-import dependencies. This detailed document is repository-side API and
+design documentation; the published README contains the supported checker
+entry and minimal invocation example.
 
 `validate(request)` accepts a complete candidate request:
 
@@ -101,10 +102,10 @@ HTTP, authentication, worker
 resource isolation, package publication, and deployment remain separate
 lifecycle gates.
 
-The root package is the supported package boundary. `dist/package.json` is an
-internal runtime artifact for the browser bundles and is not a separately
-supported package boundary; root deep-import compatibility is defined by the
-root `package.json` export map.
+The root package is the supported package boundary. `dist/package.json` and
+`dist/expressions.html` remain reachable through the preserved `dist/*`
+compatibility pattern, while `dist/checker/*` is explicitly private. The root
+`package.json` export map defines this compatibility surface.
 
 Runtime-only builds may omit the optional TypeScript dependency. In that case,
 `build:checker` preserves the checked-in generated declaration payload and

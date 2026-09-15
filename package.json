@@ -11,8 +11,11 @@
     "./dist": "./dist/expressions.js",
     "./dist/expressions": "./dist/expressions.js",
     "./dist/expressions-proxy": "./dist/expressions-proxy.js",
+    "./dist/checker": null,
+    "./dist/checker/*": null,
     "./dist/expressions.js": "./dist/expressions.js",
     "./dist/expressions-proxy.js": "./dist/expressions-proxy.js",
+    "./dist/*": "./dist/*",
     "./ts/*": "./ts/*",
     "./package.json": "./package.json"
   },

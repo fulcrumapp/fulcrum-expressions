@@ -989,7 +989,10 @@ describe 'headless expression checker', ->
       operation: 'validate'
       artifact: { source: 'VALUE("status");' }
       context: { form }
-      compiler_version: { name: 'typescript', version: require('typescript').version }
+      compiler_version: {
+        name: 'typescript'
+        version: checker.checkCalculation({ source: '1;', form }).versions.compiler
+      }
       schema_version: { name: 'ts/api.ts', version: checker.CHECKER_VERSION }
       runtime_version: {
         name: '@fulcrumapp/fulcrum-expressions'
