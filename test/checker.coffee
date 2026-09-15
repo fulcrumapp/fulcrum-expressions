@@ -321,7 +321,8 @@ describe 'headless expression checker', ->
       checks: ['api']
     })
 
-    result.outcome.should.eql('unavailable')
+    result.outcome.should.eql('invalid')
+    codes(result).should.containEql('JAVASCRIPT.UNDECLARED_NAME')
     result.coverage.failures.should.containEql({
       check: 'api'
       reason_code: 'INPUT_LIMIT_EXCEEDED'
@@ -615,7 +616,11 @@ describe 'headless expression checker', ->
     forbidden.coverage.unverified.some((entry) ->
       entry.check is 'api' and entry.reason_code is 'UNVERIFIED_DYNAMIC_CALL'
     ).should.be.true()
-    ordinary.outcome.should.eql('valid')
+    ordinary.outcome.should.eql('incomplete')
+    codes(ordinary).should.not.containEql('CALCULATION.FORBIDDEN_API')
+    ordinary.coverage.unverified.some((entry) ->
+      entry.check is 'api' and entry.reason_code is 'UNVERIFIED_DYNAMIC_CALL'
+    ).should.be.true()
 
   it 'requires and accepts a supplied repeatable scope', ->
     missing = checker.checkCalculation({ source: 'VALUE("amount");', form })

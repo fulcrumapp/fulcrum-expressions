@@ -1091,47 +1091,7 @@ function isConstVariableDeclaration(declaration) {
   )
 }
 
-function immutableForbiddenApiName(state, expression, visited = new Set()) {
-  if (!state.typeChecker || !expression) return null
-  let symbol = state.typeChecker.getSymbolAtLocation(expression)
-  while (symbol && !visited.has(symbol)) {
-    visited.add(symbol)
-    const apiName = apiDeclarationName(symbol)
-    if (apiName) return apiName
-    const declaration = (symbol.declarations || []).find(
-      (candidate) =>
-        ts.isVariableDeclaration(candidate) &&
-        candidate.initializer &&
-        candidate.name &&
-        ts.isIdentifier(candidate.name),
-    )
-    if (!declaration || !isConstVariableDeclaration(declaration)) return null
-    symbol = state.typeChecker.getSymbolAtLocation(declaration.initializer)
-  }
-  return null
-}
-
-function latestAliasAssignment(state, name, beforePosition) {
-  let latest = null
-  function visit(node) {
-    if (
-      ts.isBinaryExpression(node) &&
-      node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
-      ts.isIdentifier(node.left) &&
-      node.left.text === name &&
-      node.getStart(state.sourceFile) < beforePosition
-    ) {
-      if (!latest || node.getStart(state.sourceFile) > latest.getStart(state.sourceFile)) {
-        latest = node
-      }
-    }
-    ts.forEachChild(node, visit)
-  }
-  visit(state.sourceFile)
-  return latest
-}
-
-function forbiddenApiResolution(state, expression, call) {
+function forbiddenApiResolution(state, expression) {
   if (!state.typeChecker || !expression) return null
   const visited = new Set()
   let symbol = state.typeChecker.getSymbolAtLocation(expression)
@@ -1155,27 +1115,10 @@ function forbiddenApiResolution(state, expression, call) {
     )
     if (!declaration) return null
     if (!isConstVariableDeclaration(declaration)) {
-      const assignment = call && latestAliasAssignment(
-        state,
-        declaration.name.text,
-        call.getStart(state.sourceFile),
-      )
-      if (assignment) {
-        if (isFunctionLike(assignment.right)) {
-          mutableAlias = true
-        } else if (!immutableForbiddenApiName(state, assignment.right)) {
-          const assignmentSymbol = state.typeChecker.getSymbolAtLocation(assignment.right)
-          const sourceDeclaration = assignmentSymbol &&
-            (assignmentSymbol.declarations || []).find((candidate) =>
-              normalizePath(candidate.getSourceFile().fileName) === '/source.js')
-          if (!sourceDeclaration) return null
-          mutableAlias = true
-        } else {
-          mutableAlias = true
-        }
-      } else {
-        mutableAlias = true
-      }
+      // TypeScript's symbol points at the declaration initializer, not the
+      // value held at this call site. Mutable aliases therefore remain
+      // unverified rather than receiving a definitive policy result.
+      mutableAlias = true
     }
     symbol = state.typeChecker.getSymbolAtLocation(declaration.initializer)
   }
@@ -1252,7 +1195,7 @@ function validateAst(state) {
           }
         }
         const forbiddenResolution = state.profile === 'calculation'
-          ? forbiddenApiResolution(state, node.expression, node)
+          ? forbiddenApiResolution(state, node.expression)
           : null
         const symbol = state.typeChecker
           ? state.typeChecker.getSymbolAtLocation(node.expression)
@@ -1792,10 +1735,10 @@ function validate(request) {
     coverage.unverified.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
     coverage.failures.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
     coverage.requested.some((check) => !coverage.completed.includes(check))
-  const outcome = state.failure
-    ? 'unavailable'
-    : state.artifactError
-      ? 'invalid'
+  const outcome = state.artifactError
+    ? 'invalid'
+    : state.failure
+      ? 'unavailable'
       : hasCoverageGap
         ? 'incomplete'
         : 'valid'
