@@ -520,7 +520,6 @@ function collectForm(form) {
     const descriptors = safeDescriptors(value)
     if (!descriptors) {
       unsafe = true
-      visiting.delete(value)
       return LIMITS.formBytes + 1
     }
     visiting.add(value)
@@ -1648,7 +1647,7 @@ function validate(request) {
     : { fields: new Map(), parents: new Map(), nodeCount: 0, unsafe: false }
   const formCheck = profile === 'calculation' ? 'dependencies' : 'fields'
   if (hasForm && formInfo.unsafe) {
-    addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
+    addCoverageToRequested(coverage, 'failures', 'CONTEXT_UNSAFE')
     return emptyResult(
       profile,
       [makeRequestDiagnostic(

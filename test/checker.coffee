@@ -699,6 +699,7 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('unavailable')
     codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
+    result.coverage.failures.some((failure) -> failure.reason_code is 'CONTEXT_UNSAFE').should.be.true()
 
   it 'rejects Proxy-wrapped form containers without invoking traps', ->
     invoked = 0
@@ -716,6 +717,7 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('unavailable')
     codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
+    result.coverage.failures.some((failure) -> failure.reason_code is 'CONTEXT_UNSAFE').should.be.true()
     invoked.should.eql(0)
 
   it 'enforces calculation repeatable scope when scope is requested alone', ->
