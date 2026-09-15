@@ -1552,7 +1552,7 @@ function validate(request) {
       'A complete candidate must include deployable source JavaScript or an expression.',
       profile,
     ))
-    addCoverageToRequested(coverage, 'skipped', 'INVALID_ARTIFACT')
+    clearCoverageForInvalidRequest(coverage)
     return emptyResult(profile, diagnostics, coverage, 'invalid', versions)
   }
 

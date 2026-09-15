@@ -1082,10 +1082,13 @@ describe 'headless expression checker', ->
 
     for result in [missing, nonString]
       result.outcome.should.eql('invalid')
-      result.coverage.requested.should.eql(['syntax'])
-      result.coverage.skipped.should.containEql({
-        check: 'syntax'
-        reason_code: 'INVALID_ARTIFACT'
+      result.coverage.should.eql({
+        requested: []
+        completed: []
+        skipped: []
+        unsupported: []
+        unverified: []
+        failures: []
       })
 
   it 'clears coverage for malformed envelopes before dependency checks', ->
