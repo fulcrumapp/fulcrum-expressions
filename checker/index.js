@@ -1377,7 +1377,6 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
         'error',
         'TypeScript-only syntax is not deployable expression JavaScript.',
         'Submit deployable JavaScript without TypeScript annotations or declarations.',
-        undefined,
         probe,
       )
       state.artifactError = true

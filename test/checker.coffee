@@ -42,6 +42,12 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('JAVASCRIPT.TYPESCRIPT_SYNTAX')
 
+  it 'keeps the generated dist package from exporting checker internals', ->
+    distPackage = require('../dist/package.json')
+
+    distPackage.exports.should.not.have.property('./checker')
+    distPackage.exports['.'].should.eql('./expressions.js')
+
   it 'catches unknown literal fields despite permissive declarations', ->
     result = checker.checkDataEvent({ source: 'VALUE("not_in_form")', form })
 

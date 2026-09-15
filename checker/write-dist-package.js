@@ -23,7 +23,6 @@ fs.writeFileSync(
     license: packageMetadata.license,
     exports: {
       '.': './expressions.js',
-      './checker': './checker/index.js',
       './package.json': './package.json',
     },
     optionalDependencies: packageMetadata.optionalDependencies,
