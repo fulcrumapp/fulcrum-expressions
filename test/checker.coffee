@@ -800,6 +800,29 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('valid')
     result.coverage.skipped.should.eql([])
 
+  it 'accepts bare and named schema and runtime versions consistently', ->
+    bare = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'VALUE("status");' }
+      context: { form }
+      schema_version: checker.CHECKER_VERSION
+      runtime_version: checker.CHECKER_VERSION
+    })
+    named = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 'VALUE("status");' }
+      context: { form }
+      schema_version: 'ts/api.ts@' + checker.CHECKER_VERSION
+      runtime_version: '@fulcrumapp/fulcrum-expressions@' + checker.CHECKER_VERSION
+    })
+
+    bare.outcome.should.eql('valid')
+    named.outcome.should.eql('valid')
+
   it 'keeps unaffected checks complete for a runtime mismatch', ->
     result = checker.validate({
       contract_version: 'v1'

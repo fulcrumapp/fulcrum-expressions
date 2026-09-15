@@ -668,7 +668,11 @@ function declaredVersion(value) {
 }
 
 function versionMatches(actual, expected, name) {
-  return actual === expected || actual === `${name}@${expected}`
+  if (actual === expected) return true
+  const expectedVersion = expected.startsWith(`${name}@`)
+    ? expected.slice(name.length + 1)
+    : expected
+  return actual === expectedVersion || actual === `${name}@${expectedVersion}`
 }
 
 function makeVersions(profile) {
@@ -1290,6 +1294,11 @@ function collectTsOnlyDiagnostics(source, sourceFile, state) {
 function addSemanticDiagnostics(state, diagnostics) {
   if (!isCheckEnabled(state, 'api')) return
   for (const diagnostic of diagnostics) {
+    if (state.limitFailure) break
+    if (state.diagnostics.length >= LIMITS.diagnostics) {
+      state.limitFailure = true
+      break
+    }
     if (!diagnostic.file || normalizePath(diagnostic.file.fileName) !== '/source.js') continue
     const node = diagnostic.start === undefined
       ? state.sourceFile

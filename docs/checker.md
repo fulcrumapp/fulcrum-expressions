@@ -22,6 +22,12 @@ const {
 } = require('@fulcrumapp/fulcrum-expressions/checker')
 ```
 
+The supported checker subpath also exports the read-only provenance and policy
+constants `CONTRACT_VERSION`, `CHECKER_VERSION`, `RUNTIME_VERSION`,
+`DECLARATION_VERSION`, `LIMITS`, and `CALCULATION_FORBIDDEN_APIS`. Consumers
+should use these constants for compatibility checks and resource-bound
+configuration; other module internals are not part of the public contract.
+
 The package export map preserves the runtime entry (`.`), the bare `dist`
 compatibility path, extensionless and explicit `dist/expressions` and
 `dist/expressions-proxy` runtime assets, `dist/*` runtime assets,
