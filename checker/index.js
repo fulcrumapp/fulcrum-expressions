@@ -1724,9 +1724,8 @@ function validate(request) {
   try {
     collectTsOnlyDiagnostics(parts.source, sourceFile, state)
     if (!state.artifactError && !state.failure) {
-      const needsProgram = coverage.requested.some((check) =>
-        ['api', 'fields', 'scope', 'dependencies'].includes(check),
-      )
+      const needsProgram = ['api', 'fields', 'scope', 'dependencies']
+        .some((check) => isCheckEnabled(state, check))
       let program
       if (needsProgram) {
         program = ts.createProgram(
@@ -1743,7 +1742,7 @@ function validate(request) {
         if (sourceSyntactic.length && isCheckEnabled(state, 'syntax')) {
           addDiagnostic(
             state,
-            sourceFile,
+            state.sourceFile,
             'JAVASCRIPT.SYNTAX',
             'error',
             'The source is not valid deployable JavaScript.',
