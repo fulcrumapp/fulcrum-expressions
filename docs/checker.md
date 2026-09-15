@@ -94,8 +94,10 @@ diagnostics. Form byte accounting follows JSON serialization for supported
 values: undefined object properties are omitted and undefined array entries
 count as null. Form traversal reads only own data properties; accessor-backed
 properties are ignored and non-plain object containers are rejected as
-unavailable. Proxy-wrapped containers are rejected before reflective
-operations. These are local pure-core bounds; HTTP, authentication, worker
+unavailable. Where the host runtime exposes proxy detection, proxy-wrapped
+containers are rejected before reflective operations; otherwise proxy safety
+depends on the host's reflective behavior. These are local pure-core bounds;
+HTTP, authentication, worker
 resource isolation, package publication, and deployment remain separate
 lifecycle gates.
 

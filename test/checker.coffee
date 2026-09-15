@@ -558,6 +558,16 @@ describe 'headless expression checker', ->
       entry.check is 'scope' and entry.reason_code is 'UNVERIFIED_FIELD_REFERENCE'
     ).should.be.true()
 
+  it 'uses variable wording for semantic undeclared form variables', ->
+    result = checker.checkDataEvent({
+      source: '$missing;'
+      form
+    })
+
+    result.outcome.should.eql('invalid')
+    result.diagnostics[0].message.should.eql('A literal form variable is not present in the supplied form.')
+    result.diagnostics[0].fix.should.eql('Use a nullable form variable generated from the supplied form.')
+
   it 'enforces repeatable scope for form dollar variables and shorthand values', ->
     ordinary = checker.checkCalculation({
       source: '$amount;'

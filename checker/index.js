@@ -1421,7 +1421,7 @@ function addSemanticDiagnostics(state, diagnostics) {
     const fieldCheck = fieldReferenceCheck(state)
     if (formReference && !fieldCheck) continue
     if (formReference && (diagnostic.code === 2304 || diagnostic.code === 18004)) {
-      addFieldCheck(state, node.text.slice(1), node, 'literal')
+      addFieldCheck(state, node.text.slice(1), node, 'variable')
       continue
     }
     if (!state.hasForm && formReference) {
