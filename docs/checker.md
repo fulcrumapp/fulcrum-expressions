@@ -24,10 +24,11 @@ const {
 ```
 
 The supported checker subpath also exports the read-only provenance and policy
-constants `CONTRACT_VERSION`, `CHECKER_VERSION`, `RUNTIME_VERSION`,
-`DECLARATION_VERSION`, `LIMITS`, and `CALCULATION_FORBIDDEN_APIS`. Consumers
-should use these constants for compatibility checks and resource-bound
-configuration; other module internals are not part of the public contract.
+constants `CONTRACT_VERSION`, `CHECKER_VERSION`,
+`PINNED_TYPESCRIPT_VERSION`, `RUNTIME_VERSION`, `DECLARATION_VERSION`,
+`LIMITS`, and `CALCULATION_FORBIDDEN_APIS`. Consumers should use these
+constants for compatibility checks and resource-bound configuration; other
+module internals are not part of the public contract.
 
 The package export map preserves the runtime entry (`.`), the bare `dist`
 compatibility path, extensionless and explicit `dist/expressions` and
@@ -72,8 +73,12 @@ local callers. Every result uses the approved `v1` common envelope:
 `contract_version`, `outcome`, `diagnostics`, `coverage`, and `versions`.
 Coverage retains `requested`, `completed`, `skipped`, `unsupported`,
 `unverified`, and `failures`.
-`versions` reports the checker, exact TypeScript compiler, generated
-`ts/api.ts` identity, expression runtime lineage, and profile.
+`versions` reports `checker` (and compatibility alias `validator`), the exact
+TypeScript compiler, generated `ts/api.ts` identity, expression runtime
+lineage, and profile. The checker requires the pinned TypeScript
+`PINNED_TYPESCRIPT_VERSION` at runtime; a missing or different compiler is an
+`unavailable` dependency result rather than an analysis with unpinned
+semantics.
 
 Outcome selection is deterministic: source errors produce `invalid`; a checker
 or approved dependency failure produces `unavailable`; missing, unsupported, or
@@ -109,7 +114,9 @@ compatibility pattern, while `dist/checker/*` is explicitly private. The root
 
 Runtime-only builds may omit the optional TypeScript dependency. In that case,
 `build:checker` preserves the checked-in generated declaration payload and
-prints a warning; invoking the checker still requires TypeScript 4.9.5.
+prints a warning; invoking the checker still requires
+`PINNED_TYPESCRIPT_VERSION`. Regeneration fails fast when a different
+TypeScript version is installed.
 
 Build the fixed declaration module after changing generated declarations:
 

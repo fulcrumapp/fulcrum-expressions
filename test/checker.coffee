@@ -881,6 +881,8 @@ describe 'headless expression checker', ->
   it 'reports exact compiler and declaration provenance', ->
     result = checker.checkCalculation({ source: 'VALUE("status");', form })
 
+    result.versions.checker.should.eql(checker.CHECKER_VERSION)
+    result.versions.validator.should.eql(checker.CHECKER_VERSION)
     result.versions.compiler.should.eql('4.9.5')
     result.versions.schema.should.eql('ts/api.ts@3.0.1')
     result.versions.runtime.should.eql('@fulcrumapp/fulcrum-expressions@3.0.1')

@@ -21,6 +21,7 @@ const apiDeclarations = require('./api')
 const standardLibrary = require('./lib')
 
 const CONTRACT_VERSION = 'v1'
+const PINNED_TYPESCRIPT_VERSION = '4.9.5'
 const CHECKER_VERSION = packageMetadata.version
 const RUNTIME_VERSION = `@fulcrumapp/fulcrum-expressions@${packageMetadata.version}`
 const DECLARATION_VERSION = `ts/api.ts@${packageMetadata.version}`
@@ -756,6 +757,7 @@ function versionMatches(actual, expected, name) {
 
 function makeVersions(profile) {
   return {
+    checker: CHECKER_VERSION,
     validator: CHECKER_VERSION,
     schema: DECLARATION_VERSION,
     runtime: RUNTIME_VERSION,
@@ -1512,6 +1514,22 @@ function validate(request) {
     )
   }
 
+  if (ts.version !== PINNED_TYPESCRIPT_VERSION) {
+    addCoverageToRequested(coverage, 'failures', 'DEPENDENCY_VERSION_MISMATCH')
+    return emptyResult(
+      profile || 'unknown',
+      [makeRequestDiagnostic(
+        'CHECKER.TYPESCRIPT_VERSION_UNSUPPORTED',
+        `The checker requires TypeScript ${PINNED_TYPESCRIPT_VERSION}; found ${ts.version}.`,
+        'unknown',
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
+
   if (!request || typeof request !== 'object' || Array.isArray(request)) {
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(
@@ -1943,6 +1961,7 @@ function checkCalculation(input) {
 
 module.exports = Object.freeze({
   CONTRACT_VERSION,
+  PINNED_TYPESCRIPT_VERSION,
   CHECKER_VERSION,
   RUNTIME_VERSION,
   DECLARATION_VERSION,

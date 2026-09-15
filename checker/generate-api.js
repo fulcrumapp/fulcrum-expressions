@@ -18,6 +18,13 @@ try {
   process.exit(0)
 }
 
+const PINNED_TYPESCRIPT_VERSION = '4.9.5'
+if (ts.version !== PINNED_TYPESCRIPT_VERSION) {
+  throw new Error(
+    `TypeScript ${PINNED_TYPESCRIPT_VERSION} is required to regenerate checker payloads; found ${ts.version}.`,
+  )
+}
+
 const sourcePath = path.join(__dirname, '..', 'ts', 'api.ts')
 const outputPath = path.join(__dirname, 'api.js')
 const source = fs.readFileSync(sourcePath, 'utf8')
