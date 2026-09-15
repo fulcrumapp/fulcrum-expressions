@@ -40,6 +40,26 @@ yarn build:dist
 yarn test
 ```
 
+### Headless checker
+
+The published package exposes transport-neutral static validation at
+`@fulcrumapp/fulcrum-expressions/checker`:
+
+```js
+const { validate } = require('@fulcrumapp/fulcrum-expressions/checker')
+const result = validate({
+  contract_version: 'v1',
+  artifact_type: 'data_event',
+  operation: 'validate',
+  artifact: { source: 'VALUE("status");' },
+  context: { form: { elements: [{ data_name: 'status', type: 'TextField' }] } },
+})
+```
+
+The checker analyzes submitted source without executing it. The full request,
+coverage, isolation, and resource-bound contract is documented in
+[`docs/checker.md`](docs/checker.md) in the repository.
+
 ### Console
 Starts an interactive node terminal with the functions available to call
 ```sh

@@ -1,0 +1,129 @@
+# Headless expression checker
+
+`checker/index.js` exports the transport-neutral static checker for deployable
+Fulcrum JavaScript. It is a source-only TypeScript 4.9.5 analysis boundary; it
+does not import `runtime.coffee`, evaluate candidate code, resolve candidate
+modules, access the filesystem, or make network requests.
+
+The checker uses the pinned TypeScript compiler at runtime. It is declared as
+an optional dependency so runtime-only consumers can install the package with
+optional dependencies omitted; those deployments must not invoke the checker
+subpath. Regenerating the checked-in declaration payload requires TypeScript
+4.9.5. Runtime-only builds may omit that dependency and use the checked-in
+`checker/api.js` and `checker/lib.js` payloads, but cannot invoke the checker
+subpath until TypeScript 4.9.5 is installed.
+
+## Public API
+
+```js
+const {
+  validate,
+  checkDataEvent,
+  checkCalculation,
+} = require('@fulcrumapp/fulcrum-expressions/checker')
+```
+
+The supported checker subpath also exports the read-only provenance and policy
+constants `CONTRACT_VERSION`, `CHECKER_VERSION`,
+`PINNED_TYPESCRIPT_VERSION`, `RUNTIME_VERSION`, `DECLARATION_VERSION`,
+`LIMITS`, and `CALCULATION_FORBIDDEN_APIS`. Consumers should use these
+constants for compatibility checks and resource-bound configuration; other
+module internals are not part of the public contract.
+
+The package export map preserves the runtime entry (`.`), the bare `dist`
+compatibility path, extensionless and explicit `dist/expressions` and
+`dist/expressions-proxy` runtime assets, the existing `dist/*` deep-import
+surface, `ts/*` declaration/source files, `package.json`, and the checker
+subpath. The generated `dist/checker` payload is explicitly blocked from that
+wildcard and is not a package export. Other source and build files are
+implementation details rather than newly supported package imports; consumers
+should use the runtime entry or the checker subpath instead of adding new
+deep-import dependencies. This detailed document is repository-side API and
+design documentation; the published README contains the supported checker
+entry and minimal invocation example.
+
+`validate(request)` accepts a complete candidate request:
+
+```js
+validate({
+  contract_version: 'v1',
+  artifact_type: 'data_event', // or 'calculation'
+  operation: 'validate',
+  artifact: {
+    source: 'ON("change", "status", (event) => ALERT(event.value));'
+  },
+  context: {
+    form: {
+      elements: [
+        { data_name: 'status', type: 'TextField' },
+      ],
+    },
+  },
+  checks: ['syntax', 'api', 'hooks', 'fields'],
+})
+```
+
+Calculation requests use `artifact.expression` and
+`context: { form, repeatable, feature_index }`. The repeatable value is the
+runtime repeatable element key, not an enum describing the calculation scope.
+
+`checkDataEvent` and `checkCalculation` are convenience entry points that force
+the corresponding profile and also accept the legacy source/form shorthand for
+local callers. Every result uses the approved `v1` common envelope:
+`contract_version`, `outcome`, `diagnostics`, `coverage`, and `versions`.
+Coverage retains `requested`, `completed`, `skipped`, `unsupported`,
+`unverified`, and `failures`.
+`versions` reports `checker` (and compatibility alias `validator`), the exact
+TypeScript compiler, generated `ts/api.ts` identity, expression runtime
+lineage, and profile. The checker requires the pinned TypeScript
+`PINNED_TYPESCRIPT_VERSION` at runtime; a missing or different compiler is an
+`unavailable` dependency result rather than an analysis with unpinned
+semantics.
+
+Outcome selection is deterministic: source errors produce `invalid`; a checker
+or approved dependency failure produces `unavailable`; missing, unsupported, or
+unverified requested coverage produces `incomplete`; only complete, error-free
+coverage produces `valid`. Coverage and diagnostics are retained for every
+outcome.
+
+Form variables are generated as nullable declarations (`$data_name`) and field
+names remain permissive in the authoritative declarations. The checker adds
+literal AST field-reference checks for `FIELD`, `VALUE`, setters, hook targets,
+and repeatable helpers. Computed references are explicitly unverified and
+cannot result in warning-only `valid` output. Calculation restrictions mirror
+the deployed `runtime.coffee` calculation guard and are separate from Data
+Event API checking.
+
+The default bounds are 256 KiB of source, 128 KiB of form context, 20,000
+source AST nodes at depth 200, 20,000 form nodes at depth 200, and 100
+diagnostics. Form byte accounting follows JSON serialization for supported
+values: undefined object properties are omitted and undefined array entries
+count as null. Form traversal reads only own data properties; accessor-backed
+properties are ignored and non-plain object containers are rejected as
+unavailable. Where the host runtime exposes proxy detection, proxy-wrapped
+containers are rejected before reflective operations; otherwise proxy safety
+depends on the host's reflective behavior. These are local pure-core bounds;
+HTTP, authentication, worker
+resource isolation, package publication, and deployment remain separate
+lifecycle gates.
+
+The root package is the supported package boundary. `dist/package.json` and
+`dist/expressions.html` remain reachable through the preserved `dist/*`
+compatibility pattern, while `dist/checker/*` is explicitly private. The root
+`package.json` export map defines this compatibility surface.
+
+Runtime-only builds may omit the optional TypeScript dependency. In that case,
+`build:checker` preserves the checked-in generated declaration payload and
+prints a warning; invoking the checker still requires
+`PINNED_TYPESCRIPT_VERSION`. Regeneration fails fast when a different
+TypeScript version is installed.
+
+Build the fixed declaration module after changing generated declarations:
+
+```sh
+yarn build:checker
+```
+
+This packages the pinned declaration and standard-library text into fixed
+in-memory modules. It does not change `dist/expressions.js` or the CoffeeScript
+runtime entry point.
