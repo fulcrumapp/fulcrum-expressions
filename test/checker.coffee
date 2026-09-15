@@ -1064,5 +1064,66 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('invalid')
     result.diagnostics[0].path.should.eql('$')
 
+  it 'validates v1 artifact shape before compiler-dependent checks', ->
+    missing = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: {}
+      checks: ['syntax']
+    })
+    nonString = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: 42 }
+      checks: ['syntax']
+    })
+
+    for result in [missing, nonString]
+      result.outcome.should.eql('invalid')
+      result.coverage.requested.should.eql(['syntax'])
+      result.coverage.skipped.should.containEql({
+        check: 'syntax'
+        reason_code: 'INVALID_ARTIFACT'
+      })
+
+  it 'clears coverage for malformed envelopes before dependency checks', ->
+    for request in [
+      null
+      []
+      {}
+      {
+        contract_version: 'v1'
+        artifact_type: 'data_event'
+        operation: 'unsupported'
+        artifact: { source: '1;' }
+        checks: ['syntax']
+      }
+    ]
+      result = checker.validate(request)
+      result.outcome.should.eql('invalid')
+      result.coverage.should.eql({
+        requested: []
+        completed: []
+        skipped: []
+        unsupported: []
+        unverified: []
+        failures: []
+      })
+
+  it 'classifies an explicitly empty check selection without compiler coverage', ->
+    result = checker.validate({
+      contract_version: 'v1'
+      artifact_type: 'data_event'
+      operation: 'validate'
+      artifact: { source: '1;' }
+      checks: []
+    })
+
+    result.outcome.should.eql('incomplete')
+    result.coverage.requested.should.eql([])
+    result.coverage.skipped.should.containEql({ reason_code: 'MISSING_CHECK' })
+
   it 'uses checker-wide paths for non-object requests', ->
     checker.validate(null).diagnostics[0].path.should.eql('$')

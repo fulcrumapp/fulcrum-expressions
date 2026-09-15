@@ -1498,38 +1498,6 @@ function validate(request) {
   const versions = makeVersions(profile || 'unknown')
   const diagnostics = []
 
-  if (!ts) {
-    addCoverageToRequested(coverage, 'failures', 'DEPENDENCY_UNAVAILABLE')
-    return emptyResult(
-      profile || 'unknown',
-      [makeRequestDiagnostic(
-        'CHECKER.TYPESCRIPT_UNAVAILABLE',
-        'The optional TypeScript dependency is required to run the checker.',
-        'unknown',
-        'warning',
-      )],
-      coverage,
-      'unavailable',
-      versions,
-    )
-  }
-
-  if (ts.version !== PINNED_TYPESCRIPT_VERSION) {
-    addCoverageToRequested(coverage, 'failures', 'DEPENDENCY_VERSION_MISMATCH')
-    return emptyResult(
-      profile || 'unknown',
-      [makeRequestDiagnostic(
-        'CHECKER.TYPESCRIPT_VERSION_UNSUPPORTED',
-        `The checker requires TypeScript ${PINNED_TYPESCRIPT_VERSION}; found ${ts.version}.`,
-        'unknown',
-        'warning',
-      )],
-      coverage,
-      'unavailable',
-      versions,
-    )
-  }
-
   if (!request || typeof request !== 'object' || Array.isArray(request)) {
     clearCoverageForInvalidRequest(coverage)
     return emptyResult(
@@ -1601,6 +1569,38 @@ function validate(request) {
   if (parts.checksProvided && parts.requestedChecks.length === 0) {
     addCoverageSkipped(coverage, null, 'MISSING_CHECK')
     return emptyResult(profile, diagnostics, coverage, 'incomplete', versions)
+  }
+
+  if (!ts) {
+    addCoverageToRequested(coverage, 'failures', 'DEPENDENCY_UNAVAILABLE')
+    return emptyResult(
+      profile || 'unknown',
+      [makeRequestDiagnostic(
+        'CHECKER.TYPESCRIPT_UNAVAILABLE',
+        'The optional TypeScript dependency is required to run the checker.',
+        'unknown',
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
+
+  if (ts.version !== PINNED_TYPESCRIPT_VERSION) {
+    addCoverageToRequested(coverage, 'failures', 'DEPENDENCY_VERSION_MISMATCH')
+    return emptyResult(
+      profile || 'unknown',
+      [makeRequestDiagnostic(
+        'CHECKER.TYPESCRIPT_VERSION_UNSUPPORTED',
+        `The checker requires TypeScript ${PINNED_TYPESCRIPT_VERSION}; found ${ts.version}.`,
+        'unknown',
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
   }
 
   const sourceBytes = byteLength(parts.source)
