@@ -454,7 +454,33 @@ function collectForm(form) {
   let nodeCount = 0
   let truncated = false
   let byteExceeded = false
+  let unsafe = false
   const visiting = new Set()
+
+  function safeDescriptors(value) {
+    let prototype
+    try {
+      prototype = Object.getPrototypeOf(value)
+    } catch (_error) {
+      return null
+    }
+    const safePrototype = Array.isArray(value)
+      ? prototype === Array.prototype
+      : prototype === Object.prototype || prototype === null
+    if (!safePrototype) return null
+    try {
+      return Object.getOwnPropertyDescriptors(value)
+    } catch (_error) {
+      return null
+    }
+  }
+
+  function dataValue(descriptors, key) {
+    const descriptor = descriptors[key]
+    return descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value')
+      ? descriptor.value
+      : undefined
+  }
 
   function primitiveBytes(value) {
     if (value === null) return 4
@@ -480,6 +506,12 @@ function collectForm(form) {
       byteExceeded = true
       return LIMITS.formBytes + 1
     }
+    const descriptors = safeDescriptors(value)
+    if (!descriptors) {
+      unsafe = true
+      visiting.delete(value)
+      return LIMITS.formBytes + 1
+    }
     visiting.add(value)
     nodeCount += 1
     if (nodeCount > LIMITS.formNodes) {
@@ -491,8 +523,14 @@ function collectForm(form) {
 
     let bytes = 1
     if (Array.isArray(value)) {
-      for (let index = 0; index < value.length; index += 1) {
-        bytes += visit(value[index], parentRepeatable, depth + 1, discoverFields) + (index ? 1 : 0)
+      const length = dataValue(descriptors, 'length')
+      for (let index = 0; index < length; index += 1) {
+        bytes += visit(
+          dataValue(descriptors, String(index)),
+          parentRepeatable,
+          depth + 1,
+          discoverFields,
+        ) + (index ? 1 : 0)
         if (bytes > LIMITS.formBytes) {
           byteExceeded = true
           visiting.delete(value)
@@ -504,26 +542,36 @@ function collectForm(form) {
     }
 
     // JSON.stringify omits undefined-valued object properties.
-    const entries = Object.entries(value).filter(([, child]) => child !== undefined)
+    const entries = Object.keys(descriptors)
+      .filter((key) => descriptors[key].enumerable)
+      .map((key) => [key, dataValue(descriptors, key)])
+      .filter(([, child]) => child !== undefined)
     if (discoverFields) {
+      const dataNameValue = dataValue(descriptors, 'data_name')
+      const dataNameAliasValue = dataValue(descriptors, 'dataName')
+      const keyValue = dataValue(descriptors, 'key')
+      const elementKeyValue = dataValue(descriptors, 'element_key')
+      const typeValue = dataValue(descriptors, 'type')
       const dataName =
-        typeof value.data_name === 'string'
-          ? value.data_name
-          : typeof value.dataName === 'string'
-            ? value.dataName
+        typeof dataNameValue === 'string'
+          ? dataNameValue
+          : typeof dataNameAliasValue === 'string'
+            ? dataNameAliasValue
             : null
       const key =
-        typeof value.key === 'string'
-          ? value.key
-          : typeof value.element_key === 'string'
-            ? value.element_key
+        typeof keyValue === 'string'
+          ? keyValue
+          : typeof elementKeyValue === 'string'
+            ? elementKeyValue
             : dataName
       if (dataName) {
-        fields.set(dataName, value)
+        fields.set(dataName, {
+          type: typeof typeValue === 'string' ? typeValue : '',
+        })
         if (parentRepeatable) parents.set(dataName, parentRepeatable)
       }
 
-      const type = normalizeFieldType(value)
+      const type = normalizedTypeName(typeof typeValue === 'string' ? typeValue : '')
       const nextParent = type === 'repeatable' ? key || parentRepeatable : parentRepeatable
       for (let index = 0; index < entries.length; index += 1) {
         const [childKey, child] = entries[index]
@@ -561,7 +609,7 @@ function collectForm(form) {
 
   const bytes = visit(form, null, 0, true)
   if (bytes > LIMITS.formBytes) byteExceeded = true
-  return { fields, parents, nodeCount, truncated, byteExceeded }
+  return { fields, parents, nodeCount, truncated, byteExceeded, unsafe }
 }
 
 function fieldDeclaration(formInfo) {
@@ -1564,8 +1612,25 @@ function validate(request) {
   }
 
   const hasForm = parts.form !== null && parts.form !== undefined
-  const formInfo = hasForm ? collectForm(parts.form) : { fields: new Map(), parents: new Map(), nodeCount: 0 }
+  const formInfo = hasForm
+    ? collectForm(parts.form)
+    : { fields: new Map(), parents: new Map(), nodeCount: 0, unsafe: false }
   const formCheck = profile === 'calculation' ? 'dependencies' : 'fields'
+  if (hasForm && formInfo.unsafe) {
+    addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
+    return emptyResult(
+      profile,
+      [makeRequestDiagnostic(
+        'CHECKER.FORM_CONTEXT_UNSAFE',
+        'The form context must contain only plain objects and arrays with data properties.',
+        'unknown',
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
   if (hasForm && formInfo.truncated && coverage.requested.includes(formCheck)) {
     addCoverageToRequested(coverage, 'failures', 'INPUT_LIMIT_EXCEEDED')
     return emptyResult(
@@ -1626,29 +1691,35 @@ function validate(request) {
   try {
     collectTsOnlyDiagnostics(parts.source, sourceFile, state)
     if (!state.artifactError && !state.failure) {
-      const program = ts.createProgram(
-        ['/source.js', '/fulcrum/api.d.ts', '/fulcrum/form.d.ts', '/fulcrum/globals.d.ts'],
-        options,
-        host,
+      const needsProgram = coverage.requested.some((check) =>
+        ['api', 'fields', 'dependencies'].includes(check),
       )
-      // Always use the Program-owned SourceFile for semantic diagnostics.
-      // Passing a separately-created SourceFile makes TypeScript 4.9's
-      // contextual callback checker dereference an unbound symbol.
-      state.sourceFile = program.getSourceFile('/source.js')
-      state.typeChecker = program.getTypeChecker()
-      const sourceSyntactic = program.getSyntacticDiagnostics(state.sourceFile)
-      if (sourceSyntactic.length && isCheckEnabled(state, 'syntax')) {
-        addDiagnostic(
-          state,
-          sourceFile,
-          'JAVASCRIPT.SYNTAX',
-          'error',
-          'The source is not valid deployable JavaScript.',
+      let program
+      if (needsProgram) {
+        program = ts.createProgram(
+          ['/source.js', '/fulcrum/api.d.ts', '/fulcrum/form.d.ts', '/fulcrum/globals.d.ts'],
+          options,
+          host,
         )
-        state.artifactError = true
+        // Always use the Program-owned SourceFile for semantic diagnostics.
+        // Passing a separately-created SourceFile makes TypeScript 4.9's
+        // contextual callback checker dereference an unbound symbol.
+        state.sourceFile = program.getSourceFile('/source.js')
+        state.typeChecker = program.getTypeChecker()
+        const sourceSyntactic = program.getSyntacticDiagnostics(state.sourceFile)
+        if (sourceSyntactic.length && isCheckEnabled(state, 'syntax')) {
+          addDiagnostic(
+            state,
+            sourceFile,
+            'JAVASCRIPT.SYNTAX',
+            'error',
+            'The source is not valid deployable JavaScript.',
+          )
+          state.artifactError = true
+        }
       }
       validateAst(state)
-      if (!state.artifactError && !state.failure && !apiMismatch && isCheckEnabled(state, 'api')) {
+      if (program && !state.artifactError && !state.failure && !apiMismatch && isCheckEnabled(state, 'api')) {
         addSemanticDiagnostics(state, program.getSemanticDiagnostics(state.sourceFile))
       }
     }

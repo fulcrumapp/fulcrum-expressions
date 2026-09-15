@@ -670,6 +670,36 @@ describe 'headless expression checker', ->
     result.outcome.should.eql('unavailable')
     result.coverage.failures.some((failure) -> failure.reason_code is 'INPUT_LIMIT_EXCEEDED').should.be.true()
 
+  it 'does not invoke accessor-backed form properties', ->
+    invoked = 0
+    accessorField = { data_name: 'status', type: 'TextField' }
+    Object.defineProperty accessorField, 'label',
+      enumerable: true
+      get: ->
+        invoked += 1
+        'secret'
+
+    result = checker.checkDataEvent({
+      source: 'VALUE("status");'
+      form: { elements: [accessorField] }
+    })
+
+    result.outcome.should.eql('valid')
+    invoked.should.eql(0)
+
+  it 'rejects non-plain form containers without traversing them', ->
+    formWithCustomPrototype = Object.create({ inherited: 'ignored' })
+    formWithCustomPrototype.elements = []
+
+    result = checker.checkDataEvent({
+      source: '1;'
+      form: formWithCustomPrototype
+      checks: ['syntax']
+    })
+
+    result.outcome.should.eql('unavailable')
+    codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
+
   it 'does not run the TypeScript probe when syntax is not requested', ->
     result = checker.checkDataEvent({
       source: 'const value: number = 1;'

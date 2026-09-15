@@ -90,7 +90,9 @@ The default bounds are 256 KiB of source, 128 KiB of form context, 20,000
 source AST nodes at depth 200, 20,000 form nodes at depth 200, and 100
 diagnostics. Form byte accounting follows JSON serialization for supported
 values: undefined object properties are omitted and undefined array entries
-count as null. These are local pure-core bounds; HTTP, authentication, worker
+count as null. Form traversal reads only own data properties; accessor-backed
+properties are ignored and non-plain object containers are rejected as
+unavailable. These are local pure-core bounds; HTTP, authentication, worker
 resource isolation, package publication, and deployment remain separate
 lifecycle gates.
 
