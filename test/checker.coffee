@@ -760,6 +760,16 @@ describe 'headless expression checker', ->
     codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
     result.coverage.failures.some((failure) -> failure.reason_code is 'CONTEXT_UNSAFE').should.be.true()
 
+  it 'rejects primitive form roots as unsafe context', ->
+    result = checker.checkDataEvent({
+      source: '$status;'
+      form: 1
+    })
+
+    result.outcome.should.eql('unavailable')
+    codes(result).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
+    result.coverage.failures.some((failure) -> failure.reason_code is 'CONTEXT_UNSAFE').should.be.true()
+
   it 'rejects Proxy-wrapped form containers without invoking traps', ->
     invoked = 0
     proxyForm = new Proxy({ elements: [] }, {

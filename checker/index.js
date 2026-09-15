@@ -8,7 +8,10 @@
  */
 
 const crypto = require('crypto')
-const isProxy = require('util').types.isProxy
+const util = require('util')
+const isProxy = util.types && typeof util.types.isProxy === 'function'
+  ? util.types.isProxy
+  : () => false
 let ts
 try {
   ts = require('typescript')
@@ -1648,7 +1651,23 @@ function validate(request) {
     addCoverageSkipped(coverage, 'profile', 'VERSION_MISMATCH')
   }
 
-  const hasForm = parts.form !== null && parts.form !== undefined
+  const formProvided = parts.form !== null && parts.form !== undefined
+  const hasForm = formProvided && typeof parts.form === 'object'
+  if (formProvided && !hasForm) {
+    addCoverageToRequested(coverage, 'failures', 'CONTEXT_UNSAFE')
+    return emptyResult(
+      profile,
+      [makeRequestDiagnostic(
+        'CHECKER.FORM_CONTEXT_UNSAFE',
+        'The form context must contain only plain objects and arrays with data properties.',
+        'unknown',
+        'warning',
+      )],
+      coverage,
+      'unavailable',
+      versions,
+    )
+  }
   const formInfo = hasForm
     ? collectForm(parts.form)
     : { fields: new Map(), parents: new Map(), nodeCount: 0, unsafe: false }

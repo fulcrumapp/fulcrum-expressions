@@ -8,9 +8,10 @@ modules, access the filesystem, or make network requests.
 The checker uses the pinned TypeScript compiler at runtime. It is declared as
 an optional dependency so runtime-only consumers can install the package with
 optional dependencies omitted; those deployments must not invoke the checker
-subpath. Repository builds use the same optional dependency through the normal
-lockfile-based install; installs that omit optional dependencies cannot build
-or invoke the checker.
+subpath. Regenerating the checked-in declaration payload requires TypeScript
+4.9.5. Runtime-only builds may omit that dependency and use the checked-in
+`checker/api.js` and `checker/lib.js` payloads, but cannot invoke the checker
+subpath until TypeScript 4.9.5 is installed.
 
 ## Public API
 
