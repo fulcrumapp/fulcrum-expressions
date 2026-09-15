@@ -7,7 +7,6 @@
  * analysis boundary.
  */
 
-const crypto = require('crypto')
 const util = require('util')
 const isProxy = util.types && typeof util.types.isProxy === 'function'
   ? util.types.isProxy
@@ -18,6 +17,7 @@ try {
 } catch (_error) {}
 const packageMetadata = require('../package.json')
 const apiDeclarations = require('./api')
+const declarationMetadata = require('./metadata')
 const standardLibrary = require('./lib')
 
 const CONTRACT_VERSION = 'v1'
@@ -25,11 +25,7 @@ const PINNED_TYPESCRIPT_VERSION = '4.9.5'
 const CHECKER_VERSION = packageMetadata.version
 const RUNTIME_VERSION = `@fulcrumapp/fulcrum-expressions@${packageMetadata.version}`
 const DECLARATION_VERSION = `ts/api.ts@${packageMetadata.version}`
-const DECLARATION_IDENTITY = `${DECLARATION_VERSION}:${crypto
-  .createHash('sha256')
-  .update(apiDeclarations)
-  .digest('hex')
-  .slice(0, 16)}`
+const DECLARATION_IDENTITY = `${DECLARATION_VERSION}:${declarationMetadata.hash}`
 
 const LIMITS = Object.freeze({
   sourceBytes: 256 * 1024,
@@ -947,7 +943,7 @@ function addFieldCheck(state, dataName, node, context) {
   }
 
   const parent = state.formInfo.parents.get(dataName)
-  if (parent && state.profile === 'calculation' && isCheckEnabled(state, 'profile')) {
+  if (parent && state.profile === 'calculation' && isCheckEnabled(state, 'scope')) {
     const scopes = repeatableScopeNames(state.repeatableScope)
     if (!scopes.includes(parent)) {
       addDiagnostic(

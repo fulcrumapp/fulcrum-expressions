@@ -10,7 +10,7 @@ const distPath = path.join(__dirname, '..', 'dist')
 const distCheckerPath = path.join(distPath, 'checker')
 
 fs.mkdirSync(distCheckerPath, { recursive: true })
-for (const fileName of ['index.js', 'api.js', 'lib.js']) {
+for (const fileName of ['index.js', 'api.js', 'lib.js', 'metadata.js']) {
   fs.copyFileSync(path.join(__dirname, fileName), path.join(distCheckerPath, fileName))
 }
 

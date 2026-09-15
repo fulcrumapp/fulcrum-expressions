@@ -8,6 +8,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
 let ts
 try {
   ts = require('typescript')
@@ -48,9 +49,19 @@ const body = source
   .replace(/[ \t]+$/gm, '')
   .replace(/;\s*$/, ';')
 
+const apiContent =
+  `'use strict'\n\n// Generated from ts/api.ts by checker/generate-api.js.\n${body}\n`
 writeIfChanged(
   outputPath,
-  `'use strict'\n\n// Generated from ts/api.ts by checker/generate-api.js.\n${body}\n`,
+  apiContent,
+)
+delete require.cache[require.resolve(outputPath)]
+const declarationPayload = require(outputPath)
+writeIfChanged(
+  path.join(__dirname, 'metadata.js'),
+  `'use strict'\n\n// Generated from ts/api.ts by checker/generate-api.js.\nmodule.exports = ${JSON.stringify({
+    hash: crypto.createHash('sha256').update(declarationPayload).digest('hex').slice(0, 16),
+  }, null, 2)}\n`,
 )
 
 const libraryDirectory = path.dirname(require.resolve('typescript'))
