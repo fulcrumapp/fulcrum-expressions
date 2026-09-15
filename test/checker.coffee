@@ -518,6 +518,63 @@ describe 'headless expression checker', ->
     apiOnly.outcome.should.eql('valid')
     codes(apiOnly).should.eql([])
 
+  it 'uses bindings to keep local dollar variables out of calculation scope checks', ->
+    ordinary = checker.checkCalculation({
+      source: 'const $local = 1; $local;'
+      form
+      checks: ['scope']
+    })
+    shorthand = checker.checkCalculation({
+      source: 'const $local = 1; ({ $local });'
+      form
+      checks: ['scope']
+    })
+
+    ordinary.outcome.should.eql('valid')
+    shorthand.outcome.should.eql('valid')
+
+  it 'keeps unresolved dollar references incomplete when dependencies are unrequested', ->
+    ordinary = checker.checkCalculation({
+      source: '$missing;'
+      form
+      checks: ['scope']
+    })
+    shorthand = checker.checkCalculation({
+      source: '({ $missing });'
+      form
+      checks: ['scope', 'api']
+    })
+
+    ordinary.outcome.should.eql('incomplete')
+    shorthand.outcome.should.eql('incomplete')
+    codes(ordinary).should.not.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+    codes(shorthand).should.not.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+    ordinary.coverage.unverified.some((entry) ->
+      entry.check is 'scope' and entry.reason_code is 'UNVERIFIED_FIELD_REFERENCE'
+    ).should.be.true()
+    shorthand.coverage.unverified.some((entry) ->
+      entry.check is 'scope' and entry.reason_code is 'UNVERIFIED_FIELD_REFERENCE'
+    ).should.be.true()
+
+  it 'enforces repeatable scope for form dollar variables and shorthand values', ->
+    ordinary = checker.checkCalculation({
+      source: '$amount;'
+      form
+      repeatable_scope: { current: 'other_repeatable' }
+      checks: ['scope']
+    })
+    shorthand = checker.checkCalculation({
+      source: '({ $amount });'
+      form
+      repeatable_scope: { current: 'other_repeatable' }
+      checks: ['scope']
+    })
+
+    ordinary.outcome.should.eql('invalid')
+    shorthand.outcome.should.eql('invalid')
+    codes(ordinary).should.containEql('CALCULATION.REPEATABLE_SCOPE_MISMATCH')
+    codes(shorthand).should.containEql('CALCULATION.REPEATABLE_SCOPE_MISMATCH')
+
   it 'counts shared form objects each time without treating them as cycles', ->
     sharedField = { data_name: 'status', type: 'TextField' }
     sharedForm = { elements: [sharedField, sharedField] }

@@ -250,6 +250,11 @@ function isDefinitelyNonFunction(node) {
   )
 }
 
+function isFormDeclaration(declaration) {
+  return declaration &&
+    normalizePath(declaration.getSourceFile().fileName) === '/fulcrum/form.d.ts'
+}
+
 function isFormIdentifier(node, state) {
   if (
     !node ||
@@ -263,10 +268,9 @@ function isFormIdentifier(node, state) {
     if (!state || !state.typeChecker) return true
     const symbol = state.typeChecker.getShorthandAssignmentValueSymbol(parent)
     if (!symbol || !symbol.declarations) return true
-    return symbol.declarations.some((declaration) =>
-      normalizePath(declaration.getSourceFile().fileName) === '/fulcrum/form.d.ts')
+    return symbol.declarations.some(isFormDeclaration)
   }
-  return !(
+  const isDeclarationName = (
     (ts.isPropertyAccessExpression(parent) && parent.name === node) ||
     (ts.isPropertyAssignment(parent) && parent.name === node) ||
     (ts.isMethodDeclaration(parent) && parent.name === node) ||
@@ -277,6 +281,14 @@ function isFormIdentifier(node, state) {
     (ts.isBindingElement(parent) && parent.name === node) ||
     (ts.isLabeledStatement(parent) && parent.label === node)
   )
+  if (isDeclarationName) return false
+  if (state && state.typeChecker) {
+    const symbol = state.typeChecker.getSymbolAtLocation(node)
+    if (symbol && symbol.declarations) {
+      return symbol.declarations.some(isFormDeclaration)
+    }
+  }
+  return true
 }
 
 function sourceRange(sourceFile, node) {
@@ -1307,20 +1319,7 @@ function validateAst(state) {
         ts.forEachChild(node, (child) => visit(child, depth + 1))
         return
       }
-      const dataName = node.text.slice(1)
-      if (state.hasForm && !state.formInfo.fields.has(dataName)) {
-        addDiagnostic(
-          state,
-          node,
-          'FORM.UNKNOWN_FIELD_REFERENCE',
-          'error',
-          'A literal form variable is not present in the supplied form.',
-          'Use a nullable form variable generated from the supplied form.',
-        )
-        state.artifactError = true
-      } else if (!state.hasForm) {
-        addCoverageSkipped(state.coverage, fieldCheck, 'CONTEXT_REQUIRED')
-      }
+      addFieldCheck(state, node.text.slice(1), node, 'literal')
     }
 
     ts.forEachChild(node, (child) => visit(child, depth + 1))
@@ -1414,6 +1413,10 @@ function addSemanticDiagnostics(state, diagnostics) {
     const formReference = isFormIdentifier(node, state)
     const fieldCheck = fieldReferenceCheck(state)
     if (formReference && !fieldCheck) continue
+    if (formReference && (diagnostic.code === 2304 || diagnostic.code === 18004)) {
+      addFieldCheck(state, node.text.slice(1), node, 'literal')
+      continue
+    }
     if (!state.hasForm && formReference) {
       addCoverageSkipped(state.coverage, fieldCheck, 'CONTEXT_REQUIRED')
       continue
@@ -1722,7 +1725,7 @@ function validate(request) {
     collectTsOnlyDiagnostics(parts.source, sourceFile, state)
     if (!state.artifactError && !state.failure) {
       const needsProgram = coverage.requested.some((check) =>
-        ['api', 'fields', 'dependencies'].includes(check),
+        ['api', 'fields', 'scope', 'dependencies'].includes(check),
       )
       let program
       if (needsProgram) {
