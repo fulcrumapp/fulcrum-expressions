@@ -494,6 +494,29 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('valid')
 
+  it 'checks shorthand values against form fields without confusing property symbols', ->
+    supplied = checker.checkDataEvent({
+      source: 'const object = { $status };'
+      form
+      checks: ['fields']
+    })
+    missing = checker.checkDataEvent({
+      source: 'const object = { $missing };'
+      form
+      checks: ['fields']
+    })
+    apiOnly = checker.checkDataEvent({
+      source: 'const object = { $missing };'
+      form
+      checks: ['api']
+    })
+
+    supplied.outcome.should.eql('valid')
+    missing.outcome.should.eql('invalid')
+    codes(missing).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+    apiOnly.outcome.should.eql('valid')
+    codes(apiOnly).should.eql([])
+
   it 'counts shared form objects each time without treating them as cycles', ->
     sharedField = { data_name: 'status', type: 'TextField' }
     sharedForm = { elements: [sharedField, sharedField] }
@@ -574,6 +597,25 @@ describe 'headless expression checker', ->
 
     result.outcome.should.eql('invalid')
     codes(result).should.containEql('CALCULATION.FORBIDDEN_API')
+
+  it 'does not make definitive forbidden-API claims for mutable aliases', ->
+    forbidden = checker.checkCalculation({
+      source: 'let mutate = SETVALUE; mutate = (name, value) => 1; mutate("status", "ignored");'
+      form
+      checks: ['api']
+    })
+    ordinary = checker.checkCalculation({
+      source: 'let mutate = SETVALUE; mutate = Number; mutate("1", "ignored");'
+      form
+      checks: ['api']
+    })
+
+    forbidden.outcome.should.eql('incomplete')
+    codes(forbidden).should.not.containEql('CALCULATION.FORBIDDEN_API')
+    forbidden.coverage.unverified.some((entry) ->
+      entry.check is 'api' and entry.reason_code is 'UNVERIFIED_DYNAMIC_CALL'
+    ).should.be.true()
+    ordinary.outcome.should.eql('valid')
 
   it 'requires and accepts a supplied repeatable scope', ->
     missing = checker.checkCalculation({ source: 'VALUE("amount");', form })

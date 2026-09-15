@@ -249,7 +249,7 @@ function isDefinitelyNonFunction(node) {
   )
 }
 
-function isFormIdentifier(node) {
+function isFormIdentifier(node, state) {
   if (
     !node ||
     !ts.isIdentifier(node) ||
@@ -258,10 +258,16 @@ function isFormIdentifier(node) {
   ) return false
   const parent = node.parent
   if (!parent) return true
+  if (ts.isShorthandPropertyAssignment(parent) && parent.name === node) {
+    if (!state || !state.typeChecker) return true
+    const symbol = state.typeChecker.getShorthandAssignmentValueSymbol(parent)
+    if (!symbol || !symbol.declarations) return true
+    return symbol.declarations.some((declaration) =>
+      normalizePath(declaration.getSourceFile().fileName) === '/fulcrum/form.d.ts')
+  }
   return !(
     (ts.isPropertyAccessExpression(parent) && parent.name === node) ||
     (ts.isPropertyAssignment(parent) && parent.name === node) ||
-    (ts.isShorthandPropertyAssignment(parent) && parent.name === node) ||
     (ts.isMethodDeclaration(parent) && parent.name === node) ||
     (ts.isPropertyDeclaration(parent) && parent.name === node) ||
     (ts.isPropertySignature(parent) && parent.name === node) ||
@@ -1076,15 +1082,69 @@ function apiDeclarationName(symbol) {
   return null
 }
 
-function forbiddenApiName(state, expression) {
-  if (!state.typeChecker || !expression) return null
-  const visited = new Set()
-  let symbol = state.typeChecker.getSymbolAtLocation(expression)
+function isConstVariableDeclaration(declaration) {
+  const list = declaration && declaration.parent
+  return Boolean(
+    list &&
+    ts.isVariableDeclarationList(list) &&
+    (list.flags & ts.NodeFlags.Const) !== 0,
+  )
+}
 
+function immutableForbiddenApiName(state, expression, visited = new Set()) {
+  if (!state.typeChecker || !expression) return null
+  let symbol = state.typeChecker.getSymbolAtLocation(expression)
   while (symbol && !visited.has(symbol)) {
     visited.add(symbol)
     const apiName = apiDeclarationName(symbol)
     if (apiName) return apiName
+    const declaration = (symbol.declarations || []).find(
+      (candidate) =>
+        ts.isVariableDeclaration(candidate) &&
+        candidate.initializer &&
+        candidate.name &&
+        ts.isIdentifier(candidate.name),
+    )
+    if (!declaration || !isConstVariableDeclaration(declaration)) return null
+    symbol = state.typeChecker.getSymbolAtLocation(declaration.initializer)
+  }
+  return null
+}
+
+function latestAliasAssignment(state, name, beforePosition) {
+  let latest = null
+  function visit(node) {
+    if (
+      ts.isBinaryExpression(node) &&
+      node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+      ts.isIdentifier(node.left) &&
+      node.left.text === name &&
+      node.getStart(state.sourceFile) < beforePosition
+    ) {
+      if (!latest || node.getStart(state.sourceFile) > latest.getStart(state.sourceFile)) {
+        latest = node
+      }
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(state.sourceFile)
+  return latest
+}
+
+function forbiddenApiResolution(state, expression, call) {
+  if (!state.typeChecker || !expression) return null
+  const visited = new Set()
+  let symbol = state.typeChecker.getSymbolAtLocation(expression)
+  let mutableAlias = false
+
+  while (symbol && !visited.has(symbol)) {
+    visited.add(symbol)
+    const apiName = apiDeclarationName(symbol)
+    if (apiName) {
+      return mutableAlias
+        ? { uncertain: true }
+        : { name: apiName }
+    }
 
     const declaration = (symbol.declarations || []).find(
       (candidate) =>
@@ -1094,6 +1154,29 @@ function forbiddenApiName(state, expression) {
         ts.isIdentifier(candidate.name),
     )
     if (!declaration) return null
+    if (!isConstVariableDeclaration(declaration)) {
+      const assignment = call && latestAliasAssignment(
+        state,
+        declaration.name.text,
+        call.getStart(state.sourceFile),
+      )
+      if (assignment) {
+        if (isFunctionLike(assignment.right)) {
+          mutableAlias = true
+        } else if (!immutableForbiddenApiName(state, assignment.right)) {
+          const assignmentSymbol = state.typeChecker.getSymbolAtLocation(assignment.right)
+          const sourceDeclaration = assignmentSymbol &&
+            (assignmentSymbol.declarations || []).find((candidate) =>
+              normalizePath(candidate.getSourceFile().fileName) === '/source.js')
+          if (!sourceDeclaration) return null
+          mutableAlias = true
+        } else {
+          mutableAlias = true
+        }
+      } else {
+        mutableAlias = true
+      }
+    }
     symbol = state.typeChecker.getSymbolAtLocation(declaration.initializer)
   }
 
@@ -1168,14 +1251,17 @@ function validateAst(state) {
             state.artifactError = true
           }
         }
-        const forbiddenName = state.profile === 'calculation'
-          ? forbiddenApiName(state, node.expression)
+        const forbiddenResolution = state.profile === 'calculation'
+          ? forbiddenApiResolution(state, node.expression, node)
           : null
         const symbol = state.typeChecker
           ? state.typeChecker.getSymbolAtLocation(node.expression)
           : null
-        const isForbidden = forbiddenName || (!symbol && CALCULATION_FORBIDDEN_APIS.has(name))
-        if (state.profile === 'calculation' && isForbidden) {
+        const isForbidden = forbiddenResolution && forbiddenResolution.name ||
+          (!symbol && CALCULATION_FORBIDDEN_APIS.has(name))
+        if (state.profile === 'calculation' && forbiddenResolution && forbiddenResolution.uncertain) {
+          addDynamicCoverage(state, 'api', 'UNVERIFIED_DYNAMIC_CALL', node)
+        } else if (state.profile === 'calculation' && isForbidden) {
           if (isCheckEnabled(state, 'api')) {
             addDiagnostic(
               state,
@@ -1196,7 +1282,7 @@ function validateAst(state) {
       }
     }
 
-    if (isFormIdentifier(node)) {
+    if (isFormIdentifier(node, state)) {
       if (!isCheckEnabled(state, 'field_references')) {
         ts.forEachChild(node, (child) => visit(child, depth + 1))
         return
@@ -1305,7 +1391,7 @@ function addSemanticDiagnostics(state, diagnostics) {
     const node = diagnostic.start === undefined
       ? state.sourceFile
       : findNodeAt(state.sourceFile, diagnostic.start)
-    const formReference = isFormIdentifier(node)
+    const formReference = isFormIdentifier(node, state)
     if (formReference && !isCheckEnabled(state, 'field_references')) continue
     if (!state.hasForm && formReference) {
       addCoverageSkipped(state.coverage, 'field_references', 'CONTEXT_REQUIRED')
