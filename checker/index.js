@@ -798,6 +798,7 @@ function semanticMessage(code) {
 function addDiagnostic(state, node, code, severity, message, fix, sourceFileOverride) {
   if (state.diagnostics.length >= LIMITS.diagnostics) {
     state.limitFailure = true
+    state.failure = true
     return
   }
   const diagnostic = makeDiagnostic(
@@ -1297,6 +1298,7 @@ function addSemanticDiagnostics(state, diagnostics) {
     if (state.limitFailure) break
     if (state.diagnostics.length >= LIMITS.diagnostics) {
       state.limitFailure = true
+      state.failure = true
       break
     }
     if (!diagnostic.file || normalizePath(diagnostic.file.fileName) !== '/source.js') continue
@@ -1704,10 +1706,10 @@ function validate(request) {
     coverage.unverified.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
     coverage.failures.some((item) => item.check === undefined || coverage.requested.includes(item.check)) ||
     coverage.requested.some((check) => !coverage.completed.includes(check))
-  const outcome = state.artifactError
-    ? 'invalid'
-    : state.failure
-      ? 'unavailable'
+  const outcome = state.failure
+    ? 'unavailable'
+    : state.artifactError
+      ? 'invalid'
       : hasCoverageGap
         ? 'incomplete'
         : 'valid'

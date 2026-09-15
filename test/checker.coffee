@@ -314,6 +314,19 @@ describe 'headless expression checker', ->
 
     (result.coverage.unverified.length <= 257).should.be.true()
 
+  it 'classifies diagnostic truncation as an unavailable operational limit', ->
+    source = ("UNDECLARED_#{index}();" for index in [0...150]).join('\n')
+    result = checker.checkDataEvent({
+      source: source
+      checks: ['api']
+    })
+
+    result.outcome.should.eql('unavailable')
+    result.coverage.failures.should.containEql({
+      check: 'api'
+      reason_code: 'INPUT_LIMIT_EXCEEDED'
+    })
+
   it 'keeps the AST budget across suppressed nested API policies', ->
     result = checker.checkDataEvent({
       source: ('require($status);\n').repeat(10000)
