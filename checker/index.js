@@ -930,8 +930,12 @@ function addFieldCheck(state, dataName, node, context) {
       node,
       'FORM.UNKNOWN_FIELD_REFERENCE',
       'error',
-      'A literal field reference is not present in the supplied form.',
-      'Use a field data name from the supplied form.',
+      context === 'variable'
+        ? 'A literal form variable is not present in the supplied form.'
+        : 'A literal field reference is not present in the supplied form.',
+      context === 'variable'
+        ? 'Use a nullable form variable generated from the supplied form.'
+        : 'Use a field data name from the supplied form.',
     )
     state.artifactError = true
     return
@@ -1319,7 +1323,7 @@ function validateAst(state) {
         ts.forEachChild(node, (child) => visit(child, depth + 1))
         return
       }
-      addFieldCheck(state, node.text.slice(1), node, 'literal')
+      addFieldCheck(state, node.text.slice(1), node, 'variable')
     }
 
     ts.forEachChild(node, (child) => visit(child, depth + 1))

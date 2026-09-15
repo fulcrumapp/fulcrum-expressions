@@ -515,6 +515,8 @@ describe 'headless expression checker', ->
     supplied.outcome.should.eql('valid')
     missing.outcome.should.eql('invalid')
     codes(missing).should.containEql('FORM.UNKNOWN_FIELD_REFERENCE')
+    missing.diagnostics[0].message.should.eql('A literal form variable is not present in the supplied form.')
+    missing.diagnostics[0].fix.should.eql('Use a nullable form variable generated from the supplied form.')
     apiOnly.outcome.should.eql('valid')
     codes(apiOnly).should.eql([])
 
