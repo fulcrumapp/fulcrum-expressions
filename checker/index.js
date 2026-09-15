@@ -505,29 +505,37 @@ function collectForm(form) {
       : undefined
   }
 
-  function primitiveBytes(value) {
+  function primitiveBytes(value, inArray) {
     if (value === null) return 4
     // JSON.stringify serializes undefined array entries as null.
-    if (value === undefined) return 4
+    if (value === undefined) {
+      if (inArray) return 4
+      unsafe = true
+      return 0
+    }
     if (typeof value === 'string') return byteLength(JSON.stringify(value))
     if (typeof value === 'boolean') return value ? 4 : 5
     if (typeof value === 'number') {
       const serialized = JSON.stringify(value)
       return byteLength(serialized === undefined ? 'null' : serialized)
     }
-    return LIMITS.formBytes + 1
+    if ((typeof value === 'function' || typeof value === 'symbol') && inArray) {
+      return 4
+    }
+    unsafe = true
+    return 0
   }
 
-  function visit(value, parentRepeatable, depth, discoverFields) {
-    if (value === null || typeof value !== 'object') return primitiveBytes(value)
+  function visit(value, parentRepeatable, depth, discoverFields, inArray = false) {
+    if (value === null || typeof value !== 'object') return primitiveBytes(value, inArray)
     if (depth > LIMITS.formDepth) {
       truncated = true
       byteExceeded = true
       return LIMITS.formBytes + 1
     }
     if (visiting.has(value)) {
-      byteExceeded = true
-      return LIMITS.formBytes + 1
+      unsafe = true
+      return 0
     }
     const descriptors = safeDescriptors(value)
     if (!descriptors) {
@@ -552,6 +560,7 @@ function collectForm(form) {
           parentRepeatable,
           depth + 1,
           discoverFields,
+          true,
         ) + (index ? 1 : 0)
         if (bytes > LIMITS.formBytes) {
           byteExceeded = true
@@ -567,7 +576,11 @@ function collectForm(form) {
     const entries = Object.keys(descriptors)
       .filter((key) => descriptors[key].enumerable)
       .map((key) => [key, dataValue(descriptors, key)])
-      .filter(([, child]) => child !== undefined)
+      .filter(([, child]) =>
+        child !== undefined &&
+        typeof child !== 'function' &&
+        typeof child !== 'symbol'
+      )
     if (discoverFields) {
       const dataNameValue = dataValue(descriptors, 'data_name')
       const dataNameAliasValue = dataValue(descriptors, 'dataName')
@@ -1962,6 +1975,7 @@ module.exports = Object.freeze({
   RUNTIME_VERSION,
   DECLARATION_VERSION,
   LIMITS,
+  CALCULATION_FORBIDDEN_API_NAMES: Object.freeze(Array.from(CALCULATION_FORBIDDEN_APIS)),
   CALCULATION_FORBIDDEN_APIS: Object.freeze(Array.from(CALCULATION_FORBIDDEN_APIS)),
   validate,
   checkDataEvent,

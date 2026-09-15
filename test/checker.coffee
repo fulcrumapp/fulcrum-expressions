@@ -1,4 +1,5 @@
 checker = require '../checker'
+util = require 'util'
 
 form = {
   elements: [
@@ -760,7 +761,40 @@ describe 'headless expression checker', ->
     })
 
     result.outcome.should.eql('valid')
-    invoked.should.eql(0)
+    if util.types? and typeof util.types.isProxy is 'function'
+      invoked.should.eql(0)
+
+  it 'follows JSON byte accounting for omitted object values and unsafe values', ->
+    serializableForm = {
+      elements: []
+      omittedFunction: ->
+      omittedSymbol: Symbol('omitted')
+    }
+    serializable = checker.checkDataEvent({
+      source: '1;'
+      form: serializableForm
+      checks: ['syntax']
+    })
+    serializable.outcome.should.eql('valid')
+
+    bigintForm = { elements: [], unsupported: BigInt(1) }
+    bigintResult = checker.checkDataEvent({
+      source: '1;'
+      form: bigintForm
+      checks: ['syntax']
+    })
+    bigintResult.outcome.should.eql('unavailable')
+    codes(bigintResult).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
+
+    cyclicForm = { elements: [] }
+    cyclicForm.self = cyclicForm
+    cyclicResult = checker.checkDataEvent({
+      source: '1;'
+      form: cyclicForm
+      checks: ['syntax']
+    })
+    cyclicResult.outcome.should.eql('unavailable')
+    codes(cyclicResult).should.containEql('CHECKER.FORM_CONTEXT_UNSAFE')
 
   it 'rejects non-plain form containers without traversing them', ->
     formWithCustomPrototype = Object.create({ inherited: 'ignored' })
