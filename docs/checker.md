@@ -8,9 +8,9 @@ modules, access the filesystem, or make network requests.
 The checker uses the pinned TypeScript compiler at runtime. It is declared as
 an optional dependency so runtime-only consumers can install the package with
 optional dependencies omitted; those deployments must not invoke the checker
-subpath. It is also listed in `devDependencies` so repository builds and
-lockfile-based development installs remain deterministic even when a package
-manager is configured to omit optional dependencies.
+subpath. Repository builds use the same optional dependency through the normal
+lockfile-based install; installs that omit optional dependencies cannot build
+or invoke the checker.
 
 ## Public API
 

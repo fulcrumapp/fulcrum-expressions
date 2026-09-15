@@ -329,7 +329,7 @@ describe 'headless expression checker', ->
 
   it 'keeps the AST budget across suppressed nested API policies', ->
     result = checker.checkDataEvent({
-      source: ('require($status);\n').repeat(10000)
+      source: ('require($status);\n').repeat(Math.ceil(checker.LIMITS.sourceAstNodes / 3))
       form
       checks: ['fields']
     })
