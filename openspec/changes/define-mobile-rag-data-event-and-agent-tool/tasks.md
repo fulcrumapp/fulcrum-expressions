@@ -73,7 +73,7 @@
 
 - [ ] 4.1 In [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290),
   register the separate Android agent tool named `search_form_knowledge`;
-  verify it accepts the same closed v1 query/limit/min-score/timeout input and
+  verify it accepts the same closed v1 query/limit/min_score/timeout input and
   returns the same closed retrieval/citation result without registering a Data
   Event surface, and validates options/query before agent policy or bundle
   availability.
