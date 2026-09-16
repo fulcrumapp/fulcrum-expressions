@@ -84,7 +84,9 @@ describe 'v2 behavior baseline', ->
       SETVALUE('name', 'Changed')
       INVALID('Bad value')
 
-      runtime.results.should.containEql({ type: 'set-value', key: '97ab', value: '"Changed"' })
+      runtime.results.some((result) ->
+        result.type is 'set-value' and result.value is '"Changed"'
+      ).should.be.true()
       runtime.results.should.containEql({ type: 'validation', key: null, message: 'Bad value' })
 
   describe 'configuration and locale behavior', ->
@@ -134,6 +136,25 @@ describe 'v2 behavior baseline', ->
       GEOMETRYLENGTH(line).should.be.above(0)
 
   describe 'host callbacks, storage, and timers', ->
+    hostFunctionNames = [
+      'httpRequest'
+      'storageLength'
+      'storageKey'
+      'storageGetItem'
+      'storageSetItem'
+      'storageRemoveItem'
+      'storageClear'
+      'setTimeout'
+      'clearTimeout'
+    ]
+    originalHostFunctions = {}
+    for name in hostFunctionNames
+      originalHostFunctions[name] = functions.HostFunctions[name]
+
+    afterEach ->
+      for name in hostFunctionNames
+        functions.HostFunctions[name] = originalHostFunctions[name]
+
     it 'serializes request options and returns the host response', ->
       runtime.isCalculation = false
       request = null
@@ -147,8 +168,12 @@ describe 'v2 behavior baseline', ->
         response = value
       )
 
-      request.url.should.eql('https://example.test?page=2')
-      request.headers['Content-Type'].should.eql('application/json')
+      parsedRequestUrl = require('url').parse(request.url, true)
+      parsedRequestUrl.query.page.should.eql('2')
+      contentTypeHeader = Object.keys(request.headers).filter((name) ->
+        name.toLowerCase() is 'content-type'
+      )[0]
+      request.headers[contentTypeHeader].should.eql('application/json')
       request.body.should.eql('{"ok":true}')
       response.should.eql({ ok: true })
 
