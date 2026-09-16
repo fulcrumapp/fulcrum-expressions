@@ -8,11 +8,13 @@ active-form local RAG retrieval from a validated offline bundle.
 ### Requirement: RAG is a closed, versioned v1 callback interface
 
 The system SHALL expose the final public Data Event function
-`RAG(options, callback)` in v1. RAG SHALL be asynchronous and callback-based,
-consistent with the existing `INFERENCE(options, callback)` host-function
-pattern. The v1 contract is closed: a producer MUST NOT add a public input,
-result, result-item, citation, or stable error-code field without publishing a
-new contract version.
+`RAG(options, callback)` in v1. RAG SHALL be callback-based; for invocations
+with a callable callback, it SHALL complete asynchronously, consistent with
+the existing `INFERENCE(options, callback)` host-function pattern. A missing
+or non-callable callback is the sole synchronous validation failure and SHALL
+throw `rag_invalid_options` before retrieval. The v1 contract is closed: a
+producer MUST NOT add a public input, result, result-item, citation, or stable
+error-code field without publishing a new contract version.
 
 `options` SHALL be an object with exactly these properties:
 
@@ -44,6 +46,11 @@ validate `query` before it evaluates host support, active-form availability,
 or bundle availability. The first failing category is terminal. Therefore an
 invalid option or query SHALL not be masked by web execution, a missing active
 form, or an unusable bundle.
+
+Options-object shape means only that `options` is a non-null object. It does
+not require `query` to be present or valid: `query` presence, string type, and
+trimmed length are always evaluated in the `rag_invalid_query` phase after
+unknown-property and optional-field validation pass.
 
 #### Scenario: RAG uses default option values
 

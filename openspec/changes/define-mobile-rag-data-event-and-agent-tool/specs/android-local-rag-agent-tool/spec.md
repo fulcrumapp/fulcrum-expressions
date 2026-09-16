@@ -38,6 +38,11 @@ availability. The first failing category is terminal. Therefore an invalid
 option or query SHALL not be masked by an unavailable host, a missing active
 form, an unusable bundle, or a denied agent policy.
 
+Options-object shape means only that the supplied input is a non-null object.
+It does not require `query` to be present or valid: `query` presence, string
+type, and trimmed length are always evaluated in the `rag_invalid_query` phase
+after unknown-property and optional-field validation pass.
+
 The tool's successful output SHALL be the same closed
 `RagRetrievalResultV1` schema used by RAG:
 
