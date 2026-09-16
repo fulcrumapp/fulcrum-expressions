@@ -1,79 +1,108 @@
-## 1. Contract and dependency gates
+## 1. Foundation and contract traceability
 
-- [ ] 1.1 Confirm the Part 1 Synapse output provides signed, validated,
-  per-form offline bundles and its isolation amendment prevents alternate-form
-  lookup; verify valid, invalid, and absent bundle fixtures exercise that
-  boundary without remote fallback.
-- [ ] 1.2 Complete FLCRM-22079 and publish the ratified versioned retrieval
-  profile, including final public name, closed schemas, bounds, error mapping,
-  cancellation, timeout, privacy/redaction, and fixture criteria; verify the
-  profile has no unresolved release-gating inputs from `design.md`.
-- [ ] 1.3 Align the future implementation PRs with the existing FLCRM-22082
-  children FLCRM-22289, FLCRM-22292, FLCRM-22288, FLCRM-22293, FLCRM-22294,
-  FLCRM-22290, and FLCRM-22291; verify each implementation scope references
-  the ratified profile and this change without creating a duplicate runtime
-  task in this documentation PR.
+- [ ] 1.1 Verify the signed, validated, per-form offline bundle produced by
+  the [Synapse foundation PR #1](https://github.com/fulcrumapp/synapse/pull/1)
+  and its form-isolation amendment supply the active-form-only bundle contract;
+  prove absent, invalid, and unusable bundles cannot trigger a cross-form,
+  all-bundles, or remote fallback.
+- [ ] 1.2 Treat the ratified
+  [FLCRM-22079](https://fulcrumapp.atlassian.net/browse/FLCRM-22079) v1
+  schema, defaults, bounds, errors, lifecycle, and fixture behavior in this
+  OpenSpec as the source contract for every
+  [FLCRM-22082](https://fulcrumapp.atlassian.net/browse/FLCRM-22082)
+  implementation child; verify no implementation introduces unlisted v1
+  fields, error codes, or fallback behavior.
 
-## 2. Shared local retrieval core
+## 2. KMP local retrieval core and fixtures
 
-- [ ] 2.1 Implement the KMP local retrieval core in FLCRM-22288 to verify and
-  search only the active form's local bundle; verify core tests reject
-  alternate-form, aggregate, fallback, invalid-bundle, and remote-retrieval
-  paths.
-- [ ] 2.2 Implement the ratified bounded ranking, passage, citation/source,
-  count, and bundle/version-correlation output in FLCRM-22288; verify the
-  shared golden fixtures produce deterministic expected retrieval data.
-- [ ] 2.3 Apply the ratified privacy, redaction, cancellation, timeout, and
-  exactly-once terminal rules in FLCRM-22288; verify fixtures cover redacted
-  data, bound enforcement, cancellation, timeout, and late-result
-  suppression.
+- [ ] 2.1 In [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288),
+  define the shared closed `RagRetrievalOptionsV1`,
+  `RagRetrievalResultV1`, citation, and error-code models; verify validation
+  accepts only `query`, `limit`, `min_score`, and `timeout_ms` with the
+  documented defaults and inclusive ranges, and resolves invalid options before
+  invalid queries before availability/policy preflight.
+- [ ] 2.2 In [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288),
+  implement active-form capture and signed/validated local-bundle retrieval;
+  verify no path accepts `form_id`/attachment/document/bundle selectors,
+  enumerates all bundles, aggregates forms, falls back, or makes a Synapse
+  request.
+- [ ] 2.3 In [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288),
+  implement score normalization, inclusive `min_score` filtering before
+  `limit`, descending-score ranking, and `chunk_id` tie ordering; verify raw
+  engine scores never enter public output and empty matches return the v1
+  empty-success result.
+- [ ] 2.4 In [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288),
+  enforce v1 passage/citation bounds and output sanitization; verify
+  over-bound or unsafe candidates are omitted, `result_count` equals delivered
+  results, and output exposes no URL, credential, authentication material,
+  user token, or cross-form metadata.
+- [ ] 2.5 In [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288),
+  create versioned non-sensitive golden fixtures for valid results, defaults,
+  validation failures, unavailable bundles, ordering/ties, empty success,
+  bounds/redaction, protected diagnostics, timeout, cancellation, and
+  late-result suppression; verify mixed invalid-input/unavailable/policy cases
+  use deterministic precedence and fixture expectations are reusable by all
+  host adapters.
 
-## 3. Mobile Data Event adapters
+## 3. Data Event language and native hosts
 
-- [ ] 3.1 Add the ratified RAG Data Event language wrapper and source
-  documentation in `fulcrum-expressions` through FLCRM-22289, using the
-  existing asynchronous host-function pattern; verify expression tests reject
-  unsupported input and invoke the callback exactly once for every terminal
-  outcome.
-- [ ] 3.2 Implement the Android native ExpressionEngine adapter in
-  FLCRM-22293 to call the shared KMP core for the captured active form; verify
-  it passes the shared Data Event golden fixtures without cross-form access.
-- [ ] 3.3 Implement the iOS native ExpressionEngine adapter in FLCRM-22294 to
-  call the shared KMP core for the captured active form; verify it passes the
-  shared Data Event golden fixtures without cross-form access.
-- [ ] 3.4 Add the web-host RAG terminal behavior through FLCRM-22289; verify
-  it returns the stable `rag_unavailable` error and has no Synapse client or
-  request path.
-- [ ] 3.5 Add any required `fulcrum` components TypeScript/Monaco declarations
-  in FLCRM-22292 from the ratified public profile; verify declarations match
-  the published schema and do not define an independent contract.
+- [ ] 3.1 In [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289),
+  add final `RAG(options, callback)` language/source documentation using the
+  existing `INFERENCE`-style asynchronous host boundary; verify callable
+  callbacks receive exactly one `callback(null, result)` or
+  `callback(error, null)` terminal outcome, a missing/non-callable callback
+  synchronously throws `rag_invalid_options`, and invalid options/query take
+  precedence over unavailable retrieval.
+- [ ] 3.2 In [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289),
+  add web RAG behavior that returns `rag_unavailable`; verify it has no local
+  bundle enumeration and no Synapse client/request path.
+- [ ] 3.3 In [FLCRM-22292](https://fulcrumapp.atlassian.net/browse/FLCRM-22292),
+  add editor TypeScript/Monaco declarations for the closed RAG v1 schema;
+  verify declarations expose no form, attachment, document, bundle, raw-score,
+  or extra result fields.
+- [ ] 3.4 In [FLCRM-22293](https://fulcrumapp.atlassian.net/browse/FLCRM-22293),
+  add the Android native ExpressionEngine RAG adapter over the shared KMP core;
+  verify it captures the active form, maps every v1 terminal code, cancels on
+  record/editor unload, and passes Android Data Event golden fixtures.
+- [ ] 3.5 In [FLCRM-22294](https://fulcrumapp.atlassian.net/browse/FLCRM-22294),
+  add the iOS native ExpressionEngine RAG adapter over the shared KMP core;
+  verify it captures the active form, maps every v1 terminal code, cancels on
+  record/editor unload, and passes iOS Data Event golden fixtures.
 
 ## 4. Android conversational-agent tool
 
-- [ ] 4.1 Implement a distinct local RAG AgentToolRegistration in Android
-  through FLCRM-22290 that invokes the KMP core directly; verify agent
-  retrieval executes no Data Event JavaScript and does not expose the public
-  RAG callback API.
-- [ ] 4.2 Implement the agent tool's ratified allowlist, authorization,
-  input/output validation, cancellation, timeout, and error lifecycle in
-  FLCRM-22290; verify denied, cancelled, timed-out, and invalid requests
-  produce no retrieval payload afterward.
-- [ ] 4.3 Validate agent-tool output against the compatible shared retrieval
-  profile in FLCRM-22290; verify its golden fixtures cover citations,
-  active-form isolation, privacy/redaction, bounds, and no query-time Synapse
-  call.
+- [ ] 4.1 In [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290),
+  register the separate Android agent tool named `search_form_knowledge`;
+  verify it accepts the same closed v1 query/limit/min-score/timeout input and
+  returns the same closed retrieval/citation result without registering a Data
+  Event surface, and validates options/query before agent policy or bundle
+  availability.
+- [ ] 4.2 In [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290),
+  enforce the tool's distinct AgentToolRegistration allowlist/policy before
+  core invocation after valid input; verify denied agents receive
+  `rag_unavailable`, no KMP retrieval begins, no Data Event JavaScript is
+  started, and invalid input is not masked by policy denial.
+- [ ] 4.3 In [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290),
+  route allowed agent calls directly to the shared KMP core; verify
+  active-form-only retrieval, the same score/result semantics, timeout,
+  record/editor/agent-unload cancellation after preflight acceptance, no
+  partial/duplicate result, no LLM/answer generation, no document egress, and
+  no query-time Synapse access.
 
-## 5. Cross-surface conformance and release
+## 5. Cross-surface conformance and rollout
 
-- [ ] 5.1 Run the versioned non-sensitive golden fixture suite through
-  FLCRM-22291 across KMP, iOS, Android Data Event, web-unavailable behavior,
-  and the Android agent tool; verify equivalent local retrieval/citation
-  outcomes where applicable and the distinct surface lifecycle where required.
-- [ ] 5.2 Review the final implementation boundaries through FLCRM-22291
-  before release; verify no surface generates answers, invokes an LLM,
-  transmits document content, calls Synapse at query time, or introduces
-  alternate-form, cross-form, aggregation, or fallback retrieval.
-- [ ] 5.3 Define per-surface rollout and rollback behavior through
-  FLCRM-22291 that disables an unavailable adapter or tool rather than
-  changing form isolation or adding remote fallback; verify rollback preserves
-  the stable web `rag_unavailable` behavior.
+- [ ] 5.1 In [FLCRM-22291](https://fulcrumapp.atlassian.net/browse/FLCRM-22291),
+  run the shared golden fixture corpus across KMP, Android Data Event, iOS Data
+  Event, web-unavailable behavior, and `search_form_knowledge`; verify
+  equivalent retrieval/citation outputs where applicable and each surface's
+  distinct terminal lifecycle, including validation-before-availability/policy
+  precedence and timeout/cancellation races.
+- [ ] 5.2 In [FLCRM-22291](https://fulcrumapp.atlassian.net/browse/FLCRM-22291),
+  add conformance assertions that reject extra v1 fields/codes, raw engine
+  score, prohibited diagnostics/output metadata, cross-form/all-bundles/
+  aggregate/fallback paths, Data Event JavaScript from the agent tool, answer
+  generation, LLM use, document transmission, and query-time Synapse calls.
+- [ ] 5.3 In [FLCRM-22291](https://fulcrumapp.atlassian.net/browse/FLCRM-22291),
+  define per-surface rollout/rollback evidence; verify a disabled adapter or
+  agent registration yields its specified unavailable behavior rather than
+  widening access or introducing remote fallback.

@@ -1,207 +1,276 @@
 ## Context
 
-See `proposal.md` for motivation and the two capability specifications for
-observable behavior. The existing `INFERENCE(options, callback)` Data Event
-establishes the relevant language pattern: expression code validates input,
-uses an asynchronous native host-function bridge, and completes through a
-callback. Data Events are Fulcrum's user-authored JavaScript subset. The
-existing native inference adapters include Android ExpressionEngine
-`$$inference` and iOS `ExpressionEngineInvocation`; future RAG adapters follow
-that separation while retaining their internal names as implementation-owned.
-This change defines the Phase 2 RAG boundary only; it does not add that
-function to `functions.coffee`, `runtime.coffee`, TypeScript declarations, or
-generated documentation.
+The [FLCRM-22082 epic](https://fulcrumapp.atlassian.net/browse/FLCRM-22082)
+defines two Phase 2 consumers over one local retrieval core:
 
-Part 1 in https://github.com/fulcrumapp/synapse/pull/1 produces signed,
-validated, per-form offline RAG bundles. Its separately tracked amendment
-makes form isolation explicit. Phase 2 consumes those local artifacts only.
-FLCRM-22079 is the contract-definition spike that must ratify the public
-details before implementation begins.
+1. A builder-authored Data Event language function.
+2. A separate Android conversational-agent tool.
+
+The [FLCRM-22079 spike](https://fulcrumapp.atlassian.net/browse/FLCRM-22079)
+has ratified their v1 contract. Part 1's
+[Synapse foundation contract](https://github.com/fulcrumapp/synapse/pull/1)
+provides signed, validated, per-form offline bundles; its separately tracked
+amendment makes form isolation explicit.
+
+`INFERENCE(options, callback)` is the existing relevant Data Event pattern:
+expression code invokes an asynchronous native host function and receives a
+callback result. Data Events are Fulcrum's user-authored JavaScript subset.
+Android's existing inference bridge uses ExpressionEngine `$$inference`, and
+iOS uses `ExpressionEngineInvocation`; future RAG adapters follow that
+asynchronous boundary without making the bridge implementation itself public.
+
+This change is documentation only. It does not add RAG to CoffeeScript,
+TypeScript declarations, generated help, native code, KMP code, CI,
+dependencies, or configuration outside `openspec/`.
 
 ## Goals / Non-Goals
 
 **Goals:**
 
-- Establish independent public Data Event and Android agent-tool boundaries
-  with compatible retrieval and citation semantics.
-- Require both consumers to use one KMP local retrieval core and the active
-  form's validated bundle.
-- Preserve offline and privacy boundaries with no query-time Synapse call.
-- Define a ratification and shared-fixture gate that prevents host-specific
-  contract drift.
+- Make the ratified v1 request, result, error, isolation, and lifecycle rules
+  precise enough for independent implementation teams to conform.
+- Preserve one shared KMP local retrieval behavior while keeping Data Event and
+  Android agent authorization/invocation surfaces separate.
+- Define bounded, privacy-preserving retrieval outputs and repeatable
+  cross-surface fixture expectations.
 
 **Non-Goals:**
 
-- Implementing a runtime function, CoffeeScript bridge, TypeScript/Monaco
-  declaration, generated help, native code, KMP code, CI, dependency, or
-  configuration change in this repository.
-- Defining numeric limits, final public field names, final result shape, or
-  additional stable error codes beyond web `rag_unavailable`.
-- Generating answers, invoking an LLM, allowing a remote retrieval API, or
-  transmitting document content during a retrieval request.
-- Adding a generic Data Event telemetry transport.
-- Reusing a Data Event as an Android agent tool, or permitting cross-form
-  retrieval, aggregation, or fallback.
+- Adding answer generation, LLM invocation, generic Data Event telemetry, a
+  remote Synapse retrieval API, or document-content transmission at query
+  time.
+- Allowing caller-selected forms, attachments, documents, bundles, all-local
+  bundle searches, cross-form lookup, aggregation, or fallback.
+- Adding result fields beyond the closed v1 result/citation schemas or
+  replacing the agent tool with Data Event JavaScript.
 
 ## Decisions
 
-### Separate the two consumer contracts
+### Publish two versioned v1 surfaces over one retrieval profile
 
-`RAG(options, callback)` is the provisional public Data Event surface. It
-uses the existing asynchronous callback model, but only native iOS and Android
-hosts will eventually implement it. Android conversational agents instead use
-a local RAG AgentToolRegistration with its own authorization, allowlist,
-input/output lifecycle, and policy checks. The agent tool never runs Data
-Event JavaScript.
+`RAG(options, callback)` is the final public mobile Data Event function.
+`search_form_knowledge` is the final Android conversational-agent tool name.
+Both are closed v1 compatibility surfaces. Their shared retrieval request and
+success-result schemas are fixed as follows:
 
-This separation keeps user-authored expressions, native host behavior, and
-agent authorization independently evolvable. The alternative of making an
-agent invoke RAG through an expression engine would couple agent policy to
-Data Event validation and callbacks; it is rejected. The alternative of
-separate retrieval engines is rejected because it would allow ranking,
-isolation, and redaction behavior to diverge.
+```text
+RagRetrievalOptionsV1 = {
+  query: string,
+  limit?: integer,
+  min_score?: number,
+  timeout_ms?: integer
+}
 
-### Share one local KMP retrieval path
+RagRetrievalResultV1 = {
+  bundle_version: string,
+  result_count: integer,
+  results: Array<{
+    rank: integer,
+    score: number,
+    text: string,
+    citation: {
+      attachment_id: string,
+      filename: string,
+      page_number: integer,
+      chunk_id: string,
+      section_heading?: string
+    }
+  }>
+}
+```
 
-The KMP core is the sole retrieval implementation for both mobile Data Event
-hosts and the Android agent tool. At request acceptance, each caller binds
-the operation to the current active form and passes the request to the core.
-The core retrieves from only the corresponding local signed and validated
-bundle, then returns bounded retrieval/citation data to the calling adapter.
+The schemas are closed: no unlisted input, result, result-item, or citation
+property is valid in v1. `bundle_version` correlates results to the local
+bundle; it is not a contract-version field. Contract versioning is carried by
+the named v1 surface. A behavior change or additional public field requires a
+new contract version rather than a silent v1 extension.
 
-The system flow is:
+The two surfaces use the same values and defaults:
 
-1. A Data Event adapter or authorized Android agent tool accepts a local
-   retrieval request.
-2. The adapter captures the current active form and validates its
-   surface-specific request and policy.
-3. The shared KMP core verifies and searches only that form's local bundle.
-4. The adapter applies the shared ratified privacy, redaction, and bound
-   rules before returning its surface-specific terminal outcome.
+| Field | Rule |
+| --- | --- |
+| `query` | Required literal plain-text string; 1 through 1,000 Unicode scalar values after trimming; no query DSL, form selector, document selector, or source selector |
+| `limit` | Optional integer; default `5`; inclusive range `1..20` |
+| `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
+| `timeout_ms` | Optional integer in milliseconds; default `2,000`; inclusive range `2,000..10,000` |
+| `bundle_version` | Required opaque local-bundle identifier; 1 through 128 Unicode scalar values |
+| `result_count` | Integer equal to `results.length`; inclusive range `0..effective limit` |
+| `rank` | One-based contiguous integer from `1` through `result_count` |
+| `score` | Finite normalized value in `0..1`; the only score visible to consumers |
+| `text` | Non-empty redacted passage text; at most 2,000 Unicode scalar values |
+| `attachment_id` | Non-empty opaque identifier; at most 128 Unicode scalar values |
+| `filename` | Non-empty redacted display filename; at most 255 Unicode scalar values |
+| `page_number` | Integer in the inclusive range `1..100000` |
+| `chunk_id` | Non-empty opaque identifier; at most 128 Unicode scalar values |
+| `section_heading` | Optional; when present, non-empty redacted plain text of at most 500 Unicode scalar values |
 
-Neither path accepts a caller-provided alternative form, performs an
-aggregate search, reads a fallback bundle, or contacts Synapse. A remote
-Synapse retrieval API is explicitly out of scope.
+`null`, coercion, non-finite numbers, out-of-range values, and undeclared
+properties are not accepted as valid substitutes for the listed types.
 
-### Keep host adapters thin and aligned with existing async behavior
+### Validate before availability and use explicit callback terminal semantics
 
-Future `fulcrum-expressions` work owns the language wrapper and source
-documentation for the provisional RAG function. Android and iOS own their
-native ExpressionEngine adapters, following the existing inference-style
-asynchronous host bridge while retaining platform-specific bridge symbols and
-invocation details as implementation-owned internals. Web owns a terminal
-`rag_unavailable` behavior that makes no Synapse interaction.
+RAG requires an options object and a callable callback. A missing or
+non-callable callback SHALL synchronously throw an Error-compatible
+`rag_invalid_options` error before retrieval because no valid callback delivery
+channel exists. For an invocation with a callable callback, the callback
+always completes asynchronously and exactly once:
 
-`fulcrum` components may add editor TypeScript/Monaco declarations in its
-own implementation work. Those declarations must consume the ratified public
-contract rather than define a parallel API.
+- Success calls `callback(null, RagRetrievalResultV1)`.
+- Failure calls `callback(error, null)`, where `error.code` is one of the
+  closed v1 codes below.
 
-### Define a ratified shared retrieval profile before implementation
+For a callable callback, v1 evaluates terminal categories in this order:
 
-FLCRM-22079 must publish one versioned profile consumed by the KMP core,
-mobile Data Event adapters, Android agent tool, and future editor/docs work.
-That profile is the source of truth for:
+1. Options-object and optional-field validation, including unknown properties,
+   returns `rag_invalid_options`.
+2. Query validation returns `rag_invalid_query`.
+3. Host support and active-form bundle preflight returns `rag_unavailable`.
+4. After a request is accepted for KMP retrieval, success, `rag_timeout`, and
+   `rag_cancelled` race; the first terminal transition wins.
 
-- final public function naming and version compatibility;
-- closed options, result, citation/source, bundle-correlation, and error
-  schemas;
-- maximum query, result-count, passage, metadata, and execution bounds;
-- availability conditions and error mapping, including the fixed web
-  `rag_unavailable` behavior;
-- cancellation trigger, terminal callback/tool outcome, timeout behavior,
-  and late-result handling;
-- privacy/redaction rules for passage text and source metadata; and
-- versioned golden fixtures, ranking expectations, and parity criteria.
+Therefore an invalid options object is not hidden by web execution, an absent
+bundle, or an agent policy decision, and an invalid query is not hidden by
+availability. Preflight completes before the timeout clock begins and does not
+perform a retrieval, fallback, or remote call.
 
-This OpenSpec change intentionally records the ratification gate rather than
-fabricating values. No public implementation may substitute local defaults
-for an unratified profile value.
+The exact stable error-code set is:
 
-### Use shared non-sensitive golden fixtures
+| Code | Required use |
+| --- | --- |
+| `rag_invalid_options` | Options object is missing or not an object; an unknown option is supplied; an optional field has an invalid type, null, non-finite value, or out-of-range value; or the callback is missing/non-callable |
+| `rag_invalid_query` | `query` is missing, not a string, empty after trimming, or exceeds 1,000 Unicode scalar values after trimming |
+| `rag_unavailable` | Execution is web or another unsupported host; no active form is available; the active form has no local signed and validated bundle; its bundle cannot safely be used; or local retrieval is denied or unavailable |
+| `rag_timeout` | The accepted invocation has not reached a terminal result by its effective `timeout_ms` |
+| `rag_cancelled` | The associated record or editor unloads before a terminal result |
 
-The shared retrieval profile includes a non-sensitive fixture corpus with
-expected passages, ordering, citations, counts, bundle/version correlation,
-redactions, bounds, and terminal errors. KMP validates the core behavior;
-iOS, Android Data Event, web-unavailable behavior, and the Android agent
-tool validate their adapters against the relevant shared expectations. Agent
-fixtures additionally verify policy denial and that no Data Event JavaScript
-is executed.
+No other public v1 error code is emitted. Error objects and logs contain the
+code and non-sensitive diagnostics only; they never include query text,
+passage text, filenames, citations, document content, source URLs,
+credentials, authentication material, or user tokens.
 
-This choice provides a common contract without requiring the two consumer
-surfaces to share an API or authorization model.
+### Bind every retrieval request to the active form
 
-### Preserve explicit ownership boundaries
+Once a request passes validation, its host adapter captures the current active
+form. The KMP core only opens that form's local signed and validated bundle.
+No v1 input field exists for `form_id`, `attachment_id`, `document_id`, a
+bundle version, or any equivalent selector. Such a field is an unknown option
+and is rejected as `rag_invalid_options`.
 
-| Owner | Future responsibility | Existing tracker |
-| --- | --- | --- |
-| `fulcrum-expressions` | Data Event language function and source documentation | FLCRM-22289 |
-| `fulcrum` components | Editor TypeScript/Monaco types, when applicable | FLCRM-22292 |
-| Android | Native ExpressionEngine adapter | FLCRM-22293 |
-| iOS | Native ExpressionEngine invocation adapter | FLCRM-22294 |
-| KMP | Shared local retrieval core and contract-fixture behavior | FLCRM-22288 |
-| Android agent runtime | Separate local RAG agent tool | FLCRM-22290 |
-| Cross-surface owners | Data Event and agent-tool conformance | FLCRM-22291 |
-| Synapse / Part 1 | Signed, validated, per-form offline bundle production | Part 1 dependency |
+The core never enumerates all downloaded bundles, searches another form,
+aggregates multiple forms, or falls back to another bundle or remote service.
+Any missing, invalid, or unusable active-form bundle resolves as
+`rag_unavailable`. Web always resolves as `rag_unavailable` and never
+constructs a Synapse request.
 
-Implementation is separately tracked by Epic FLCRM-22082 children
-FLCRM-22289, FLCRM-22292, FLCRM-22288, FLCRM-22293, FLCRM-22294,
-FLCRM-22290, and FLCRM-22291. This documentation change neither reassigns
-those items nor authorizes implementation in this repository.
+### Normalize, filter, rank, and bound results in the shared KMP core
+
+The KMP core is the only retrieval implementation. It selects candidates from
+the captured active form's local bundle, normalizes each internal engine score
+to the v1 `score` range, applies privacy/output eligibility, then applies
+`min_score` before `limit`. The remaining results sort by normalized `score`
+descending. Equal scores sort by `citation.chunk_id` in ascending Unicode
+code-point order so fixtures are deterministic.
+
+The raw engine score is internal and is never exposed in output, errors,
+logs, or an alternate result property. An empty matching set is a successful
+result with `result_count: 0` and `results: []`.
+
+Before delivery, the core enforces the table bounds. It redacts prohibited
+credential, authentication, user-token, source-URL, and cross-form metadata
+from text fields. If a candidate cannot retain every required result and
+citation field after sanitization, the core omits that candidate; the returned
+count reflects only delivered candidates. This is not a fallback or an error
+when no candidates remain.
+
+### Keep local retrieval distinct from answer generation and remote access
+
+The shared core and both adapters return retrieval passages and citations only.
+They do not generate an answer, invoke an LLM, send document content, or make
+a query-time Synapse call. This restriction applies equally to successful,
+empty, error, timeout, and cancellation paths.
+
+### Use independent adapters for Data Events and conversational agents
+
+Native iOS and Android ExpressionEngine adapters validate `RAG` input,
+capture the active form, call the KMP core, and translate its terminal state
+to the callback contract. Web implements only the terminal
+`rag_unavailable` callback behavior.
+
+The Android conversational-agent runtime registers
+`search_form_knowledge` independently. It performs the same options and query
+validation precedence before it evaluates its own AgentToolRegistration
+allowlist and policy. A caller denied by that policy receives
+`rag_unavailable`, which avoids disclosing local tool eligibility; the tool
+does not call the KMP core for that request. The tool uses the same
+request/result/error values and timeout range, but it returns through the
+agent runtime lifecycle rather than a Data Event callback. It never starts,
+evaluates, or depends on Data Event JavaScript.
+
+For both surfaces, local host, policy, active-form, and bundle preflight must
+succeed before the timeout clock starts. On record or editor unload, the
+host/tool transitions an accepted in-flight request to `rag_cancelled` before
+disposing its invocation context and suppresses every later result. The first
+terminal transition wins a timeout-versus-cancellation race; no partial result
+or second terminal result is emitted.
+
+### Prove the contract with shared, non-sensitive golden fixtures
+
+[FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288) owns the
+versioned fixture corpus and KMP conformance behavior. Fixtures use
+non-sensitive documents and assert:
+
+- defaults, type/range validation, and unknown-property rejection;
+- active-form-only access and absence of all-bundle, cross-form, aggregate,
+  fallback, and query-time Synapse paths;
+- score normalization, threshold-before-limit behavior, descending ranking,
+  deterministic ties, empty success, and no raw score;
+- exact closed result/citation keys and all output bounds;
+- privacy sanitization plus no content or secrets in errors/logs;
+- deterministic validation-before-availability/policy precedence, web
+  `rag_unavailable`, absent/invalid bundle `rag_unavailable`, timeout,
+  record/editor-unload cancellation, exactly-once terminal behavior, and
+  late-result suppression;
+- Android agent allowlist denial and direct KMP use without Data Event
+  JavaScript; and
+- equivalent retrieval/citation output from all applicable native surfaces.
 
 ## Risks / Trade-offs
 
-- **Part 1 bundle isolation or validation is incomplete** → Depend on the
-  Synapse foundation amendment and reject absent or invalid bundles instead
-  of falling back.
-- **Host implementations interpret a provisional contract differently** →
-  Block public implementation on the FLCRM-22079 versioned profile and shared
-  fixtures.
-- **Agent authorization is accidentally coupled to Data Event permissions** →
-  Require an independent Android allowlist/policy before tool retrieval.
-- **Sensitive content escapes through passages or citations** → Apply the
-  ratified redaction and bound rules before either consumer receives output.
-- **Cancellation or timeout emits duplicate or late output** → Require one
-  terminal outcome and fixture coverage for cancellation, timeout, and
-  late-result suppression.
-- **Local retrieval is mistaken for an answer-generation feature** → Keep the
-  output retrieval-only and forbid LLM, answer, document-transmission, and
-  query-time Synapse behavior in both contracts.
+- **A caller needs another form's knowledge** → v1 rejects the request rather
+  than expanding the authorization boundary; multi-form retrieval requires a
+  future version and explicit product/security review.
+- **A valid bundle cannot produce a safely bounded candidate** → the candidate
+  is omitted and an empty success remains valid, avoiding unbounded or
+  sensitive output.
+- **A native callback is being torn down during unload** → the adapter
+  transitions the request to `rag_cancelled` before context disposal and
+  suppresses late output.
+- **Agent policy and Data Event permissions drift** → the tool has an
+  independent policy gate, while both paths must pass the same KMP fixtures.
+- **An implementation exposes an internal ranking signal** → fixture schema
+  assertions reject fields other than the one normalized v1 `score`.
 
 ## Migration Plan
 
-This change has no deployed migration because it adds documentation only.
-Implementation sequencing is:
+This documentation PR has no deployed migration. The implementation sequence
+is fixed by the existing epic children:
 
-1. Confirm the Part 1 signed, validated, per-form bundle output and its
-   form-isolation amendment.
-2. Ratify the release-gating profile in FLCRM-22079.
-3. Implement and fixture-test the KMP local core.
-4. Implement iOS and Android Data Event adapters and the distinct Android
-   agent registration against the shared profile.
-5. Add the language source docs and any editor declarations in their owning
-   repositories, then validate every surface with the golden fixtures.
+1. Confirm the Part 1 local signed/validated bundle and form-isolation output
+   from the [Synapse foundation PR](https://github.com/fulcrumapp/synapse/pull/1).
+2. Implement the KMP v1 retrieval core and golden fixtures in
+   [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288).
+3. Add the RAG language function/source docs in
+   [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289) and
+   editor declarations in [FLCRM-22292](https://fulcrumapp.atlassian.net/browse/FLCRM-22292).
+4. Add native Data Event adapters in
+   [FLCRM-22293](https://fulcrumapp.atlassian.net/browse/FLCRM-22293) for
+   Android and [FLCRM-22294](https://fulcrumapp.atlassian.net/browse/FLCRM-22294)
+   for iOS.
+5. Add `search_form_knowledge` with its independent policy in
+   [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290).
+6. Run cross-surface conformance and rollout evidence in
+   [FLCRM-22291](https://fulcrumapp.atlassian.net/browse/FLCRM-22291).
 
-If a future implementation must be rolled back, it disables the relevant
-native adapter or agent registration rather than introducing remote fallback
-or changing form isolation. The web behavior remains the stable
-`rag_unavailable` terminal error.
-
-## Release-Gating Ratification Inputs
-
-These are required decisions for FLCRM-22079, not deferrable open questions:
-
-1. Final public RAG name, version signaling, and backward-compatibility
-   policy.
-2. Complete closed options, result, citation/source, count, and
-   bundle/version-correlation field definitions.
-3. Numeric bounds for query input, results, passages, metadata, time, and
-   any resource budget.
-4. Full stable error taxonomy and mapping for invalid input, unavailable or
-   invalid bundle, cancellation, timeout, and privacy/bound enforcement;
-   only web `rag_unavailable` is fixed by this change.
-5. Caller-visible cancellation trigger, timeout duration, queueing behavior,
-   and exactly-once terminal semantics.
-6. Privacy classification and redaction rules, including which citation and
-   source metadata can leave the local core.
-7. Golden-fixture corpus, deterministic ranking/tie behavior, and cross-host
-   conformance acceptance criteria.
+If a surface must be rolled back, disable that adapter or the agent
+registration. It must not broaden form access, introduce remote retrieval, or
+replace web `rag_unavailable` behavior with a fallback.

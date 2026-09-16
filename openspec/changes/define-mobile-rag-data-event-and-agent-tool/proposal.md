@@ -1,23 +1,46 @@
 ## Why
 
-Phase 1 produces signed, validated, per-form offline RAG bundles, but Phase 2 needs a contract for consuming those bundles locally without allowing cross-form access, remote retrieval, or confusion between Data Events and Android conversational-agent tools. Defining that boundary now lets the dependent teams implement against one privacy-preserving retrieval model after FLCRM-22079 ratifies the public details.
+Phase 1 now provides signed, validated, per-form offline RAG bundles, and
+[FLCRM-22079](https://fulcrumapp.atlassian.net/browse/FLCRM-22079) has
+ratified the Phase 2 v1 retrieval contract. This change turns that ratified
+decision into an implementation-ready, cross-surface contract while preserving
+strict offline, active-form, and privacy boundaries.
 
 ## What Changes
 
-- Define the provisional mobile Data Event function `RAG(options, callback)` for Fulcrum's user-authored JavaScript subset as an asynchronous, callback-based language surface analogous to `INFERENCE(options, callback)`.
-- Define v1 host availability: native iOS and Android implement local retrieval; web returns the stable `rag_unavailable` error and never calls Synapse.
-- Define current-active-form-only retrieval from that form's validated local bundle, with no caller-selected form, cross-form search, aggregation, or fallback.
-- Define retrieval-only behavior: bounded ranked passages with citation/source metadata, result counts, and local bundle/version correlation; no answer generation, LLM invocation, document transmission, or query-time Synapse call.
-- Define a distinct Android local RAG AgentToolRegistration contract, analogous in role to `SearchLocalRecordsAgentToolRegistry`, that uses the same KMP retrieval core without invoking Data Event JavaScript.
-- Establish the Phase 2 contract-ratification gate for the public function name, closed versioned options/result/error schemas, numeric bounds, cancellation/timeout semantics, privacy/redaction rules, and golden fixtures. FLCRM-22079 provides the ratified values before implementation and public documentation; this change does not invent them.
-- Record implementation ownership and dependencies only. Runtime implementation remains in separately tracked Epic children FLCRM-22289, FLCRM-22292, FLCRM-22288, FLCRM-22293, FLCRM-22294, FLCRM-22290, and FLCRM-22291.
+- Define the final v1 public Data Event
+  `RAG(options, callback)` for Fulcrum's user-authored JavaScript subset. It
+  is asynchronous and callback-based, following the `INFERENCE` host-function
+  model.
+- Lock the closed v1 RAG request, result, citation, error, default, and
+  boundary contracts, including the exact options
+  `{ query, limit?, min_score?, timeout_ms? }`.
+- Restrict RAG to iOS and Android native hosts. Web completes with
+  `rag_unavailable` and never contacts Synapse.
+- Require local retrieval from only the current active form's signed and
+  validated bundle. RAG accepts no form, attachment, document, or bundle
+  selector and cannot search across, aggregate, or fall back between forms.
+- Define retrieval-only results: ranked, normalized-score passages and
+  citations with bundle correlation; no answer generation, LLM invocation,
+  document transmission, or query-time Synapse request.
+- Define the separate Android conversational-agent tool
+  `search_form_knowledge`. It shares the KMP local retrieval core and v1
+  retrieval data contract, but has a distinct allowlist, policy, and lifecycle
+  and never invokes Data Event JavaScript.
+- Require shared golden fixtures and cross-surface conformance for the KMP
+  core, iOS, Android Data Event, web-unavailable behavior, and Android agent
+  tool.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `mobile-rag-data-event`: Defines the public, mobile-only Data Event retrieval boundary and its required isolation, error, privacy, and ratification behavior.
-- `android-local-rag-agent-tool`: Defines the separate Android conversational-agent retrieval registration, policy boundary, and relationship to the shared KMP core.
+- `mobile-rag-data-event`: Defines the final v1 mobile-only Data Event
+  retrieval contract, including validation, result schema, active-form
+  isolation, lifecycle, privacy, and conformance behavior.
+- `android-local-rag-agent-tool`: Defines the final v1 Android
+  `search_form_knowledge` tool contract, its independent policy/lifecycle, and
+  shared local retrieval semantics.
 
 ### Modified Capabilities
 
@@ -25,7 +48,26 @@ None.
 
 ## Impact
 
-- Documentation only in this repository's OpenSpec artifacts; no CoffeeScript, TypeScript, generated asset, CI, dependency, configuration, or runtime changes are included.
-- Depends on the FLCRM-22079 Phase 2 contract spike and the Part 1 Synapse foundation contract in https://github.com/fulcrumapp/synapse/pull/1, including its separate amendment that makes per-form isolation explicit.
-- Future implementation owners are: `fulcrum-expressions` for the Data Event language function and source docs; `fulcrum` components for editor TypeScript/Monaco types as applicable; Android and iOS for native bridges; and KMP for the shared local retrieval core.
-- No remote Synapse retrieval API is introduced or required.
+- **Documentation scope:** this ratification revision changes only the five
+  artifacts under this OpenSpec change. The PR's earlier commit initialized the
+  minimal `openspec/` root because none existed. Neither revision changes
+  CoffeeScript, TypeScript, generated assets, CI, dependencies, or
+  non-OpenSpec configuration.
+- **Foundation dependency:** the
+  [Synapse foundation contract](https://github.com/fulcrumapp/synapse/pull/1)
+  and its per-form-isolation amendment supply the signed, validated local
+  bundle required by v1.
+- **Contract source:** [FLCRM-22079](https://fulcrumapp.atlassian.net/browse/FLCRM-22079)
+  is the ratified Phase 2 v1 decision; the
+  [FLCRM-22082 epic](https://fulcrumapp.atlassian.net/browse/FLCRM-22082)
+  tracks delivery.
+- **Implementation traceability:** [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288)
+  owns the KMP core and fixtures; [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289)
+  the expression function; [FLCRM-22292](https://fulcrumapp.atlassian.net/browse/FLCRM-22292)
+  editor types; [FLCRM-22293](https://fulcrumapp.atlassian.net/browse/FLCRM-22293)
+  Android Data Event hosting; [FLCRM-22294](https://fulcrumapp.atlassian.net/browse/FLCRM-22294)
+  iOS hosting; [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290)
+  the Android agent tool; and [FLCRM-22291](https://fulcrumapp.atlassian.net/browse/FLCRM-22291)
+  cross-surface conformance.
+- **No remote retrieval:** this change introduces no Synapse retrieval API and
+  permits no query-time Synapse interaction.
