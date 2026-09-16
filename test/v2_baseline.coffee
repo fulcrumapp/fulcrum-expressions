@@ -70,6 +70,7 @@ describe 'v2 behavior baseline', ->
       results[4].error.should.match(/DOES_NOT_EXIST is not defined/)
 
     it 'reports side-effect functions as invalid during calculation', ->
+      runtime.isCalculation = true
       runtime.expressions = [
         { key: 'result', dataName: 'result', expression: "SETVALUE('name', 'Changed'); INVALID('Bad value'); 'ok'" }
       ]
@@ -118,7 +119,7 @@ describe 'v2 behavior baseline', ->
       GROUPINGSEPARATOR().should.eql(',')
 
   describe 'geometry and boundary behavior', ->
-    it 'handles empty, invalid, and boundary values without throwing', ->
+    it 'handles empty/boundary inputs and throws on invalid geometry', ->
       ISBLANK(null).should.be.true()
       ISBLANK([]).should.be.true()
       NUM('not a number').should.be.NaN()
@@ -155,27 +156,25 @@ describe 'v2 behavior baseline', ->
       for name in hostFunctionNames
         functions.HostFunctions[name] = originalHostFunctions[name]
 
-    it 'serializes request options and returns the host response', ->
+    it 'serializes request options and returns the host response', (done) ->
       runtime.isCalculation = false
       request = null
       functions.HostFunctions.httpRequest = (options, callback) ->
         request = JSON.parse(options)
         callback(null, { ok: true })
 
-      response = null
       REQUEST({ url: 'https://example.test', qs: { page: 2 }, json: { ok: true } }, (error, value) ->
         (error is null).should.be.true()
-        response = value
+        parsedRequestUrl = require('url').parse(request.url, true)
+        parsedRequestUrl.query.page.should.eql('2')
+        contentTypeHeader = Object.keys(request.headers).filter((name) ->
+          name.toLowerCase() is 'content-type'
+        )[0]
+        request.headers[contentTypeHeader].should.eql('application/json')
+        request.body.should.eql('{"ok":true}')
+        value.should.eql({ ok: true })
+        done()
       )
-
-      parsedRequestUrl = require('url').parse(request.url, true)
-      parsedRequestUrl.query.page.should.eql('2')
-      contentTypeHeader = Object.keys(request.headers).filter((name) ->
-        name.toLowerCase() is 'content-type'
-      )[0]
-      request.headers[contentTypeHeader].should.eql('application/json')
-      request.body.should.eql('{"ok":true}')
-      response.should.eql({ ok: true })
 
     it 'uses the host storage contract and forwards timer operations', ->
       runtime.isCalculation = false
@@ -203,7 +202,7 @@ describe 'v2 behavior baseline', ->
       timerCalls.should.eql([['timeout', 25], ['clearTimeout', 17]])
 
   describe 'global initialization and asynchronous completion', ->
-    it 'installs the runtime globals and completes a host callback', ->
+    it 'installs the runtime globals and completes a host callback', (done) ->
       global.$$runtime.should.equal(runtime)
       global.$$prepare.should.be.a.Function()
       global.$$evaluate.should.be.a.Function()
@@ -215,7 +214,9 @@ describe 'v2 behavior baseline', ->
         runtime.callbackID = callbackID
         runtime.callbackArguments = [value]
         runtime.finishAsync()
-      ), ['complete'], (value) -> result = value)
-
-      result.should.eql('complete')
-      Object.keys(runtime.asyncCallbacks).should.eql([])
+      ), ['complete'], (value) ->
+        result = value
+        result.should.eql('complete')
+        Object.keys(runtime.asyncCallbacks).should.eql([])
+        done()
+      )
