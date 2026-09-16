@@ -16,11 +16,19 @@ throw `rag_invalid_options` before retrieval. The v1 contract is closed: a
 producer MUST NOT add a public input, result, result-item, citation, or stable
 error-code field without publishing a new contract version.
 
+This capability specification is the canonical normative definition of the
+shared `RagRetrievalOptionsV1`, `RagRetrievalResultV1`, citation, default,
+bound, query-normalization, score-ordering, and stable-error profile. The
+Android `search_form_knowledge` capability SHALL adopt this shared profile
+without extension and defines only its agent-specific registration, policy,
+and lifecycle behavior. If the capability specifications conflict on shared
+retrieval behavior, this specification controls.
+
 `options` SHALL be an object with exactly these properties:
 
 | Property | Requirement |
 | --- | --- |
-| `query` | Required literal plain-text string; after trimming, 1 through 1,000 Unicode scalar values |
+| `query` | Required literal plain-text string; after `trimQueryV1`, 1 through 1,000 Unicode scalar values |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
@@ -31,6 +39,15 @@ selector, document selector, or bundle selector. `null`, coercion,
 non-finite values, and undeclared properties are invalid. In particular,
 `form_id`, `attachment_id`, `document_id`, bundle selectors, and equivalent
 alternate-form inputs are undeclared and invalid.
+
+If `query` is a string, RAG SHALL apply `trimQueryV1` before it evaluates
+query emptiness or length and before it performs local retrieval.
+`trimQueryV1` removes only contiguous leading and trailing Unicode scalar
+values in this fixed set: `U+0009..U+000D`, `U+0020`, `U+0085`, `U+00A0`,
+`U+1680`, `U+2000..U+200A`, `U+2028`, `U+2029`, `U+202F`, `U+205F`, and
+`U+3000`. It preserves interior whitespace and every other scalar value.
+Query length SHALL count Unicode scalar values in the `trimQueryV1` result,
+not UTF-16 code units or grapheme clusters.
 
 The callback MUST be callable. A missing or non-callable callback SHALL
 synchronously throw an Error-compatible error with code `rag_invalid_options`
@@ -49,8 +66,8 @@ form, or an unusable bundle.
 
 Options-object shape means only that `options` is a non-null object. It does
 not require `query` to be present or valid: `query` presence, string type, and
-trimmed length are always evaluated in the `rag_invalid_query` phase after
-unknown-property and optional-field validation pass.
+`trimQueryV1` length are always evaluated in the `rag_invalid_query` phase
+after unknown-property and optional-field validation pass.
 
 #### Scenario: RAG uses default option values
 
@@ -68,10 +85,18 @@ unknown-property and optional-field validation pass.
 
 #### Scenario: RAG rejects an invalid query
 
-- **WHEN** `query` is missing, non-string, empty after trimming, or longer
-  than 1,000 Unicode scalar values after trimming
+- **WHEN** `query` is missing, non-string, empty after `trimQueryV1`, or
+  longer than 1,000 Unicode scalar values after `trimQueryV1`
 - **THEN** the callback completes asynchronously with `rag_invalid_query`
   and no retrieval begins
+
+#### Scenario: RAG applies the v1 query-trimming rule
+
+- **WHEN** a string `query` has leading or trailing `U+00A0` or `U+2003`
+  whitespace and valid non-whitespace text
+- **THEN** RAG removes only that boundary whitespace with `trimQueryV1`,
+  preserves interior text and whitespace, and uses the resulting Unicode
+  scalar-value sequence for validation and local retrieval
 
 #### Scenario: RAG requires a callback
 
@@ -88,10 +113,12 @@ unknown-property and optional-field validation pass.
 ### Requirement: RAG is mobile-only and active-form-only
 
 In v1, only iOS and Android native ExpressionEngine hosts SHALL implement
-RAG. Web execution SHALL complete with `rag_unavailable` and MUST NOT contact
-Synapse. A supported mobile host SHALL capture the current active form for a
-valid request after input validation succeeds and SHALL retrieve only from
-that form's local signed and validated RAG bundle.
+RAG. For an invocation with a callable callback whose v1 options and query
+validation succeed, web execution SHALL complete asynchronously with
+`rag_unavailable` and MUST NOT contact Synapse. A supported mobile host SHALL
+capture the current active form for a valid request after input validation
+succeeds and SHALL retrieve only from that form's local signed and validated
+RAG bundle.
 
 RAG MUST NOT enumerate all downloaded bundles, retrieve from another form,
 aggregate multiple forms, select an attachment or document independently of
@@ -102,7 +129,8 @@ NOT substitute an empty-success or another retrieval source.
 
 #### Scenario: RAG runs in web execution
 
-- **WHEN** a Data Event invokes RAG in a web host
+- **WHEN** a Data Event invokes RAG in a web host with a callable callback
+  and v1-valid options and query
 - **THEN** the callback completes asynchronously with `rag_unavailable` and
   the host makes no Synapse request
 
@@ -243,11 +271,12 @@ RAG SHALL expose only these stable v1 terminal error codes:
 and `rag_cancelled`. `rag_invalid_options` covers a missing/non-object options
 value, unknown option, invalid optional value, or missing/non-callable
 callback. `rag_invalid_query` covers missing, non-string, blank, or
-overlength query input. `rag_unavailable` covers unsupported web execution,
-no active form, unavailable/invalid/unusable active-form bundle, or otherwise
-unavailable local retrieval. `rag_timeout` covers a request that does not
-complete by its effective timeout. `rag_cancelled` covers record or editor
-unload before terminal completion.
+overlength `trimQueryV1` query input. `rag_unavailable` covers a
+post-validation unsupported web execution, no active form,
+unavailable/invalid/unusable active-form bundle, or otherwise unavailable
+local retrieval. `rag_timeout` covers a request that does not complete by its
+effective timeout. `rag_cancelled` covers record or editor unload before
+terminal completion.
 
 For a callable callback, options validation takes precedence over query
 validation, and query validation takes precedence over host/bundle
@@ -296,9 +325,9 @@ The fixtures SHALL verify defaults; validation and error codes; active-form
 isolation; local-bundle availability; score normalization, threshold-before-
 limit behavior, ordering, and empty success; exact closed result/citation
 schema and bounds; prohibited-output sanitization; no content or secrets in
-errors/logs; validation-before-availability precedence; web
-`rag_unavailable`; timeout; record/editor-unload cancellation; and
-exactly-once/late-result behavior.
+errors/logs; `trimQueryV1` edge whitespace and Unicode-scalar length;
+validation-before-availability precedence; web `rag_unavailable`; timeout;
+record/editor-unload cancellation; and exactly-once/late-result behavior.
 
 iOS and Android RAG hosts MUST pass the same applicable fixture expectations.
 Web MUST pass the `rag_unavailable` fixture without a Synapse interaction.

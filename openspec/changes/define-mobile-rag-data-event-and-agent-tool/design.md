@@ -50,8 +50,18 @@ dependencies, or configuration outside `openspec/`.
 
 `RAG(options, callback)` is the final public mobile Data Event function.
 `search_form_knowledge` is the final Android conversational-agent tool name.
-Both are closed v1 compatibility surfaces. Their shared retrieval request and
-success-result schemas are fixed as follows:
+Both are closed v1 compatibility surfaces. The mobile RAG capability
+specification is the canonical normative definition of the shared v1 request,
+result, citation, default, bound, score-ordering, query-normalization, and
+stable-error contract. The Android agent-tool capability specification
+normatively adopts that shared profile without extension and defines only its
+agent-specific registration, policy, and lifecycle behavior. If the two
+capability specifications conflict on shared retrieval behavior, the mobile
+RAG capability specification controls. This design's restatement is
+non-normative implementation guidance.
+
+For readability, the shared retrieval request and success-result schemas are
+summarized below:
 
 ```text
 RagRetrievalOptionsV1 = {
@@ -89,7 +99,7 @@ The two surfaces use the same values and defaults:
 
 | Field | Rule |
 | --- | --- |
-| `query` | Required literal plain-text string; 1 through 1,000 Unicode scalar values after trimming; no query DSL, form selector, document selector, or source selector |
+| `query` | Required literal plain-text string; 1 through 1,000 Unicode scalar values after `trimQueryV1`; no query DSL, form selector, document selector, or source selector |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
@@ -106,6 +116,14 @@ The two surfaces use the same values and defaults:
 
 `null`, coercion, non-finite numbers, out-of-range values, and undeclared
 properties are not accepted as valid substitutes for the listed types.
+
+`trimQueryV1` removes only contiguous leading and trailing Unicode scalar
+values in this fixed set: `U+0009..U+000D`, `U+0020`, `U+0085`, `U+00A0`,
+`U+1680`, `U+2000..U+200A`, `U+2028`, `U+2029`, `U+202F`, `U+205F`, and
+`U+3000`. It preserves interior whitespace and every other scalar value.
+Both v1 surfaces use the trimmed text for query emptiness, query length, and
+local retrieval. Query length counts Unicode scalar values, not UTF-16 code
+units or grapheme clusters.
 
 ### Validate before availability and use explicit callback terminal semantics
 
@@ -138,7 +156,7 @@ The exact stable error-code set is:
 | Code | Required use |
 | --- | --- |
 | `rag_invalid_options` | Options object is missing or not an object; an unknown option is supplied; an optional field has an invalid type, null, non-finite value, or out-of-range value; or the callback is missing/non-callable |
-| `rag_invalid_query` | `query` is missing, not a string, empty after trimming, or exceeds 1,000 Unicode scalar values after trimming |
+| `rag_invalid_query` | `query` is missing, not a string, empty after `trimQueryV1`, or exceeds 1,000 Unicode scalar values after `trimQueryV1` |
 | `rag_unavailable` | Execution is web or another unsupported host; no active form is available; the active form has no local signed and validated bundle; its bundle cannot safely be used; or local retrieval is denied or unavailable |
 | `rag_timeout` | The accepted invocation has not reached a terminal result by its effective `timeout_ms` |
 | `rag_cancelled` | The associated record or editor unloads before a terminal result |
@@ -159,8 +177,9 @@ and is rejected as `rag_invalid_options`.
 The core never enumerates all downloaded bundles, searches another form,
 aggregates multiple forms, or falls back to another bundle or remote service.
 Any missing, invalid, or unusable active-form bundle resolves as
-`rag_unavailable`. Web always resolves as `rag_unavailable` and never
-constructs a Synapse request.
+`rag_unavailable`. After v1 options and query validation succeeds for a
+callable callback, web resolves as `rag_unavailable` and never constructs a
+Synapse request.
 
 ### Normalize, filter, rank, and bound results in the shared KMP core
 
@@ -219,7 +238,8 @@ or second terminal result is emitted.
 versioned fixture corpus and KMP conformance behavior. Fixtures use
 non-sensitive documents and assert:
 
-- defaults, type/range validation, and unknown-property rejection;
+- defaults, type/range validation, unknown-property rejection, `trimQueryV1`
+  edge whitespace, and Unicode-scalar query length;
 - active-form-only access and absence of all-bundle, cross-form, aggregate,
   fallback, and query-time Synapse paths;
 - score normalization, threshold-before-limit behavior, descending ranking,

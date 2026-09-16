@@ -15,8 +15,9 @@ strict offline, active-form, and privacy boundaries.
 - Lock the closed v1 RAG request, result, citation, error, default, and
   boundary contracts, including the exact options
   `{ query, limit?, min_score?, timeout_ms? }`.
-- Restrict RAG to iOS and Android native hosts. Web completes with
-  `rag_unavailable` and never contacts Synapse.
+- Restrict RAG to iOS and Android native hosts. After v1 options and query
+  validation succeeds for a callable callback, web completes asynchronously
+  with `rag_unavailable` and never contacts Synapse.
 - Require local retrieval from only the current active form's signed and
   validated bundle. RAG accepts no form, attachment, document, or bundle
   selector and cannot search across, aggregate, or fall back between forms.

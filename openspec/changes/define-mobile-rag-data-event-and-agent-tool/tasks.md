@@ -19,8 +19,9 @@
   define the shared closed `RagRetrievalOptionsV1`,
   `RagRetrievalResultV1`, citation, and error-code models; verify validation
   accepts only `query`, `limit`, `min_score`, and `timeout_ms` with the
-  documented defaults and inclusive ranges, and resolves invalid options before
-  invalid queries before availability/policy preflight.
+  documented defaults and inclusive ranges; applies `trimQueryV1` before
+  query length/retrieval; and resolves invalid options before invalid queries
+  before availability/policy preflight.
 - [ ] 2.2 In [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288),
   implement active-form capture and signed/validated local-bundle retrieval;
   verify no path accepts `form_id`/attachment/document/bundle selectors,
@@ -40,9 +41,10 @@
   create versioned non-sensitive golden fixtures for valid results, defaults,
   validation failures, unavailable bundles, ordering/ties, empty success,
   bounds/redaction, protected diagnostics, timeout, cancellation, and
-  late-result suppression; verify mixed invalid-input/unavailable/policy cases
-  use deterministic precedence and fixture expectations are reusable by all
-  host adapters.
+  late-result suppression; verify `trimQueryV1` edge whitespace and
+  Unicode-scalar-length cases plus mixed invalid-input/unavailable/policy
+  cases use deterministic precedence and fixture expectations are reusable by
+  all host adapters.
 
 ## 3. Data Event language and native hosts
 
@@ -54,8 +56,10 @@
   synchronously throws `rag_invalid_options`, and invalid options/query take
   precedence over unavailable retrieval.
 - [ ] 3.2 In [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289),
-  add web RAG behavior that returns `rag_unavailable`; verify it has no local
-  bundle enumeration and no Synapse client/request path.
+  add web RAG behavior that returns `rag_unavailable` only after callable-
+  callback options/query validation succeeds; verify it has no local bundle
+  enumeration and no Synapse client/request path, and invalid input preserves
+  validation-error precedence.
 - [ ] 3.3 In [FLCRM-22292](https://fulcrumapp.atlassian.net/browse/FLCRM-22292),
   add editor TypeScript/Monaco declarations for the closed RAG v1 schema;
   verify declarations expose no form, attachment, document, bundle, raw-score,
@@ -73,10 +77,10 @@
 
 - [ ] 4.1 In [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290),
   register the separate Android agent tool named `search_form_knowledge`;
-  verify it accepts the same closed v1 query/limit/min_score/timeout input and
-  returns the same closed retrieval/citation result without registering a Data
-  Event surface, and validates options/query before agent policy or bundle
-  availability.
+  verify it accepts the same closed v1 `query`, `limit`, `min_score`, and
+  `timeout_ms` input and returns the same closed retrieval/citation result
+  without registering a Data Event surface, and validates options/query before
+  agent policy or bundle availability.
 - [ ] 4.2 In [FLCRM-22290](https://fulcrumapp.atlassian.net/browse/FLCRM-22290),
   enforce the tool's distinct AgentToolRegistration allowlist/policy before
   core invocation after valid input; verify denied agents receive

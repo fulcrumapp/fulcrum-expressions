@@ -13,11 +13,19 @@ surface, distinct from the public Data Event `RAG(options, callback)`. The
 tool MUST NOT register as a Data Event function, expose a Data Event callback
 API, start an expression engine, or invoke Data Event JavaScript.
 
+The mobile RAG capability specification is the canonical normative definition
+of the shared `RagRetrievalOptionsV1`, `RagRetrievalResultV1`, citation,
+default, bound, query-normalization, score-ordering, and stable-error profile.
+This capability specification SHALL adopt that profile without extension and
+defines only agent-specific registration, policy, and lifecycle behavior. If
+the capability specifications conflict on shared retrieval behavior, the
+mobile RAG capability specification controls.
+
 Its input SHALL be an object with exactly:
 
 | Property | Requirement |
 | --- | --- |
-| `query` | Required literal plain-text string; after trimming, 1 through 1,000 Unicode scalar values |
+| `query` | Required literal plain-text string; after `trimQueryV1`, 1 through 1,000 Unicode scalar values |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
@@ -31,6 +39,10 @@ unknown properties, and optional-field values pass validation. Every invalid
 options-object shape, optional value, or unknown property returns
 `rag_invalid_options`.
 
+If `query` is a string, the tool SHALL use the canonical `trimQueryV1`
+algorithm before it evaluates query emptiness or length and before it calls
+local retrieval. The trimmed text is the query used by the shared KMP core.
+
 The tool SHALL validate options-object shape, unknown properties, and optional
 field values before it validates `query`; it SHALL validate `query` before it
 evaluates its allowlist/policy, active-form availability, or bundle
@@ -40,8 +52,9 @@ form, an unusable bundle, or a denied agent policy.
 
 Options-object shape means only that the supplied input is a non-null object.
 It does not require `query` to be present or valid: `query` presence, string
-type, and trimmed length are always evaluated in the `rag_invalid_query` phase
-after unknown-property and optional-field validation pass.
+type, and `trimQueryV1` length are always evaluated in the
+`rag_invalid_query` phase after unknown-property and optional-field validation
+pass.
 
 The tool's successful output SHALL be the same closed
 `RagRetrievalResultV1` schema used by RAG:
@@ -118,7 +131,7 @@ late, or duplicate output is permitted.
 
 #### Scenario: Invalid input takes precedence over agent policy
 
-- **WHEN** an unallowlisted agent supplies a blank `query` after trimming
+- **WHEN** an unallowlisted agent supplies a blank `query` after `trimQueryV1`
 - **THEN** the tool terminates with `rag_invalid_query` before it evaluates
   the allowlist/policy
 
@@ -251,8 +264,9 @@ defaults; validation-before-policy/availability precedence; agent allowlist
 denial; direct KMP use without Data Event JavaScript; active-form-only
 retrieval; no cross-form, all-bundles, aggregate, fallback, or Synapse paths;
 score normalization/filtering/ranking; exact output schema and bounds; empty
-success; privacy sanitization; protected diagnostics; timeout; unload
-cancellation; and exactly-once terminal behavior.
+success; `trimQueryV1` edge whitespace and Unicode-scalar length; privacy
+sanitization; protected diagnostics; timeout; unload cancellation; and
+exactly-once terminal behavior.
 
 #### Scenario: The agent tool is ready for release
 
