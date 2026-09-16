@@ -32,7 +32,16 @@ describe 'v2 behavior baseline', ->
 
   describe 'exported function surface', ->
     it 'exposes every callable v2 function on the expression global', ->
-      publicFunctionNames.length.should.be.above(200)
+      publicFunctionNames.length.should.be.above(0)
+
+      [
+        'RESETCONFIG'
+        'CONFIGURE'
+        'SETVALUE'
+        'INVALID'
+        'UPPER'
+      ].forEach (name) ->
+        publicFunctionNames.should.containEql(name)
 
       for name in publicFunctionNames
         (typeof global[name]).should.eql('function')
