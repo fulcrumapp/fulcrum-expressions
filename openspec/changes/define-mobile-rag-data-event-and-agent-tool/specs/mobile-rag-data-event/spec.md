@@ -21,7 +21,7 @@ new contract version.
 | `query` | Required literal plain-text string; after trimming, 1 through 1,000 Unicode scalar values |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
-| `timeout_ms` | Optional integer in milliseconds; default `2,000`; inclusive range `2,000..10,000` |
+| `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
 
 `query` MUST be treated as literal plain text and MUST NOT be interpreted as
 a query DSL, expression, regular expression, URL, form selector, attachment
@@ -75,8 +75,8 @@ form, or an unusable bundle.
 #### Scenario: Invalid input takes precedence over unavailable retrieval
 
 - **WHEN** a web invocation includes an unknown `form_id` option
-- **THEN** the callback completes with `rag_invalid_options` rather than
-  `rag_unavailable`, and no retrieval begins
+- **THEN** the callback completes asynchronously with `rag_invalid_options`
+  rather than `rag_unavailable`, and no retrieval begins
 
 ### Requirement: RAG is mobile-only and active-form-only
 
@@ -96,8 +96,8 @@ NOT substitute an empty-success or another retrieval source.
 #### Scenario: RAG runs in web execution
 
 - **WHEN** a Data Event invokes RAG in a web host
-- **THEN** the callback completes with `rag_unavailable` and the host makes no
-  Synapse request
+- **THEN** the callback completes asynchronously with `rag_unavailable` and
+  the host makes no Synapse request
 
 #### Scenario: The active form has a valid local bundle
 
@@ -110,7 +110,7 @@ NOT substitute an empty-success or another retrieval source.
 
 - **WHEN** a valid RAG invocation runs without an active form or with an
   absent, invalid, or unusable active-form bundle
-- **THEN** the callback completes with `rag_unavailable` without a
+- **THEN** the callback completes asynchronously with `rag_unavailable` without a
   cross-form, all-bundles, empty-success, or remote fallback
 
 ### Requirement: RAG returns the exact v1 retrieval result
@@ -148,14 +148,14 @@ An empty matching set SHALL be a successful result with `result_count: 0` and
 
 - **WHEN** local retrieval finds eligible matching passages for the active
   form
-- **THEN** the callback receives exactly the closed v1 result schema with
+- **THEN** the callback asynchronously receives exactly the closed v1 result schema with
   bounded passages, citations, one-based contiguous ranks, and normalized
   scores
 
 #### Scenario: RAG finds no eligible passages
 
 - **WHEN** no active-form candidate satisfies the retrieval and output rules
-- **THEN** the callback succeeds with the active bundle version,
+- **THEN** the callback asynchronously succeeds with the active bundle version,
   `result_count: 0`, and `results: []`
 
 #### Scenario: A result would expose a prohibited field
@@ -164,7 +164,7 @@ An empty matching set SHALL be a successful result with `result_count: 0` and
   authentication material, user token, raw score, cross-form metadata, or
   another undeclared output field
 - **THEN** RAG omits or redacts the prohibited value before delivery and never
-  exposes it in the v1 result
+  exposes it in the asynchronous callback's v1 result
 
 ### Requirement: RAG has no generative, remote, or document-egress path
 
@@ -185,8 +185,9 @@ content, source URLs, credentials, authentication material, or user tokens.
 #### Scenario: RAG returns local retrieval data
 
 - **WHEN** RAG successfully retrieves passages for the active form
-- **THEN** it delivers only the bounded v1 result to the local callback and
-  does not generate an answer, invoke an LLM, or make a remote request
+- **THEN** it asynchronously delivers only the bounded v1 result to the local
+  callback and does not generate an answer, invoke an LLM, or make a remote
+  request
 
 #### Scenario: RAG emits diagnostics
 
@@ -259,27 +260,27 @@ or user tokens.
 
 - **WHEN** a valid local request has not completed by its effective
   `timeout_ms`
-- **THEN** the callback completes exactly once with `rag_timeout`, no result,
-  and no later output
+- **THEN** the callback completes asynchronously exactly once with
+  `rag_timeout`, no result, and no later output
 
 #### Scenario: A record or editor unloads during retrieval
 
 - **WHEN** the record or editor associated with an in-flight RAG call unloads
-- **THEN** the host completes the call as `rag_cancelled` before context
-  disposal and suppresses all later retrieval output
+- **THEN** the host asynchronously completes the call as `rag_cancelled`
+  before context disposal and suppresses all later retrieval output
 
 #### Scenario: Cancellation and timeout occur together
 
 - **WHEN** cancellation and timeout race for the same in-flight RAG call
-- **THEN** the first terminal transition produces exactly one of
-  `rag_cancelled` or `rag_timeout` and no second completion occurs
+- **THEN** the callback asynchronously completes exactly once with the first
+  terminal transition, either `rag_cancelled` or `rag_timeout`
 
 #### Scenario: An invalid query is submitted in an unavailable context
 
 - **WHEN** a web call has a callable callback but its `query` is blank after
   trimming
-- **THEN** the callback completes with `rag_invalid_query` before
-  `rag_unavailable` is considered
+- **THEN** the callback completes asynchronously with `rag_invalid_query`
+  before `rag_unavailable` is considered
 
 ### Requirement: RAG v1 conformance uses shared golden fixtures
 

@@ -92,7 +92,7 @@ The two surfaces use the same values and defaults:
 | `query` | Required literal plain-text string; 1 through 1,000 Unicode scalar values after trimming; no query DSL, form selector, document selector, or source selector |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
-| `timeout_ms` | Optional integer in milliseconds; default `2,000`; inclusive range `2,000..10,000` |
+| `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
 | `bundle_version` | Required opaque local-bundle identifier; 1 through 128 Unicode scalar values |
 | `result_count` | Integer equal to `results.length`; inclusive range `0..effective limit` |
 | `rank` | One-based contiguous integer from `1` through `result_count` |

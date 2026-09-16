@@ -20,14 +20,16 @@ Its input SHALL be an object with exactly:
 | `query` | Required literal plain-text string; after trimming, 1 through 1,000 Unicode scalar values |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
-| `timeout_ms` | Optional integer in milliseconds; default `2,000`; inclusive range `2,000..10,000` |
+| `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
 
 The tool MUST NOT accept `null`, coercion, non-finite values, undeclared
 properties, or a form, attachment, document, bundle, cross-form, or
 all-bundles selector. `query` MUST be handled as literal plain text, not as a
 query DSL, expression, regular expression, URL, or source selector. A missing
-or invalid query returns `rag_invalid_query`; every other invalid input or
-unknown property returns `rag_invalid_options`.
+or invalid query returns `rag_invalid_query` only after options-object shape,
+unknown properties, and optional-field values pass validation. Every invalid
+options-object shape, optional value, or unknown property returns
+`rag_invalid_options`.
 
 The tool SHALL validate options-object shape, unknown properties, and optional
 field values before it validates `query`; it SHALL validate `query` before it
