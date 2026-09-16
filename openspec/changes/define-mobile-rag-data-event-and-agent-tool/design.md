@@ -39,6 +39,7 @@ details before implementation begins.
   additional stable error codes beyond web `rag_unavailable`.
 - Generating answers, invoking an LLM, allowing a remote retrieval API, or
   transmitting document content during a retrieval request.
+- Adding a generic Data Event telemetry transport.
 - Reusing a Data Event as an Android agent tool, or permitting cross-form
   retrieval, aggregation, or fallback.
 
@@ -131,14 +132,16 @@ surfaces to share an API or authorization model.
 
 ### Preserve explicit ownership boundaries
 
-| Owner | Future responsibility |
-| --- | --- |
-| `fulcrum-expressions` | Data Event language function and source documentation |
-| `fulcrum` components | Editor TypeScript/Monaco types, when applicable |
-| Android | Native ExpressionEngine adapter and separate local RAG agent tool |
-| iOS | Native ExpressionEngine invocation adapter |
-| KMP | Shared local retrieval core and contract-fixture behavior |
-| Synapse / Part 1 | Signed, validated, per-form offline bundle production |
+| Owner | Future responsibility | Existing tracker |
+| --- | --- | --- |
+| `fulcrum-expressions` | Data Event language function and source documentation | FLCRM-22289 |
+| `fulcrum` components | Editor TypeScript/Monaco types, when applicable | FLCRM-22292 |
+| Android | Native ExpressionEngine adapter | FLCRM-22293 |
+| iOS | Native ExpressionEngine invocation adapter | FLCRM-22294 |
+| KMP | Shared local retrieval core and contract-fixture behavior | FLCRM-22288 |
+| Android agent runtime | Separate local RAG agent tool | FLCRM-22290 |
+| Cross-surface owners | Data Event and agent-tool conformance | FLCRM-22291 |
+| Synapse / Part 1 | Signed, validated, per-form offline bundle production | Part 1 dependency |
 
 Implementation is separately tracked by Epic FLCRM-22082 children
 FLCRM-22289, FLCRM-22292, FLCRM-22288, FLCRM-22293, FLCRM-22294,
