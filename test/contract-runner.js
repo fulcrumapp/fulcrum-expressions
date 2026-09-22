@@ -29,6 +29,17 @@ function normalize(value) {
   return value;
 }
 
+function isPlainObject(value) {
+  if (!value || Object.prototype.toString.call(value) !== "[object Object]") return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function normalizeLocalScriptSource(source) {
+  if (/^(?:[a-z][a-z0-9+.-]*:)?\/\//i.test(source)) return null;
+  return path.posix.basename(path.posix.normalize(source.replace(/[?#].*$/, "")));
+}
+
 function loadAdapter(moduleName) {
   if (!moduleName || moduleName === "legacy") return createLegacyAdapter();
 
@@ -55,7 +66,6 @@ function createLegacyAdapter() {
     runtime.setupValues();
     global.CONFIGURE(configure || {});
     runtime.resetResults();
-    runtime.results = [];
     runtime.isCalculation = false;
   }
 
@@ -86,8 +96,8 @@ function assertPackageContracts() {
 
   const html = fs.readFileSync(path.join(__dirname, "..", "expressions.html"), "utf8");
   const scriptNames = [...html.matchAll(/<script src=["']([^"']+)["']/g)]
-    .map((match) => match[1])
-    .filter((name) => !name.startsWith("http") && !name.startsWith("//"));
+    .map((match) => normalizeLocalScriptSource(match[1]))
+    .filter(Boolean);
   assert.deepStrictEqual(scriptNames, corpus.package.browserScripts);
   assert.ok(fs.readFileSync(path.join(__dirname, "..", "expressions-proxy.coffee"), "utf8")
     .includes("finishAsyncCallback"));
@@ -104,8 +114,7 @@ function run(adapter, compareAdapter) {
     const observed = contract.observe === "results" ? actual.results : actual.value;
     const normalized = normalize(observed);
     if (contract.expected && contract.expected.$type === "object") {
-      assert.strictEqual(typeof observed, "object", contract.id);
-      assert.ok(observed !== null, contract.id);
+      assert.ok(isPlainObject(observed), contract.id);
     } else {
       assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
     }
@@ -129,7 +138,15 @@ function optionValue(option) {
   return value;
 }
 
-const candidate = optionValue("--runtime");
-const compare = optionValue("--compare");
-const count = run(loadAdapter(candidate || "legacy"), compare ? loadAdapter(compare) : null);
-console.log(`Contract suite passed: ${count} cases`);
+if (require.main === module) {
+  const candidate = optionValue("--runtime");
+  const compare = optionValue("--compare");
+  const count = run(loadAdapter(candidate || "legacy"), compare ? loadAdapter(compare) : null);
+  console.log(`Contract suite passed: ${count} cases`);
+}
+
+module.exports = {
+  createLegacyAdapter,
+  isPlainObject,
+  normalizeLocalScriptSource,
+};
