@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const ts = require("typescript");
 const { loadAdapter, normalize } = require("./contract-runner");
 
 const root = path.join(__dirname, "..");
@@ -30,13 +31,19 @@ function sourceNames() {
 }
 
 function parameterCount(source) {
-  const declarations = [...source.matchAll(/export default function[^(]*\(([^)]*)\)/g)];
-  return declarations.reduce((maximum, declaration) => {
-    const parameters = declaration[1].trim();
-    if (!parameters) return maximum;
-    const count = parameters.split(",").length;
-    return Math.max(maximum, count);
-  }, 0);
+  const file = ts.createSourceFile("function.ts", source, ts.ScriptTarget.Latest, true);
+  let maximum = 0;
+  function visit(node) {
+    if (ts.isFunctionDeclaration(node)
+      && node.modifiers
+      && node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.DefaultKeyword)
+      && node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+      maximum = Math.max(maximum, node.parameters.length);
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(file);
+  return maximum;
 }
 
 function argsFor(name, arity, probe) {
@@ -108,6 +115,7 @@ for (const name of sourceNames()) {
   }
 }
 
+fs.mkdirSync(path.dirname(output), { recursive: true });
 fs.writeFileSync(output, `${JSON.stringify({
   version: 1,
   description: "Generated deterministic probes for every legacy expression function file.",

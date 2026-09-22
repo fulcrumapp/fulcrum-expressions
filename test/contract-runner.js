@@ -201,7 +201,7 @@ if (require.main === module) {
   const compareAdapter = compare ? loadAdapter(compare) : null;
   const count = run(adapter, compareAdapter);
   const matrix = loadMatrix();
-  const matrixCount = matrix ? run(loadAdapter(candidate || "legacy"), compareAdapter, matrix) : 0;
+  const matrixCount = matrix ? run(adapter, compareAdapter, matrix) : 0;
   if (matrix) {
     const expectedCases = (matrix.coverage.functions - matrix.limitations.length) * matrix.coverage.probesPerFunction;
     assert.strictEqual(matrix.cases.length, expectedCases, "function matrix coverage metadata");

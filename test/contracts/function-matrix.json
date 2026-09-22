@@ -349,8 +349,7 @@
       "id": "matrix-applicationinfo-normal",
       "function": "APPLICATIONINFO",
       "args": [
-        1,
-        2
+        1
       ],
       "expected": ""
     },
@@ -358,7 +357,6 @@
       "id": "matrix-applicationinfo-coercion",
       "function": "APPLICATIONINFO",
       "args": [
-        "1",
         "1"
       ],
       "expected": ""
@@ -367,7 +365,6 @@
       "id": "matrix-applicationinfo-blank",
       "function": "APPLICATIONINFO",
       "args": [
-        null,
         null
       ],
       "expected": ""
@@ -376,7 +373,6 @@
       "id": "matrix-applicationinfo-boundary",
       "function": "APPLICATIONINFO",
       "args": [
-        0,
         0
       ],
       "expected": ""
@@ -1523,8 +1519,7 @@
       "id": "matrix-deviceinfo-normal",
       "function": "DEVICEINFO",
       "args": [
-        1,
-        2
+        1
       ],
       "expected": ""
     },
@@ -1532,7 +1527,6 @@
       "id": "matrix-deviceinfo-coercion",
       "function": "DEVICEINFO",
       "args": [
-        "1",
         "1"
       ],
       "expected": ""
@@ -1541,7 +1535,6 @@
       "id": "matrix-deviceinfo-blank",
       "function": "DEVICEINFO",
       "args": [
-        null,
         null
       ],
       "expected": ""
@@ -1550,7 +1543,6 @@
       "id": "matrix-deviceinfo-boundary",
       "function": "DEVICEINFO",
       "args": [
-        0,
         0
       ],
       "expected": ""
@@ -4218,8 +4210,7 @@
       "function": "GEOMETRYFEATURECOLLECTION",
       "args": [
         1,
-        2,
-        3
+        2
       ],
       "expected": {
         "features": 1,
@@ -4230,7 +4221,6 @@
       "id": "matrix-geometryfeaturecollection-coercion",
       "function": "GEOMETRYFEATURECOLLECTION",
       "args": [
-        "1",
         "1",
         "1"
       ],
@@ -4244,7 +4234,6 @@
       "function": "GEOMETRYFEATURECOLLECTION",
       "args": [
         null,
-        null,
         null
       ],
       "expected": {
@@ -4257,7 +4246,6 @@
       "id": "matrix-geometryfeaturecollection-boundary",
       "function": "GEOMETRYFEATURECOLLECTION",
       "args": [
-        0,
         0,
         0
       ],
@@ -5051,8 +5039,7 @@
       "function": "INFERENCE",
       "args": [
         1,
-        2,
-        3
+        2
       ],
       "expected": {
         "$type": "error",
@@ -5064,7 +5051,6 @@
       "id": "matrix-inference-coercion",
       "function": "INFERENCE",
       "args": [
-        "1",
         "1",
         "1"
       ],
@@ -5079,7 +5065,6 @@
       "function": "INFERENCE",
       "args": [
         null,
-        null,
         null
       ],
       "expected": {
@@ -5092,7 +5077,6 @@
       "id": "matrix-inference-boundary",
       "function": "INFERENCE",
       "args": [
-        0,
         0,
         0
       ],
@@ -7027,8 +7011,7 @@
       "id": "matrix-platforminfo-normal",
       "function": "PLATFORMINFO",
       "args": [
-        1,
-        2
+        1
       ],
       "expected": ""
     },
@@ -7036,7 +7019,6 @@
       "id": "matrix-platforminfo-coercion",
       "function": "PLATFORMINFO",
       "args": [
-        "1",
         "1"
       ],
       "expected": ""
@@ -7045,7 +7027,6 @@
       "id": "matrix-platforminfo-blank",
       "function": "PLATFORMINFO",
       "args": [
-        null,
         null
       ],
       "expected": ""
@@ -7054,7 +7035,6 @@
       "id": "matrix-platforminfo-boundary",
       "function": "PLATFORMINFO",
       "args": [
-        0,
         0
       ],
       "expected": ""
@@ -10176,8 +10156,7 @@
       "id": "matrix-versioninfo-normal",
       "function": "VERSIONINFO",
       "args": [
-        1,
-        2
+        1
       ],
       "expected": ""
     },
@@ -10185,7 +10164,6 @@
       "id": "matrix-versioninfo-coercion",
       "function": "VERSIONINFO",
       "args": [
-        "1",
         "1"
       ],
       "expected": ""
@@ -10194,7 +10172,6 @@
       "id": "matrix-versioninfo-blank",
       "function": "VERSIONINFO",
       "args": [
-        null,
         null
       ],
       "expected": ""
@@ -10203,7 +10180,6 @@
       "id": "matrix-versioninfo-boundary",
       "function": "VERSIONINFO",
       "args": [
-        0,
         0
       ],
       "expected": ""
