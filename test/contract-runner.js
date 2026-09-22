@@ -8,6 +8,10 @@ const path = require("path");
 
 const corpusPath = path.join(__dirname, "contracts", "expressions.json");
 const corpus = JSON.parse(fs.readFileSync(corpusPath, "utf8"), revive);
+const matrixPath = path.join(__dirname, "contracts", "function-matrix.json");
+const matrix = fs.existsSync(matrixPath)
+  ? JSON.parse(fs.readFileSync(matrixPath, "utf8"), revive)
+  : null;
 const variables = require("./variables.json");
 
 function revive(key, value) {
@@ -15,16 +19,25 @@ function revive(key, value) {
   return value;
 }
 
-function normalize(value) {
+function normalize(value, seen = new WeakSet()) {
   if (value === undefined) return { $type: "undefined" };
   if (typeof value === "number" && Number.isNaN(value)) return { $type: "nan" };
   if (value instanceof Date) return { $date: value.toISOString().slice(0, 10) };
   if (typeof value === "function") return { $type: "function" };
-  if (Array.isArray(value)) return value.map(normalize);
+  if (value instanceof Error) {
+    return { $type: "error", name: value.name, message: value.message };
+  }
+  if (Array.isArray(value)) {
+    if (seen.has(value)) return { $type: "circular" };
+    seen.add(value);
+    return value.map((item) => normalize(item, seen));
+  }
   if (value && typeof value === "object") {
+    if (seen.has(value)) return { $type: "circular" };
+    seen.add(value);
     const output = {};
     Object.keys(value).sort().forEach((key) => {
-      output[key] = normalize(value[key]);
+      output[key] = normalize(value[key], seen);
     });
     return output;
   }
@@ -88,8 +101,12 @@ function createLegacyAdapter() {
     invoke(name, args, configure) {
       reset(configure);
       if (typeof global[name] !== "function") throw new Error(`Unknown expression function: ${name}`);
-      const value = global[name].apply(null, args);
-      return { value, results: runtime.results };
+      try {
+        const value = global[name].apply(null, args);
+        return { value, results: runtime.results };
+      } catch (error) {
+        return { error, results: runtime.results };
+      }
     },
     lifecycle() {
       reset();
@@ -115,25 +132,28 @@ function assertPackageContracts() {
     .includes("finishAsyncCallback"));
 }
 
-function run(adapter, compareAdapter) {
+function run(adapter, compareAdapter, activeCorpus = corpus) {
   assertPackageContracts();
   const lifecycle = adapter.lifecycle ? adapter.lifecycle() : null;
   if (lifecycle) assert.deepStrictEqual(lifecycle, { runtimeGlobals: true, functionGlobals: true });
 
   let count = 0;
-  corpus.cases.forEach((contract) => {
+  activeCorpus.cases.forEach((contract) => {
     const actual = adapter.invoke(contract.function, contract.args, contract.configure);
-    const observed = contract.observe === "results" ? actual.results : actual.value;
+    const observed = contract.observe === "results" ? actual.results : actual.error || actual.value;
     const normalized = normalize(observed);
-    if (contract.expected && contract.expected.$type === "object") {
+    if (compareAdapter) {
+      const candidate = compareAdapter.invoke(contract.function, contract.args, contract.configure);
+      const candidateObserved = contract.observe === "results"
+        ? candidate.results
+        : candidate.error || candidate.value;
+      assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
+    } else if (contract.expectedType) {
+      assert.strictEqual(typeof observed, contract.expectedType, contract.id);
+    } else if (contract.expected && contract.expected.$type === "object") {
       assert.ok(isPlainObject(observed), contract.id);
     } else {
       assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
-    }
-    if (compareAdapter) {
-      const candidate = compareAdapter.invoke(contract.function, contract.args, contract.configure);
-      const candidateObserved = contract.observe === "results" ? candidate.results : candidate.value;
-      assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
     }
     count += 1;
   });
@@ -153,13 +173,25 @@ function optionValue(option) {
 if (require.main === module) {
   const candidate = optionValue("--runtime");
   const compare = optionValue("--compare");
-  const count = run(loadAdapter(candidate || "legacy"), compare ? loadAdapter(compare) : null);
-  console.log(`Contract suite passed: ${count} cases`);
+  const adapter = loadAdapter(candidate || "legacy");
+  const compareAdapter = compare ? loadAdapter(compare) : null;
+  const count = run(adapter, compareAdapter);
+  const matrixCount = matrix ? run(loadAdapter(candidate || "legacy"), compareAdapter, matrix) : 0;
+  if (matrix) {
+    const expectedCases = (matrix.coverage.functions - matrix.limitations.length) * matrix.coverage.probesPerFunction;
+    assert.strictEqual(matrix.cases.length, expectedCases, "function matrix coverage metadata");
+  }
+  console.log(`Contract suite passed: ${count + matrixCount} cases (${count} baseline, ${matrixCount} function matrix)`);
 }
 
 module.exports = {
   createLegacyAdapter,
   extractLocalScriptSources,
+  loadAdapter,
+  matrix,
   isPlainObject,
   normalizeLocalScriptSource,
+  normalize,
+  run,
+  revive,
 };
