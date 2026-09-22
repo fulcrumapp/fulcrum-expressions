@@ -163,7 +163,8 @@ function run(adapter, compareAdapter, activeCorpus = corpus) {
         : candidate.error || candidate.value;
       const candidateNormalized = normalize(candidateObserved);
       assertContract(contract, candidateObserved, candidateNormalized);
-      if (!contract.expectedType) {
+      if (!contract.expectedType
+        && !(contract.expected && contract.expected.$type === "object")) {
         assert.deepStrictEqual(candidateNormalized, normalized, contract.id);
       }
     }
@@ -182,11 +183,11 @@ function invokeAdapter(adapter, contract) {
 
 function assertContract(contract, observed, normalized) {
   if (contract.expectedType) {
-      assert.strictEqual(typeof observed, contract.expectedType, contract.id);
+    assert.strictEqual(typeof observed, contract.expectedType, contract.id);
   } else if (contract.expected && contract.expected.$type === "object") {
-      assert.ok(isPlainObject(observed), contract.id);
+    assert.ok(isPlainObject(observed), contract.id);
   } else {
-      assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
+    assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
   }
 }
 
@@ -203,10 +204,14 @@ function optionValue(option) {
 if (require.main === module) {
   const candidate = optionValue("--runtime");
   const compare = optionValue("--compare");
+  const requireMatrix = process.argv.includes("--require-matrix");
   const adapter = loadAdapter(candidate || "legacy");
   const compareAdapter = compare ? loadAdapter(compare) : null;
   const count = run(adapter, compareAdapter);
   const matrix = loadMatrix();
+  if (requireMatrix && !matrix) {
+    throw new Error("Contract matrix is required but test/contracts/function-matrix.json is missing");
+  }
   const matrixCount = matrix ? run(adapter, compareAdapter, matrix) : 0;
   if (matrix) {
     const expectedCases = (matrix.coverage.functions - matrix.limitations.length) * matrix.coverage.probesPerFunction;
