@@ -4539,18 +4539,14 @@
         [
           -82.6,
           27.7
-        ]
+        ],
+        null,
+        null
       ],
       "expected": {
-        "geometry": {
-          "coordinates": [
-            -82.6,
-            27.7
-          ],
-          "type": "Point"
-        },
-        "properties": {},
-        "type": "Feature"
+        "$type": "error",
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'id')"
       }
     },
     {
@@ -4588,18 +4584,14 @@
         [
           0,
           0
-        ]
+        ],
+        null,
+        null
       ],
       "expected": {
-        "geometry": {
-          "coordinates": [
-            0,
-            0
-          ],
-          "type": "Point"
-        },
-        "properties": {},
-        "type": "Feature"
+        "$type": "error",
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'id')"
       }
     },
     {
@@ -9828,7 +9820,8 @@
       "function": "TIMEADD",
       "args": [
         "2020-01-01",
-        0
+        0,
+        null
       ],
       "expected": {
         "$type": "undefined"

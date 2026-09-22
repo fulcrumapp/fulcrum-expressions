@@ -152,36 +152,42 @@ function run(adapter, compareAdapter, activeCorpus = corpus) {
 
   let count = 0;
   activeCorpus.cases.forEach((contract) => {
-    const actual = adapter.invoke(contract.function, contract.args, contract.configure);
+    const actual = invokeAdapter(adapter, contract);
     const observed = contract.observe === "results" ? actual.results : actual.error || actual.value;
     const normalized = normalize(observed);
+    assertContract(contract, observed, normalized);
     if (compareAdapter) {
-      if (contract.expectedType) assert.strictEqual(typeof observed, contract.expectedType, contract.id);
-      if (contract.expected && contract.expected.$type === "object") {
-        assert.ok(isPlainObject(observed), contract.id);
-      }
-      const candidate = compareAdapter.invoke(contract.function, contract.args, contract.configure);
+      const candidate = invokeAdapter(compareAdapter, contract);
       const candidateObserved = contract.observe === "results"
         ? candidate.results
         : candidate.error || candidate.value;
-      if (contract.expectedType) {
-        assert.strictEqual(typeof candidateObserved, contract.expectedType, contract.id);
-      } else if (contract.expected && contract.expected.$type === "object") {
-        assert.ok(isPlainObject(candidateObserved), contract.id);
-      }
+      const candidateNormalized = normalize(candidateObserved);
+      assertContract(contract, candidateObserved, candidateNormalized);
       if (!contract.expectedType) {
-        assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
+        assert.deepStrictEqual(candidateNormalized, normalized, contract.id);
       }
-    } else if (contract.expectedType) {
-      assert.strictEqual(typeof observed, contract.expectedType, contract.id);
-    } else if (contract.expected && contract.expected.$type === "object") {
-      assert.ok(isPlainObject(observed), contract.id);
-    } else {
-      assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
     }
     count += 1;
   });
   return count;
+}
+
+function invokeAdapter(adapter, contract) {
+  try {
+    return adapter.invoke(contract.function, contract.args, contract.configure);
+  } catch (error) {
+    return { error, results: [] };
+  }
+}
+
+function assertContract(contract, observed, normalized) {
+  if (contract.expectedType) {
+      assert.strictEqual(typeof observed, contract.expectedType, contract.id);
+  } else if (contract.expected && contract.expected.$type === "object") {
+      assert.ok(isPlainObject(observed), contract.id);
+  } else {
+      assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
+  }
 }
 
 function optionValue(option) {
