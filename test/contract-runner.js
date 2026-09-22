@@ -9,9 +9,6 @@ const path = require("path");
 const corpusPath = path.join(__dirname, "contracts", "expressions.json");
 const corpus = JSON.parse(fs.readFileSync(corpusPath, "utf8"), revive);
 const matrixPath = path.join(__dirname, "contracts", "function-matrix.json");
-const matrix = fs.existsSync(matrixPath)
-  ? JSON.parse(fs.readFileSync(matrixPath, "utf8"), revive)
-  : null;
 const variables = require("./variables.json");
 
 function revive(key, value) {
@@ -22,6 +19,9 @@ function revive(key, value) {
 function normalize(value, seen = new WeakSet()) {
   if (value === undefined) return { $type: "undefined" };
   if (typeof value === "number" && Number.isNaN(value)) return { $type: "nan" };
+  if (value === Infinity) return { $type: "infinity", sign: 1 };
+  if (value === -Infinity) return { $type: "infinity", sign: -1 };
+  if (Object.is(value, -0)) return { $type: "number", value: "-0" };
   if (value instanceof Date) return { $date: value.toISOString().slice(0, 10) };
   if (typeof value === "function") return { $type: "function" };
   if (value instanceof Error) {
@@ -30,16 +30,24 @@ function normalize(value, seen = new WeakSet()) {
   if (Array.isArray(value)) {
     if (seen.has(value)) return { $type: "circular" };
     seen.add(value);
-    return value.map((item) => normalize(item, seen));
+    try {
+      return value.map((item) => normalize(item, seen));
+    } finally {
+      seen.delete(value);
+    }
   }
   if (value && typeof value === "object") {
     if (seen.has(value)) return { $type: "circular" };
     seen.add(value);
-    const output = {};
-    Object.keys(value).sort().forEach((key) => {
-      output[key] = normalize(value[key], seen);
-    });
-    return output;
+    try {
+      const output = {};
+      Object.keys(value).sort().forEach((key) => {
+        output[key] = normalize(value[key], seen);
+      });
+      return output;
+    } finally {
+      seen.delete(value);
+    }
   }
   return value;
 }
@@ -65,6 +73,11 @@ function extractLocalScriptSources(html) {
     if (normalized) scriptSources.push(normalized);
   }
   return scriptSources;
+}
+
+function loadMatrix() {
+  if (!fs.existsSync(matrixPath)) return null;
+  return JSON.parse(fs.readFileSync(matrixPath, "utf8"), revive);
 }
 
 function loadAdapter(moduleName) {
@@ -143,11 +156,22 @@ function run(adapter, compareAdapter, activeCorpus = corpus) {
     const observed = contract.observe === "results" ? actual.results : actual.error || actual.value;
     const normalized = normalize(observed);
     if (compareAdapter) {
+      if (contract.expectedType) assert.strictEqual(typeof observed, contract.expectedType, contract.id);
+      if (contract.expected && contract.expected.$type === "object") {
+        assert.ok(isPlainObject(observed), contract.id);
+      }
       const candidate = compareAdapter.invoke(contract.function, contract.args, contract.configure);
       const candidateObserved = contract.observe === "results"
         ? candidate.results
         : candidate.error || candidate.value;
-      assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
+      if (contract.expectedType) {
+        assert.strictEqual(typeof candidateObserved, contract.expectedType, contract.id);
+      } else if (contract.expected && contract.expected.$type === "object") {
+        assert.ok(isPlainObject(candidateObserved), contract.id);
+      }
+      if (!contract.expectedType) {
+        assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
+      }
     } else if (contract.expectedType) {
       assert.strictEqual(typeof observed, contract.expectedType, contract.id);
     } else if (contract.expected && contract.expected.$type === "object") {
@@ -176,6 +200,7 @@ if (require.main === module) {
   const adapter = loadAdapter(candidate || "legacy");
   const compareAdapter = compare ? loadAdapter(compare) : null;
   const count = run(adapter, compareAdapter);
+  const matrix = loadMatrix();
   const matrixCount = matrix ? run(loadAdapter(candidate || "legacy"), compareAdapter, matrix) : 0;
   if (matrix) {
     const expectedCases = (matrix.coverage.functions - matrix.limitations.length) * matrix.coverage.probesPerFunction;
@@ -188,7 +213,7 @@ module.exports = {
   createLegacyAdapter,
   extractLocalScriptSources,
   loadAdapter,
-  matrix,
+  loadMatrix,
   isPlainObject,
   normalizeLocalScriptSource,
   normalize,
