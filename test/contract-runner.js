@@ -36,7 +36,7 @@ function loadAdapter(moduleName) {
   const factory = candidate.createContractAdapter || candidate.default || candidate;
   const adapter = typeof factory === "function" ? factory({ variables }) : factory;
   if (!adapter || typeof adapter.invoke !== "function") {
-    throw new Error(`${moduleName} must export an adapter with invoke(name, args)`);
+    throw new Error(`${moduleName} must export an adapter with invoke(name, args, configure)`);
   }
   return adapter;
 }
@@ -87,7 +87,7 @@ function assertPackageContracts() {
   const html = fs.readFileSync(path.join(__dirname, "..", "expressions.html"), "utf8");
   const scriptNames = [...html.matchAll(/<script src=["']([^"']+)["']/g)]
     .map((match) => match[1])
-    .filter((name) => !name.startsWith("http"));
+    .filter((name) => !name.startsWith("http") && !name.startsWith("//"));
   assert.deepStrictEqual(scriptNames, corpus.package.browserScripts);
   assert.ok(fs.readFileSync(path.join(__dirname, "..", "expressions-proxy.coffee"), "utf8")
     .includes("finishAsyncCallback"));
@@ -103,24 +103,33 @@ function run(adapter, compareAdapter) {
     const actual = adapter.invoke(contract.function, contract.args, contract.configure);
     const observed = contract.observe === "results" ? actual.results : actual.value;
     const normalized = normalize(observed);
-    if (compareAdapter) {
-      const candidate = compareAdapter.invoke(contract.function, contract.args, contract.configure);
-      const candidateObserved = contract.observe === "results" ? candidate.results : candidate.value;
-      assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
-    } else if (contract.expected && contract.expected.$type === "object") {
+    if (contract.expected && contract.expected.$type === "object") {
       assert.strictEqual(typeof observed, "object", contract.id);
       assert.ok(observed !== null, contract.id);
     } else {
       assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
+    }
+    if (compareAdapter) {
+      const candidate = compareAdapter.invoke(contract.function, contract.args, contract.configure);
+      const candidateObserved = contract.observe === "results" ? candidate.results : candidate.value;
+      assert.deepStrictEqual(normalize(candidateObserved), normalized, contract.id);
     }
     count += 1;
   });
   return count;
 }
 
-const runtimeIndex = process.argv.indexOf("--runtime");
-const compareIndex = process.argv.indexOf("--compare");
-const candidate = runtimeIndex >= 0 ? process.argv[runtimeIndex + 1] : null;
-const compare = compareIndex >= 0 ? process.argv[compareIndex + 1] : null;
+function optionValue(option) {
+  const index = process.argv.indexOf(option);
+  if (index < 0) return null;
+  const value = process.argv[index + 1];
+  if (!value || value.startsWith("--")) {
+    throw new Error(`${option} requires a value`);
+  }
+  return value;
+}
+
+const candidate = optionValue("--runtime");
+const compare = optionValue("--compare");
 const count = run(loadAdapter(candidate || "legacy"), compare ? loadAdapter(compare) : null);
 console.log(`Contract suite passed: ${count} cases`);
