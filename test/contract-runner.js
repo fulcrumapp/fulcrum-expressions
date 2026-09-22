@@ -1,5 +1,7 @@
 "use strict";
 
+process.env.TZ = "UTC";
+
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
@@ -36,8 +38,20 @@ function isPlainObject(value) {
 }
 
 function normalizeLocalScriptSource(source) {
-  if (/^(?:[a-z][a-z0-9+.-]*:)?\/\//i.test(source)) return null;
-  return path.posix.basename(path.posix.normalize(source.replace(/[?#].*$/, "")));
+  const trimmed = source.trim();
+  if (/^(?:[a-z][a-z0-9+.-]*:)?\/\//i.test(trimmed)) return null;
+  return path.posix.basename(path.posix.normalize(trimmed.replace(/[?#].*$/, "")));
+}
+
+function extractLocalScriptSources(html) {
+  const scriptSources = [];
+  const scriptTagPattern = /<script\b[^>]*\bsrc\s*=\s*(?:(["'])(.*?)\1|([^\s"'=<>`]+))[^>]*>/gi;
+  let match;
+  while ((match = scriptTagPattern.exec(html)) !== null) {
+    const normalized = normalizeLocalScriptSource(match[2] || match[3]);
+    if (normalized) scriptSources.push(normalized);
+  }
+  return scriptSources;
 }
 
 function loadAdapter(moduleName) {
@@ -95,9 +109,7 @@ function assertPackageContracts() {
   assert.strictEqual(packageJson.main, corpus.package.main);
 
   const html = fs.readFileSync(path.join(__dirname, "..", "expressions.html"), "utf8");
-  const scriptNames = [...html.matchAll(/<script src=["']([^"']+)["']/g)]
-    .map((match) => normalizeLocalScriptSource(match[1]))
-    .filter(Boolean);
+  const scriptNames = extractLocalScriptSources(html);
   assert.deepStrictEqual(scriptNames, corpus.package.browserScripts);
   assert.ok(fs.readFileSync(path.join(__dirname, "..", "expressions-proxy.coffee"), "utf8")
     .includes("finishAsyncCallback"));
@@ -147,6 +159,7 @@ if (require.main === module) {
 
 module.exports = {
   createLegacyAdapter,
+  extractLocalScriptSources,
   isPlainObject,
   normalizeLocalScriptSource,
 };
