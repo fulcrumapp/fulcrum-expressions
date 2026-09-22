@@ -47,24 +47,29 @@ function parameterCount(source) {
 }
 
 function argsFor(name, arity, probe) {
-  if (probe === "blank") return Array.from({ length: arity }, () => null);
+  let args;
+  if (probe === "blank") args = Array.from({ length: arity }, () => null);
   if (probe === "boundary") {
-    if (name === "DATE") return [1970, 1, 1];
-    if (name === "DATEADD" || name === "TIMEADD") return ["2020-01-01", 0];
-    if (name === "GEOMETRYPOINT") return [[0, 0]];
-    return Array.from({ length: arity }, () => 0);
+    if (name === "DATE") args = [1970, 1, 1];
+    else if (name === "DATEADD" || name === "TIMEADD") args = ["2020-01-01", 0];
+    else if (name === "GEOMETRYPOINT") args = [[0, 0]];
+    else args = Array.from({ length: arity }, () => 0);
   }
   if (probe === "coercion") {
-    if (name === "IF") return [1, "yes", "no"];
-    if (name === "DATE") return ["2020", "1", "2"];
-    return Array.from({ length: arity }, () => "1");
+    if (name === "IF") args = [1, "yes", "no"];
+    else if (name === "DATE") args = ["2020", "1", "2"];
+    else args = Array.from({ length: arity }, () => "1");
   }
-  if (name === "IF") return [true, "yes", "no"];
-  if (name === "DATE") return [2020, 1, 2];
-  if (name === "GEOMETRYPOINT") return [[-82.6, 27.7]];
-  if (name === "SETVALUE") return ["name", "Changed"];
-  if (name === "SETLOCATION") return [27.7, -82.6];
-  return Array.from({ length: arity }, (_, index) => index + 1);
+  if (!args) {
+    if (name === "IF") args = [true, "yes", "no"];
+    else if (name === "DATE") args = [2020, 1, 2];
+    else if (name === "GEOMETRYPOINT") args = [[-82.6, 27.7]];
+    else if (name === "SETVALUE") args = ["name", "Changed"];
+    else if (name === "SETLOCATION") args = [27.7, -82.6];
+    else args = Array.from({ length: arity }, (_, index) => index + 1);
+  }
+  if (arity === 0) return args;
+  return args.slice(0, arity).concat(Array.from({ length: Math.max(0, arity - args.length) }, () => null));
 }
 
 function runProbe(adapter, name, args) {
@@ -84,7 +89,8 @@ function configureFor(name) {
 const adapter = loadAdapter("legacy");
 const cases = [];
 const limitations = [];
-for (const name of sourceNames()) {
+const names = sourceNames();
+for (const name of names) {
   const source = fs.readFileSync(path.join(functionsDir, `${name}.ts`), "utf8");
   const arity = parameterCount(source);
   const fn = global[name];
@@ -119,8 +125,8 @@ fs.mkdirSync(path.dirname(output), { recursive: true });
 fs.writeFileSync(output, `${JSON.stringify({
   version: 1,
   description: "Generated deterministic probes for every legacy expression function file.",
-  coverage: { functions: sourceNames().length, probesPerFunction: 4, cases: cases.length },
+  coverage: { functions: names.length, probesPerFunction: 4, cases: cases.length },
   limitations,
   cases,
 }, null, 2)}\n`);
-console.log(`Generated ${cases.length} cases for ${sourceNames().length} functions (${limitations.length} classified limitations).`);
+console.log(`Generated ${cases.length} cases for ${names.length} functions (${limitations.length} classified limitations).`);
