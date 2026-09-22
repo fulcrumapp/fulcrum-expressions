@@ -68,23 +68,25 @@
     {
       "id": "matrix-abs-normal",
       "function": "ABS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-abs-coercion",
       "function": "ABS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-abs-blank",
       "function": "ABS",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -92,31 +94,33 @@
     {
       "id": "matrix-abs-boundary",
       "function": "ABS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-acos-normal",
       "function": "ACOS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-acos-coercion",
       "function": "ACOS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-acos-blank",
       "function": "ACOS",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -124,31 +128,33 @@
     {
       "id": "matrix-acos-boundary",
       "function": "ACOS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1.5707963267948966
     },
     {
       "id": "matrix-acosh-normal",
       "function": "ACOSH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-acosh-coercion",
       "function": "ACOSH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-acosh-blank",
       "function": "ACOSH",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -156,7 +162,9 @@
     {
       "id": "matrix-acosh-boundary",
       "function": "ACOSH",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -164,11 +172,14 @@
     {
       "id": "matrix-alert-normal",
       "function": "ALERT",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [
         {
-          "message": null,
-          "title": null,
+          "message": "2",
+          "title": "1",
           "type": "message"
         }
       ],
@@ -177,11 +188,14 @@
     {
       "id": "matrix-alert-coercion",
       "function": "ALERT",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [
         {
-          "message": null,
-          "title": null,
+          "message": "1",
+          "title": "1",
           "type": "message"
         }
       ],
@@ -190,7 +204,10 @@
     {
       "id": "matrix-alert-blank",
       "function": "ALERT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [
         {
           "message": null,
@@ -203,11 +220,14 @@
     {
       "id": "matrix-alert-boundary",
       "function": "ALERT",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [
         {
-          "message": null,
-          "title": null,
+          "message": "0",
+          "title": "0",
           "type": "message"
         }
       ],
@@ -248,26 +268,34 @@
     {
       "id": "matrix-and-normal",
       "function": "AND",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": true
     },
     {
       "id": "matrix-and-coercion",
       "function": "AND",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": true
     },
     {
       "id": "matrix-and-blank",
       "function": "AND",
-      "args": [],
-      "expected": true
+      "args": [
+        null
+      ],
+      "expected": false
     },
     {
       "id": "matrix-and-boundary",
       "function": "AND",
-      "args": [],
-      "expected": true
+      "args": [
+        0
+      ],
+      "expected": false
     },
     {
       "id": "matrix-application-normal",
@@ -320,25 +348,37 @@
     {
       "id": "matrix-applicationinfo-normal",
       "function": "APPLICATIONINFO",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": ""
     },
     {
       "id": "matrix-applicationinfo-coercion",
       "function": "APPLICATIONINFO",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": ""
     },
     {
       "id": "matrix-applicationinfo-blank",
       "function": "APPLICATIONINFO",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-applicationinfo-boundary",
       "function": "APPLICATIONINFO",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": ""
     },
     {
@@ -368,79 +408,100 @@
     {
       "id": "matrix-array-normal",
       "function": "ARRAY",
-      "args": [],
-      "expected": []
+      "args": [
+        1
+      ],
+      "expected": [
+        1
+      ]
     },
     {
       "id": "matrix-array-coercion",
       "function": "ARRAY",
-      "args": [],
-      "expected": []
+      "args": [
+        "1"
+      ],
+      "expected": [
+        "1"
+      ]
     },
     {
       "id": "matrix-array-blank",
       "function": "ARRAY",
-      "args": [],
-      "expected": []
+      "args": [
+        null
+      ],
+      "expected": [
+        null
+      ]
     },
     {
       "id": "matrix-array-boundary",
       "function": "ARRAY",
-      "args": [],
-      "expected": []
+      "args": [
+        0
+      ],
+      "expected": [
+        0
+      ]
     },
     {
       "id": "matrix-average-normal",
       "function": "AVERAGE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-average-coercion",
       "function": "AVERAGE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-average-blank",
       "function": "AVERAGE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        null
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-average-boundary",
       "function": "AVERAGE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-ceiling-normal",
       "function": "CEILING",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 2
     },
     {
       "id": "matrix-ceiling-coercion",
       "function": "CEILING",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-ceiling-blank",
       "function": "CEILING",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -448,39 +509,50 @@
     {
       "id": "matrix-ceiling-boundary",
       "function": "CEILING",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-char-normal",
       "function": "CHAR",
-      "args": [],
-      "expected": "\u0000"
+      "args": [
+        1
+      ],
+      "expected": "\u0001"
     },
     {
       "id": "matrix-char-coercion",
       "function": "CHAR",
-      "args": [],
-      "expected": "\u0000"
+      "args": [
+        "1"
+      ],
+      "expected": "\u0001"
     },
     {
       "id": "matrix-char-blank",
       "function": "CHAR",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": "\u0000"
     },
     {
       "id": "matrix-char-boundary",
       "function": "CHAR",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": "\u0000"
     },
     {
       "id": "matrix-choicevalue-normal",
       "function": "CHOICEVALUE",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -488,7 +560,9 @@
     {
       "id": "matrix-choicevalue-coercion",
       "function": "CHOICEVALUE",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -496,7 +570,9 @@
     {
       "id": "matrix-choicevalue-blank",
       "function": "CHOICEVALUE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -504,7 +580,9 @@
     {
       "id": "matrix-choicevalue-boundary",
       "function": "CHOICEVALUE",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -512,7 +590,9 @@
     {
       "id": "matrix-choicevalues-normal",
       "function": "CHOICEVALUES",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -520,7 +600,9 @@
     {
       "id": "matrix-choicevalues-coercion",
       "function": "CHOICEVALUES",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -528,7 +610,9 @@
     {
       "id": "matrix-choicevalues-blank",
       "function": "CHOICEVALUES",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -536,7 +620,9 @@
     {
       "id": "matrix-choicevalues-boundary",
       "function": "CHOICEVALUES",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -544,47 +630,65 @@
     {
       "id": "matrix-clean-normal",
       "function": "CLEAN",
-      "args": [],
-      "expected": ""
+      "args": [
+        1
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "TypeError",
+        "message": "text.replace is not a function"
+      }
     },
     {
       "id": "matrix-clean-coercion",
       "function": "CLEAN",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-clean-blank",
       "function": "CLEAN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-clean-boundary",
       "function": "CLEAN",
-      "args": [],
-      "expected": ""
+      "args": [
+        0
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "TypeError",
+        "message": "text.replace is not a function"
+      }
     },
     {
       "id": "matrix-coalesce-normal",
       "function": "COALESCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-coalesce-coercion",
       "function": "COALESCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-coalesce-blank",
       "function": "COALESCE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -592,31 +696,33 @@
     {
       "id": "matrix-coalesce-boundary",
       "function": "COALESCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-code-normal",
       "function": "CODE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 49
     },
     {
       "id": "matrix-code-coercion",
       "function": "CODE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 49
     },
     {
       "id": "matrix-code-blank",
       "function": "CODE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -624,15 +730,17 @@
     {
       "id": "matrix-code-boundary",
       "function": "CODE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 48
     },
     {
       "id": "matrix-compact-normal",
       "function": "COMPACT",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -640,7 +748,9 @@
     {
       "id": "matrix-compact-coercion",
       "function": "COMPACT",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -648,7 +758,9 @@
     {
       "id": "matrix-compact-blank",
       "function": "COMPACT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -656,7 +768,9 @@
     {
       "id": "matrix-compact-boundary",
       "function": "COMPACT",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -664,123 +778,173 @@
     {
       "id": "matrix-concat-normal",
       "function": "CONCAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-concat-coercion",
       "function": "CONCAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-concat-blank",
       "function": "CONCAT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-concat-boundary",
       "function": "CONCAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-concatenate-normal",
       "function": "CONCATENATE",
-      "args": [],
-      "expected": ""
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-concatenate-coercion",
       "function": "CONCATENATE",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-concatenate-blank",
       "function": "CONCATENATE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-concatenate-boundary",
       "function": "CONCATENATE",
-      "args": [],
-      "expected": ""
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-confirm-normal",
       "function": "CONFIRM",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-confirm-coercion",
       "function": "CONFIRM",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-confirm-blank",
       "function": "CONFIRM",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-confirm-boundary",
       "function": "CONFIRM",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-contains-normal",
       "function": "CONTAINS",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": false
     },
     {
       "id": "matrix-contains-coercion",
       "function": "CONTAINS",
-      "args": [],
-      "expected": false
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": true
     },
     {
       "id": "matrix-contains-blank",
       "function": "CONTAINS",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-contains-boundary",
       "function": "CONTAINS",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": false
     },
     {
       "id": "matrix-cos-normal",
       "function": "COS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0.5403023058681398
     },
     {
       "id": "matrix-cos-coercion",
       "function": "COS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0.5403023058681398
     },
     {
       "id": "matrix-cos-blank",
       "function": "COS",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -788,31 +952,33 @@
     {
       "id": "matrix-cos-boundary",
       "function": "COS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-cosh-normal",
       "function": "COSH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1.5430806348152437
     },
     {
       "id": "matrix-cosh-coercion",
       "function": "COSH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1.5430806348152437
     },
     {
       "id": "matrix-cosh-blank",
       "function": "COSH",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -820,15 +986,17 @@
     {
       "id": "matrix-cosh-boundary",
       "function": "COSH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-count-normal",
       "function": "COUNT",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -836,7 +1004,9 @@
     {
       "id": "matrix-count-coercion",
       "function": "COUNT",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -844,7 +1014,9 @@
     {
       "id": "matrix-count-blank",
       "function": "COUNT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -852,7 +1024,9 @@
     {
       "id": "matrix-count-boundary",
       "function": "COUNT",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -860,49 +1034,65 @@
     {
       "id": "matrix-counta-normal",
       "function": "COUNTA",
-      "args": [],
-      "expected": 0
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-counta-coercion",
       "function": "COUNTA",
-      "args": [],
-      "expected": 0
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-counta-blank",
       "function": "COUNTA",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": 0
     },
     {
       "id": "matrix-counta-boundary",
       "function": "COUNTA",
-      "args": [],
-      "expected": 0
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-countblank-normal",
       "function": "COUNTBLANK",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": 0
     },
     {
       "id": "matrix-countblank-coercion",
       "function": "COUNTBLANK",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": 0
     },
     {
       "id": "matrix-countblank-blank",
       "function": "COUNTBLANK",
-      "args": [],
-      "expected": 0
+      "args": [
+        null
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-countblank-boundary",
       "function": "COUNTBLANK",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": 0
     },
     {
@@ -1004,43 +1194,25 @@
     {
       "id": "matrix-datanames-normal",
       "function": "DATANAMES",
-      "args": [],
-      "expected": [
-        "name",
-        "items",
-        "cost",
-        "choice_value",
-        "child_items",
-        "child_item_cost",
-        "grandchild_items",
-        "grandchild_item_cost",
-        "choice_field",
-        "checklist",
-        "sketch_field"
-      ]
+      "args": [
+        1
+      ],
+      "expected": []
     },
     {
       "id": "matrix-datanames-coercion",
       "function": "DATANAMES",
-      "args": [],
-      "expected": [
-        "name",
-        "items",
-        "cost",
-        "choice_value",
-        "child_items",
-        "child_item_cost",
-        "grandchild_items",
-        "grandchild_item_cost",
-        "choice_field",
-        "checklist",
-        "sketch_field"
-      ]
+      "args": [
+        "1"
+      ],
+      "expected": []
     },
     {
       "id": "matrix-datanames-blank",
       "function": "DATANAMES",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         "name",
         "items",
@@ -1058,20 +1230,10 @@
     {
       "id": "matrix-datanames-boundary",
       "function": "DATANAMES",
-      "args": [],
-      "expected": [
-        "name",
-        "items",
-        "cost",
-        "choice_value",
-        "child_items",
-        "child_item_cost",
-        "grandchild_items",
-        "grandchild_item_cost",
-        "choice_field",
-        "checklist",
-        "sketch_field"
-      ]
+      "args": [
+        0
+      ],
+      "expected": []
     },
     {
       "id": "matrix-date-normal",
@@ -1100,7 +1262,11 @@
     {
       "id": "matrix-date-blank",
       "function": "DATE",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1120,7 +1286,10 @@
     {
       "id": "matrix-dateadd-normal",
       "function": "DATEADD",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1128,15 +1297,21 @@
     {
       "id": "matrix-dateadd-coercion",
       "function": "DATEADD",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
-        "$type": "undefined"
+        "$date": "2001-01-02"
       }
     },
     {
       "id": "matrix-dateadd-blank",
       "function": "DATEADD",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1155,7 +1330,10 @@
     {
       "id": "matrix-datevalue-normal",
       "function": "DATEVALUE",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1163,15 +1341,21 @@
     {
       "id": "matrix-datevalue-coercion",
       "function": "DATEVALUE",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
-        "$type": "undefined"
+        "$date": "2001-01-01"
       }
     },
     {
       "id": "matrix-datevalue-blank",
       "function": "DATEVALUE",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1179,7 +1363,10 @@
     {
       "id": "matrix-datevalue-boundary",
       "function": "DATEVALUE",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1187,7 +1374,9 @@
     {
       "id": "matrix-day-normal",
       "function": "DAY",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1195,15 +1384,17 @@
     {
       "id": "matrix-day-coercion",
       "function": "DAY",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-day-blank",
       "function": "DAY",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1211,7 +1402,9 @@
     {
       "id": "matrix-day-boundary",
       "function": "DAY",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1255,23 +1448,25 @@
     {
       "id": "matrix-degrees-normal",
       "function": "DEGREES",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 57.29577951308232
     },
     {
       "id": "matrix-degrees-coercion",
       "function": "DEGREES",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 57.29577951308232
     },
     {
       "id": "matrix-degrees-blank",
       "function": "DEGREES",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -1279,15 +1474,17 @@
     {
       "id": "matrix-degrees-boundary",
       "function": "DEGREES",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-description-normal",
       "function": "DESCRIPTION",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1295,7 +1492,9 @@
     {
       "id": "matrix-description-coercion",
       "function": "DESCRIPTION",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1303,7 +1502,9 @@
     {
       "id": "matrix-description-blank",
       "function": "DESCRIPTION",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1311,7 +1512,9 @@
     {
       "id": "matrix-description-boundary",
       "function": "DESCRIPTION",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1319,25 +1522,37 @@
     {
       "id": "matrix-deviceinfo-normal",
       "function": "DEVICEINFO",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": ""
     },
     {
       "id": "matrix-deviceinfo-coercion",
       "function": "DEVICEINFO",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": ""
     },
     {
       "id": "matrix-deviceinfo-blank",
       "function": "DEVICEINFO",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-deviceinfo-boundary",
       "function": "DEVICEINFO",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": ""
     },
     {
@@ -1423,63 +1638,73 @@
     {
       "id": "matrix-error-normal",
       "function": "ERROR",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": ""
+        "message": "1"
       }
     },
     {
       "id": "matrix-error-coercion",
       "function": "ERROR",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": ""
+        "message": "1"
       }
     },
     {
       "id": "matrix-error-blank",
       "function": "ERROR",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": ""
+        "message": "null"
       }
     },
     {
       "id": "matrix-error-boundary",
       "function": "ERROR",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": ""
+        "message": "0"
       }
     },
     {
       "id": "matrix-even-normal",
       "function": "EVEN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 2
     },
     {
       "id": "matrix-even-coercion",
       "function": "EVEN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 2
     },
     {
       "id": "matrix-even-blank",
       "function": "EVEN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -1487,79 +1712,105 @@
     {
       "id": "matrix-even-boundary",
       "function": "EVEN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-exact-normal",
       "function": "EXACT",
-      "args": [],
-      "expected": true
+      "args": [
+        1,
+        2
+      ],
+      "expected": false
     },
     {
       "id": "matrix-exact-coercion",
       "function": "EXACT",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": true
     },
     {
       "id": "matrix-exact-blank",
       "function": "EXACT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-exact-boundary",
       "function": "EXACT",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": true
     },
     {
       "id": "matrix-exists-normal",
       "function": "EXISTS",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": true
     },
     {
       "id": "matrix-exists-coercion",
       "function": "EXISTS",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": true
     },
     {
       "id": "matrix-exists-blank",
       "function": "EXISTS",
-      "args": [],
-      "expected": true
+      "args": [
+        null,
+        null
+      ],
+      "expected": false
     },
     {
       "id": "matrix-exists-boundary",
       "function": "EXISTS",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": true
     },
     {
       "id": "matrix-exp-normal",
       "function": "EXP",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 2.718281828459045
     },
     {
       "id": "matrix-exp-coercion",
       "function": "EXP",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 2.718281828459045
     },
     {
       "id": "matrix-exp-blank",
       "function": "EXP",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -1567,31 +1818,33 @@
     {
       "id": "matrix-exp-boundary",
       "function": "EXP",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-fact-normal",
       "function": "FACT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-fact-coercion",
       "function": "FACT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-fact-blank",
       "function": "FACT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -1599,31 +1852,33 @@
     {
       "id": "matrix-fact-boundary",
       "function": "FACT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-factdouble-normal",
       "function": "FACTDOUBLE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-factdouble-coercion",
       "function": "FACTDOUBLE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-factdouble-blank",
       "function": "FACTDOUBLE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -1631,10 +1886,10 @@
     {
       "id": "matrix-factdouble-boundary",
       "function": "FACTDOUBLE",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-false-normal",
@@ -1663,7 +1918,9 @@
     {
       "id": "matrix-field-normal",
       "function": "FIELD",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1671,7 +1928,9 @@
     {
       "id": "matrix-field-coercion",
       "function": "FIELD",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1679,7 +1938,9 @@
     {
       "id": "matrix-field-blank",
       "function": "FIELD",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1687,7 +1948,9 @@
     {
       "id": "matrix-field-boundary",
       "function": "FIELD",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1695,7 +1958,10 @@
     {
       "id": "matrix-fieldnames-normal",
       "function": "FIELDNAMES",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1703,7 +1969,10 @@
     {
       "id": "matrix-fieldnames-coercion",
       "function": "FIELDNAMES",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1711,7 +1980,10 @@
     {
       "id": "matrix-fieldnames-blank",
       "function": "FIELDNAMES",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1719,7 +1991,10 @@
     {
       "id": "matrix-fieldnames-boundary",
       "function": "FIELDNAMES",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1727,7 +2002,10 @@
     {
       "id": "matrix-fields-normal",
       "function": "FIELDS",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1735,7 +2013,10 @@
     {
       "id": "matrix-fields-coercion",
       "function": "FIELDS",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1743,7 +2024,10 @@
     {
       "id": "matrix-fields-blank",
       "function": "FIELDS",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1751,7 +2035,10 @@
     {
       "id": "matrix-fields-boundary",
       "function": "FIELDS",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1759,7 +2046,9 @@
     {
       "id": "matrix-fieldtype-normal",
       "function": "FIELDTYPE",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1767,7 +2056,9 @@
     {
       "id": "matrix-fieldtype-coercion",
       "function": "FIELDTYPE",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1775,7 +2066,9 @@
     {
       "id": "matrix-fieldtype-blank",
       "function": "FIELDTYPE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1783,7 +2076,9 @@
     {
       "id": "matrix-fieldtype-boundary",
       "function": "FIELDTYPE",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1791,23 +2086,30 @@
     {
       "id": "matrix-first-normal",
       "function": "FIRST",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": []
     },
     {
       "id": "matrix-first-coercion",
       "function": "FIRST",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": [
+        "1"
+      ]
     },
     {
       "id": "matrix-first-blank",
       "function": "FIRST",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1815,31 +2117,40 @@
     {
       "id": "matrix-first-boundary",
       "function": "FIRST",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": []
     },
     {
       "id": "matrix-fixed-normal",
       "function": "FIXED",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2,
+        3
+      ],
+      "expected": "1.00"
     },
     {
       "id": "matrix-fixed-coercion",
       "function": "FIXED",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": "1.0"
     },
     {
       "id": "matrix-fixed-blank",
       "function": "FIXED",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1847,15 +2158,19 @@
     {
       "id": "matrix-fixed-boundary",
       "function": "FIXED",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0,
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-flatten-normal",
       "function": "FLATTEN",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1863,7 +2178,9 @@
     {
       "id": "matrix-flatten-coercion",
       "function": "FLATTEN",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1871,7 +2188,9 @@
     {
       "id": "matrix-flatten-blank",
       "function": "FLATTEN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1879,7 +2198,9 @@
     {
       "id": "matrix-flatten-boundary",
       "function": "FLATTEN",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -1887,23 +2208,28 @@
     {
       "id": "matrix-floor-normal",
       "function": "FLOOR",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-floor-coercion",
       "function": "FLOOR",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-floor-blank",
       "function": "FLOOR",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -1911,10 +2237,11 @@
     {
       "id": "matrix-floor-boundary",
       "function": "FLOOR",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-form-normal",
@@ -3267,47 +3594,67 @@
     {
       "id": "matrix-format-normal",
       "function": "FORMAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        1,
+        2
+      ],
+      "expected": "1 2"
     },
     {
       "id": "matrix-format-coercion",
       "function": "FORMAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": "1 1"
     },
     {
       "id": "matrix-format-blank",
       "function": "FORMAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        null,
+        null
+      ],
+      "expected": "null null"
     },
     {
       "id": "matrix-format-boundary",
       "function": "FORMAT",
-      "args": [],
-      "expected": ""
+      "args": [
+        0,
+        0
+      ],
+      "expected": "0 0"
     },
     {
       "id": "matrix-formataddress-normal",
       "function": "FORMATADDRESS",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2,
+        3
+      ],
+      "expected": ""
     },
     {
       "id": "matrix-formataddress-coercion",
       "function": "FORMATADDRESS",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": ""
     },
     {
       "id": "matrix-formataddress-blank",
       "function": "FORMATADDRESS",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -3315,39 +3662,63 @@
     {
       "id": "matrix-formataddress-boundary",
       "function": "FORMATADDRESS",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0,
+        0
+      ],
+      "expected": ""
     },
     {
       "id": "matrix-formatnumber-normal",
       "function": "FORMATNUMBER",
-      "args": [],
-      "expected": "NaN"
+      "args": [
+        1,
+        2,
+        3
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-formatnumber-coercion",
       "function": "FORMATNUMBER",
-      "args": [],
-      "expected": "NaN"
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "RangeError",
+        "message": "Incorrect locale information provided"
+      }
     },
     {
       "id": "matrix-formatnumber-blank",
       "function": "FORMATNUMBER",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": "NaN"
     },
     {
       "id": "matrix-formatnumber-boundary",
       "function": "FORMATNUMBER",
-      "args": [],
-      "expected": "NaN"
+      "args": [
+        0,
+        0,
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-gcd-normal",
       "function": "GCD",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -3355,7 +3726,9 @@
     {
       "id": "matrix-gcd-coercion",
       "function": "GCD",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -3363,7 +3736,9 @@
     {
       "id": "matrix-gcd-blank",
       "function": "GCD",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -3371,7 +3746,9 @@
     {
       "id": "matrix-gcd-boundary",
       "function": "GCD",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -3411,107 +3788,140 @@
     {
       "id": "matrix-geometryalong-normal",
       "function": "GEOMETRYALONG",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of undefined (reading 'length')"
       }
     },
     {
       "id": "matrix-geometryalong-coercion",
       "function": "GEOMETRYALONG",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of undefined (reading 'length')"
       }
     },
     {
       "id": "matrix-geometryalong-blank",
       "function": "GEOMETRYALONG",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'type')"
       }
     },
     {
       "id": "matrix-geometryalong-boundary",
       "function": "GEOMETRYALONG",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of undefined (reading 'length')"
       }
     },
     {
       "id": "matrix-geometryarea-normal",
       "function": "GEOMETRYAREA",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometryarea-coercion",
       "function": "GEOMETRYAREA",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometryarea-blank",
       "function": "GEOMETRYAREA",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'type')"
       }
     },
     {
       "id": "matrix-geometryarea-boundary",
       "function": "GEOMETRYAREA",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrybearing-normal",
       "function": "GEOMETRYBEARING",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "coord is required"
+        "message": "coord must be GeoJSON Point or an Array of numbers"
       }
     },
     {
       "id": "matrix-geometrybearing-coercion",
       "function": "GEOMETRYBEARING",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "coord is required"
+        "message": "coord must be GeoJSON Point or an Array of numbers"
       }
     },
     {
       "id": "matrix-geometrybearing-blank",
       "function": "GEOMETRYBEARING",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3521,7 +3931,10 @@
     {
       "id": "matrix-geometrybearing-boundary",
       "function": "GEOMETRYBEARING",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3531,27 +3944,39 @@
     {
       "id": "matrix-geometrybuffer-normal",
       "function": "GEOMETRYBUFFER",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "geojson is required"
+        "message": "options must be an object"
       }
     },
     {
       "id": "matrix-geometrybuffer-coercion",
       "function": "GEOMETRYBUFFER",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "geojson is required"
+        "message": "options must be an object"
       }
     },
     {
       "id": "matrix-geometrybuffer-blank",
       "function": "GEOMETRYBUFFER",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3561,7 +3986,11 @@
     {
       "id": "matrix-geometrybuffer-boundary",
       "function": "GEOMETRYBUFFER",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3571,107 +4000,143 @@
     {
       "id": "matrix-geometrycentroid-normal",
       "function": "GEOMETRYCENTROID",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrycentroid-coercion",
       "function": "GEOMETRYCENTROID",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrycentroid-blank",
       "function": "GEOMETRYCENTROID",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "coordinates must contain numbers"
       }
     },
     {
       "id": "matrix-geometrycentroid-boundary",
       "function": "GEOMETRYCENTROID",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometryconvex-normal",
       "function": "GEOMETRYCONVEX",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot create property 'concavity' on number '2'"
       }
     },
     {
       "id": "matrix-geometryconvex-coercion",
       "function": "GEOMETRYCONVEX",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot create property 'concavity' on string '1'"
       }
     },
     {
       "id": "matrix-geometryconvex-blank",
       "function": "GEOMETRYCONVEX",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'concavity')"
       }
     },
     {
       "id": "matrix-geometryconvex-boundary",
       "function": "GEOMETRYCONVEX",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot create property 'concavity' on number '0'"
       }
     },
     {
       "id": "matrix-geometrydistance-normal",
       "function": "GEOMETRYDISTANCE",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "coord is required"
+        "message": "coord must be GeoJSON Point or an Array of numbers"
       }
     },
     {
       "id": "matrix-geometrydistance-coercion",
       "function": "GEOMETRYDISTANCE",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "coord is required"
+        "message": "coord must be GeoJSON Point or an Array of numbers"
       }
     },
     {
       "id": "matrix-geometrydistance-blank",
       "function": "GEOMETRYDISTANCE",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3681,7 +4146,11 @@
     {
       "id": "matrix-geometrydistance-boundary",
       "function": "GEOMETRYDISTANCE",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3691,47 +4160,55 @@
     {
       "id": "matrix-geometryfeature-normal",
       "function": "GEOMETRYFEATURE",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
-        "geometry": {
-          "$type": "undefined"
-        },
-        "properties": {},
+        "geometry": 1,
+        "properties": 2,
         "type": "Feature"
       }
     },
     {
       "id": "matrix-geometryfeature-coercion",
       "function": "GEOMETRYFEATURE",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
-        "geometry": {
-          "$type": "undefined"
-        },
-        "properties": {},
+        "geometry": "1",
+        "properties": "1",
         "type": "Feature"
       }
     },
     {
       "id": "matrix-geometryfeature-blank",
       "function": "GEOMETRYFEATURE",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
-        "geometry": {
-          "$type": "undefined"
-        },
-        "properties": {},
-        "type": "Feature"
+        "$type": "error",
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'id')"
       }
     },
     {
       "id": "matrix-geometryfeature-boundary",
       "function": "GEOMETRYFEATURE",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
-        "geometry": {
-          "$type": "undefined"
-        },
+        "geometry": 0,
         "properties": {},
         "type": "Feature"
       }
@@ -3739,191 +4216,258 @@
     {
       "id": "matrix-geometryfeaturecollection-normal",
       "function": "GEOMETRYFEATURECOLLECTION",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
-        "features": {
-          "$type": "undefined"
-        },
+        "features": 1,
         "type": "FeatureCollection"
       }
     },
     {
       "id": "matrix-geometryfeaturecollection-coercion",
       "function": "GEOMETRYFEATURECOLLECTION",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
-        "features": {
-          "$type": "undefined"
-        },
+        "features": "1",
         "type": "FeatureCollection"
       }
     },
     {
       "id": "matrix-geometryfeaturecollection-blank",
       "function": "GEOMETRYFEATURECOLLECTION",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
-        "features": {
-          "$type": "undefined"
-        },
-        "type": "FeatureCollection"
+        "$type": "error",
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'id')"
       }
     },
     {
       "id": "matrix-geometryfeaturecollection-boundary",
       "function": "GEOMETRYFEATURECOLLECTION",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
-        "features": {
-          "$type": "undefined"
-        },
+        "features": 0,
         "type": "FeatureCollection"
       }
     },
     {
       "id": "matrix-geometryintersects-normal",
       "function": "GEOMETRYINTERSECTS",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometryintersects-coercion",
       "function": "GEOMETRYINTERSECTS",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometryintersects-blank",
       "function": "GEOMETRYINTERSECTS",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'type')"
       }
     },
     {
       "id": "matrix-geometryintersects-boundary",
       "function": "GEOMETRYINTERSECTS",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrylength-normal",
       "function": "GEOMETRYLENGTH",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrylength-coercion",
       "function": "GEOMETRYLENGTH",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrylength-blank",
       "function": "GEOMETRYLENGTH",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'type')"
       }
     },
     {
       "id": "matrix-geometrylength-boundary",
       "function": "GEOMETRYLENGTH",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrylinestring-normal",
       "function": "GEOMETRYLINESTRING",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "geometry": {
+          "coordinates": 1,
+          "type": "LineString"
+        },
+        "properties": 2,
+        "type": "Feature"
       }
     },
     {
       "id": "matrix-geometrylinestring-coercion",
       "function": "GEOMETRYLINESTRING",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "name": "Error",
+        "message": "coordinates must be an array of two or more positions"
       }
     },
     {
       "id": "matrix-geometrylinestring-blank",
       "function": "GEOMETRYLINESTRING",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "message": "Cannot read properties of null (reading 'length')"
       }
     },
     {
       "id": "matrix-geometrylinestring-boundary",
       "function": "GEOMETRYLINESTRING",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "geometry": {
+          "coordinates": 0,
+          "type": "LineString"
+        },
+        "properties": {},
+        "type": "Feature"
       }
     },
     {
       "id": "matrix-geometrynearestpoint-normal",
       "function": "GEOMETRYNEARESTPOINT",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
-        "name": "Error",
-        "message": "targetPoint is required"
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading '0')"
       }
     },
     {
       "id": "matrix-geometrynearestpoint-coercion",
       "function": "GEOMETRYNEARESTPOINT",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "Error",
-        "message": "targetPoint is required"
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading '0')"
       }
     },
     {
       "id": "matrix-geometrynearestpoint-blank",
       "function": "GEOMETRYNEARESTPOINT",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3933,7 +4477,11 @@
     {
       "id": "matrix-geometrynearestpoint-boundary",
       "function": "GEOMETRYNEARESTPOINT",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -3943,41 +4491,57 @@
     {
       "id": "matrix-geometrynearestpointonline-normal",
       "function": "GEOMETRYNEARESTPOINTONLINE",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrynearestpointonline-coercion",
       "function": "GEOMETRYNEARESTPOINTONLINE",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
       "id": "matrix-geometrynearestpointonline-blank",
       "function": "GEOMETRYNEARESTPOINTONLINE",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'type')"
       }
     },
     {
       "id": "matrix-geometrynearestpointonline-boundary",
       "function": "GEOMETRYNEARESTPOINTONLINE",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "Unknown Geometry Type"
       }
     },
     {
@@ -4004,17 +4568,25 @@
     {
       "id": "matrix-geometrypoint-coercion",
       "function": "GEOMETRYPOINT",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "coordinates is required"
+        "message": "coordinates must be an Array"
       }
     },
     {
       "id": "matrix-geometrypoint-blank",
       "function": "GEOMETRYPOINT",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -4045,67 +4617,104 @@
     {
       "id": "matrix-geometrypolygon-normal",
       "function": "GEOMETRYPOLYGON",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "geometry": {
+          "coordinates": 1,
+          "type": "Polygon"
+        },
+        "properties": 2,
+        "type": "Feature"
       }
     },
     {
       "id": "matrix-geometrypolygon-coercion",
       "function": "GEOMETRYPOLYGON",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "name": "Error",
+        "message": "Each LinearRing of a Polygon must have 4 or more Positions."
       }
     },
     {
       "id": "matrix-geometrypolygon-blank",
       "function": "GEOMETRYPOLYGON",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "message": "Cannot read properties of null (reading 'length')"
       }
     },
     {
       "id": "matrix-geometrypolygon-boundary",
       "function": "GEOMETRYPOLYGON",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'length')"
+        "geometry": {
+          "coordinates": 0,
+          "type": "Polygon"
+        },
+        "properties": {},
+        "type": "Feature"
       }
     },
     {
       "id": "matrix-geometrytag-normal",
       "function": "GEOMETRYTAG",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3,
+        4
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "geojson is required"
+        "message": "unknown GeoJSON type"
       }
     },
     {
       "id": "matrix-geometrytag-coercion",
       "function": "GEOMETRYTAG",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "geojson is required"
+        "message": "unknown GeoJSON type"
       }
     },
     {
       "id": "matrix-geometrytag-blank",
       "function": "GEOMETRYTAG",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -4115,7 +4724,12 @@
     {
       "id": "matrix-geometrytag-boundary",
       "function": "GEOMETRYTAG",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -4125,41 +4739,53 @@
     {
       "id": "matrix-geometrywithin-normal",
       "function": "GEOMETRYWITHIN",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "feature1 undefined geometry not supported"
       }
     },
     {
       "id": "matrix-geometrywithin-coercion",
       "function": "GEOMETRYWITHIN",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "feature1 undefined geometry not supported"
       }
     },
     {
       "id": "matrix-geometrywithin-blank",
       "function": "GEOMETRYWITHIN",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "message": "Cannot read properties of null (reading 'type')"
       }
     },
     {
       "id": "matrix-geometrywithin-boundary",
       "function": "GEOMETRYWITHIN",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'type')"
+        "name": "Error",
+        "message": "feature1 undefined geometry not supported"
       }
     },
     {
@@ -4197,33 +4823,59 @@
     {
       "id": "matrix-group-normal",
       "function": "GROUP",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
-        "$type": "undefined"
+        "1": [
+          1
+        ],
+        "2": [
+          2
+        ]
       }
     },
     {
       "id": "matrix-group-coercion",
       "function": "GROUP",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
-        "$type": "undefined"
+        "1": [
+          "1",
+          "1"
+        ]
       }
     },
     {
       "id": "matrix-group-blank",
       "function": "GROUP",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
-        "$type": "undefined"
+        "null": [
+          null,
+          null
+        ]
       }
     },
     {
       "id": "matrix-group-boundary",
       "function": "GROUP",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
-        "$type": "undefined"
+        "0": [
+          0,
+          0
+        ]
       }
     },
     {
@@ -4289,25 +4941,33 @@
     {
       "id": "matrix-hasother-normal",
       "function": "HASOTHER",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": false
     },
     {
       "id": "matrix-hasother-coercion",
       "function": "HASOTHER",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": false
     },
     {
       "id": "matrix-hasother-blank",
       "function": "HASOTHER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-hasother-boundary",
       "function": "HASOTHER",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": false
     },
     {
@@ -4333,75 +4993,95 @@
     {
       "id": "matrix-if-blank",
       "function": "IF",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        null,
+        null,
+        null
+      ],
+      "expected": null
     },
     {
       "id": "matrix-if-boundary",
       "function": "IF",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0,
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-iferror-normal",
       "function": "IFERROR",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-iferror-coercion",
       "function": "IFERROR",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-iferror-blank",
       "function": "IFERROR",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        null,
+        null
+      ],
+      "expected": null
     },
     {
       "id": "matrix-iferror-boundary",
       "function": "IFERROR",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-inference-normal",
       "function": "INFERENCE",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "options must be provided"
+        "message": "callback must be a function"
       }
     },
     {
       "id": "matrix-inference-coercion",
       "function": "INFERENCE",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "options must be provided"
+        "message": "callback must be a function"
       }
     },
     {
       "id": "matrix-inference-blank",
       "function": "INFERENCE",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -4411,57 +5091,74 @@
     {
       "id": "matrix-inference-boundary",
       "function": "INFERENCE",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "options must be provided"
+        "message": "options.model must be a string"
       }
     },
     {
       "id": "matrix-inspect-normal",
       "function": "INSPECT",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-inspect-coercion",
       "function": "INSPECT",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        "1"
+      ],
+      "expected": "'1'"
     },
     {
       "id": "matrix-inspect-blank",
       "function": "INSPECT",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        null
+      ],
+      "expected": "null"
     },
     {
       "id": "matrix-inspect-boundary",
       "function": "INSPECT",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-int-normal",
       "function": "INT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-int-coercion",
       "function": "INT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-int-blank",
       "function": "INT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -4469,177 +5166,242 @@
     {
       "id": "matrix-int-boundary",
       "function": "INT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-invalid-normal",
       "function": "INVALID",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": 1
     },
     {
       "id": "matrix-invalid-coercion",
       "function": "INVALID",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": 1
     },
     {
       "id": "matrix-invalid-blank",
       "function": "INVALID",
-      "args": [],
-      "expected": 1
+      "args": [
+        null,
+        null
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'toString')"
+      }
     },
     {
       "id": "matrix-invalid-boundary",
       "function": "INVALID",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": 1
     },
     {
       "id": "matrix-isblank-normal",
       "function": "ISBLANK",
-      "args": [],
-      "expected": true
+      "args": [
+        1
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isblank-coercion",
       "function": "ISBLANK",
-      "args": [],
-      "expected": true
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isblank-blank",
       "function": "ISBLANK",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-isblank-boundary",
       "function": "ISBLANK",
-      "args": [],
-      "expected": true
+      "args": [
+        0
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iserr-normal",
       "function": "ISERR",
-      "args": [],
-      "expected": true
+      "args": [
+        1
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iserr-coercion",
       "function": "ISERR",
-      "args": [],
-      "expected": true
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iserr-blank",
       "function": "ISERR",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-iserr-boundary",
       "function": "ISERR",
-      "args": [],
-      "expected": true
+      "args": [
+        0
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iserror-normal",
       "function": "ISERROR",
-      "args": [],
-      "expected": true
+      "args": [
+        1
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iserror-coercion",
       "function": "ISERROR",
-      "args": [],
-      "expected": true
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iserror-blank",
       "function": "ISERROR",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-iserror-boundary",
       "function": "ISERROR",
-      "args": [],
-      "expected": true
+      "args": [
+        0
+      ],
+      "expected": false
     },
     {
       "id": "matrix-iseven-normal",
       "function": "ISEVEN",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": false
     },
     {
       "id": "matrix-iseven-coercion",
       "function": "ISEVEN",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": false
     },
     {
       "id": "matrix-iseven-blank",
       "function": "ISEVEN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-iseven-boundary",
       "function": "ISEVEN",
-      "args": [],
-      "expected": false
+      "args": [
+        0
+      ],
+      "expected": true
     },
     {
       "id": "matrix-islandscape-normal",
       "function": "ISLANDSCAPE",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": true
     },
     {
       "id": "matrix-islandscape-coercion",
       "function": "ISLANDSCAPE",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": true
     },
     {
       "id": "matrix-islandscape-blank",
       "function": "ISLANDSCAPE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-islandscape-boundary",
       "function": "ISLANDSCAPE",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": true
     },
     {
       "id": "matrix-islogical-normal",
       "function": "ISLOGICAL",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": false
     },
     {
       "id": "matrix-islogical-coercion",
       "function": "ISLOGICAL",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": false
     },
     {
       "id": "matrix-islogical-blank",
       "function": "ISLOGICAL",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-islogical-boundary",
       "function": "ISLOGICAL",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": false
     },
     {
@@ -4669,26 +5431,34 @@
     {
       "id": "matrix-isnan-normal",
       "function": "ISNAN",
-      "args": [],
-      "expected": true
+      "args": [
+        1
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isnan-coercion",
       "function": "ISNAN",
-      "args": [],
-      "expected": true
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isnan-blank",
       "function": "ISNAN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-isnan-boundary",
       "function": "ISNAN",
-      "args": [],
-      "expected": true
+      "args": [
+        0
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isnew-normal",
@@ -4717,95 +5487,121 @@
     {
       "id": "matrix-isnontext-normal",
       "function": "ISNONTEXT",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": true
     },
     {
       "id": "matrix-isnontext-coercion",
       "function": "ISNONTEXT",
-      "args": [],
-      "expected": true
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isnontext-blank",
       "function": "ISNONTEXT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-isnontext-boundary",
       "function": "ISNONTEXT",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": true
     },
     {
       "id": "matrix-isnumber-normal",
       "function": "ISNUMBER",
-      "args": [],
-      "expected": false
+      "args": [
+        1
+      ],
+      "expected": true
     },
     {
       "id": "matrix-isnumber-coercion",
       "function": "ISNUMBER",
-      "args": [],
-      "expected": false
+      "args": [
+        "1"
+      ],
+      "expected": true
     },
     {
       "id": "matrix-isnumber-blank",
       "function": "ISNUMBER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-isnumber-boundary",
       "function": "ISNUMBER",
-      "args": [],
-      "expected": false
+      "args": [
+        0
+      ],
+      "expected": true
     },
     {
       "id": "matrix-isodd-normal",
       "function": "ISODD",
-      "args": [],
-      "expected": false
+      "args": [
+        1
+      ],
+      "expected": true
     },
     {
       "id": "matrix-isodd-coercion",
       "function": "ISODD",
-      "args": [],
-      "expected": false
+      "args": [
+        "1"
+      ],
+      "expected": true
     },
     {
       "id": "matrix-isodd-blank",
       "function": "ISODD",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-isodd-boundary",
       "function": "ISODD",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": false
     },
     {
       "id": "matrix-isportrait-normal",
       "function": "ISPORTRAIT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isportrait-coercion",
       "function": "ISPORTRAIT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isportrait-blank",
       "function": "ISPORTRAIT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -4813,81 +5609,109 @@
     {
       "id": "matrix-isportrait-boundary",
       "function": "ISPORTRAIT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": false
     },
     {
       "id": "matrix-isrole-normal",
       "function": "ISROLE",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": false
     },
     {
       "id": "matrix-isrole-coercion",
       "function": "ISROLE",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": false
     },
     {
       "id": "matrix-isrole-blank",
       "function": "ISROLE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-isrole-boundary",
       "function": "ISROLE",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": false
     },
     {
       "id": "matrix-isselected-normal",
       "function": "ISSELECTED",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": false
     },
     {
       "id": "matrix-isselected-coercion",
       "function": "ISSELECTED",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": false
     },
     {
       "id": "matrix-isselected-blank",
       "function": "ISSELECTED",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-isselected-boundary",
       "function": "ISSELECTED",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": false
     },
     {
       "id": "matrix-istext-normal",
       "function": "ISTEXT",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": false
     },
     {
       "id": "matrix-istext-coercion",
       "function": "ISTEXT",
-      "args": [],
-      "expected": false
+      "args": [
+        "1"
+      ],
+      "expected": true
     },
     {
       "id": "matrix-istext-blank",
       "function": "ISTEXT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": false
     },
     {
       "id": "matrix-istext-boundary",
       "function": "ISTEXT",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": false
     },
     {
@@ -4917,7 +5741,9 @@
     {
       "id": "matrix-label-normal",
       "function": "LABEL",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -4925,7 +5751,9 @@
     {
       "id": "matrix-label-coercion",
       "function": "LABEL",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -4933,7 +5761,9 @@
     {
       "id": "matrix-label-blank",
       "function": "LABEL",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -4941,7 +5771,9 @@
     {
       "id": "matrix-label-boundary",
       "function": "LABEL",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -4973,23 +5805,30 @@
     {
       "id": "matrix-last-normal",
       "function": "LAST",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": []
     },
     {
       "id": "matrix-last-coercion",
       "function": "LAST",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": [
+        "1"
+      ]
     },
     {
       "id": "matrix-last-blank",
       "function": "LAST",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -4997,10 +5836,11 @@
     {
       "id": "matrix-last-boundary",
       "function": "LAST",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": []
     },
     {
       "id": "matrix-latitude-normal",
@@ -5037,23 +5877,25 @@
     {
       "id": "matrix-lcm-normal",
       "function": "LCM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-lcm-coercion",
       "function": "LCM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-lcm-blank",
       "function": "LCM",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5061,31 +5903,36 @@
     {
       "id": "matrix-lcm-boundary",
       "function": "LCM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-left-normal",
       "function": "LEFT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-left-coercion",
       "function": "LEFT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-left-blank",
       "function": "LEFT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5093,55 +5940,66 @@
     {
       "id": "matrix-left-boundary",
       "function": "LEFT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": ""
     },
     {
       "id": "matrix-len-normal",
       "function": "LEN",
-      "args": [],
-      "expected": 0
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-len-coercion",
       "function": "LEN",
-      "args": [],
-      "expected": 0
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-len-blank",
       "function": "LEN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": 0
     },
     {
       "id": "matrix-len-boundary",
       "function": "LEN",
-      "args": [],
-      "expected": 0
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-ln-normal",
       "function": "LN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-ln-coercion",
       "function": "LN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-ln-blank",
       "function": "LN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5149,9 +6007,12 @@
     {
       "id": "matrix-ln-boundary",
       "function": "LN",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
-        "$type": "nan"
+        "$type": "infinity",
+        "sign": -1
       }
     },
     {
@@ -5193,15 +6054,19 @@
     {
       "id": "matrix-log-normal",
       "function": "LOG",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-log-coercion",
       "function": "LOG",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5209,7 +6074,10 @@
     {
       "id": "matrix-log-blank",
       "function": "LOG",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5217,7 +6085,10 @@
     {
       "id": "matrix-log-boundary",
       "function": "LOG",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5225,23 +6096,25 @@
     {
       "id": "matrix-log10-normal",
       "function": "LOG10",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-log10-coercion",
       "function": "LOG10",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-log10-blank",
       "function": "LOG10",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5249,9 +6122,12 @@
     {
       "id": "matrix-log10-boundary",
       "function": "LOG10",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
-        "$type": "nan"
+        "$type": "infinity",
+        "sign": -1
       }
     },
     {
@@ -5289,23 +6165,25 @@
     {
       "id": "matrix-lower-normal",
       "function": "LOWER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-lower-coercion",
       "function": "LOWER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-lower-blank",
       "function": "LOWER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5313,35 +6191,41 @@
     {
       "id": "matrix-lower-boundary",
       "function": "LOWER",
-      "args": [],
+      "args": [
+        0
+      ],
+      "expected": "0"
+    },
+    {
+      "id": "matrix-lpad-normal",
+      "function": "LPAD",
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "undefined"
       }
     },
     {
-      "id": "matrix-lpad-normal",
-      "function": "LPAD",
-      "args": [],
-      "expected": {
-        "$type": "error",
-        "name": "RangeError",
-        "message": "Invalid array length"
-      }
-    },
-    {
       "id": "matrix-lpad-coercion",
       "function": "LPAD",
-      "args": [],
-      "expected": {
-        "$type": "error",
-        "name": "RangeError",
-        "message": "Invalid array length"
-      }
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-lpad-blank",
       "function": "LPAD",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "RangeError",
@@ -5351,33 +6235,37 @@
     {
       "id": "matrix-lpad-boundary",
       "function": "LPAD",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
-        "$type": "error",
-        "name": "RangeError",
-        "message": "Invalid array length"
+        "$type": "undefined"
       }
     },
     {
       "id": "matrix-max-normal",
       "function": "MAX",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-max-coercion",
       "function": "MAX",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-max-blank",
       "function": "MAX",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5385,31 +6273,33 @@
     {
       "id": "matrix-max-boundary",
       "function": "MAX",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-maxa-normal",
       "function": "MAXA",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-maxa-coercion",
       "function": "MAXA",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-maxa-blank",
       "function": "MAXA",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5417,31 +6307,33 @@
     {
       "id": "matrix-maxa-boundary",
       "function": "MAXA",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-median-normal",
       "function": "MEDIAN",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-median-coercion",
       "function": "MEDIAN",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-median-blank",
       "function": "MEDIAN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5449,59 +6341,79 @@
     {
       "id": "matrix-median-boundary",
       "function": "MEDIAN",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-messagebox-normal",
       "function": "MESSAGEBOX",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-messagebox-coercion",
       "function": "MESSAGEBOX",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-messagebox-blank",
       "function": "MESSAGEBOX",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-messagebox-boundary",
       "function": "MESSAGEBOX",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-mid-normal",
       "function": "MID",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2,
+        3
+      ],
+      "expected": ""
     },
     {
       "id": "matrix-mid-coercion",
       "function": "MID",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-mid-blank",
       "function": "MID",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5509,7 +6421,11 @@
     {
       "id": "matrix-mid-boundary",
       "function": "MID",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5517,23 +6433,25 @@
     {
       "id": "matrix-min-normal",
       "function": "MIN",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-min-coercion",
       "function": "MIN",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-min-blank",
       "function": "MIN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5541,31 +6459,33 @@
     {
       "id": "matrix-min-boundary",
       "function": "MIN",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-mina-normal",
       "function": "MINA",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-mina-coercion",
       "function": "MINA",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-mina-blank",
       "function": "MINA",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5573,31 +6493,36 @@
     {
       "id": "matrix-mina-boundary",
       "function": "MINA",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-mod-normal",
       "function": "MOD",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-mod-coercion",
       "function": "MOD",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-mod-blank",
       "function": "MOD",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5605,7 +6530,10 @@
     {
       "id": "matrix-mod-boundary",
       "function": "MOD",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5613,7 +6541,9 @@
     {
       "id": "matrix-month-normal",
       "function": "MONTH",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5621,15 +6551,17 @@
     {
       "id": "matrix-month-coercion",
       "function": "MONTH",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-month-blank",
       "function": "MONTH",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5637,7 +6569,9 @@
     {
       "id": "matrix-month-boundary",
       "function": "MONTH",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5645,71 +6579,89 @@
     {
       "id": "matrix-n-normal",
       "function": "N",
-      "args": [],
-      "expected": 0
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-n-coercion",
       "function": "N",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": 0
     },
     {
       "id": "matrix-n-blank",
       "function": "N",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": 0
     },
     {
       "id": "matrix-n-boundary",
       "function": "N",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": 0
     },
     {
       "id": "matrix-not-normal",
       "function": "NOT",
-      "args": [],
-      "expected": true
+      "args": [
+        1
+      ],
+      "expected": false
     },
     {
       "id": "matrix-not-coercion",
       "function": "NOT",
-      "args": [],
-      "expected": true
+      "args": [
+        "1"
+      ],
+      "expected": false
     },
     {
       "id": "matrix-not-blank",
       "function": "NOT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": true
     },
     {
       "id": "matrix-not-boundary",
       "function": "NOT",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": true
     },
     {
       "id": "matrix-num-normal",
       "function": "NUM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-num-coercion",
       "function": "NUM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-num-blank",
       "function": "NUM",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5717,55 +6669,75 @@
     {
       "id": "matrix-num-boundary",
       "function": "NUM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-nums-normal",
       "function": "NUMS",
-      "args": [],
-      "expected": []
+      "args": [
+        1
+      ],
+      "expected": [
+        1
+      ]
     },
     {
       "id": "matrix-nums-coercion",
       "function": "NUMS",
-      "args": [],
-      "expected": []
+      "args": [
+        "1"
+      ],
+      "expected": [
+        1
+      ]
     },
     {
       "id": "matrix-nums-blank",
       "function": "NUMS",
-      "args": [],
-      "expected": []
+      "args": [
+        null
+      ],
+      "expected": [
+        {
+          "$type": "nan"
+        }
+      ]
     },
     {
       "id": "matrix-nums-boundary",
       "function": "NUMS",
-      "args": [],
-      "expected": []
+      "args": [
+        0
+      ],
+      "expected": [
+        0
+      ]
     },
     {
       "id": "matrix-odd-normal",
       "function": "ODD",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-odd-coercion",
       "function": "ODD",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-odd-blank",
       "function": "ODD",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -5773,15 +6745,19 @@
     {
       "id": "matrix-odd-boundary",
       "function": "ODD",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-off-normal",
       "function": "OFF",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -5791,17 +6767,25 @@
     {
       "id": "matrix-off-coercion",
       "function": "OFF",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "name must be a string"
+        "message": "callback must be a function"
       }
     },
     {
       "id": "matrix-off-blank",
       "function": "OFF",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -5811,7 +6795,11 @@
     {
       "id": "matrix-off-boundary",
       "function": "OFF",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -5821,7 +6809,11 @@
     {
       "id": "matrix-on-normal",
       "function": "ON",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -5831,17 +6823,25 @@
     {
       "id": "matrix-on-coercion",
       "function": "ON",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "name must be a string"
+        "message": "callback must be a function"
       }
     },
     {
       "id": "matrix-on-blank",
       "function": "ON",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -5851,7 +6851,11 @@
     {
       "id": "matrix-on-boundary",
       "function": "ON",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "error",
         "name": "Error",
@@ -5861,67 +6865,82 @@
     {
       "id": "matrix-once-normal",
       "function": "ONCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-once-coercion",
       "function": "ONCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-once-blank",
       "function": "ONCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        null
+      ],
+      "expected": null
     },
     {
       "id": "matrix-once-boundary",
       "function": "ONCE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-openurl-normal",
       "function": "OPENURL",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-openurl-coercion",
       "function": "OPENURL",
-      "args": [],
-      "expected": [],
+      "args": [
+        "1"
+      ],
+      "expected": [
+        {
+          "type": "open",
+          "value": "\"1\""
+        }
+      ],
       "observe": "results"
     },
     {
       "id": "matrix-openurl-blank",
       "function": "OPENURL",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-openurl-boundary",
       "function": "OPENURL",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-other-normal",
       "function": "OTHER",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5929,7 +6948,9 @@
     {
       "id": "matrix-other-coercion",
       "function": "OTHER",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5937,7 +6958,9 @@
     {
       "id": "matrix-other-blank",
       "function": "OTHER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -5945,7 +6968,9 @@
     {
       "id": "matrix-other-boundary",
       "function": "OTHER",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -6001,25 +7026,37 @@
     {
       "id": "matrix-platforminfo-normal",
       "function": "PLATFORMINFO",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": ""
     },
     {
       "id": "matrix-platforminfo-coercion",
       "function": "PLATFORMINFO",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": ""
     },
     {
       "id": "matrix-platforminfo-blank",
       "function": "PLATFORMINFO",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-platforminfo-boundary",
       "function": "PLATFORMINFO",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": ""
     },
     {
@@ -6049,47 +7086,68 @@
     {
       "id": "matrix-pluck-normal",
       "function": "PLUCK",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": []
     },
     {
       "id": "matrix-pluck-coercion",
       "function": "PLUCK",
-      "args": [],
-      "expected": []
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": [
+        {
+          "$type": "undefined"
+        }
+      ]
     },
     {
       "id": "matrix-pluck-blank",
       "function": "PLUCK",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": []
     },
     {
       "id": "matrix-pluck-boundary",
       "function": "PLUCK",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": []
     },
     {
       "id": "matrix-power-normal",
       "function": "POWER",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-power-coercion",
       "function": "POWER",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-power-blank",
       "function": "POWER",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6097,31 +7155,34 @@
     {
       "id": "matrix-power-boundary",
       "function": "POWER",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-precision-normal",
       "function": "PRECISION",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-precision-coercion",
       "function": "PRECISION",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-precision-blank",
       "function": "PRECISION",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6129,31 +7190,33 @@
     {
       "id": "matrix-precision-boundary",
       "function": "PRECISION",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-product-normal",
       "function": "PRODUCT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-product-coercion",
       "function": "PRODUCT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-product-blank",
       "function": "PRODUCT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6161,19 +7224,22 @@
     {
       "id": "matrix-product-boundary",
       "function": "PRODUCT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-progress-normal",
       "function": "PROGRESS",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [
         {
-          "message": null,
-          "title": null,
+          "message": "2",
+          "title": "1",
           "type": "progress"
         }
       ],
@@ -6182,11 +7248,14 @@
     {
       "id": "matrix-progress-coercion",
       "function": "PROGRESS",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [
         {
-          "message": null,
-          "title": null,
+          "message": "1",
+          "title": "1",
           "type": "progress"
         }
       ],
@@ -6195,7 +7264,10 @@
     {
       "id": "matrix-progress-blank",
       "function": "PROGRESS",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [
         {
           "message": null,
@@ -6208,11 +7280,14 @@
     {
       "id": "matrix-progress-boundary",
       "function": "PROGRESS",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [
         {
-          "message": null,
-          "title": null,
+          "message": "0",
+          "title": "0",
           "type": "progress"
         }
       ],
@@ -6285,51 +7360,69 @@
     {
       "id": "matrix-prompt-normal",
       "function": "PROMPT",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-prompt-coercion",
       "function": "PROMPT",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-prompt-blank",
       "function": "PROMPT",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-prompt-boundary",
       "function": "PROMPT",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-proper-normal",
       "function": "PROPER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-proper-coercion",
       "function": "PROPER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-proper-blank",
       "function": "PROPER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -6337,31 +7430,36 @@
     {
       "id": "matrix-proper-boundary",
       "function": "PROPER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-quotient-normal",
       "function": "QUOTIENT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-quotient-coercion",
       "function": "QUOTIENT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-quotient-blank",
       "function": "QUOTIENT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6369,7 +7467,10 @@
     {
       "id": "matrix-quotient-boundary",
       "function": "QUOTIENT",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6377,23 +7478,25 @@
     {
       "id": "matrix-radians-normal",
       "function": "RADIANS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0.017453292519943295
     },
     {
       "id": "matrix-radians-coercion",
       "function": "RADIANS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0.017453292519943295
     },
     {
       "id": "matrix-radians-blank",
       "function": "RADIANS",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6401,10 +7504,10 @@
     {
       "id": "matrix-radians-boundary",
       "function": "RADIANS",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-rand-normal",
@@ -6437,28 +7540,40 @@
     {
       "id": "matrix-randbetween-normal",
       "function": "RANDBETWEEN",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expectedType": "number",
       "limitation": "volatile-result"
     },
     {
       "id": "matrix-randbetween-coercion",
       "function": "RANDBETWEEN",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expectedType": "number",
       "limitation": "volatile-result"
     },
     {
       "id": "matrix-randbetween-blank",
       "function": "RANDBETWEEN",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expectedType": "number",
       "limitation": "volatile-result"
     },
     {
       "id": "matrix-randbetween-boundary",
       "function": "RANDBETWEEN",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expectedType": "number",
       "limitation": "volatile-result"
     },
@@ -6561,7 +7676,10 @@
     {
       "id": "matrix-repeatablesum-normal",
       "function": "REPEATABLESUM",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6569,7 +7687,10 @@
     {
       "id": "matrix-repeatablesum-coercion",
       "function": "REPEATABLESUM",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6577,7 +7698,10 @@
     {
       "id": "matrix-repeatablesum-blank",
       "function": "REPEATABLESUM",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6585,7 +7709,10 @@
     {
       "id": "matrix-repeatablesum-boundary",
       "function": "REPEATABLESUM",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6593,47 +7720,72 @@
     {
       "id": "matrix-repeatablevalues-normal",
       "function": "REPEATABLEVALUES",
-      "args": [],
-      "expected": null
+      "args": [
+        1,
+        2
+      ],
+      "expected": {
+        "$type": "undefined"
+      }
     },
     {
       "id": "matrix-repeatablevalues-coercion",
       "function": "REPEATABLEVALUES",
-      "args": [],
-      "expected": null
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "$type": "undefined"
+      }
     },
     {
       "id": "matrix-repeatablevalues-blank",
       "function": "REPEATABLEVALUES",
-      "args": [],
-      "expected": null
+      "args": [
+        null,
+        null
+      ],
+      "expected": {
+        "$type": "undefined"
+      }
     },
     {
       "id": "matrix-repeatablevalues-boundary",
       "function": "REPEATABLEVALUES",
-      "args": [],
-      "expected": null
+      "args": [
+        0,
+        0
+      ],
+      "expected": {
+        "$type": "undefined"
+      }
     },
     {
       "id": "matrix-right-normal",
       "function": "RIGHT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-right-coercion",
       "function": "RIGHT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-right-blank",
       "function": "RIGHT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -6641,10 +7793,11 @@
     {
       "id": "matrix-right-boundary",
       "function": "RIGHT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": ""
     },
     {
       "id": "matrix-role-normal",
@@ -6681,23 +7834,28 @@
     {
       "id": "matrix-round-normal",
       "function": "ROUND",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-round-coercion",
       "function": "ROUND",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-round-blank",
       "function": "ROUND",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6705,31 +7863,37 @@
     {
       "id": "matrix-round-boundary",
       "function": "ROUND",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0,
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-rounddown-normal",
       "function": "ROUNDDOWN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-rounddown-coercion",
       "function": "ROUNDDOWN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-rounddown-blank",
       "function": "ROUNDDOWN",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6737,31 +7901,40 @@
     {
       "id": "matrix-rounddown-boundary",
       "function": "ROUNDDOWN",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
-        "$type": "nan"
+        "$type": "number",
+        "value": "-0"
       }
     },
     {
       "id": "matrix-roundup-normal",
       "function": "ROUNDUP",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1,
+        2
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-roundup-coercion",
       "function": "ROUNDUP",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-roundup-blank",
       "function": "ROUNDUP",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -6769,35 +7942,45 @@
     {
       "id": "matrix-roundup-boundary",
       "function": "ROUNDUP",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
-        "$type": "nan"
+        "$type": "number",
+        "value": "-0"
       }
     },
     {
       "id": "matrix-rpad-normal",
       "function": "RPAD",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
-        "$type": "error",
-        "name": "RangeError",
-        "message": "Invalid array length"
+        "$type": "undefined"
       }
     },
     {
       "id": "matrix-rpad-coercion",
       "function": "RPAD",
-      "args": [],
-      "expected": {
-        "$type": "error",
-        "name": "RangeError",
-        "message": "Invalid array length"
-      }
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-rpad-blank",
       "function": "RPAD",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "RangeError",
@@ -6807,17 +7990,23 @@
     {
       "id": "matrix-rpad-boundary",
       "function": "RPAD",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
-        "$type": "error",
-        "name": "RangeError",
-        "message": "Invalid array length"
+        "$type": "undefined"
       }
     },
     {
       "id": "matrix-search-normal",
       "function": "SEARCH",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -6825,15 +8014,21 @@
     {
       "id": "matrix-search-coercion",
       "function": "SEARCH",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-search-blank",
       "function": "SEARCH",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -6841,37 +8036,33 @@
     {
       "id": "matrix-search-boundary",
       "function": "SEARCH",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0,
+        0,
+        0
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-setassignment-normal",
       "function": "SETASSIGNMENT",
-      "args": [],
-      "expected": [
-        {
-          "key": "@assignment",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        1
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setassignment-coercion",
       "function": "SETASSIGNMENT",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "key": "@assignment",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "\"1\""
         }
       ],
       "observe": "results"
@@ -6879,14 +8070,14 @@
     {
       "id": "matrix-setassignment-blank",
       "function": "SETASSIGNMENT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "key": "@assignment",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "null"
         }
       ],
       "observe": "results"
@@ -6894,227 +8085,277 @@
     {
       "id": "matrix-setassignment-boundary",
       "function": "SETASSIGNMENT",
-      "args": [],
-      "expected": [
-        {
-          "key": "@assignment",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        0
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoicefilter-normal",
       "function": "SETCHOICEFILTER",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoicefilter-coercion",
       "function": "SETCHOICEFILTER",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoicefilter-blank",
       "function": "SETCHOICEFILTER",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoicefilter-boundary",
       "function": "SETCHOICEFILTER",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoices-normal",
       "function": "SETCHOICES",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoices-coercion",
       "function": "SETCHOICES",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoices-blank",
       "function": "SETCHOICES",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setchoices-boundary",
       "function": "SETCHOICES",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setconfiguration-normal",
       "function": "SETCONFIGURATION",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setconfiguration-coercion",
       "function": "SETCONFIGURATION",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setconfiguration-blank",
       "function": "SETCONFIGURATION",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setconfiguration-boundary",
       "function": "SETCONFIGURATION",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdescription-normal",
       "function": "SETDESCRIPTION",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdescription-coercion",
       "function": "SETDESCRIPTION",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdescription-blank",
       "function": "SETDESCRIPTION",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdescription-boundary",
       "function": "SETDESCRIPTION",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdisabled-normal",
       "function": "SETDISABLED",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdisabled-coercion",
       "function": "SETDISABLED",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdisabled-blank",
       "function": "SETDISABLED",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setdisabled-boundary",
       "function": "SETDISABLED",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setformattributes-normal",
       "function": "SETFORMATTRIBUTES",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setformattributes-coercion",
       "function": "SETFORMATTRIBUTES",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setformattributes-blank",
       "function": "SETFORMATTRIBUTES",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setformattributes-boundary",
       "function": "SETFORMATTRIBUTES",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setgeometry-normal",
       "function": "SETGEOMETRY",
-      "args": [],
-      "expected": [
-        {
-          "key": "@geometry",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        1
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setgeometry-coercion",
       "function": "SETGEOMETRY",
-      "args": [],
-      "expected": [
-        {
-          "key": "@geometry",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        "1"
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setgeometry-blank",
       "function": "SETGEOMETRY",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "key": "@geometry",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "null"
         }
       ],
       "observe": "results"
@@ -7122,50 +8363,59 @@
     {
       "id": "matrix-setgeometry-boundary",
       "function": "SETGEOMETRY",
-      "args": [],
-      "expected": [
-        {
-          "key": "@geometry",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        0
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-sethidden-normal",
       "function": "SETHIDDEN",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-sethidden-coercion",
       "function": "SETHIDDEN",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-sethidden-blank",
       "function": "SETHIDDEN",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-sethidden-boundary",
       "function": "SETHIDDEN",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setinterval-normal",
       "function": "SETINTERVAL",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7173,7 +8423,10 @@
     {
       "id": "matrix-setinterval-coercion",
       "function": "SETINTERVAL",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7181,7 +8434,10 @@
     {
       "id": "matrix-setinterval-blank",
       "function": "SETINTERVAL",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7189,7 +8445,10 @@
     {
       "id": "matrix-setinterval-boundary",
       "function": "SETINTERVAL",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7197,28 +8456,40 @@
     {
       "id": "matrix-setlabel-normal",
       "function": "SETLABEL",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setlabel-coercion",
       "function": "SETLABEL",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setlabel-blank",
       "function": "SETLABEL",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setlabel-boundary",
       "function": "SETLABEL",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
@@ -7241,12 +8512,15 @@
     {
       "id": "matrix-setlocation-coercion",
       "function": "SETLOCATION",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [
         {
           "key": "@geometry",
           "type": "set-value",
-          "value": "null"
+          "value": "{\"type\":\"Point\",\"coordinates\":[1,1]}"
         }
       ],
       "observe": "results"
@@ -7254,7 +8528,10 @@
     {
       "id": "matrix-setlocation-blank",
       "function": "SETLOCATION",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [
         {
           "key": "@geometry",
@@ -7267,12 +8544,15 @@
     {
       "id": "matrix-setlocation-boundary",
       "function": "SETLOCATION",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [
         {
           "key": "@geometry",
           "type": "set-value",
-          "value": "null"
+          "value": "{\"type\":\"Point\",\"coordinates\":[0,0]}"
         }
       ],
       "observe": "results"
@@ -7280,85 +8560,103 @@
     {
       "id": "matrix-setmaxlength-normal",
       "function": "SETMAXLENGTH",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setmaxlength-coercion",
       "function": "SETMAXLENGTH",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setmaxlength-blank",
       "function": "SETMAXLENGTH",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setmaxlength-boundary",
       "function": "SETMAXLENGTH",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setminlength-normal",
       "function": "SETMINLENGTH",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setminlength-coercion",
       "function": "SETMINLENGTH",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setminlength-blank",
       "function": "SETMINLENGTH",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setminlength-boundary",
       "function": "SETMINLENGTH",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setproject-normal",
       "function": "SETPROJECT",
-      "args": [],
-      "expected": [
-        {
-          "key": "@project",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        1
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setproject-coercion",
       "function": "SETPROJECT",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "key": "@project",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "\"1\""
         }
       ],
       "observe": "results"
@@ -7366,14 +8664,14 @@
     {
       "id": "matrix-setproject-blank",
       "function": "SETPROJECT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "key": "@project",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "null"
         }
       ],
       "observe": "results"
@@ -7381,28 +8679,24 @@
     {
       "id": "matrix-setproject-boundary",
       "function": "SETPROJECT",
-      "args": [],
-      "expected": [
-        {
-          "key": "@project",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        0
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setprojecthidden-normal",
       "function": "SETPROJECTHIDDEN",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [
         {
           "attribute": "hidden",
           "key": "@project",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7410,13 +8704,15 @@
     {
       "id": "matrix-setprojecthidden-coercion",
       "function": "SETPROJECTHIDDEN",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "attribute": "hidden",
           "key": "@project",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7424,7 +8720,9 @@
     {
       "id": "matrix-setprojecthidden-blank",
       "function": "SETPROJECTHIDDEN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "attribute": "hidden",
@@ -7438,13 +8736,15 @@
     {
       "id": "matrix-setprojecthidden-boundary",
       "function": "SETPROJECTHIDDEN",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [
         {
           "attribute": "hidden",
           "key": "@project",
           "type": "update-element",
-          "value": null
+          "value": "false"
         }
       ],
       "observe": "results"
@@ -7452,13 +8752,15 @@
     {
       "id": "matrix-setprojectreadonly-normal",
       "function": "SETPROJECTREADONLY",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [
         {
           "attribute": "disabled",
           "key": "@project",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7466,13 +8768,15 @@
     {
       "id": "matrix-setprojectreadonly-coercion",
       "function": "SETPROJECTREADONLY",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "attribute": "disabled",
           "key": "@project",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7480,7 +8784,9 @@
     {
       "id": "matrix-setprojectreadonly-blank",
       "function": "SETPROJECTREADONLY",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "attribute": "disabled",
@@ -7494,13 +8800,15 @@
     {
       "id": "matrix-setprojectreadonly-boundary",
       "function": "SETPROJECTREADONLY",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [
         {
           "attribute": "disabled",
           "key": "@project",
           "type": "update-element",
-          "value": null
+          "value": "false"
         }
       ],
       "observe": "results"
@@ -7508,113 +8816,139 @@
     {
       "id": "matrix-setreadonly-normal",
       "function": "SETREADONLY",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setreadonly-coercion",
       "function": "SETREADONLY",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setreadonly-blank",
       "function": "SETREADONLY",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setreadonly-boundary",
       "function": "SETREADONLY",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setrequired-normal",
       "function": "SETREQUIRED",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setrequired-coercion",
       "function": "SETREQUIRED",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setrequired-blank",
       "function": "SETREQUIRED",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setrequired-boundary",
       "function": "SETREQUIRED",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setresult-normal",
       "function": "SETRESULT",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setresult-coercion",
       "function": "SETRESULT",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setresult-blank",
       "function": "SETRESULT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setresult-boundary",
       "function": "SETRESULT",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setstatus-normal",
       "function": "SETSTATUS",
-      "args": [],
-      "expected": [
-        {
-          "key": "@status",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        1
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setstatus-coercion",
       "function": "SETSTATUS",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "key": "@status",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "\"1\""
         }
       ],
       "observe": "results"
@@ -7622,14 +8956,14 @@
     {
       "id": "matrix-setstatus-blank",
       "function": "SETSTATUS",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "key": "@status",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "null"
         }
       ],
       "observe": "results"
@@ -7637,28 +8971,24 @@
     {
       "id": "matrix-setstatus-boundary",
       "function": "SETSTATUS",
-      "args": [],
-      "expected": [
-        {
-          "key": "@status",
-          "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
-        }
+      "args": [
+        0
       ],
+      "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-setstatusfilter-normal",
       "function": "SETSTATUSFILTER",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [
         {
           "attribute": "choice_filter",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "[\"1\"]"
         }
       ],
       "observe": "results"
@@ -7666,13 +8996,15 @@
     {
       "id": "matrix-setstatusfilter-coercion",
       "function": "SETSTATUSFILTER",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "attribute": "choice_filter",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "[\"1\"]"
         }
       ],
       "observe": "results"
@@ -7680,7 +9012,9 @@
     {
       "id": "matrix-setstatusfilter-blank",
       "function": "SETSTATUSFILTER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "attribute": "choice_filter",
@@ -7694,13 +9028,15 @@
     {
       "id": "matrix-setstatusfilter-boundary",
       "function": "SETSTATUSFILTER",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [
         {
           "attribute": "choice_filter",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "[]"
         }
       ],
       "observe": "results"
@@ -7708,13 +9044,15 @@
     {
       "id": "matrix-setstatushidden-normal",
       "function": "SETSTATUSHIDDEN",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [
         {
           "attribute": "hidden",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7722,13 +9060,15 @@
     {
       "id": "matrix-setstatushidden-coercion",
       "function": "SETSTATUSHIDDEN",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "attribute": "hidden",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7736,7 +9076,9 @@
     {
       "id": "matrix-setstatushidden-blank",
       "function": "SETSTATUSHIDDEN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "attribute": "hidden",
@@ -7750,13 +9092,15 @@
     {
       "id": "matrix-setstatushidden-boundary",
       "function": "SETSTATUSHIDDEN",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [
         {
           "attribute": "hidden",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "false"
         }
       ],
       "observe": "results"
@@ -7764,13 +9108,15 @@
     {
       "id": "matrix-setstatusreadonly-normal",
       "function": "SETSTATUSREADONLY",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [
         {
           "attribute": "disabled",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7778,13 +9124,15 @@
     {
       "id": "matrix-setstatusreadonly-coercion",
       "function": "SETSTATUSREADONLY",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [
         {
           "attribute": "disabled",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "true"
         }
       ],
       "observe": "results"
@@ -7792,7 +9140,9 @@
     {
       "id": "matrix-setstatusreadonly-blank",
       "function": "SETSTATUSREADONLY",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [
         {
           "attribute": "disabled",
@@ -7806,13 +9156,15 @@
     {
       "id": "matrix-setstatusreadonly-boundary",
       "function": "SETSTATUSREADONLY",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [
         {
           "attribute": "disabled",
           "key": "@status",
           "type": "update-element",
-          "value": null
+          "value": "false"
         }
       ],
       "observe": "results"
@@ -7820,7 +9172,10 @@
     {
       "id": "matrix-settimeout-normal",
       "function": "SETTIMEOUT",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7828,7 +9183,10 @@
     {
       "id": "matrix-settimeout-coercion",
       "function": "SETTIMEOUT",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7836,7 +9194,10 @@
     {
       "id": "matrix-settimeout-blank",
       "function": "SETTIMEOUT",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7844,7 +9205,10 @@
     {
       "id": "matrix-settimeout-boundary",
       "function": "SETTIMEOUT",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -7868,16 +9232,15 @@
     {
       "id": "matrix-setvalue-coercion",
       "function": "SETVALUE",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": [
         {
-          "key": {
-            "$type": "undefined"
-          },
+          "key": "1",
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "\"1\""
         }
       ],
       "observe": "results"
@@ -7885,16 +9248,15 @@
     {
       "id": "matrix-setvalue-blank",
       "function": "SETVALUE",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": [
         {
-          "key": {
-            "$type": "undefined"
-          },
+          "key": null,
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "null"
         }
       ],
       "observe": "results"
@@ -7902,16 +9264,15 @@
     {
       "id": "matrix-setvalue-boundary",
       "function": "SETVALUE",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": [
         {
-          "key": {
-            "$type": "undefined"
-          },
+          "key": 0,
           "type": "set-value",
-          "value": {
-            "$type": "undefined"
-          }
+          "value": "0"
         }
       ],
       "observe": "results"
@@ -7919,55 +9280,63 @@
     {
       "id": "matrix-showerrors-normal",
       "function": "SHOWERRORS",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-showerrors-coercion",
       "function": "SHOWERRORS",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-showerrors-blank",
       "function": "SHOWERRORS",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-showerrors-boundary",
       "function": "SHOWERRORS",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": [],
       "observe": "results"
     },
     {
       "id": "matrix-shuffle-normal",
       "function": "SHUFFLE",
-      "args": [],
-      "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot convert undefined or null to object"
-      }
+      "args": [
+        1
+      ],
+      "expected": []
     },
     {
       "id": "matrix-shuffle-coercion",
       "function": "SHUFFLE",
-      "args": [],
-      "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot convert undefined or null to object"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": [
+        "1"
+      ]
     },
     {
       "id": "matrix-shuffle-blank",
       "function": "SHUFFLE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "error",
         "name": "TypeError",
@@ -7977,33 +9346,33 @@
     {
       "id": "matrix-shuffle-boundary",
       "function": "SHUFFLE",
-      "args": [],
-      "expected": {
-        "$type": "error",
-        "name": "TypeError",
-        "message": "Cannot convert undefined or null to object"
-      }
+      "args": [
+        0
+      ],
+      "expected": []
     },
     {
       "id": "matrix-sign-normal",
       "function": "SIGN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sign-coercion",
       "function": "SIGN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sign-blank",
       "function": "SIGN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8011,31 +9380,33 @@
     {
       "id": "matrix-sign-boundary",
       "function": "SIGN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-sin-normal",
       "function": "SIN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 0.8414709848078965
     },
     {
       "id": "matrix-sin-coercion",
       "function": "SIN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 0.8414709848078965
     },
     {
       "id": "matrix-sin-blank",
       "function": "SIN",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8043,31 +9414,33 @@
     {
       "id": "matrix-sin-boundary",
       "function": "SIN",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-sinh-normal",
       "function": "SINH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1.1752011936438014
     },
     {
       "id": "matrix-sinh-coercion",
       "function": "SINH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1.1752011936438014
     },
     {
       "id": "matrix-sinh-blank",
       "function": "SINH",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8075,63 +9448,73 @@
     {
       "id": "matrix-sinh-boundary",
       "function": "SINH",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-sort-normal",
       "function": "SORT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": [
+        1
+      ]
     },
     {
       "id": "matrix-sort-coercion",
       "function": "SORT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": [
+        "1"
+      ]
     },
     {
       "id": "matrix-sort-blank",
       "function": "SORT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        null
+      ],
+      "expected": [
+        null
+      ]
     },
     {
       "id": "matrix-sort-boundary",
       "function": "SORT",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": [
+        0
+      ]
     },
     {
       "id": "matrix-sqrt-normal",
       "function": "SQRT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sqrt-coercion",
       "function": "SQRT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sqrt-blank",
       "function": "SQRT",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8139,31 +9522,33 @@
     {
       "id": "matrix-sqrt-boundary",
       "function": "SQRT",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-sqrtpi-normal",
       "function": "SQRTPI",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1.7724538509055159
     },
     {
       "id": "matrix-sqrtpi-coercion",
       "function": "SQRTPI",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1.7724538509055159
     },
     {
       "id": "matrix-sqrtpi-blank",
       "function": "SQRTPI",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8171,10 +9556,10 @@
     {
       "id": "matrix-sqrtpi-boundary",
       "function": "SQRTPI",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-status-normal",
@@ -8243,31 +9628,44 @@
     {
       "id": "matrix-string-normal",
       "function": "STRING",
-      "args": [],
-      "expected": ""
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-string-coercion",
       "function": "STRING",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-string-blank",
       "function": "STRING",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-string-boundary",
       "function": "STRING",
-      "args": [],
-      "expected": ""
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-substitute-normal",
       "function": "SUBSTITUTE",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3,
+        4
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8275,15 +9673,23 @@
     {
       "id": "matrix-substitute-coercion",
       "function": "SUBSTITUTE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-substitute-blank",
       "function": "SUBSTITUTE",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8291,7 +9697,12 @@
     {
       "id": "matrix-substitute-boundary",
       "function": "SUBSTITUTE",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8299,23 +9710,25 @@
     {
       "id": "matrix-sum-normal",
       "function": "SUM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sum-coercion",
       "function": "SUM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sum-blank",
       "function": "SUM",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8323,31 +9736,33 @@
     {
       "id": "matrix-sum-boundary",
       "function": "SUM",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-sumsq-normal",
       "function": "SUMSQ",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        1
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sumsq-coercion",
       "function": "SUMSQ",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 1
     },
     {
       "id": "matrix-sumsq-blank",
       "function": "SUMSQ",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "nan"
       }
@@ -8355,39 +9770,51 @@
     {
       "id": "matrix-sumsq-boundary",
       "function": "SUMSQ",
-      "args": [],
-      "expected": {
-        "$type": "nan"
-      }
+      "args": [
+        0
+      ],
+      "expected": 0
     },
     {
       "id": "matrix-t-normal",
       "function": "T",
-      "args": [],
-      "expected": ""
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-t-coercion",
       "function": "T",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-t-blank",
       "function": "T",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-t-boundary",
       "function": "T",
-      "args": [],
-      "expected": ""
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-timeadd-normal",
       "function": "TIMEADD",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8395,7 +9822,11 @@
     {
       "id": "matrix-timeadd-coercion",
       "function": "TIMEADD",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8403,7 +9834,11 @@
     {
       "id": "matrix-timeadd-blank",
       "function": "TIMEADD",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8422,7 +9857,11 @@
     {
       "id": "matrix-timediff-normal",
       "function": "TIMEDIFF",
-      "args": [],
+      "args": [
+        1,
+        2,
+        3
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8430,7 +9869,11 @@
     {
       "id": "matrix-timediff-coercion",
       "function": "TIMEDIFF",
-      "args": [],
+      "args": [
+        "1",
+        "1",
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8438,7 +9881,11 @@
     {
       "id": "matrix-timediff-blank",
       "function": "TIMEDIFF",
-      "args": [],
+      "args": [
+        null,
+        null,
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8446,7 +9893,11 @@
     {
       "id": "matrix-timediff-boundary",
       "function": "TIMEDIFF",
-      "args": [],
+      "args": [
+        0,
+        0,
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8490,26 +9941,34 @@
     {
       "id": "matrix-trim-normal",
       "function": "TRIM",
-      "args": [],
-      "expected": ""
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-trim-coercion",
       "function": "TRIM",
-      "args": [],
-      "expected": ""
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-trim-blank",
       "function": "TRIM",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-trim-boundary",
       "function": "TRIM",
-      "args": [],
-      "expected": ""
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-true-normal",
@@ -8538,79 +9997,97 @@
     {
       "id": "matrix-typeof-normal",
       "function": "TYPEOF",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        1
+      ],
+      "expected": "number"
     },
     {
       "id": "matrix-typeof-coercion",
       "function": "TYPEOF",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        "1"
+      ],
+      "expected": "string"
     },
     {
       "id": "matrix-typeof-blank",
       "function": "TYPEOF",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        null
+      ],
+      "expected": "null"
     },
     {
       "id": "matrix-typeof-boundary",
       "function": "TYPEOF",
-      "args": [],
-      "expected": "undefined"
+      "args": [
+        0
+      ],
+      "expected": "number"
     },
     {
       "id": "matrix-unique-normal",
       "function": "UNIQUE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": [
+        1
+      ]
     },
     {
       "id": "matrix-unique-coercion",
       "function": "UNIQUE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": [
+        "1"
+      ]
     },
     {
       "id": "matrix-unique-blank",
       "function": "UNIQUE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        null
+      ],
+      "expected": [
+        null
+      ]
     },
     {
       "id": "matrix-unique-boundary",
       "function": "UNIQUE",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": [
+        0
+      ]
     },
     {
       "id": "matrix-upper-normal",
       "function": "UPPER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        1
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-upper-coercion",
       "function": "UPPER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": "1"
     },
     {
       "id": "matrix-upper-blank",
       "function": "UPPER",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8618,10 +10095,10 @@
     {
       "id": "matrix-upper-boundary",
       "function": "UPPER",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        0
+      ],
+      "expected": "0"
     },
     {
       "id": "matrix-userfullname-normal",
@@ -8658,7 +10135,9 @@
     {
       "id": "matrix-value-normal",
       "function": "VALUE",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8666,7 +10145,9 @@
     {
       "id": "matrix-value-coercion",
       "function": "VALUE",
-      "args": [],
+      "args": [
+        "1"
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8674,7 +10155,9 @@
     {
       "id": "matrix-value-blank",
       "function": "VALUE",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8682,7 +10165,9 @@
     {
       "id": "matrix-value-boundary",
       "function": "VALUE",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8690,31 +10175,45 @@
     {
       "id": "matrix-versioninfo-normal",
       "function": "VERSIONINFO",
-      "args": [],
+      "args": [
+        1,
+        2
+      ],
       "expected": ""
     },
     {
       "id": "matrix-versioninfo-coercion",
       "function": "VERSIONINFO",
-      "args": [],
+      "args": [
+        "1",
+        "1"
+      ],
       "expected": ""
     },
     {
       "id": "matrix-versioninfo-blank",
       "function": "VERSIONINFO",
-      "args": [],
+      "args": [
+        null,
+        null
+      ],
       "expected": ""
     },
     {
       "id": "matrix-versioninfo-boundary",
       "function": "VERSIONINFO",
-      "args": [],
+      "args": [
+        0,
+        0
+      ],
       "expected": ""
     },
     {
       "id": "matrix-year-normal",
       "function": "YEAR",
-      "args": [],
+      "args": [
+        1
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8722,15 +10221,17 @@
     {
       "id": "matrix-year-coercion",
       "function": "YEAR",
-      "args": [],
-      "expected": {
-        "$type": "undefined"
-      }
+      "args": [
+        "1"
+      ],
+      "expected": 2001
     },
     {
       "id": "matrix-year-blank",
       "function": "YEAR",
-      "args": [],
+      "args": [
+        null
+      ],
       "expected": {
         "$type": "undefined"
       }
@@ -8738,7 +10239,9 @@
     {
       "id": "matrix-year-boundary",
       "function": "YEAR",
-      "args": [],
+      "args": [
+        0
+      ],
       "expected": {
         "$type": "undefined"
       }

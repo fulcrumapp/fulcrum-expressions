@@ -29,6 +29,16 @@ function sourceNames() {
     .sort();
 }
 
+function parameterCount(source) {
+  const declarations = [...source.matchAll(/export default function[^(]*\(([^)]*)\)/g)];
+  return declarations.reduce((maximum, declaration) => {
+    const parameters = declaration[1].trim();
+    if (!parameters) return maximum;
+    const count = parameters.split(",").length;
+    return Math.max(maximum, count);
+  }, 0);
+}
+
 function argsFor(name, arity, probe) {
   if (probe === "blank") return Array.from({ length: arity }, () => null);
   if (probe === "boundary") {
@@ -68,8 +78,9 @@ const adapter = loadAdapter("legacy");
 const cases = [];
 const limitations = [];
 for (const name of sourceNames()) {
+  const source = fs.readFileSync(path.join(functionsDir, `${name}.ts`), "utf8");
+  const arity = parameterCount(source);
   const fn = global[name];
-  const arity = typeof fn === "function" ? fn.length : 0;
   if (unsupported.has(name) || typeof fn !== "function") {
     limitations.push({
       function: name,
