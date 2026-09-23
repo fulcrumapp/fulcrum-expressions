@@ -22,7 +22,10 @@ function normalize(value, seen = new WeakSet()) {
   if (value === Infinity) return { $type: "infinity", sign: 1 };
   if (value === -Infinity) return { $type: "infinity", sign: -1 };
   if (Object.is(value, -0)) return { $type: "number", value: "-0" };
-  if (value instanceof Date) return { $date: value.toISOString().slice(0, 10) };
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return { $type: "invalid-date" };
+    return { $date: value.toISOString().slice(0, 10) };
+  }
   if (typeof value === "function") return { $type: "function" };
   if (value instanceof Error) {
     return { $type: "error", name: value.name, message: value.message };
@@ -146,10 +149,6 @@ function assertPackageContracts() {
 }
 
 function run(adapter, compareAdapter, activeCorpus = corpus) {
-  assertPackageContracts();
-  const lifecycle = adapter.lifecycle ? adapter.lifecycle() : null;
-  if (lifecycle) assert.deepStrictEqual(lifecycle, { runtimeGlobals: true, functionGlobals: true });
-
   let count = 0;
   activeCorpus.cases.forEach((contract) => {
     const actual = invokeAdapter(adapter, contract);
@@ -177,6 +176,12 @@ function run(adapter, compareAdapter, activeCorpus = corpus) {
     count += 1;
   });
   return count;
+}
+
+function assertAdapterContracts(adapter) {
+  assertPackageContracts();
+  const lifecycle = adapter.lifecycle ? adapter.lifecycle() : null;
+  if (lifecycle) assert.deepStrictEqual(lifecycle, { runtimeGlobals: true, functionGlobals: true });
 }
 
 function invokeAdapter(adapter, contract) {
@@ -216,6 +221,8 @@ if (require.main === module) {
   const requireMatrix = process.argv.includes("--require-matrix");
   const adapter = loadAdapter(candidate || "legacy");
   const compareAdapter = compare ? loadAdapter(compare) : null;
+  assertAdapterContracts(adapter);
+  if (compareAdapter) assertAdapterContracts(compareAdapter);
   const count = run(adapter, compareAdapter);
   const matrix = loadMatrix();
   if (requireMatrix && !matrix) {

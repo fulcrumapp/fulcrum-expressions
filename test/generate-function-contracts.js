@@ -74,10 +74,14 @@ function argsFor(name, arity, probe) {
   return args.slice(0, arity).concat(Array.from({ length: Math.max(0, arity - args.length) }, () => null));
 }
 
-function runProbe(adapter, name, args) {
-  const actual = adapter.invoke(name, args, configureFor(name));
-  const observed = sideEffects.has(name) ? actual.results : actual.error || actual.value;
-  return normalize(observed);
+function formatError(error) {
+  if (error instanceof Error) return `${error.name}: ${error.message}`;
+  if (typeof error === "string") return error;
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return String(error);
+  }
 }
 
 function configureFor(name) {
@@ -114,7 +118,7 @@ for (const name of names) {
     if (sideEffects.has(name) && actual.error) {
       limitations.push({
         function: name,
-        reason: `Host callback is required for deterministic ${probe} probe: ${actual.error.message}`,
+        reason: `Host callback is required for deterministic ${probe} probe: ${formatError(actual.error)}`,
       });
       continue;
     }
