@@ -11,7 +11,7 @@ const output = path.join(__dirname, "contracts", "function-matrix.json");
 const volatile = new Set(["RAND", "RANDBETWEEN"]);
 const unsupported = new Set([
   "CLEARINTERVAL", "CLEARTIMEOUT", "LOADFILE", "LOADFORM", "LOADRECORDS", "REQUEST", "TIMESTAMP",
-  "OPENEXTENSION", "RECOGNIZETEXT", "CONFIG", "CONFIGURE", "STORAGE",
+  "OPENEXTENSION", "RECOGNIZETEXT", "CONFIG", "CONFIGURE", "STORAGE", "CONFIRM", "PROMPT", "MESSAGEBOX",
 ]);
 const sideEffects = new Set([
   "ALERT", "CONFIRM", "MESSAGEBOX", "OPENURL", "PROGRESS", "PROMPT",
@@ -33,17 +33,19 @@ function sourceNames() {
 function parameterCount(source) {
   const file = ts.createSourceFile("function.ts", source, ts.ScriptTarget.Latest, true);
   let maximum = 0;
+  let found = false;
   function visit(node) {
     if (ts.isFunctionDeclaration(node)
       && node.modifiers
       && node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.DefaultKeyword)
       && node.modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+      found = true;
       maximum = Math.max(maximum, node.parameters.length);
     }
     ts.forEachChild(node, visit);
   }
   visit(file);
-  return maximum;
+  return found ? maximum : null;
 }
 
 function argsFor(name, arity, probe) {
@@ -94,10 +96,12 @@ for (const name of names) {
   const source = fs.readFileSync(path.join(functionsDir, `${name}.ts`), "utf8");
   const arity = parameterCount(source);
   const fn = global[name];
-  if (unsupported.has(name) || typeof fn !== "function") {
+  if (unsupported.has(name) || typeof fn !== "function" || arity === null) {
     limitations.push({
       function: name,
-      reason: typeof fn !== "function"
+      reason: arity === null
+        ? "No exported default function declaration was found for deterministic arity discovery."
+        : typeof fn !== "function"
         ? "Exported TypeScript compatibility surface is not installed as a legacy global."
         : "Host-dependent or intentionally unsupported in deterministic Node harness.",
     });
@@ -106,8 +110,23 @@ for (const name of names) {
   for (const probe of ["normal", "coercion", "blank", "boundary"]) {
     const args = argsFor(name, arity, probe);
     const id = `matrix-${name.toLowerCase()}-${probe}`;
+    const actual = adapter.invoke(name, args, configureFor(name));
+    if (sideEffects.has(name) && actual.error) {
+      limitations.push({
+        function: name,
+        reason: `Host callback is required for deterministic ${probe} probe: ${actual.error.message}`,
+      });
+      continue;
+    }
     if (volatile.has(name)) {
-      cases.push({ id, function: name, args, expectedType: "number", limitation: "volatile-result" });
+      cases.push({
+        id,
+        function: name,
+        args,
+        expectedType: "number",
+        finite: probe !== "blank",
+        limitation: "volatile-result",
+      });
       continue;
     }
     cases.push({
@@ -115,7 +134,7 @@ for (const name of names) {
       function: name,
       args,
       configure: configureFor(name),
-      expected: runProbe(adapter, name, args),
+      expected: normalize(sideEffects.has(name) ? actual.results : actual.error || actual.value),
       observe: sideEffects.has(name) ? "results" : undefined,
     });
   }
