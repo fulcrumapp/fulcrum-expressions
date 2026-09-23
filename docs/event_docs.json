@@ -431,6 +431,65 @@
             ]
         },
         {
+            "name": "RAG",
+            "access": "",
+            "virtual": false,
+            "description": "RAG\nRetrieves ranked passages from the current form's local, validated RAG bundle.\nRAG is a Data Event function and is supported only by the iOS and Android\nExpressions hosts. Web calls complete with `rag_unavailable`; a missing\nactive form or usable bundle also returns `rag_unavailable`.\n\nThe options object accepts only `query`, `limit`, `min_score`, and\n`timeout_ms`; selectors such as `form_id`, `attachment_id`, and\n`document_id` are not supported. Defaults are `limit: 5`, `min_score: 0.70`,\nand `timeout_ms: 2000`. `limit` must be an integer from 1 through 20,\n`min_score` a finite number from 0 through 1, and `timeout_ms` an integer\nfrom 2,000 through 10,000.\nThe inclusive `min_score` threshold is applied before `limit`.\n\n`query` is literal plain text. `trimQueryV1` removes only boundary Unicode\nscalar values in `U+0009..U+000D`, `U+0020`, `U+0085`, `U+00A0`, `U+1680`,\n`U+2000..U+200A`, `U+2028`, `U+2029`, `U+202F`, `U+205F`, and `U+3000`.\nInterior whitespace and all other scalar values are preserved. The trimmed\nquery must contain 1–1,000 Unicode scalar values.\n\nA successful result has exactly `bundle_version`, `result_count`, and\n`results`. `bundle_version` is non-empty and at most 128 Unicode scalar\nvalues. `result_count` equals `results.length` and is no greater than the\neffective limit; an empty result list is a successful retrieval. Results\nare ordered by descending normalized score, with ties ordered by ascending\n`chunk_id` Unicode code-point order. Each result has exactly `rank`, `score`,\n`text`, and `citation`: ranks are one-based and contiguous; scores are finite\nand in 0..1; and redacted passage text is non-empty and at most 2,000\nUnicode scalar values. The citation has exactly `attachment_id`, `filename`,\n`page_number`, and `chunk_id`, with optional `section_heading`: IDs are\nnon-empty and at most 128 scalar values, a redacted filename is non-empty\nand at most 255 scalar values, the page number is an integer from 1 through\n100,000, and an optional redacted heading is non-empty and at most 500\nscalar values.\n\nRAG returns local retrieval results only. It does not generate an answer,\ninvoke an LLM, make a remote request, or search another form or bundle.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "The closed v1 retrieval options",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.query",
+                    "type": "string",
+                    "description": "Required literal plain-text query",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "options.limit",
+                    "type": "number",
+                    "description": "Maximum result count, an integer from 1 through 20",
+                    "default": 5,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.min_score",
+                    "type": "number",
+                    "description": "Inclusive normalized-score threshold from 0 through 1",
+                    "default": "0.70",
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "options.timeout_ms",
+                    "type": "number",
+                    "description": "Timeout in milliseconds, an integer from 2,000 through 10,000",
+                    "default": 2000,
+                    "optional": true,
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "Called asynchronously exactly once with `(error, result)`\n\nStable error codes are `rag_invalid_options`, `rag_invalid_query`,\n`rag_unavailable`, `rag_timeout`, and `rag_cancelled`. On failure the\ncallback receives `(error, null)`; on success it receives `(null, result)`.\nError messages and diagnostics do not include query text, passage text,\nfilenames, citations, document content, source URLs, or credentials.",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "RAG({query: 'soil moisture', limit: 5}, function(error, result) {\n  if (error) {\n    if (error.code === 'rag_unavailable') {\n      // Handle a host or active-bundle that is unavailable.\n    }\n    return;\n  }\n\n  if (result.results.length) {\n    SETVALUE('knowledge_excerpt', result.results[0].text);\n  }\n});"
+            ]
+        },
+        {
             "name": "SETASSIGNMENT",
             "access": "",
             "virtual": false,
