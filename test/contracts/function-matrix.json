@@ -73,39 +73,39 @@
     },
     {
       "function": "SETASSIGNMENT",
-      "reason": "Host callback is required for deterministic normal probe: user must be a string"
+      "reason": "Host callback is required for deterministic normal probe: Error: user must be a string"
     },
     {
       "function": "SETASSIGNMENT",
-      "reason": "Host callback is required for deterministic boundary probe: user must be a string"
+      "reason": "Host callback is required for deterministic boundary probe: Error: user must be a string"
     },
     {
       "function": "SETGEOMETRY",
-      "reason": "Host callback is required for deterministic normal probe: Geometry must be a valid GeoJSON value."
+      "reason": "Host callback is required for deterministic normal probe: Error: Geometry must be a valid GeoJSON value."
     },
     {
       "function": "SETGEOMETRY",
-      "reason": "Host callback is required for deterministic coercion probe: Geometry must be a valid GeoJSON value."
+      "reason": "Host callback is required for deterministic coercion probe: Error: Geometry must be a valid GeoJSON value."
     },
     {
       "function": "SETGEOMETRY",
-      "reason": "Host callback is required for deterministic boundary probe: Geometry must be a valid GeoJSON value."
+      "reason": "Host callback is required for deterministic boundary probe: Error: Geometry must be a valid GeoJSON value."
     },
     {
       "function": "SETPROJECT",
-      "reason": "Host callback is required for deterministic normal probe: project must be a string"
+      "reason": "Host callback is required for deterministic normal probe: Error: project must be a string"
     },
     {
       "function": "SETPROJECT",
-      "reason": "Host callback is required for deterministic boundary probe: project must be a string"
+      "reason": "Host callback is required for deterministic boundary probe: Error: project must be a string"
     },
     {
       "function": "SETSTATUS",
-      "reason": "Host callback is required for deterministic normal probe: status must be a string"
+      "reason": "Host callback is required for deterministic normal probe: Error: status must be a string"
     },
     {
       "function": "SETSTATUS",
-      "reason": "Host callback is required for deterministic boundary probe: status must be a string"
+      "reason": "Host callback is required for deterministic boundary probe: Error: status must be a string"
     },
     {
       "function": "STORAGE",

@@ -5,6 +5,7 @@ const {
   createLegacyAdapter,
   extractLocalScriptSources,
   isPlainObject,
+  normalize,
   normalizeLocalScriptSource,
 } = require("./contract-runner");
 
@@ -25,6 +26,13 @@ assert.strictEqual(isPlainObject(Object.create(null)), true);
 assert.strictEqual(isPlainObject([]), false);
 assert.strictEqual(isPlainObject(new Date()), false);
 assert.strictEqual(isPlainObject(null), false);
+assert.deepStrictEqual(normalize(new Date(NaN)), { $type: "invalid-date" });
+assert.deepStrictEqual(normalize(new Error("boom")), {
+  $type: "error",
+  name: "Error",
+  message: "boom",
+});
+assert.deepStrictEqual(normalize("thrown"), "thrown");
 
 const adapter = createLegacyAdapter();
 assert.deepStrictEqual(adapter.invoke("ALERT", ["first"]).results, [
