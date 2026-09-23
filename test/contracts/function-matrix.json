@@ -4,7 +4,7 @@
   "coverage": {
     "functions": 242,
     "probesPerFunction": 4,
-    "cases": 912
+    "cases": 887
   },
   "limitations": [
     {
@@ -17,10 +17,14 @@
     },
     {
       "function": "CONFIG",
-      "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
+      "reason": "No exported default function declaration was found for deterministic arity discovery."
     },
     {
       "function": "CONFIGURE",
+      "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
+    },
+    {
+      "function": "CONFIRM",
       "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
     },
     {
@@ -44,8 +48,20 @@
       "reason": "Exported TypeScript compatibility surface is not installed as a legacy global."
     },
     {
+      "function": "MESSAGEBOX",
+      "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
+    },
+    {
       "function": "OPENEXTENSION",
       "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
+    },
+    {
+      "function": "PROMPT",
+      "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
+    },
+    {
+      "function": "RAND",
+      "reason": "No exported default function declaration was found for deterministic arity discovery."
     },
     {
       "function": "RECOGNIZETEXT",
@@ -54,6 +70,42 @@
     {
       "function": "REQUEST",
       "reason": "Host-dependent or intentionally unsupported in deterministic Node harness."
+    },
+    {
+      "function": "SETASSIGNMENT",
+      "reason": "Host callback is required for deterministic normal probe: user must be a string"
+    },
+    {
+      "function": "SETASSIGNMENT",
+      "reason": "Host callback is required for deterministic boundary probe: user must be a string"
+    },
+    {
+      "function": "SETGEOMETRY",
+      "reason": "Host callback is required for deterministic normal probe: Geometry must be a valid GeoJSON value."
+    },
+    {
+      "function": "SETGEOMETRY",
+      "reason": "Host callback is required for deterministic coercion probe: Geometry must be a valid GeoJSON value."
+    },
+    {
+      "function": "SETGEOMETRY",
+      "reason": "Host callback is required for deterministic boundary probe: Geometry must be a valid GeoJSON value."
+    },
+    {
+      "function": "SETPROJECT",
+      "reason": "Host callback is required for deterministic normal probe: project must be a string"
+    },
+    {
+      "function": "SETPROJECT",
+      "reason": "Host callback is required for deterministic boundary probe: project must be a string"
+    },
+    {
+      "function": "SETSTATUS",
+      "reason": "Host callback is required for deterministic normal probe: status must be a string"
+    },
+    {
+      "function": "SETSTATUS",
+      "reason": "Host callback is required for deterministic boundary probe: status must be a string"
     },
     {
       "function": "STORAGE",
@@ -834,50 +886,6 @@
         0
       ],
       "expected": "0"
-    },
-    {
-      "id": "matrix-confirm-normal",
-      "function": "CONFIRM",
-      "args": [
-        1,
-        2,
-        3
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-confirm-coercion",
-      "function": "CONFIRM",
-      "args": [
-        "1",
-        "1",
-        "1"
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-confirm-blank",
-      "function": "CONFIRM",
-      "args": [
-        null,
-        null,
-        null
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-confirm-boundary",
-      "function": "CONFIRM",
-      "args": [
-        0,
-        0,
-        0
-      ],
-      "expected": [],
-      "observe": "results"
     },
     {
       "id": "matrix-contains-normal",
@@ -6323,46 +6331,6 @@
       "expected": 0
     },
     {
-      "id": "matrix-messagebox-normal",
-      "function": "MESSAGEBOX",
-      "args": [
-        1,
-        2
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-messagebox-coercion",
-      "function": "MESSAGEBOX",
-      "args": [
-        "1",
-        "1"
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-messagebox-blank",
-      "function": "MESSAGEBOX",
-      "args": [
-        null,
-        null
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-messagebox-boundary",
-      "function": "MESSAGEBOX",
-      "args": [
-        0,
-        0
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
       "id": "matrix-mid-normal",
       "function": "MID",
       "args": [
@@ -7330,50 +7298,6 @@
       }
     },
     {
-      "id": "matrix-prompt-normal",
-      "function": "PROMPT",
-      "args": [
-        1,
-        2,
-        3
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-prompt-coercion",
-      "function": "PROMPT",
-      "args": [
-        "1",
-        "1",
-        "1"
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-prompt-blank",
-      "function": "PROMPT",
-      "args": [
-        null,
-        null,
-        null
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-prompt-boundary",
-      "function": "PROMPT",
-      "args": [
-        0,
-        0,
-        0
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
       "id": "matrix-proper-normal",
       "function": "PROPER",
       "args": [
@@ -7482,34 +7406,6 @@
       "expected": 0
     },
     {
-      "id": "matrix-rand-normal",
-      "function": "RAND",
-      "args": [],
-      "expectedType": "number",
-      "limitation": "volatile-result"
-    },
-    {
-      "id": "matrix-rand-coercion",
-      "function": "RAND",
-      "args": [],
-      "expectedType": "number",
-      "limitation": "volatile-result"
-    },
-    {
-      "id": "matrix-rand-blank",
-      "function": "RAND",
-      "args": [],
-      "expectedType": "number",
-      "limitation": "volatile-result"
-    },
-    {
-      "id": "matrix-rand-boundary",
-      "function": "RAND",
-      "args": [],
-      "expectedType": "number",
-      "limitation": "volatile-result"
-    },
-    {
       "id": "matrix-randbetween-normal",
       "function": "RANDBETWEEN",
       "args": [
@@ -7517,6 +7413,7 @@
         2
       ],
       "expectedType": "number",
+      "finite": true,
       "limitation": "volatile-result"
     },
     {
@@ -7527,6 +7424,7 @@
         "1"
       ],
       "expectedType": "number",
+      "finite": true,
       "limitation": "volatile-result"
     },
     {
@@ -7537,6 +7435,7 @@
         null
       ],
       "expectedType": "number",
+      "finite": false,
       "limitation": "volatile-result"
     },
     {
@@ -7547,6 +7446,7 @@
         0
       ],
       "expectedType": "number",
+      "finite": true,
       "limitation": "volatile-result"
     },
     {
@@ -8016,15 +7916,6 @@
       "expected": 1
     },
     {
-      "id": "matrix-setassignment-normal",
-      "function": "SETASSIGNMENT",
-      "args": [
-        1
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
       "id": "matrix-setassignment-coercion",
       "function": "SETASSIGNMENT",
       "args": [
@@ -8052,15 +7943,6 @@
           "value": "null"
         }
       ],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-setassignment-boundary",
-      "function": "SETASSIGNMENT",
-      "args": [
-        0
-      ],
-      "expected": [],
       "observe": "results"
     },
     {
@@ -8300,24 +8182,6 @@
       "observe": "results"
     },
     {
-      "id": "matrix-setgeometry-normal",
-      "function": "SETGEOMETRY",
-      "args": [
-        1
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-setgeometry-coercion",
-      "function": "SETGEOMETRY",
-      "args": [
-        "1"
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
       "id": "matrix-setgeometry-blank",
       "function": "SETGEOMETRY",
       "args": [
@@ -8330,15 +8194,6 @@
           "value": "null"
         }
       ],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-setgeometry-boundary",
-      "function": "SETGEOMETRY",
-      "args": [
-        0
-      ],
-      "expected": [],
       "observe": "results"
     },
     {
@@ -8610,15 +8465,6 @@
       "observe": "results"
     },
     {
-      "id": "matrix-setproject-normal",
-      "function": "SETPROJECT",
-      "args": [
-        1
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
       "id": "matrix-setproject-coercion",
       "function": "SETPROJECT",
       "args": [
@@ -8646,15 +8492,6 @@
           "value": "null"
         }
       ],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-setproject-boundary",
-      "function": "SETPROJECT",
-      "args": [
-        0
-      ],
-      "expected": [],
       "observe": "results"
     },
     {
@@ -8902,15 +8739,6 @@
       "observe": "results"
     },
     {
-      "id": "matrix-setstatus-normal",
-      "function": "SETSTATUS",
-      "args": [
-        1
-      ],
-      "expected": [],
-      "observe": "results"
-    },
-    {
       "id": "matrix-setstatus-coercion",
       "function": "SETSTATUS",
       "args": [
@@ -8938,15 +8766,6 @@
           "value": "null"
         }
       ],
-      "observe": "results"
-    },
-    {
-      "id": "matrix-setstatus-boundary",
-      "function": "SETSTATUS",
-      "args": [
-        0
-      ],
-      "expected": [],
       "observe": "results"
     },
     {

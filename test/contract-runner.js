@@ -153,11 +153,17 @@ function run(adapter, compareAdapter, activeCorpus = corpus) {
   let count = 0;
   activeCorpus.cases.forEach((contract) => {
     const actual = invokeAdapter(adapter, contract);
+    if (contract.observe === "results") {
+      assert.strictEqual(actual.error, undefined, `${contract.id}: side-effect invocation threw`);
+    }
     const observed = contract.observe === "results" ? actual.results : actual.error || actual.value;
     const normalized = normalize(observed);
     assertContract(contract, observed, normalized);
     if (compareAdapter) {
       const candidate = invokeAdapter(compareAdapter, contract);
+      if (contract.observe === "results") {
+        assert.strictEqual(candidate.error, undefined, `${contract.id}: candidate side-effect invocation threw`);
+      }
       const candidateObserved = contract.observe === "results"
         ? candidate.results
         : candidate.error || candidate.value;
@@ -184,6 +190,9 @@ function invokeAdapter(adapter, contract) {
 function assertContract(contract, observed, normalized) {
   if (contract.expectedType) {
     assert.strictEqual(typeof observed, contract.expectedType, contract.id);
+    if (contract.expectedType === "number" && contract.finite) {
+      assert.ok(Number.isFinite(observed), `${contract.id}: expected a finite number`);
+    }
   } else if (contract.expected && contract.expected.$type === "object") {
     assert.ok(isPlainObject(observed), contract.id);
   } else {
@@ -214,8 +223,7 @@ if (require.main === module) {
   }
   const matrixCount = matrix ? run(adapter, compareAdapter, matrix) : 0;
   if (matrix) {
-    const expectedCases = (matrix.coverage.functions - matrix.limitations.length) * matrix.coverage.probesPerFunction;
-    assert.strictEqual(matrix.cases.length, expectedCases, "function matrix coverage metadata");
+    assert.strictEqual(matrix.cases.length, matrix.coverage.cases, "function matrix coverage metadata");
   }
   console.log(`Contract suite passed: ${count + matrixCount} cases (${count} baseline, ${matrixCount} function matrix)`);
 }
