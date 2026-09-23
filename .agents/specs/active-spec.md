@@ -1,7 +1,9 @@
 # FLCRM-22289: Retrieval-only RAG Data Event function
 
-**Status:** Approved by the user on 2026-09-23.  
-**Jira:** [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289)  
+**Status:** Approved by the user on 2026-09-23.
+
+**Jira:** [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289)
+
 **Normative contract:** [FLCRM-22079](https://fulcrumapp.atlassian.net/browse/FLCRM-22079) and `openspec/changes/define-mobile-rag-data-event-and-agent-tool/specs/mobile-rag-data-event/spec.md`
 
 ## Goal
