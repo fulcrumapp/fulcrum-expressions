@@ -25,6 +25,7 @@ runtime.prepare()
 $repeatable_field = variables.values.form_values['1337']
 
 docs = JSON.parse(fs.readFileSync(__dirname + '/../docs/docs.json'))
+eventDocs = JSON.parse(fs.readFileSync(__dirname + '/../docs/event_docs.json'))
 
 shouldBeNull = (value) ->
   (value is null).should.be.true()
@@ -59,3 +60,27 @@ describe 'Documentation', ->
           actual = Utils.formatMachineDate(result)
 
         actual.should.eql(returnValue)
+
+describe 'Data Event Documentation', ->
+  ragDoc = _.find(eventDocs.functions, (func) -> func.name is 'RAG')
+
+  it 'includes executable RAG examples for both callback outcomes', ->
+    ragDoc.should.be.ok()
+    ragDoc.examples.should.have.length(1)
+
+    example = ragDoc.examples[0]
+    executeExample = new Function('RAG', 'SETVALUE', example)
+
+    rag = (options, callback) ->
+      options.query.should.eql('soil moisture')
+      options.limit.should.eql(5)
+      callback({code: 'rag_unavailable'}, null)
+
+    (-> executeExample(rag, ->)).should.not.throw()
+
+    rag = (options, callback) ->
+      options.query.should.eql('soil moisture')
+      options.limit.should.eql(5)
+      callback(null, {results: [{text: 'A redacted passage.'}]})
+
+    (-> executeExample(rag, ->)).should.not.throw()

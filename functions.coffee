@@ -1314,6 +1314,398 @@ exports.INFERENCE = (options, callback) ->
     HostFunctions.inference(JSON.stringify(args), completion)
   , 1)
 
+RAG_ERROR_MESSAGES =
+  rag_invalid_options: 'Invalid RAG options.'
+  rag_invalid_query: 'Invalid RAG query.'
+  rag_unavailable: 'RAG is unavailable.'
+  rag_timeout: 'RAG request timed out.'
+  rag_cancelled: 'RAG request was cancelled.'
+
+ragError = (code) ->
+  error = new Error(RAG_ERROR_MESSAGES[code] ? RAG_ERROR_MESSAGES.rag_unavailable)
+  error.code = code
+  error
+
+ragHasOwn = (object, key) ->
+  Object.prototype.hasOwnProperty.call(object, key)
+
+ragOwnKeys = (object) ->
+  keys = Object.getOwnPropertyNames(object)
+  keys = keys.concat(Object.getOwnPropertySymbols(object)) if Object.getOwnPropertySymbols?
+  keys
+
+ragIsAllowedOption = (key) ->
+  key is 'query' or key is 'limit' or key is 'min_score' or key is 'timeout_ms'
+
+ragIsTrimQueryWhitespace = (code) ->
+  (code >= 0x09 and code <= 0x0d) or
+    code is 0x20 or
+    code is 0x85 or
+    code is 0xa0 or
+    code is 0x1680 or
+    (code >= 0x2000 and code <= 0x200a) or
+    code is 0x2028 or
+    code is 0x2029 or
+    code is 0x202f or
+    code is 0x205f or
+    code is 0x3000
+
+ragTrimQueryV1 = (query) ->
+  start = 0
+  end = query.length
+
+  start += 1 while start < end and ragIsTrimQueryWhitespace(query.charCodeAt(start))
+  end -= 1 while end > start and ragIsTrimQueryWhitespace(query.charCodeAt(end - 1))
+
+  query.substring(start, end)
+
+ragUnicodeScalarLength = (value) ->
+  count = 0
+  index = 0
+
+  while index < value.length
+    code = value.charCodeAt(index)
+
+    if code >= 0xd800 and code <= 0xdbff
+      return -1 if index + 1 >= value.length
+
+      nextCode = value.charCodeAt(index + 1)
+      return -1 unless nextCode >= 0xdc00 and nextCode <= 0xdfff
+
+      index += 2
+    else if code >= 0xdc00 and code <= 0xdfff
+      return -1
+    else
+      index += 1
+
+    count += 1
+
+  count
+
+ragIsBoundedNonEmptyString = (value, maximum) ->
+  return false unless typeof value is 'string'
+
+  length = ragUnicodeScalarLength(value)
+
+  length > 0 and length <= maximum
+
+ragCompareUnicodeCodePoints = (left, right) ->
+  leftIndex = 0
+  rightIndex = 0
+
+  while leftIndex < left.length and rightIndex < right.length
+    leftCode = left.charCodeAt(leftIndex)
+    rightCode = right.charCodeAt(rightIndex)
+
+    if leftCode >= 0xd800 and leftCode <= 0xdbff
+      leftCode = 0x10000 + ((leftCode - 0xd800) * 0x400) + (left.charCodeAt(leftIndex + 1) - 0xdc00)
+      leftIndex += 2
+    else
+      leftIndex += 1
+
+    if rightCode >= 0xd800 and rightCode <= 0xdbff
+      rightCode = 0x10000 + ((rightCode - 0xd800) * 0x400) + (right.charCodeAt(rightIndex + 1) - 0xdc00)
+      rightIndex += 2
+    else
+      rightIndex += 1
+
+    return -1 if leftCode < rightCode
+    return 1 if leftCode > rightCode
+
+  return -1 if leftIndex is left.length and rightIndex < right.length
+  return 1 if leftIndex < left.length and rightIndex is right.length
+
+  0
+
+ragNormalizeOptions = (options) ->
+  throw ragError('rag_invalid_options') unless options isnt null and typeof options is 'object'
+
+  for key in ragOwnKeys(options)
+    throw ragError('rag_invalid_options') unless ragIsAllowedOption(key)
+
+  for key of options
+    throw ragError('rag_invalid_options') unless ragIsAllowedOption(key)
+
+  limit = if ragHasOwn(options, 'limit') then options.limit else 5
+  minScore = if ragHasOwn(options, 'min_score') then options.min_score else 0.70
+  timeout = if ragHasOwn(options, 'timeout_ms') then options.timeout_ms else 2000
+
+  unless typeof limit is 'number' and isFinite(limit) and limit % 1 is 0 and limit >= 1 and limit <= 20
+    throw ragError('rag_invalid_options')
+
+  unless typeof minScore is 'number' and isFinite(minScore) and minScore >= 0 and minScore <= 1
+    throw ragError('rag_invalid_options')
+
+  unless typeof timeout is 'number' and isFinite(timeout) and timeout % 1 is 0 and timeout >= 2000 and timeout <= 10000
+    throw ragError('rag_invalid_options')
+
+  try
+    query = if ragHasOwn(options, 'query') then options.query else undefined
+  catch error
+    throw ragError('rag_invalid_query')
+
+  throw ragError('rag_invalid_query') unless typeof query is 'string'
+
+  query = ragTrimQueryV1(query)
+  queryLength = ragUnicodeScalarLength(query)
+  throw ragError('rag_invalid_query') unless queryLength >= 1 and queryLength <= 1000
+
+  query: query
+  limit: limit
+  min_score: minScore
+  timeout_ms: timeout
+
+ragHasExactKeys = (value, requiredKeys, optionalKeys=[]) ->
+  return false unless value? and typeof value is 'object' and not Array.isArray(value)
+
+  keys = ragOwnKeys(value)
+  return false unless keys.length >= requiredKeys.length
+
+  for key in keys
+    return false unless typeof key is 'string' and (_.include(requiredKeys, key) or _.include(optionalKeys, key))
+
+  for key of value
+    return false unless typeof key is 'string' and (_.include(requiredKeys, key) or _.include(optionalKeys, key))
+
+  for key in requiredKeys
+    return false unless ragHasOwn(value, key)
+
+  true
+
+ragReadOwnDataValue = (object, key) ->
+  descriptor = Object.getOwnPropertyDescriptor(object, key)
+
+  return { valid: false } unless descriptor? and ragHasOwn(descriptor, 'value')
+
+  { valid: true, value: descriptor.value }
+
+ragReadArrayDataValue = (array, index) ->
+  ragReadOwnDataValue(array, '' + index)
+
+ragClosedArrayLength = (value) ->
+  return -1 unless Array.isArray(value)
+
+  keys = ragOwnKeys(value)
+  return -1 unless keys.length is value.length + 1
+
+  for key of value
+    return -1 unless ragHasOwn(value, key)
+
+  for key in keys
+    continue if key is 'length'
+    return -1 unless typeof key is 'string'
+
+    index = +key
+    return -1 unless isFinite(index) and index % 1 is 0 and index >= 0 and index < value.length and '' + index is key
+
+  value.length
+
+ragValidateResultV1 = (result, requestOptions) ->
+  return null unless ragHasExactKeys(result, ['bundle_version', 'result_count', 'results'])
+
+  bundleVersionField = ragReadOwnDataValue(result, 'bundle_version')
+  resultCountField = ragReadOwnDataValue(result, 'result_count')
+  resultsField = ragReadOwnDataValue(result, 'results')
+  return null unless bundleVersionField.valid and resultCountField.valid and resultsField.valid
+
+  bundleVersion = bundleVersionField.value
+  resultCount = resultCountField.value
+  results = resultsField.value
+
+  return null unless ragIsBoundedNonEmptyString(bundleVersion, 128)
+
+  resultsLength = ragClosedArrayLength(results)
+  return null if resultsLength < 0 or resultsLength > requestOptions.limit
+  return null unless resultCount is resultsLength
+
+  normalizedResults = []
+  previousScore = null
+  previousChunkID = null
+  index = 0
+
+  while index < resultsLength
+    itemField = ragReadArrayDataValue(results, index)
+    return null unless itemField.valid
+
+    item = itemField.value
+    return null unless ragHasExactKeys(item, ['rank', 'score', 'text', 'citation'])
+
+    rankField = ragReadOwnDataValue(item, 'rank')
+    scoreField = ragReadOwnDataValue(item, 'score')
+    textField = ragReadOwnDataValue(item, 'text')
+    citationField = ragReadOwnDataValue(item, 'citation')
+    return null unless rankField.valid and scoreField.valid and textField.valid and citationField.valid
+
+    rank = rankField.value
+    score = scoreField.value
+    text = textField.value
+    citation = citationField.value
+
+    return null unless typeof rank is 'number' and rank % 1 is 0 and rank is index + 1
+    return null unless typeof score is 'number' and isFinite(score) and score >= requestOptions.min_score and score <= 1
+    return null unless ragIsBoundedNonEmptyString(text, 2000)
+    return null unless ragHasExactKeys(citation, ['attachment_id', 'filename', 'page_number', 'chunk_id'], ['section_heading'])
+
+    attachmentIDField = ragReadOwnDataValue(citation, 'attachment_id')
+    filenameField = ragReadOwnDataValue(citation, 'filename')
+    pageNumberField = ragReadOwnDataValue(citation, 'page_number')
+    chunkIDField = ragReadOwnDataValue(citation, 'chunk_id')
+    return null unless attachmentIDField.valid and filenameField.valid and pageNumberField.valid and chunkIDField.valid
+
+    attachmentID = attachmentIDField.value
+    filename = filenameField.value
+    pageNumber = pageNumberField.value
+    chunkID = chunkIDField.value
+
+    return null unless ragIsBoundedNonEmptyString(attachmentID, 128)
+    return null unless ragIsBoundedNonEmptyString(filename, 255)
+    return null unless typeof pageNumber is 'number' and isFinite(pageNumber) and pageNumber % 1 is 0 and pageNumber >= 1 and pageNumber <= 100000
+    return null unless ragIsBoundedNonEmptyString(chunkID, 128)
+
+    sectionHeading = undefined
+    if ragHasOwn(citation, 'section_heading')
+      sectionHeadingField = ragReadOwnDataValue(citation, 'section_heading')
+      return null unless sectionHeadingField.valid
+      sectionHeading = sectionHeadingField.value
+      return null unless ragIsBoundedNonEmptyString(sectionHeading, 500)
+
+    if index > 0
+      return null if previousScore < score
+      if previousScore is score
+        return null if ragCompareUnicodeCodePoints(previousChunkID, chunkID) > 0
+
+    normalizedCitation =
+      attachment_id: attachmentID
+      filename: filename
+      page_number: pageNumber
+      chunk_id: chunkID
+
+    normalizedCitation.section_heading = sectionHeading if ragHasOwn(citation, 'section_heading')
+
+    normalizedResults.push(
+      rank: rank
+      score: score
+      text: text
+      citation: normalizedCitation
+    )
+
+    previousScore = score
+    previousChunkID = chunkID
+    index += 1
+
+  bundle_version: bundleVersion
+  result_count: resultCount
+  results: normalizedResults
+
+ragNativeErrorCode = (error) ->
+  try
+    return error.code if error?.code is 'rag_timeout' or error?.code is 'rag_cancelled'
+  catch ignored
+
+  'rag_unavailable'
+
+ragScheduleAsync = (callback) ->
+  try
+    if hostFunctionExists('setTimeout')
+      HostFunctions.setTimeout(callback, 1)
+      return
+  catch ignored
+
+  globalObject = $$runtime.global
+  if globalObject? and _.isFunction(globalObject.setTimeout)
+    try
+      globalObject.setTimeout.call(globalObject, callback, 1)
+      return
+    catch ignored
+
+  if typeof queueMicrotask isnt 'undefined' and _.isFunction(queueMicrotask)
+    queueMicrotask(callback)
+    return
+
+  if typeof Promise isnt 'undefined' and _.isFunction(Promise.resolve)
+    Promise.resolve().then(callback)
+
+exports.RAG = (options, callback) ->
+  throw ragError('rag_invalid_options') unless _.isFunction(callback)
+
+  completed = false
+
+  finish = (error, result) ->
+    return if completed
+
+    completed = true
+
+    if error?
+      callback(error, null)
+    else
+      callback(null, result)
+
+  finishWithCode = (code) ->
+    finish(ragError(code), null)
+
+  finishFromHost = (error, result, requestOptions) ->
+    return if completed
+
+    if error?
+      finishWithCode(ragNativeErrorCode(error))
+      return
+
+    try
+      validatedResult = ragValidateResultV1(result, requestOptions)
+    catch ignored
+      validatedResult = null
+
+    if validatedResult?
+      finish(null, validatedResult)
+    else
+      finishWithCode('rag_unavailable')
+
+  dispatch = ->
+    return if completed
+
+    try
+      requestOptions = ragNormalizeOptions(options)
+    catch validationError
+      code = 'rag_invalid_options'
+      try
+        code = 'rag_invalid_query' if validationError?.code is 'rag_invalid_query'
+      catch ignored
+        code = 'rag_invalid_options'
+      finishWithCode(code)
+      return
+
+    platform = null
+    try
+      platform = PLATFORM()
+    catch ignored
+      finishWithCode('rag_unavailable')
+      return
+
+    if platform isnt 'iOS' and platform isnt 'Android'
+      finishWithCode('rag_unavailable')
+      return
+
+    nativeRagAvailable = false
+    try
+      nativeRagAvailable = hostFunctionExists('rag')
+    catch ignored
+      finishWithCode('rag_unavailable')
+      return
+
+    unless nativeRagAvailable
+      finishWithCode('rag_unavailable')
+      return
+
+    try
+      ragHostCall(JSON.stringify(requestOptions), (error, result) ->
+        finishFromHost(error, result, requestOptions)
+      )
+    catch ignored
+      finishWithCode('rag_unavailable')
+
+  ragScheduleAsync(dispatch)
+  return
+
 exports.LOADFILE = (options, callback) ->
   ERROR('options must be provided') unless options?
   ERROR('options.name must be a string') if not _.isString(options.name)
@@ -2475,6 +2867,14 @@ hostFunctionCall = (name, args) ->
 
 hostAsyncFunctionCall = (name, args, callback) ->
   $$runtime.invokeAsync $$runtime["$$#{name}"], args, callback
+
+ragHostCall = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('rag')
+    hostAsyncFunctionCall('rag', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
 
 HostFunctions = exports.HostFunctions = host = {}
 
