@@ -28,11 +28,11 @@ Contract-test setup is already complete (905-case contracts, legacy suite green,
 
 ### New Capabilities
 
-- None. All capabilities should remain in parity during migration.
+- `ts-hybrid-rollout`: Defines required rollout behavior for side-by-side legacy/hybrid artifacts, deterministic per-function routing, promotion gates, and rollback rules during incremental TypeScript migration.
 
 ### Modified Capabilities
 
-- None. All capabilities should remain in parity during migration.
+- None.
 
 ## Impact
 
