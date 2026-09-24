@@ -34,6 +34,29 @@ mockHostFunction = (name, values) ->
     runtime.callbackArguments = values
     runtime.finishAsync()
 
+mockAsyncHostTimer = ->
+  runtime.$$setTimeout = (delay, callbackID) ->
+    setTimeout((->
+      runtime.callbackID = callbackID
+      runtime.callbackArguments = []
+      runtime.finishAsync()
+    ), delay)
+
+newRagItem = (rank=1, score=0.9, chunkID='chunk-1') ->
+  rank: rank
+  score: score
+  text: 'A redacted passage.'
+  citation:
+    attachment_id: 'attachment-1'
+    filename: 'field-guide.pdf'
+    page_number: 1
+    chunk_id: chunkID
+
+newRagResult = (results=[]) ->
+  bundle_version: 'bundle-v1'
+  result_count: results.length
+  results: results
+
 shouldBeNull = (value) ->
   (value is null).should.be.true()
 
@@ -2948,6 +2971,486 @@ describe "SETMODE", ->
             size: 224
 
         (-> INFERENCE params).should.throw('options.config cannot contain both size (Vision ML) and prompt/systemPrompt (Generative LLM)')
+
+
+  describe 'RAG', ->
+    it 'throws a coded error synchronously when the callback is missing or not callable', ->
+      missingCallbackError = null
+      nonCallableCallbackError = null
+
+      try
+        RAG(query: 'private query')
+      catch error
+        missingCallbackError = error
+
+      try
+        RAG({query: 'private query'}, null)
+      catch error
+        nonCallableCallbackError = error
+
+      missingCallbackError.code.should.eql('rag_invalid_options')
+      nonCallableCallbackError.code.should.eql('rag_invalid_options')
+      missingCallbackError.message.should.not.containEql('private query')
+
+    it 'cannot be used in calculations', ->
+      runtime.isCalculation = true
+
+      try
+        (-> RAG({query: 'query'}, ->)).should.throw('RAG cannot be used in a calculation')
+      finally
+        runtime.isCalculation = false
+
+    it 'trims only v1 boundary whitespace and sends default options to the native host', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+
+      allV1Whitespace = '\u0009\u000a\u000b\u000c\u000d \u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000'
+      expectedQuery = '\ufeffalpha\t beta\u180e\u200b'
+      request = null
+      runtime.$$rag = (options, callbackID) ->
+        request = JSON.parse(options)
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, newRagResult([newRagItem()])]
+        runtime.finishAsync()
+
+      callbackCalled = false
+      RAG({query: allV1Whitespace + expectedQuery + allV1Whitespace}, (error, result) ->
+        try
+          callbackCalled.should.be.false()
+          callbackCalled = true
+          shouldBeNull(error)
+          request.should.eql(
+            query: expectedQuery
+            limit: 5
+            min_score: 0.70
+            timeout_ms: 2000
+          )
+          result.should.eql(newRagResult([newRagItem()]))
+          Object.keys(result).sort().should.eql(['bundle_version', 'result_count', 'results'])
+          Object.keys(result.results[0]).sort().should.eql(['citation', 'rank', 'score', 'text'])
+          Object.keys(result.results[0].citation).sort().should.eql(['attachment_id', 'chunk_id', 'filename', 'page_number'])
+          done()
+        catch error
+          done(error)
+      )
+
+      callbackCalled.should.be.false()
+
+    it 'passes explicit validated options including the effective timeout to the host', (done) ->
+      CONFIGURE({ platform: 'iOS' })
+      mockAsyncHostTimer()
+
+      request = null
+      runtime.$$rag = (options, callbackID) ->
+        request = JSON.parse(options)
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, newRagResult([])]
+        runtime.finishAsync()
+
+      RAG({query: 'soil', limit: 20, min_score: 0.85, timeout_ms: 6500}, (error, result) ->
+        try
+          shouldBeNull(error)
+          result.should.eql(newRagResult([]))
+          request.should.eql(
+            query: 'soil'
+            limit: 20
+            min_score: 0.85
+            timeout_ms: 6500
+          )
+          done()
+        catch error
+          done(error)
+      )
+
+    it 'counts Unicode scalar values rather than UTF-16 code units', (done) ->
+      CONFIGURE({ platform: 'iOS' })
+      mockAsyncHostTimer()
+
+      query = new Array(1001).join('\ud83d\ude00')
+      request = null
+      runtime.$$rag = (options, callbackID) ->
+        request = JSON.parse(options)
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, newRagResult([])]
+        runtime.finishAsync()
+
+      RAG({query: query}, (error, result) ->
+        try
+          shouldBeNull(error)
+          result.should.eql(newRagResult([]))
+          request.query.should.eql(query)
+          done()
+        catch error
+          done(error)
+      )
+
+    it 'rejects malformed options asynchronously before query or host availability errors', (done) ->
+      CONFIGURE({ platform: 'Web' })
+      mockAsyncHostTimer()
+
+      cases = [
+        undefined
+        null
+        'not an object'
+        {query: '', form_id: 'another-form'}
+        {query: '', limit: '5'}
+        {query: '', limit: null}
+        {query: '', limit: NaN}
+        {query: '', limit: 0}
+        {query: '', limit: 1.5}
+        {query: '', limit: 21}
+        {query: '', min_score: null}
+        {query: '', min_score: NaN}
+        {query: '', min_score: Infinity}
+        {query: '', min_score: -0.1}
+        {query: '', min_score: 1.1}
+        {query: '', timeout_ms: null}
+        {query: '', timeout_ms: NaN}
+        {query: '', timeout_ms: 1999}
+        {query: '', timeout_ms: 2000.5}
+        {query: '', timeout_ms: 10001}
+        {query: 'valid', attachment_id: 'not-allowed'}
+      ]
+      inheritedUnknownOption = Object.create({form_id: 'another-form'})
+      inheritedUnknownOption.query = ''
+      cases.push(inheritedUnknownOption)
+
+      dispatchCount = 0
+      completedCount = 0
+      runtime.$$rag = ->
+        dispatchCount += 1
+
+      for options in cases
+        do (options) ->
+          RAG(options, (error, result) ->
+            try
+              error.code.should.eql('rag_invalid_options')
+              shouldBeNull(result)
+              dispatchCount.should.eql(0)
+              completedCount += 1
+              done() if completedCount is cases.length
+            catch error
+              done(error)
+          )
+          completedCount.should.eql(0)
+
+    it 'rejects missing, non-string, blank, malformed-scalar, and overlength queries asynchronously', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+
+      cases = [
+        {}
+        {query: null}
+        {query: 12}
+        {query: '\u0009\u00a0\u2003'}
+        {query: '\ud800'}
+        {query: new Array(1002).join('\ud83d\ude00')}
+      ]
+
+      dispatchCount = 0
+      completedCount = 0
+      runtime.$$rag = ->
+        dispatchCount += 1
+
+      for options in cases
+        do (options) ->
+          RAG(options, (error, result) ->
+            try
+              error.code.should.eql('rag_invalid_query')
+              shouldBeNull(result)
+              dispatchCount.should.eql(0)
+              completedCount += 1
+              done() if completedCount is cases.length
+            catch error
+              done(error)
+          )
+          completedCount.should.eql(0)
+
+    it 'returns asynchronous rag_unavailable on Web without dispatching a retrieval request', (done) ->
+      CONFIGURE({ platform: 'Web' })
+      mockAsyncHostTimer()
+
+      dispatchCount = 0
+      runtime.$$rag = ->
+        dispatchCount += 1
+
+      callbackCalled = false
+      RAG({query: 'valid query'}, (error, result) ->
+        try
+          callbackCalled.should.be.false()
+          callbackCalled = true
+          error.code.should.eql('rag_unavailable')
+          shouldBeNull(result)
+          dispatchCount.should.eql(0)
+          done()
+        catch error
+          done(error)
+      )
+
+      callbackCalled.should.be.false()
+
+    it 'returns asynchronous rag_unavailable when a supported host has no RAG operation', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+      delete runtime.$$rag
+
+      callbackCalled = false
+      RAG({query: 'valid query'}, (error, result) ->
+        try
+          callbackCalled.should.be.false()
+          callbackCalled = true
+          error.code.should.eql('rag_unavailable')
+          shouldBeNull(result)
+          done()
+        catch error
+          done(error)
+      )
+
+      callbackCalled.should.be.false()
+
+    it 'validates options and query before Web availability', (done) ->
+      CONFIGURE({ platform: 'Web' })
+      mockAsyncHostTimer()
+
+      cases = [
+        [{query: '', form_id: 'another-form'}, 'rag_invalid_options']
+        [{query: '\u00a0'}, 'rag_invalid_query']
+      ]
+      completedCount = 0
+      runtime.$$rag = ->
+        throw new Error('Web must not dispatch RAG')
+
+      for testCase in cases
+        do (testCase) ->
+          RAG(testCase[0], (error, result) ->
+            try
+              error.code.should.eql(testCase[1])
+              shouldBeNull(result)
+              completedCount += 1
+              done() if completedCount is cases.length
+            catch error
+              done(error)
+          )
+          completedCount.should.eql(0)
+
+    it 'returns a valid empty success result', (done) ->
+      CONFIGURE({ platform: 'iOS' })
+      mockAsyncHostTimer()
+
+      runtime.$$rag = (options, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, newRagResult([])]
+        runtime.finishAsync()
+
+      RAG({query: 'empty'}, (error, result) ->
+        try
+          shouldBeNull(error)
+          result.should.eql(newRagResult([]))
+          done()
+        catch error
+          done(error)
+      )
+
+    it 'rejects malformed or non-closed native result shapes', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+
+      extraTopLevel = newRagResult([])
+      extraTopLevel.raw_score = 100
+
+      wrongCount = newRagResult([newRagItem()])
+      wrongCount.result_count = 0
+
+      extraItemField = newRagResult([newRagItem()])
+      extraItemField.results[0].engine_score = 100
+
+      extraCitationField = newRagResult([newRagItem()])
+      extraCitationField.results[0].citation.source_url = 'https://private.invalid'
+
+      belowThreshold = newRagResult([newRagItem(1, 0.69)])
+      wrongRank = newRagResult([newRagItem(2, 0.9)])
+      ascendingScoreViolation = newRagResult([newRagItem(1, 0.8, 'a'), newRagItem(2, 0.9, 'b')])
+      codePointOrderViolation = newRagResult([newRagItem(1, 0.8, '\ud800\udc00'), newRagItem(2, 0.8, '\ue000')])
+
+      badPageNumber = newRagResult([newRagItem()])
+      badPageNumber.results[0].citation.page_number = 100001
+
+      badBundleVersion = newRagResult([])
+      badBundleVersion.bundle_version = new Array(130).join('v')
+
+      tooManyResults = newRagResult([
+        newRagItem(1, 0.9, 'a')
+        newRagItem(2, 0.9, 'b')
+        newRagItem(3, 0.9, 'c')
+        newRagItem(4, 0.9, 'd')
+        newRagItem(5, 0.9, 'e')
+        newRagItem(6, 0.9, 'f')
+      ])
+
+      badPassageLength = newRagResult([newRagItem()])
+      badPassageLength.results[0].text = new Array(2002).join('p')
+
+      badFilenameLength = newRagResult([newRagItem()])
+      badFilenameLength.results[0].citation.filename = new Array(257).join('f')
+
+      emptyHeading = newRagResult([newRagItem()])
+      emptyHeading.results[0].citation.section_heading = ''
+
+      responses = [
+        extraTopLevel
+        wrongCount
+        extraItemField
+        extraCitationField
+        belowThreshold
+        wrongRank
+        ascendingScoreViolation
+        codePointOrderViolation
+        badPageNumber
+        badBundleVersion
+        tooManyResults
+        badPassageLength
+        badFilenameLength
+        emptyHeading
+      ]
+      responseIndex = 0
+      completedCount = 0
+
+      runtime.$$rag = (options, callbackID) ->
+        response = responses[responseIndex]
+        responseIndex += 1
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, response]
+        runtime.finishAsync()
+
+      for response in responses
+        do (response) ->
+          RAG({query: 'valid'}, (error, result) ->
+            try
+              error.code.should.eql('rag_unavailable')
+              error.message.should.eql('RAG is unavailable.')
+              shouldBeNull(result)
+              completedCount += 1
+              done() if completedCount is responses.length
+            catch error
+              done(error)
+          )
+          completedCount.should.eql(0)
+
+    it 'accepts equal-score results in Unicode code-point chunk-id order', (done) ->
+      CONFIGURE({ platform: 'iOS' })
+      mockAsyncHostTimer()
+
+      validResult = newRagResult([
+        newRagItem(1, 0.8, '\ue000')
+        newRagItem(2, 0.8, '\ud800\udc00')
+      ])
+
+      runtime.$$rag = (options, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, validResult]
+        runtime.finishAsync()
+
+      RAG({query: 'valid'}, (error, result) ->
+        try
+          shouldBeNull(error)
+          result.results[0].citation.chunk_id.should.eql('\ue000')
+          result.results[1].citation.chunk_id.should.eql('\ud800\udc00')
+          done()
+        catch error
+          done(error)
+      )
+
+    it 'forwards only stable timeout and cancellation codes with privacy-safe errors', (done) ->
+      CONFIGURE({ platform: 'iOS' })
+      mockAsyncHostTimer()
+
+      codes = ['rag_timeout', 'rag_cancelled']
+      completedCount = 0
+      runtime.$$rag = (options, callbackID) ->
+        errorCode = codes[completedCount]
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [
+          { code: errorCode, message: 'secret query, filename, and citation' }
+          null
+        ]
+        runtime.finishAsync()
+
+      for code in codes
+        do (code) ->
+          RAG({query: 'secret query'}, (error, result) ->
+            try
+              error.code.should.eql(code)
+              error.message.should.not.containEql('secret query')
+              error.message.should.not.containEql('filename')
+              error.message.should.not.containEql('citation')
+              shouldBeNull(result)
+              completedCount += 1
+              done() if completedCount is codes.length
+            catch error
+              done(error)
+          )
+
+    it 'calls the public callback exactly once when a host reports late completions', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+
+      originalInvokeAsync = runtime.invokeAsync
+      runtime.$$rag = ->
+      runtime.invokeAsync = (hostFunction, args, hostCallback) ->
+        try
+          hostCallback(null, newRagResult([]))
+          hostCallback({ code: 'rag_cancelled' }, null)
+        finally
+          runtime.invokeAsync = originalInvokeAsync
+
+      callbackCount = 0
+
+      RAG({query: 'once'}, (error, result) ->
+        try
+          callbackCount += 1
+          shouldBeNull(error)
+          result.should.eql(newRagResult([]))
+          setTimeout((->
+            try
+              callbackCount.should.eql(1)
+              done()
+            catch error
+              done(error)
+          ), 10)
+        catch error
+          done(error)
+      )
+
+    it 'maps unknown host failures to a stable privacy-safe error without logging content', (done) ->
+      CONFIGURE({ platform: 'iOS' })
+      mockAsyncHostTimer()
+
+      originalLog = console.log
+      logs = []
+      console.log = (args...) ->
+        logs.push(args.join(' '))
+
+      runtime.$$rag = (options, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [
+          { code: 'native_error', message: 'private query passage filename citation' }
+          null
+        ]
+        runtime.finishAsync()
+
+      RAG({query: 'private query'}, (error, result) ->
+        try
+          error.code.should.eql('rag_unavailable')
+          error.message.should.eql('RAG is unavailable.')
+          error.message.should.not.containEql('private query')
+          shouldBeNull(result)
+          logs.should.eql([])
+          done()
+        catch error
+          done(error)
+        finally
+          console.log = originalLog
+      )
 
 
   describe 'LOADFILE', ->

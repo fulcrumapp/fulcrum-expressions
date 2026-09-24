@@ -367,6 +367,7 @@ class Runtime
       OPENURL: true
       OPENEXTENSION: true
       PROGRESS: true
+      RAG: true
       RECOGNIZETEXT: true
       REQUEST: true
       SETCHOICEFILTER: true
