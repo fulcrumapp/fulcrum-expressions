@@ -1,10 +1,10 @@
-# Spec Delta
+# TS Hybrid Rollout
 
 ## Purpose
 
 Define externally observable rollout behavior for incremental TypeScript migration with side-by-side legacy and hybrid channels, deterministic routing, gate-controlled default promotion, and rollback safety.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Dual artifact channels are produced and selectable
 The expressions build MUST produce both legacy and hybrid artifact channels in the same migration era, and runtime selection MUST keep legacy as the default until promotion criteria are met.
