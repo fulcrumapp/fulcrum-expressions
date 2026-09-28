@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "description": "Deterministic behavioral contracts for the legacy expression runtime.",
+  "cases": [
+    {
+      "id": "array-flattens",
+      "category": "expression",
+      "function": "ARRAY",
+      "args": [[1, [2, [3]]]],
+      "expected": [1, 2, 3]
+    },
+    {
+      "id": "numeric-coercion",
+      "category": "expression",
+      "function": "NUM",
+      "args": ["12.5"],
+      "expected": 12.5
+    },
+    {
+      "id": "invalid-number-is-nan",
+      "category": "expression",
+      "function": "NUM",
+      "args": ["not a number"],
+      "expected": {"$type": "nan"}
+    },
+    {
+      "id": "conditional-selection",
+      "category": "expression",
+      "function": "IF",
+      "args": [true, "yes", "no"],
+      "expected": "yes"
+    },
+    {
+      "id": "string-normalization",
+      "category": "expression",
+      "function": "UPPER",
+      "args": ["Fulcrum"],
+      "expected": "FULCRUM"
+    },
+    {
+      "id": "date-construction",
+      "category": "time",
+      "function": "DATE",
+      "args": [2020, 1, 2],
+      "expected": {"$date": "2020-01-02"}
+    },
+    {
+      "id": "timezone-global",
+      "category": "locale-timezone",
+      "function": "TIMEZONE",
+      "args": [],
+      "configure": {"timeZone": "America/New_York"},
+      "expected": "America/New_York"
+    },
+    {
+      "id": "locale-global",
+      "category": "locale-timezone",
+      "function": "LOCALE",
+      "args": [],
+      "configure": {"locale": "de_DE"},
+      "expected": "de_DE"
+    },
+    {
+      "id": "decimal-separator-global",
+      "category": "locale-timezone",
+      "function": "DECIMALSEPARATOR",
+      "args": [],
+      "configure": {"decimalSeparator": ","},
+      "expected": ","
+    },
+    {
+      "id": "geometry-point",
+      "category": "geometry",
+      "function": "GEOMETRYPOINT",
+      "args": [[-82.6, 27.7]],
+      "expected": {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {"type": "Point", "coordinates": [-82.6, 27.7]}
+      }
+    },
+    {
+      "id": "geometry-distance-is-zero",
+      "category": "geometry",
+      "function": "GEOMETRYDISTANCE",
+      "args": [
+        {"type": "Point", "coordinates": [0, 0]},
+        {"type": "Point", "coordinates": [0, 0]}
+      ],
+      "expected": 0
+    },
+    {
+      "id": "alert-host-effect",
+      "category": "host-effect",
+      "function": "ALERT",
+      "args": ["Notice"],
+      "expected": [
+        {"type": "message", "title": null, "message": "Notice"}
+      ],
+      "observe": "results"
+    },
+    {
+      "id": "progress-host-effect",
+      "category": "host-effect",
+      "function": "PROGRESS",
+      "args": ["Loading"],
+      "expected": [
+        {"type": "progress", "title": null, "message": "Loading"}
+      ],
+      "observe": "results"
+    },
+    {
+      "id": "open-url-host-effect",
+      "category": "host-effect",
+      "function": "OPENURL",
+      "args": ["https://example.com"],
+      "expected": [
+        {"type": "open", "value": "\"https://example.com\""}
+      ],
+      "observe": "results"
+    },
+    {
+      "id": "set-value-host-effect",
+      "category": "host-effect",
+      "function": "SETVALUE",
+      "args": ["name", "Changed"],
+      "expected": [
+        {"type": "set-value", "key": "97ab", "value": "\"Changed\""}
+      ],
+      "observe": "results"
+    },
+    {
+      "id": "set-location-host-effect",
+      "category": "host-effect",
+      "function": "SETLOCATION",
+      "args": [27.7, -82.6],
+      "expected": [
+        {
+          "type": "set-value",
+          "key": "@geometry",
+          "value": "{\"type\":\"Point\",\"coordinates\":[-82.6,27.7]}"
+        }
+      ],
+      "observe": "results"
+    },
+    {
+      "id": "configuration-result",
+      "category": "runtime-lifecycle",
+      "function": "SETCONFIGURATION",
+      "args": [{"title": "Contract form", "unsupported": true}],
+      "expected": [
+        {"type": "configure", "attribute": "title", "value": "\"Contract form\""}
+      ],
+      "observe": "results"
+    },
+    {
+      "id": "storage-api-is-present",
+      "category": "runtime-lifecycle",
+      "function": "STORAGE",
+      "args": [],
+      "expected": {"$type": "object"}
+    }
+  ],
+  "package": {
+    "name": "@fulcrumapp/fulcrum-expressions",
+    "main": "dist/expressions.js",
+    "browserScripts": ["expressions.js", "expressions-proxy.js"]
+  }
+}
