@@ -6,22 +6,24 @@ Define the expressions repository's build and release behavior for incremental T
 
 ## ADDED Requirements
 
-### Requirement: Dual artifact channels are complete and selectable
-The expressions build MUST produce both the complete current CoffeeScript legacy artifact and a hybrid artifact composed of that CoffeeScript build plus a TypeScript overlay. A TypeScript implementation MUST override the CoffeeScript implementation with the same function name in the hybrid artifact; functions without a TypeScript overlay MUST continue to use CoffeeScript.
+This is an OpenSpec delta spec; the requirements below are added by this change.
+
+### Requirement: Dual release artifacts and entry points are complete
+For every migration release, the expressions build MUST produce both the complete current CoffeeScript legacy release and a hybrid release composed of that CoffeeScript build plus a TypeScript overlay. The stable entry points MUST be `dist/legacy/expressions.js` and `dist/hybrid/expressions.js`. A TypeScript implementation MUST override the CoffeeScript implementation with the same function name in the hybrid release; functions without a TypeScript implementation MUST continue to use CoffeeScript.
 
 #### Scenario: Build emits both channels
 - **WHEN** the project build runs for a migration release
 - **THEN** `dist/legacy/*` contains the complete current CoffeeScript build
 - **AND** `dist/hybrid/*` contains that build plus the TypeScript overlay
-- **AND** each channel is independently loadable by the runtime selector
+- **AND** `dist/legacy/expressions.js` and `dist/hybrid/expressions.js` are independently loadable release entry points
 
 #### Scenario: TypeScript overlay overrides same-named CoffeeScript function
 - **WHEN** a function is implemented in both CoffeeScript and TypeScript
 - **AND** the hybrid channel is loaded
-- **THEN** the TypeScript implementation handles that function
+- **THEN** the TypeScript implementation handles that function in the hybrid release
 - **AND** functions without a TypeScript implementation continue to use CoffeeScript
 
-### Requirement: Both expression releases are available for each migration batch
+### Requirement: Both expression releases are deployed for each migration batch
 For each migration release, this repository MUST build and deploy both the complete current CoffeeScript release and the hybrid release composed of that CoffeeScript build plus the TypeScript overlay. A migrated batch MUST become part of the hybrid release as that batch passes the automated CI/test gates and is merged/released; there MUST NOT be a separate one-time promotion gate for the entire migration.
 
 #### Scenario: A migration batch is released
@@ -51,19 +53,6 @@ The hybrid build MUST compile migration-owned TypeScript sources with a strict, 
 - **THEN** its function behavior remains legacy-equivalent
 - **AND** the hybrid entry point remains independently loadable
 
-### Requirement: Hybrid routing is deterministic and legacy-first
-Hybrid execution MUST route each function by deterministic manifest entry (`legacy|ts`) and MUST default unmigrated behavior to legacy.
-
-#### Scenario: Manifest routes migrated function to TypeScript
-- **WHEN** a function manifest entry is `ts`
-- **THEN** hybrid dispatches that function to the TypeScript implementation
-- **AND** non-targeted functions continue using their own manifest targets
-
-#### Scenario: Unmapped or legacy-marked functions use legacy runtime
-- **WHEN** a function entry is missing or set to `legacy`
-- **THEN** that function executes through legacy runtime behavior
-- **AND** no implicit upgrade to TypeScript occurs
-
 ### Requirement: Automated gates apply to every migrated batch
 The required automated CI/test gates MUST run for each migrated batch before it is merged/released. Passing gates authorize that batch's inclusion in the hybrid release; they MUST NOT be described as a one-time promotion requirement for the entire migration.
 
@@ -79,7 +68,7 @@ The required automated CI/test gates MUST run for each migrated batch before it 
 - **AND** its CI outputs provide verifiable gate evidence
 
 ### Requirement: Rollback paths remain available throughout migration
-The runtime MUST support rollback by either global channel selection or per-function manifest reversion during migration.
+Rails MUST be able to select the complete legacy release for affected customers throughout migration using its LaunchDarkly flag. This repository MUST keep both releases available; it does not implement customer targeting or per-function rollback.
 
 #### Scenario: Operational rollback selects the legacy channel for a customer
 - **WHEN** Rails sets `expressions-ts-migration` to `false` for a customer
@@ -87,8 +76,3 @@ The runtime MUST support rollback by either global channel selection or per-func
 - **AND** rollback does not require rebuilding bundles
 - **AND** if the flag cannot be read, Rails selects legacy as though the flag were `false`
 - **AND** setting the flag to `true` after the issue is fixed selects the available hybrid release
-
-#### Scenario: Slice rollback by manifest reversion
-- **WHEN** operators revert selected manifest entries from `ts` to `legacy`
-- **THEN** affected functions execute on legacy runtime while hybrid channel remains selectable
-- **AND** unaffected migrated functions can remain on TypeScript per manifest
