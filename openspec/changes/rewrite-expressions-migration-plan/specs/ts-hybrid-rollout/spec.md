@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define externally observable rollout behavior for incremental TypeScript migration with side-by-side legacy and hybrid channels, deterministic routing, gate-controlled default promotion, and rollback safety.
+Define the expressions repository's build and release behavior for incremental TypeScript migration: publish complete legacy and hybrid releases together, with deterministic TypeScript overrides and per-batch automated gates. Rails owns production release selection.
 
 ## ADDED Requirements
 
@@ -21,30 +21,21 @@ The expressions build MUST produce both the complete current CoffeeScript legacy
 - **THEN** the TypeScript implementation handles that function
 - **AND** functions without a TypeScript implementation continue to use CoffeeScript
 
-### Requirement: Production channel selection and emergency rollback are explicit
-Before promotion, the default channel MUST be legacy. After gate-approved promotion, production MUST default to hybrid. The host/application MUST evaluate an operational customer rollback flag before runtime startup and select the complete legacy bundle for customers enabled for rollback; it MUST keep this rollback mechanism available until the issue is fixed.
+### Requirement: Both expression releases are available for each migration batch
+For each migration release, this repository MUST build and deploy both the complete current CoffeeScript release and the hybrid release composed of that CoffeeScript build plus the TypeScript overlay. A migrated batch MUST become part of the hybrid release as that batch passes the automated CI/test gates and is merged/released; there MUST NOT be a separate one-time promotion gate for the entire migration.
 
-#### Scenario: Legacy is the pre-promotion default
-- **WHEN** hybrid has not passed the promotion gate
-- **AND** no explicit channel selection is made
-- **THEN** the legacy channel is selected
+#### Scenario: A migration batch is released
+- **WHEN** a migrated function batch passes its required automated CI/test gates and is merged for release
+- **THEN** the hybrid release includes the batch's TypeScript implementations
+- **AND** the complete legacy CoffeeScript release is also built and deployed alongside it
+- **AND** both releases remain independently addressable by the consuming Rails application
 
-#### Scenario: Hybrid is the production default after promotion
-- **WHEN** the step-6 promotion gate has passed
-- **AND** the operational rollback flag is disabled for a customer
-- **THEN** production loads `dist/hybrid/expressions.js` for that customer
-
-#### Scenario: Operational rollback routes a customer to legacy
-- **WHEN** the operational rollback flag is enabled for a customer
-- **THEN** the host loads `dist/legacy/expressions.js` for that customer before runtime startup
-- **AND** the complete CoffeeScript implementation is used without rebuilding either artifact
-- **AND** disabling the flag after the issue is fixed returns that customer to the production-default hybrid channel
-- **AND** the runtime does not change channels after initialization
-
-#### Scenario: Flag wiring is external to this repository
-- **WHEN** this repository's build and runtime channel contract is implemented
-- **THEN** it provides independently loadable legacy and hybrid entry points
-- **AND** it does not invent the Rails flag key, configuration source, customer targeting mechanism, or Rails-side URL mapping
+#### Scenario: Rails selects the customer release
+- **WHEN** Rails evaluates its LaunchDarkly `expressions-ts-migration` flag for a customer
+- **THEN** a value of `true` selects the hybrid release
+- **AND** a value of `false` selects the complete legacy release
+- **AND** if Rails cannot read the flag, it treats the value as `false` and selects the legacy release
+- **AND** flag evaluation and customer targeting are owned by Rails, not this repository
 
 ### Requirement: Hybrid TypeScript compilation is isolated from the existing project baseline
 The hybrid build MUST compile migration-owned TypeScript sources with a strict, explicit compiler configuration and MUST NOT claim the existing project-wide TypeScript check passes unless that check is independently verified.
@@ -73,27 +64,29 @@ Hybrid execution MUST route each function by deterministic manifest entry (`lega
 - **THEN** that function executes through legacy runtime behavior
 - **AND** no implicit upgrade to TypeScript occurs
 
-### Requirement: Promotion requires explicit gate evidence
-Default promotion to hybrid/TypeScript MUST occur only after required migration gates pass.
+### Requirement: Automated gates apply to every migrated batch
+The required automated CI/test gates MUST run for each migrated batch before it is merged/released. Passing gates authorize that batch's inclusion in the hybrid release; they MUST NOT be described as a one-time promotion requirement for the entire migration.
 
-#### Scenario: Promotion blocked when any required gate fails
+#### Scenario: A batch is blocked when any required gate fails
 - **WHEN** legacy contracts, hybrid contracts, unchanged-function differential checks, or focused migrated-function parity checks are failing
-- **THEN** promotion to hybrid default is blocked
-- **AND** legacy remains the default channel
+- **THEN** that migration batch is blocked from merge/release
+- **AND** the already-published legacy release remains available
+- **AND** previously released hybrid batches remain independently available
 
-#### Scenario: Promotion allowed after all gates pass
-- **WHEN** all required gate categories pass for the migration scope
-- **THEN** hybrid/TypeScript may be promoted to default
-- **AND** promotion records verifiable gate evidence in CI outputs
+#### Scenario: A passing batch is included in hybrid
+- **WHEN** the required gate categories pass for a migration batch
+- **THEN** the batch may be merged/released in the hybrid artifact
+- **AND** its CI outputs provide verifiable gate evidence
 
 ### Requirement: Rollback paths remain available throughout migration
 The runtime MUST support rollback by either global channel selection or per-function manifest reversion during migration.
 
 #### Scenario: Operational rollback selects the legacy channel for a customer
-- **WHEN** operators enable the operational rollback flag for a customer
+- **WHEN** Rails sets `expressions-ts-migration` to `false` for a customer
 - **THEN** all execution uses legacy artifacts
 - **AND** rollback does not require rebuilding bundles
-- **AND** disabling the flag after the issue is fixed restores the production-default hybrid channel
+- **AND** if the flag cannot be read, Rails selects legacy as though the flag were `false`
+- **AND** setting the flag to `true` after the issue is fixed selects the available hybrid release
 
 #### Scenario: Slice rollback by manifest reversion
 - **WHEN** operators revert selected manifest entries from `ts` to `legacy`

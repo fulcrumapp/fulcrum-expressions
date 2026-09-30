@@ -10,19 +10,20 @@ Contract-test setup is already complete (905-case contracts, legacy suite green,
 - Make **dual publish** the primary strategy from the beginning:
   - publish `dist/legacy/*` as the complete current CoffeeScript build
   - publish `dist/hybrid/*` as the complete current CoffeeScript build plus a separately compiled TypeScript overlay; for any function name present in both, the TypeScript implementation overrides the CoffeeScript implementation
-  - before production promotion, legacy remains the default; after gate-approved promotion, hybrid is the production default
-  - evaluate an operational rollback flag before runtime startup; when enabled for a customer, it selects that customer's complete legacy bundle instead of hybrid, without changing either artifact
-- Keep the operational rollback flag available after hybrid becomes the production default; it redirects affected customers to legacy while an issue is investigated and fixed.
+  - build and deploy both independently addressable releases together for each migration release
+  - Rails owns the LaunchDarkly `expressions-ts-migration` flag and selects which release to use: `true` selects hybrid; `false` selects legacy
+  - if Rails cannot read the flag, it treats the value as `false` and selects legacy
+- Apply the existing automated CI/test gates to each migrated batch. Once a batch passes and is merged/released, that batch is present in the hybrid release; there is no separate final production-promotion event for the entire migration.
 - Sequence work and PR layers around safety-gated slices:
   - **1** define the shared adapter contract
-  - **2** enable TS skeleton packaging, side-by-side artifacts, and channel selection
+  - **2** enable TS skeleton packaging and side-by-side artifacts
   - **3** add CI contract, differential, and gate-reporting jobs against both channels
   - **4** route deterministic parity batches (iterative TS migration)
   - **5** validate host effects + lifecycle parity
-  - **6** promote TS/hybrid channel to production default while retaining the operational legacy rollback flag
-- Run CI gate setup only after both legacy and hybrid channels are buildable and selectable.
+  - **6** verify each merged/released batch is included in the hybrid release while preserving the complete legacy release
+- Run or extend CI gate coverage only after both legacy and hybrid artifacts are buildable; the gates apply to each migrated batch, not to a one-time end-of-migration channel promotion.
 - Treat the existing project-wide TypeScript compiler errors as a known baseline, not as a passing check: hybrid build validation must use a strict, isolated TypeScript project for migration-owned sources and must not silently suppress or misreport existing diagnostics.
-- Require gates per migrated slice:
+- Require the automated gates for each migrated batch before merge/release:
   - legacy contract suite passes
   - hybrid contract suite passes
   - differential checks legacy full vs hybrid unchanged functions
@@ -32,7 +33,7 @@ Contract-test setup is already complete (905-case contracts, legacy suite green,
 
 ### New Capabilities
 
-- `ts-hybrid-rollout`: Defines required rollout behavior for side-by-side legacy/hybrid artifacts, deterministic per-function routing, promotion gates, and rollback rules during incremental TypeScript migration.
+- `ts-hybrid-rollout`: Defines required rollout behavior for side-by-side legacy/hybrid releases, deterministic per-function routing, per-batch automated gates, and rollback rules during incremental TypeScript migration.
 
 ### Modified Capabilities
 
@@ -40,7 +41,7 @@ Contract-test setup is already complete (905-case contracts, legacy suite green,
 
 ## Impact
 
-- Affected artifacts: side-by-side builds and host/application operational flag behavior.
-- Delivery impact: supports incremental migration with rollback path and explicit promotion gates.
-- Release impact: requires explicit bundle layout (`dist/legacy/*`, `dist/hybrid/*`) and flag loader selection.
-- Open integration detail: this repository specifies the required operational flag behavior but not the Rails feature-flag key, configuration source, or customer targeting mechanism. Those external wiring details must be agreed with the Rails owner.
+- Affected artifacts: side-by-side builds and release artifacts consumed by the Rails application. The LaunchDarkly flag and release selection are Rails-owned and are not implemented in this repository.
+- Delivery impact: supports incremental migration with rollback path and explicit automated gates for each batch.
+- Release impact: requires explicit bundle layout (`dist/legacy/*`, `dist/hybrid/*`) and both releases to be published together for each migration release.
+- Rails integration contract: `expressions-ts-migration=true` selects the hybrid release; `false` selects the legacy release. If the flag cannot be read, Rails defaults to `false`. Rails owns LaunchDarkly configuration and release selection.

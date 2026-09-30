@@ -7,12 +7,12 @@
 ## 2. Side-by-side build enablement from the start
 
 - [ ] 2.1 Implement build pipeline outputs for `dist/legacy/*` and `dist/hybrid/*` in the same build flow: legacy is the complete current CoffeeScript build, and hybrid is that build plus a TypeScript overlay where TypeScript overrides same-named CoffeeScript functions. Keep legacy output independent of the known-failing project-wide `ts/tsconfig.json` check; compile only migration-owned TypeScript sources with a strict isolated configuration, and verify both artifact trees are produced in one build invocation.
-- [ ] 2.2 Define pre-start channel selection: legacy is the default before promotion; after gate-approved promotion, hybrid is the production default. The host/application evaluates an operational customer rollback flag before startup and loads the complete legacy bundle for selected customers, without rebuilding either artifact or switching channels after startup. Leave the Rails flag key, configuration source, customer targeting mechanism, and URL mapping unresolved until agreed with the Rails owner.
+- [ ] 2.2 Make both independently addressable expression releases available together for every migration release: Rails selects hybrid when its LaunchDarkly `expressions-ts-migration` flag is `true`, and legacy when it is `false` or cannot be read. Implement only the expressions-repository artifact/release side; Rails owns flag evaluation and customer targeting.
 - [ ] 2.3 Add build integrity checks (artifact presence + deterministic output constraints), verify repeated builds produce stable artifact manifests, and ensure the isolated migration-source type check blocks on diagnostics without representing the existing project-wide `ts/tsconfig.json` diagnostics as passing.
 
 ## 3. CI gate foundation
 
-- [ ] 3.1 Add CI jobs that run the legacy contract suite, hybrid contract suite, and unchanged-function differential checks after both channels are buildable and selectable; verify all three gate categories pass on a baseline run.
+- [ ] 3.1 Ensure per-batch CI runs the required legacy and hybrid contract suites, unchanged-function differential checks, and migrated-function parity tests; reuse existing automated gates and add only missing hybrid/differential coverage, verifying failures block that batch's merge/release.
 - [ ] 3.2 Add CI visibility/reporting for gate outcomes per function group, and verify a failed gate produces a blocking status with actionable failure logs.
 
 ## 4. Deterministic manifest routing and parity batches
@@ -28,9 +28,9 @@
 - [ ] 5.2 Implement lifecycle/result-shape parity tests for migrated batches, and verify output structure/value contracts match legacy snapshots.
 - [ ] 5.3 Add tests and close discovered parity gaps in TS implementations or adapter plumbing, and verify all host/lifecycle parity suites pass without relaxing assertions.
 
-## 6. Promotion readiness and controlled default switch
+## 6. Per-batch hybrid release
 
-- [ ] 6.1 Promote the hybrid channel to production default after all required gate evidence passes, retaining the operational flag that can redirect affected customers to the complete legacy bundle until the issue is fixed.
+- [ ] 6.1 Verify each passing, merged migration batch is included in the hybrid release while the complete legacy release is published alongside it; there is no separate end-of-migration promotion step.
 
 ## 7. Deferred follow-on scope after 6
 

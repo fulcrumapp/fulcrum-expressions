@@ -2,7 +2,7 @@
 
 ## Context
 
-See `proposal.md` for motivation and approved sequencing. This design covers only the incremental TypeScript migration phase and assumes the contract baseline is already complete (905-case corpus, legacy suite green, review hardening complete). The rollout model is side-by-side from the start: both `dist/legacy/*` and `dist/hybrid/*` are built early, with runtime selection preserving safe fallback.
+See `proposal.md` for motivation and approved sequencing. This design covers only the incremental TypeScript migration phase and assumes the contract baseline is already complete (905-case corpus, legacy suite green, review hardening complete). The rollout model is side-by-side from the start: both `dist/legacy/*` and `dist/hybrid/*` are built and deployed together for each migration release.
 
 The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn tsc --project ts --noEmit` reports existing diagnostics across the function modules, runtime, declarations, and library typings. This change must not describe that command as passing or make its success a prerequisite for emitting the legacy bundle. Hybrid TypeScript code must instead be isolated in a migration-owned entry point and strict compiler configuration whose source/dependency closure is explicit and whose diagnostics are blocking. The hybrid build must not use broad error suppression or treat the existing project-wide errors as successful type-check evidence.
 
@@ -12,11 +12,11 @@ The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn
 
 - Build and ship dual artifacts from early implementation onward: complete current CoffeeScript legacy bundle plus a hybrid bundle composed of that same CoffeeScript build and a TypeScript overlay.
 - Let TypeScript implementations override same-named CoffeeScript functions in the hybrid bundle.
-- Before promotion, keep legacy as the default; after gate-approved promotion, use hybrid by default in production.
-- Retain an operational flag that can select the complete legacy bundle for affected customers as an emergency rollback, without rebuilding either artifact.
+- Publish each passing, merged migration batch in the hybrid release alongside the complete legacy release.
+- Keep release selection in the Rails application: LaunchDarkly `expressions-ts-migration=true` selects hybrid; `false` selects legacy; an unreadable flag is treated as `false`.
 - Migrate function groups to TypeScript in slices, each gated by parity and regression checks.
-- Preserve immediate rollback options throughout migration and promotion.
-- Promote TS/hybrid to production default only after explicit step 6 gates pass.
+- Make each batch available for production use as it is merged and released after its automated CI/test gates pass; do not wait for a separate final promotion across the whole migration.
+- Preserve the complete legacy release as the emergency rollback path throughout migration.
 
 **Non-Goals:**
 
@@ -26,10 +26,10 @@ The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn
 
 ## Decisions
 
-1. **Side-by-side artifact builds start at step 2, not at end-of-phase.**  
+1. **Side-by-side artifact builds and deployment start at step 2, not at end-of-phase.**
    - **Decision:** Enable production-like packaging for both channels as soon as TS skeleton exists behind adapter.  
    - **Why:** Earlier packaging catches integration and release-shape issues before deep migration work accumulates.  
-   - **Alternative considered:** Build hybrid artifacts only near step 6. Rejected because it delays release-risk discovery and weakens rollback rehearsal.
+   - **Alternative considered:** Build hybrid artifacts only after migration is complete. Rejected because it delays release-risk discovery and weakens rollback rehearsal.
 
 2. **Hybrid runtime uses deterministic manifest routing.**  
    - **Decision:** Hybrid loader resolves each function through a manifest entry (`legacy|ts`), defaulting every function to `legacy` unless explicitly migrated.  
@@ -41,11 +41,11 @@ The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn
    - **Why:** The hybrid channel must remain complete and behaviorally available while functions are migrated incrementally.
    - **Build constraint:** Compile migration-owned TypeScript with the strict isolated project described above; do not present the existing project-wide check as passing.
 
-4. **Channel selection is an operational, pre-start customer override with a hybrid production default after promotion.**
-   - **Decision:** Before promotion, the default channel is legacy. After the step-6 gate-approved promotion, production defaults to hybrid. The host evaluates an operational flag before loading the runtime; for a customer selected for rollback, the flag chooses `dist/legacy/expressions.js`, otherwise it chooses `dist/hybrid/expressions.js`. This is a whole-channel selection and does not change after runtime startup.
-   - **Why:** A host-side pre-start selection fits the existing script-entry loading model and can redirect selected customers to the full current implementation without rebuilding bundles.
-   - **Emergency rollback:** Keep the operational flag available after promotion; enable it for affected customers to route them to legacy until the issue is fixed, then disable it to return them to hybrid.
-   - **Unresolved integration detail:** This repository specifies the flag's required behavior but contains no Rails feature-flag implementation or contract. Its exact key, configuration source, customer targeting mechanism, and URL mapping must be agreed with the Rails owner; do not infer these names here.
+4. **Rails selects the release; this repository builds and deploys both releases.**
+   - **Decision:** For each migration release, publish the complete legacy CoffeeScript release and the hybrid CoffeeScript-plus-TypeScript release together. Rails owns the LaunchDarkly `expressions-ts-migration` flag and selects the release: `true` selects hybrid; `false` selects legacy. If Rails cannot read the flag, it defaults to `false`, selecting legacy.
+   - **Why:** Keeping release selection in Rails avoids duplicating LaunchDarkly/customer configuration in this expressions repository, while publishing both releases makes either path available without rebuilding.
+   - **Batch rollout:** Each migrated batch becomes part of the hybrid release as that batch passes its CI/test gates and is merged/released. There is no separate end-of-migration promotion step; Rails can direct customers to the released hybrid or legacy version.
+   - **Scope boundary:** This repository is responsible for producing and deploying both independently addressable releases. Rails is responsible for reading the flag and mapping it to the appropriate release.
 
 5. **Maintain two rollback paths for all slices.**
    - **Decision:** Preserve both rollback options: (a) switch runtime selector to full legacy bundle, (b) keep hybrid selected but flip manifest entries back to legacy.  
@@ -66,15 +66,15 @@ The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn
    - **Why:** CI must exercise a real hybrid channel; a legacy-only baseline cannot prove hybrid or differential gates.
    - **Alternative considered:** Configure hybrid CI before the hybrid runtime is selectable. Rejected because it would create placeholder or duplicate legacy gates rather than useful rollout evidence.
 
-8. **Step 6 is a promotion gate, not implementation start.**
-   - **Decision:** Step 6 promotes the hybrid channel to production default only after cumulative gate evidence is met. The operational flag remains available to select the legacy bundle for emergency customer rollback.
-   - **Why:** Keeps operational risk bounded while allowing meaningful production-readiness confidence.
-   - **Alternative considered:** Promote by schedule/date. Rejected because readiness must be evidence-driven.
+8. **Automated gates apply to each batch; there is no global promotion milestone.**
+   - **Decision:** Use the existing automated CI/test gates for each migrated batch. Once a batch passes and is merged/released, it is available in the hybrid release; the complete legacy release remains available in parallel.
+   - **Why:** This matches the incremental release model and avoids suggesting that all TypeScript work must finish before hybrid can be used.
+   - **Alternative considered:** A one-time production default switch after all migration gates pass. Rejected because migrated batches are released incrementally.
 
-9. **Defer Rails hardening beyond the required selector behavior.**
-   - **Decision:** The host/application must provide the specified pre-start operational rollback behavior, but adapter seam rewrites, startup fallback redesign, and broader server-flag hardening are deferred until after step 6 promotion.
-   - **Why:** Keeps this phase focused on TS parity and channel promotion readiness; avoids mixing infrastructure refactors with migration risk.  
-   - **Alternative considered:** Parallel Rails rework during steps 1–4. Rejected because it increases concurrent change surface and rollback complexity.
+9. **Rails flag evaluation is outside this repository's implementation scope.**
+   - **Decision:** This repository publishes both releases and documents the selection contract; the Rails repository owns LaunchDarkly configuration, flag evaluation, customer targeting, and fallback-to-legacy behavior when the flag cannot be read. Broader Rails hardening remains separate follow-on work.
+   - **Why:** Keeps this phase focused on building and publishing the two expressions releases and validating TypeScript parity.
+   - **Alternative considered:** Implement the flag reader or customer targeting here. Rejected because those responsibilities belong to Rails.
 
 ## Risks / Trade-offs
 
@@ -94,9 +94,9 @@ The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn
    - Produce `dist/legacy/*` as the complete current CoffeeScript build.
    - Produce `dist/hybrid/*` from that complete CoffeeScript build plus the TypeScript overlay; TS implementations override CoffeeScript functions with the same name.
    - Compile only migration-owned TypeScript sources with a strict isolated project; do not require the known-failing project-wide `ts/tsconfig.json` check to pass.
-   - Before promotion, default to legacy; after step-6 promotion, default production to hybrid.
-   - Evaluate the operational customer rollback flag before startup: select the legacy entry point for flagged customers and hybrid otherwise. Keep this flag operational after promotion.
-   - Leave the exact Rails feature-flag key, configuration source, customer targeting mechanism, and host-side URL mapping open for agreement with the Rails owner.
+   - For each migration release, publish both the complete legacy release and the hybrid release containing the TypeScript overrides merged in that batch.
+   - Rails selects the release using LaunchDarkly `expressions-ts-migration`: `true` selects hybrid; `false` selects legacy; if the flag cannot be read, Rails treats it as `false`.
+   - This repository does not read the flag or target customers; it ensures both independently addressable releases are built and deployed.
 
 3. **3. CI gate foundation**
    - Add CI jobs that execute legacy contracts, hybrid contracts, and unchanged-function differential checks.
@@ -109,17 +109,18 @@ The current `ts/tsconfig.json` project-wide check is not a clean baseline: `yarn
 5. **5. Host effects + lifecycle parity**
    - Validate and close parity gaps involving host interactions, lifecycle hooks, and result-shape behavior.
 
-6. **6. Promote TS/hybrid channel to production default**
-   - Switch default channel only after cumulative gate criteria are satisfied and rollback paths are verified operational.
+6. **6. Release each passing migration batch**
+   - Include the batch's TypeScript overrides in the hybrid release as the batch is merged and released.
+   - Publish the complete legacy release alongside it; Rails selects which release customers use through its LaunchDarkly flag.
 
 7. **Post-step-6 follow-on hardening (deferred scope)**
-   - Execute Rails/runtime-selection hardening tasks as separate follow-on work: adapter seam updates, startup fallback hardening, and server-flag refactors.
+   - Execute broader Rails/runtime-selection hardening tasks separately: adapter seam updates, startup fallback hardening, and server-flag refactors.
 
-**Rollback strategy during steps 1–6 and after promotion:**
+**Rollback strategy for every migration release:**
 
-- Path A: enable the operational flag for affected customers to select the complete legacy bundle without rebuilding.
+- Path A: Rails sets `expressions-ts-migration` to `false` for affected customers to select the complete legacy release; an unreadable flag also defaults to `false`.
 - Path B: keep hybrid selected and revert manifest entries to legacy for affected function groups.
 
 ## Open Questions
 
-- None blocking for this phase; deferred Rails/runtime-selection hardening details will be specified in follow-on artifacts after step 6 promotion readiness is demonstrated.
+- None blocking for this phase. LaunchDarkly flag evaluation and release selection are Rails-owned; this repository's responsibility is to build and deploy both complete legacy and hybrid releases.
