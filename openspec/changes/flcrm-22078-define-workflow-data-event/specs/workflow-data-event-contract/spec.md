@@ -1,11 +1,11 @@
 ## ADDED Requirements
 
 ### Requirement: Versioned FLOW options contract
-The contract SHALL define the `FLOW()` data event options object with `schema_version`,
-`workflow_id`, `workflow_version`, `steps`, optional `title`, `interaction`, `run_key`, and
-`limits`, SHALL use `snake_case` keys, and SHALL state compatibility rules: adding an optional field
-is compatible within a major version, while removing or renaming a field, or changing its meaning
-or type, requires a new major version.
+The contract SHALL define the `FLOW()` data event options object with `schema_version`, `nodes`,
+and the optional `flow_id` and `interaction`, SHALL use `snake_case` keys, and SHALL state
+compatibility rules: adding an optional field is compatible within a major version, while removing
+or renaming a field, or changing its meaning or type, requires a new major version. It SHALL NOT
+define a workflow version, title, idempotency key, or flow-level limits.
 
 #### Scenario: A consumer receives a supported payload
 - **WHEN** a form calls `FLOW()` with a supported `schema_version`
@@ -19,90 +19,122 @@ or type, requires a new major version.
 
 #### Scenario: A form runs with no user interface
 - **WHEN** `interaction` is `"none"`
-- **THEN** a `confirmation` step, or a `node` step with a `prompt`, fails the call with `invalid_definition`.
+- **THEN** an `agentic` node with a `prompt` fails the call with `invalid_definition`.
 
 #### Scenario: A form chooses how the run starts
 - **WHEN** a valid definition is passed
 - **THEN** the run starts as soon as the data event fires, in the chat when `interaction` is `"chat"` or omitted
-- **AND** to ask the user first, the definition makes its first step a `confirmation`
+- **AND** to ask the user first, the definition makes its first node an `agentic` node with a `prompt`
 - **AND** an `interaction` value other than `"chat"` or `"none"` fails with `invalid_definition`.
 
-### Requirement: Step kinds and transitions
-The contract SHALL define the step kinds `node`, `tool`, `confirmation`, `branch`, and `end`, with
-required and optional fields for each, and SHALL require every transition to name the next step.
+### Requirement: Node kinds and transitions
+The contract SHALL rename steps to nodes and define exactly three node kinds: `agentic` (uses the
+LLM), `tool` (calls a tool), and `decision` (chooses the next node from data). A node of any other
+kind, such as `confirmation`, `branch`, or `end`, SHALL fail with `invalid_definition`.
 
-A run SHALL begin at the first step in `steps`. `on_error`, `on_rejected`, and `on_expired` SHALL
-accept a step id or `abort`, and SHALL default to `abort`. A `branch` SHALL test its cases in order,
-use the first match, and require a `default`. A step of kind `end` SHALL have no `next`.
+A run SHALL begin at the first node in `nodes`. `next`, `on_error`, `default`, and case targets
+SHALL accept a node id or the reserved targets `end` (completes the flow) and `abort` (fails it).
+`next` MAY be omitted on `agentic` and `tool` nodes, meaning `end`. `on_error` SHALL default to
+`abort`. A `decision` SHALL test its cases in order, use the first match, and require a `default`.
 
-#### Scenario: A branch matches no case
-- **WHEN** no case of a `branch` step matches
-- **THEN** control moves to its `default` step.
+#### Scenario: A decision matches no case
+- **WHEN** no case of a `decision` node matches
+- **THEN** control moves to its `default` target.
 
 #### Scenario: A failure is routed onward
-- **WHEN** a step fails and `on_error` names a step
-- **THEN** the run continues at that step and does not end
+- **WHEN** a node fails and `on_error` names a node
+- **THEN** the run continues at that node and does not end
 - **AND** when `on_error` is `abort` or omitted the run ends with the outcome in the run outcome table.
 
-#### Scenario: A workflow branches and loops
-- **WHEN** a `branch` case or `on_rejected` targets an earlier step
-- **THEN** the workflow loops
-- **AND** each step runs at most `limits.max_step_visits` times.
+#### Scenario: A flow loops
+- **WHEN** a `decision` case or `next` targets an earlier node
+- **THEN** the flow loops
+- **AND** each node runs at most its `max_calls` times.
 
-### Requirement: Tools and confirmations
-The contract SHALL allow a `tool` step to name any tool the chat exposes, SHALL make tool results
-available as `steps.<id>.output`, and SHALL record a confirmation outcome as `accepted`,
-`rejected`, or `expired` without storing the answer text.
+### Requirement: Agentic nodes and models
+The contract SHALL define the `agentic` node with a required `instruction`, an optional `prompt`,
+an optional `model`, and an optional `output` declaration. `model` SHALL be the `name` of a model
+in the model reference file, SHALL be optional, and SHALL default to `fulcrumite-2b` when empty or
+absent. A model name that is not in the reference file SHALL fail the node with `unknown_model`
+without retrying.
 
-#### Scenario: A tool step names an unknown tool
-- **WHEN** a `tool` step names a tool id the chat does not expose
+#### Scenario: An agentic node has no model
+- **WHEN** `model` is empty or absent
+- **THEN** the node uses `fulcrumite-2b`.
+
+#### Scenario: An agentic node names an unknown model
+- **WHEN** `model` is not a name in the model reference file
+- **THEN** the node fails with `unknown_model` and follows `on_error`.
+
+#### Scenario: A confirmation is expressed with an agentic node
+- **WHEN** a flow needs a yes or no answer
+- **THEN** an `agentic` node declares `output: { "confirmed": "boolean" }`
+- **AND** a following `decision` routes on `state.confirmed`.
+
+### Requirement: Tool nodes and retries
+The contract SHALL allow a `tool` node to name any tool the chat exposes and SHALL define
+`retry.max_attempts` (1 to 5, counting the first attempt, default 1) and `retry.on` (`tool_error`,
+`timeout`, default both) on tool nodes.
+
+#### Scenario: A tool node names an unknown tool
+- **WHEN** a `tool` node names a tool id the chat does not expose
 - **THEN** the definition still passes validation
-- **AND** when the step runs it fails without retrying and follows `on_error`.
-
-#### Scenario: A confirmation does not trigger a tool
-- **WHEN** a confirmation step is accepted
-- **THEN** control moves to its `next` step, which need not be a tool step.
-
-### Requirement: Retries
-The contract SHALL define `retry.max_attempts` on tool and confirmation steps, SHALL let the chat
-decide whether a confirmation answer is complete and ask only for what is missing, and SHALL count
-each question to the user as one attempt of the same step, bounded by `max_attempts`. `max_attempts`
-SHALL be 1 to 5 and count the first attempt, defaulting to 1 for tool steps (no retry) and 2 for
-confirmation steps. `retry.on` SHALL list `tool_error` and `timeout` and default to both.
-
-#### Scenario: A confirmation is partly answered
-- **WHEN** the user confirms only some of the items and attempts remain
-- **THEN** the chat asks for the missing items
-- **AND** when attempts are exhausted without an accepted answer the step counts as `rejected`.
+- **AND** when the node runs it fails without retrying and follows `on_error`.
 
 #### Scenario: A tool fails and is retried
-- **WHEN** a tool step fails with a retryable kind and attempts remain
-- **THEN** the step runs again
+- **WHEN** a tool node fails with a retryable kind and attempts remain
+- **THEN** the node runs again
 - **AND** when attempts are exhausted control moves to `on_error`.
 
+### Requirement: Structured responses and global state
+The contract SHALL require every node to return a structured response and SHALL define a single
+global state, a JSON object that starts empty. When a node finishes, the runtime SHALL merge its
+response into the state at the top level: a new key is added and an existing key is overridden.
+A failed node SHALL NOT change the state. An `agentic` node SHALL return the keys declared in
+`output`, or `{ "reply": <text> }` when `output` is omitted. A `tool` node SHALL return its result,
+wrapping a non-object result as `{ "result": <value> }`.
+
+#### Scenario: A node writes a new key
+- **WHEN** a node returns a key that is not in the state
+- **THEN** the key is added to the state.
+
+#### Scenario: A node writes an existing key
+- **WHEN** a later node returns a key already in the state
+- **THEN** the new value overrides the old one.
+
+#### Scenario: An agentic response does not match its output
+- **WHEN** an `agentic` node's response lacks a declared key or has the wrong type
+- **THEN** the node fails with `invalid_output` without retrying, follows `on_error`, and the state is unchanged.
+
 ### Requirement: References and conditions
-The contract SHALL define references `form.<field>`, `steps.<id>.output.<key>`, and
-`steps.<id>.output.reply` (the user's reply to a `node` step that has a `prompt`), SHALL write
-references in strings as `{{path}}`, and SHALL define branch conditions as structured
-`{ ref, op, value }` objects with a bare path, using the operators `eq`, `ne`, `gt`, `gte`, `lt`,
-`lte`, `in`, `exists`, and `not_exists`, rather than JavaScript.
+The contract SHALL define references `form.<field>` and `state.<key>`, SHALL write references in
+strings as `{{path}}`, and SHALL define decision conditions as structured `{ ref, op, value }`
+objects with a bare path, using the operators `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`,
+`exists`, and `not_exists`, rather than JavaScript.
 
-#### Scenario: A later step uses the user's reply
-- **WHEN** a `node` step with a `prompt` receives a reply and a later `tool` input references `{{steps.<id>.output.reply}}`
-- **THEN** the reply text is used as the input value.
-
-#### Scenario: A node step has no prompt
-- **WHEN** a reference names the reply of a `node` step that has no `prompt`
-- **THEN** the reference is treated as absent.
-
-#### Scenario: A reference names a missing step
-- **WHEN** a reference names a step id that does not exist
-- **THEN** validation fails with `unknown_step`.
+#### Scenario: A later node uses state
+- **WHEN** a `tool` input references `{{state.<key>}}` and an earlier node wrote that key
+- **THEN** the value is used as the input value.
 
 #### Scenario: A reference cannot be resolved
 - **WHEN** a reference has no value at run time
 - **THEN** `exists` is false
-- **AND** a tool input that needs it fails the step.
+- **AND** a tool input that needs it fails the node.
+
+### Requirement: Per-node limits
+The contract SHALL define limits on each node and no limits on the whole flow. `timeout_seconds`
+(`agentic` and `tool`) SHALL be an integer 1 to 3600 with default 300, and `max_calls` (all kinds)
+SHALL be an integer 1 to 50 with default 10. A non-integer value SHALL fail with
+`invalid_definition` and an out-of-range integer with `limit_exceeded`.
+
+#### Scenario: A node runs too long
+- **WHEN** a node runs longer than its `timeout_seconds`
+- **THEN** it fails with `timeout` and follows `on_error`
+- **AND** when `on_error` is `abort` the run ends as `failed` with `node_timeout`.
+
+#### Scenario: A node is called too often
+- **WHEN** a node is about to run more than its `max_calls` times
+- **THEN** the run ends as `failed` with `max_calls_exceeded`.
 
 ### Requirement: Run outcome
 The contract SHALL define the run outcome as a `status` of `completed`, `failed`, or `cancelled`
@@ -110,74 +142,66 @@ and a stable `termination_reason` vocabulary, and SHALL map each way a run can e
 outcome.
 
 #### Scenario: A tool fails with no retries left
-- **WHEN** a tool step fails, its attempts are exhausted, and `on_error` is `abort`
-- **THEN** the run ends as `failed` with `retries_exhausted` when the step retried and used every attempt
+- **WHEN** a tool node fails, its attempts are exhausted, and `on_error` is `abort`
+- **THEN** the run ends as `failed` with `retries_exhausted` when the node retried and used every attempt
 - **AND** with `tool_error` when the tool call itself failed without retrying
 - **AND** `unknown_tool` and `input_unresolved` take precedence over `tool_error`.
 
-#### Scenario: Several limits trip together
-- **WHEN** more than one limit is exceeded
-- **THEN** the earliest recorded cause decides the outcome
-- **AND** a step that runs more than `limits.max_step_visits` times ends the run as `failed` with `max_visits_exceeded`
-- **AND** only `limits.timeout_seconds` ends it as `cancelled` with `timeout`.
+#### Scenario: A flow is aborted
+- **WHEN** a node routes to `abort`
+- **THEN** the run ends as `failed` with `aborted`.
+
+#### Scenario: A flow completes
+- **WHEN** a node routes to `end`, or a node without `next` finishes
+- **THEN** the run ends as `completed`.
 
 #### Scenario: A consumer meets an unknown termination reason
 - **WHEN** a consumer receives a `termination_reason` it does not know
 - **THEN** it treats it as `unknown` within the same `status`.
 
-#### Scenario: The user rejects a confirmation
-- **WHEN** a confirmation is rejected and `on_rejected` is `abort`
-- **THEN** the run ends as `cancelled` with `user_rejected`.
-
 ### Requirement: Runtime correlation fields
-The contract SHALL define the correlation fields for workflow, run, agent, session, step, tool,
-model, timing, outcome, and error. It SHALL distinguish the identity fields `workflow_id`,
-`workflow_version`, and `run_key`, which the definition supplies and the runtime copies into
-reports, from the remaining fields, which the runtime assigns. It SHALL state that a definition
-cannot set a runtime-assigned field.
+The contract SHALL define the correlation fields for flow, run, agent, session, node, tool, model,
+timing, outcome, and error. It SHALL distinguish `flow_id`, which the definition supplies and the
+runtime copies into reports, from the remaining fields, which the runtime assigns. It SHALL state
+that a definition cannot set a runtime-assigned field.
 
 #### Scenario: A definition supplies a correlation field
 - **WHEN** the options contain a runtime-assigned field such as `run_id`
 - **THEN** validation fails with `invalid_definition`
-- **AND** `workflow_id`, `workflow_version`, and `run_key` remain valid options.
+- **AND** `flow_id` remains a valid option.
 
-#### Scenario: Two runs share a run key
-- **WHEN** two runs use the same `run_key` at different times
-- **THEN** each run has a different `run_id`.
-
-### Requirement: Idempotency and nesting
-The contract SHALL define run identity from `workflow_id`, `workflow_version`, the record, and
-`run_key`, and SHALL state that nested workflows are not supported in version 1 and fail with
+### Requirement: Internal run queue and nesting
+The contract SHALL state that the runtime queues runs internally, that the definition has no
+idempotency key, and that nested flows are not supported in version 1 and fail with
 `invalid_definition`.
 
 #### Scenario: The data event fires twice
-- **WHEN** `FLOW()` fires again with the same identity while a run is active
-- **THEN** no second run starts
-- **AND** a different `run_key` starts an independent run.
+- **WHEN** `FLOW()` fires again
+- **THEN** the runtime handles the repeat through its internal queue
+- **AND** the author supplies no key.
 
-#### Scenario: A definition tries to nest a workflow
-- **WHEN** a step tries to start or embed another workflow
+#### Scenario: A definition tries to nest a flow
+- **WHEN** a node tries to start or embed another flow
 - **THEN** validation fails with `invalid_definition`.
 
 ### Requirement: Validation and errors
 The contract SHALL define stable error codes for a disabled plan, an unsupported version, an
-invalid definition, unknown or unreachable steps, duplicate step ids, and exceeded limits, and
-SHALL state the size, count, and limit values: 1 to 50 steps, 32 KB, `max_step_visits` default 10 and
-maximum 50, and `timeout_seconds` default 1800 and maximum 3600. Both limits are integers of at least 1; a non-integer value fails with `invalid_definition`. A consumer that meets an unknown
+invalid definition, unknown or unreachable nodes, duplicate node ids, and exceeded limits, and
+SHALL state the size and count values: 1 to 50 nodes and 32 KB. A consumer that meets an unknown
 code SHALL treat it as an error of the same class.
 
 #### Scenario: A payload exceeds a limit
-- **WHEN** a definition has more than 50 steps, serializes to more than 32 KB, or sets a limit outside its range such as a `max_step_visits` above 50 or a `timeout_seconds` of 0, below 0 or above 3600
+- **WHEN** a definition has more than 50 nodes, serializes to more than 32 KB, or sets a per-node limit outside its range
 - **THEN** the call fails with `limit_exceeded`.
 
-#### Scenario: A step cannot be reached or an id repeats
-- **WHEN** a step cannot be reached from the first step
-- **THEN** the call fails with `unreachable_step`
-- **AND** when two steps share an `id` it fails with `duplicate_step_id`.
+#### Scenario: A node cannot be reached or an id repeats
+- **WHEN** a node cannot be reached from the first node
+- **THEN** the call fails with `unreachable_node`
+- **AND** when two nodes share an `id` it fails with `duplicate_node_id`.
 
-#### Scenario: A payload references a missing step
-- **WHEN** a `next` value names a step that does not exist
-- **THEN** the call fails with `unknown_step` before any step runs.
+#### Scenario: A payload references a missing node
+- **WHEN** a `next` value names a node that does not exist
+- **THEN** the call fails with `unknown_node` before any node runs.
 
 ### Requirement: Privacy
 The contract SHALL state that a definition contains author-written text and wiring only, no
@@ -204,7 +228,7 @@ including platforms that are blocked.
 ### Requirement: Evidence and implementation backlog
 The contract SHALL link existing tickets and code as evidence and SHALL provide a
 dependency-ordered backlog with owners and acceptance criteria and, where it exists, evidence, marking the result callback,
-progress reporting, iOS and Web, and nested workflows as deferred.
+progress reporting, iOS and Web, and nested flows as deferred.
 
 #### Scenario: A platform team starts implementation
 - **WHEN** a team reads the backlog

@@ -9,15 +9,15 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 
 - Define the `FLOW()` data event input: identity, versioning, compatibility, and the options
   object.
-- Specify the step kinds (`node`, `tool`, `confirmation`, `branch`, `end`), retries, branches and
-  loops, references to form and step data, idempotency, limits, privacy, and validation errors.
+- Specify the node kinds (`agentic`, `tool`, `decision`), retries, decisions and
+  loops, structured responses merged into a global state, references to form and state data, per-node limits, privacy, and validation errors.
   Nested workflows are not supported in version 1 and fail with `invalid_definition`.
 - Provide representative payloads: a pole-inspection workflow, a minimal workflow, and invalid
   payloads with their error codes.
 - Identify completed tickets and code that provide evidence.
 - Produce a dependency-ordered starter backlog.
 - Define the run outcome statuses and termination reasons.
-- Define the runtime correlation fields (workflow, run, agent, session, step, tool, model, timing, outcome, error).
+- Define the runtime correlation fields (flow, run, agent, session, node, tool, model, timing, outcome, error).
 - Define conformance and per-platform acceptance criteria for KMP, Android, iOS, and Web.
 - **Out of scope:** callback delivery of the outcome, progress reporting, the runtime, iOS and Web
   implementation, and any client code change.

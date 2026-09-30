@@ -2,8 +2,8 @@
 
 - [x] 1.1 Confirm the `FLOW()` data event pattern from the existing invocations (`Inference.kt`, `LoadForm.kt`, `LoadRecords.kt`).
 - [x] 1.2 Define the options object, identity, versioning, and compatibility rules.
-- [x] 1.3 Define the step kinds, transitions, retries, branches, loops, and limits.
-- [x] 1.4 Define references (including the user's `reply`), conditions, idempotency, nesting, and privacy rules.
+- [x] 1.3 Define the node kinds, transitions, retries, decisions, loops, per-node limits, and global state.
+- [x] 1.4 Define references, conditions, the internal run queue, nesting, and privacy rules.
 - [x] 1.5 Define validation error codes.
 - [x] 1.6 Define the run outcome statuses and termination reasons.
 - [x] 1.7 Define the runtime correlation fields.
