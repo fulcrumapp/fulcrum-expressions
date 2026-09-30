@@ -18,7 +18,7 @@ On Android, `execute_workflow` is currently a stub, so the runtime is separate f
 
 - Delivering the run outcome through the callback, and progress reporting (a follow-up).
 - The runtime that executes a definition, and any client implementation.
-- iOS and Web work (blocked until those platforms have a chat surface).
+- iOS and Web work (blocked until those platforms have the `ask_user` tool and a flow runtime).
 - Nested workflows.
 
 ## Decisions
@@ -101,7 +101,7 @@ to point at the wrong node. Nodes may still loop back to it.
 
 ### Start behavior
 
-A run always starts immediately. `interaction` chooses whether it runs in the chat (`chat`, default) or with no user interface (`none`). An author who wants the user to decide first makes the first node an `agentic` node with a `prompt` and a boolean `output`.
+A run always starts immediately and always runs headless, with no chat. When a node needs feedback it asks the user through the `ask_user` tool. An author who wants the user to decide first makes the first node an `agentic` node with a `prompt` and a boolean `output`.
 
 ## Risks / Trade-offs
 

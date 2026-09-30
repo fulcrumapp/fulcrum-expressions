@@ -2,7 +2,7 @@
 
 ### Requirement: Versioned FLOW options contract
 The contract SHALL define the `FLOW()` data event options object with `schema_version`, `nodes`,
-and the optional `flow_id` and `interaction`, SHALL use `snake_case` keys, and SHALL state
+and the optional `flow_id`, SHALL use `snake_case` keys, and SHALL state
 compatibility rules: adding an optional field is compatible within a major version, while removing
 or renaming a field, or changing its meaning or type, requires a new major version. It SHALL NOT
 define a workflow version, title, idempotency key, or flow-level limits.
@@ -17,15 +17,12 @@ define a workflow version, title, idempotency key, or flow-level limits.
 - **WHEN** `schema_version` is not supported
 - **THEN** the call fails with `unsupported_schema_version`.
 
-#### Scenario: A form runs with no user interface
-- **WHEN** `interaction` is `"none"`
-- **THEN** an `agentic` node with a `prompt` fails the call with `invalid_definition`.
-
-#### Scenario: A form chooses how the run starts
+#### Scenario: A flow runs
 - **WHEN** a valid definition is passed
-- **THEN** the run starts as soon as the data event fires, in the chat when `interaction` is `"chat"` or omitted
+- **THEN** the run starts as soon as the data event fires, always headless with no chat
+- **AND** when a node needs feedback it asks the user through the `ask_user` tool
 - **AND** to ask the user first, the definition makes its first node an `agentic` node with a `prompt`
-- **AND** an `interaction` value other than `"chat"` or `"none"` fails with `invalid_definition`.
+- **AND** an `interaction` field is not part of the contract and fails with `invalid_definition`.
 
 ### Requirement: Node kinds and transitions
 The contract SHALL rename steps to nodes and define exactly three node kinds: `agentic` (uses the
@@ -221,8 +218,8 @@ including platforms that are blocked.
 - **WHEN** a platform implements `FLOW()`
 - **THEN** it accepts the valid fixtures and returns the documented code for each invalid fixture.
 
-#### Scenario: A platform has no chat yet
-- **WHEN** iOS or Web has no chat surface
+#### Scenario: A platform has no runtime yet
+- **WHEN** iOS or Web has no `ask_user` tool or flow runtime
 - **THEN** its criteria are still listed and it is marked blocked.
 
 ### Requirement: Evidence and implementation backlog
