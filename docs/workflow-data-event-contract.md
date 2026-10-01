@@ -64,7 +64,7 @@ Shared rules:
   nodes, which means `end`. `on_error` defaults to `abort`. `default` on a `decision` is required.
 - The run starts at the first node in `nodes`. Every node must be reachable from it, and every
   referenced `id` must exist. Later nodes may loop back to the first node.
-- `instruction` is a short direction for the LLM, at most 500 characters.
+- `instruction` is a short direction for the LLM, at most 500 characters (longer fails with `limit_exceeded`).
 - Every node except `decision` returns a structured response, described under [State](#state).
 
 ### Agentic nodes
@@ -123,12 +123,12 @@ function. It can be tested without a model.
 - It has no network access. It cannot change `form` or `state` directly; only the returned object
   changes the state.
 - An error thrown by the code, including a syntax error or a failed tool call, fails the node with
-  `tool_error`. `js` failures are never retried, whatever `retry` says. They follow `on_error`.
+  `tool_error`, except an unknown tool id, which fails it with `unknown_tool` (see above). `js` failures are never retried, whatever `retry` says. They follow `on_error`.
   Tools called before the failure are not undone.
 - The definition validator checks only that `input.expression` is a non-empty string within the size
   limit when `function` is `js`. It does not parse the code or check the `form` and `state` names it uses.
 
-Authors write the code as a callback in `input.run`. The callback receives `{ form, state, tools }`, may be
+**Authoring form (JS source).** Authors write the code as a callback in `input.run`. The callback receives `{ form, state, tools }`, may be
 `async`, and returns the node's object:
 
 ```js
@@ -147,10 +147,12 @@ With a tool call:
   next: 'check' }
 ```
 
-The wire format stays a string. The `FLOW()` expression engine converts the callback with `toString()` and
+**Wire form (serialized options payload).** The wire format stays a string. The `FLOW()` expression engine converts the callback with `toString()` and
 sends it as `input.expression`, so the payload is the same as a hand-written string. A callback cannot use
 outside variables, because only its source text is sent. Authors may also write `input.expression` directly.
-Exactly one of `input.run` and `input.expression` is allowed in the engine; the payload carries only `expression`.
+At authoring time exactly one of `input.run` and `input.expression` is allowed (both, or neither, is
+`invalid_definition`). On the wire only `input.expression` exists: validators never see `input.run`, and a
+payload that carries `run` is `invalid_definition`.
 
 ### Decision nodes
 
@@ -215,9 +217,9 @@ form (the callback) is follow-up work, but the vocabulary is fixed here so it st
 | `status` | `termination_reason` | What ended the run |
 | --- | --- | --- |
 | `completed` | Omitted | A node routed to `end`, or a node without `next` finished |
-| `failed` | `tool_error` | A function (a tool call, or `js` code that threw, has a syntax error or made a failed tool call) that was found and had its inputs resolved returned a failure without retrying (`max_attempts` of 1, or the failure kind is not in `retry.on`) and `on_error` is `abort` |
+| `failed` | `tool_error` | A function (a tool call, or `js` code that threw, has a syntax error or made a failed tool call to a known tool) that was found and had its inputs resolved returned a failure without retrying (`max_attempts` of 1, or the failure kind is not in `retry.on`) and `on_error` is `abort` |
 | `failed` | `retries_exhausted` | A function node retried, used every attempt, failed, and `on_error` is `abort` |
-| `failed` | `unknown_tool` | A function node names a tool the chat does not expose (not retried) and `on_error` is `abort` |
+| `failed` | `unknown_tool` | A function node names a tool the chat does not expose, including a `js` call to `tools.<tool_id>` with an unknown id (not retried) and `on_error` is `abort` |
 | `failed` | `unknown_model` | An agentic node names a model that is not in the reference file and `on_error` is `abort` |
 | `failed` | `invalid_output` | An agentic node's response did not match its `output`, or a `js` function did not return an object, and `on_error` is `abort` |
 | `failed` | `input_unresolved` | A function input reference had no value and `on_error` is `abort` |
@@ -324,6 +326,10 @@ error of the same class.
 
 ## Representative payloads
 
+The examples below are in **authoring form**: a `js` node uses `input.run` (a callback). Before `FLOW()` sends
+the options object, the engine serializes each callback into `input.expression`, so the **wire payload** a
+validator receives has `expression` and never `run`.
+
 ### Pole inspection
 
 A guided flow: a safety confirmation, find the pole, fill fields in a loop, capture a photo with
@@ -408,7 +414,8 @@ FLOW({
 | A node that cannot be reached from the first node | `unreachable_node` |
 | 51 nodes | `limit_exceeded` |
 | A `function` node with no `function` | `invalid_definition` |
-| A `js` function node with no `input.expression` | `invalid_definition` |
+| A `js` function node with no `input.expression` (wire payload) | `invalid_definition` |
+| A `js` function node whose wire payload carries `input.run` | `invalid_definition` |
 | An `agentic` node with no `instruction` | `invalid_definition` |
 | A node `kind` of `confirmation`, `branch`, or `end` | `invalid_definition` |
 

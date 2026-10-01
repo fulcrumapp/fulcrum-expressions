@@ -25,7 +25,7 @@ define a workflow version, title, idempotency key, or flow-level limits.
 - **AND** an `interaction` field is not part of the contract and fails with `invalid_definition`.
 
 ### Requirement: Node kinds and transitions
-The contract SHALL rename steps to nodes and define exactly four node kinds: `agentic` (uses the
+The contract SHALL rename steps to nodes and define exactly three node kinds: `agentic` (uses the
 LLM), `function` (deterministic: calls a tool the chat exposes, or runs the built-in `js` function), and `decision` (chooses the next node from data). A node of any other
 kind, such as `confirmation`, `branch`, or `end`, SHALL fail with `invalid_definition`.
 
@@ -49,11 +49,15 @@ SHALL accept a node id or the reserved targets `end` (completes the flow) and `a
 - **AND** each node runs at most its `max_calls` times.
 
 ### Requirement: Agentic nodes and models
-The contract SHALL define the `agentic` node with a required `instruction`, an optional boolean `interactive` (default `false`),
+The contract SHALL define the `agentic` node with a required `instruction` (a string of at most 500 characters; longer fails with `limit_exceeded`), an optional boolean `interactive` (default `false`),
 an optional `model`, and an optional `output` declaration. `model` SHALL be the `name` of a model
 in the model reference file, SHALL be optional, and SHALL default to `fulcrumite-2b` when empty or
 absent. A model name that is not in the reference file SHALL fail the node with `unknown_model`
 without retrying.
+
+#### Scenario: An instruction is too long
+- **WHEN** an agentic node's `instruction` is longer than 500 characters
+- **THEN** validation fails with `limit_exceeded`.
 
 #### Scenario: An agentic node has no model
 - **WHEN** `model` is empty or absent
@@ -85,8 +89,8 @@ The contract SHALL allow a `function` node to name any tool the chat exposes, or
 
 ### Requirement: The `js` function
 The built-in `js` function SHALL run `input.expression` (JavaScript of at most 4096 characters, an expression or an async function body) in the
-`FLOW()` expression engine with read-only `form` and `state` variables and a `tools` object whose calls (for example `search_records` or `take_photo`) count toward `max_calls` and `timeout_seconds`, with no network access. A failed tool call SHALL fail the node with `tool_error`. The wire format SHALL stay a string; authors write a callback in `input.run` (the preferred form), which the expression engine converts with `toString()` into `input.expression`. It SHALL return a plain object that is merged into the state. The validator SHALL
-check only that `input.expression` is a non-empty string within the limit.
+`FLOW()` expression engine with read-only `form` and `state` variables and a `tools` object whose calls (for example `search_records` or `take_photo`) count toward `max_calls` and `timeout_seconds`, with no network access. A failed call to a known tool SHALL fail the node with `tool_error`, and a call to a tool id the chat does not expose SHALL fail it with `unknown_tool`, neither retried. The wire format SHALL stay a string; authors write a callback in `input.run` (the preferred form), which the expression engine converts with `toString()` into `input.expression`. It SHALL return a plain object that is merged into the state. The validator SHALL
+check only that the wire payload's `input.expression` is a non-empty string within the limit. At authoring time exactly one of `input.run` and `input.expression` SHALL be given (otherwise `invalid_definition`); a wire payload that carries `input.run` SHALL fail with `invalid_definition`.
 
 #### Scenario: A `js` function returns an object
 - **WHEN** the expression evaluates to an object
@@ -134,7 +138,7 @@ objects with a bare path, using the operators `eq`, `ne`, `gt`, `gte`, `lt`, `lt
 
 ### Requirement: Per-node limits
 The contract SHALL define limits on each node and no limits on the whole flow. `timeout_seconds`
-(`agentic` and `tool`) SHALL be an integer 1 to 3600 with default 300, and `max_calls` (all kinds)
+(`agentic` and `function`) SHALL be an integer 1 to 3600 with default 300, and `max_calls` (all kinds)
 SHALL be an integer 1 to 50 with default 10. A non-integer value SHALL fail with
 `invalid_definition` and an out-of-range integer with `limit_exceeded`.
 
