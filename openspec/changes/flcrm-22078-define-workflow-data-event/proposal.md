@@ -9,7 +9,7 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 
 - Define the `FLOW()` data event input: identity, versioning, compatibility, and the options
   object.
-- Specify the node kinds (`agentic`, `tool`, `decision`), retries, decisions and
+- Specify the node kinds (`agentic`, `function`, `decision`), retries, decisions and
   loops, structured responses merged into a global state, references to form and state data, per-node limits, privacy, and validation errors.
   Nested workflows are not supported in version 1 and fail with `invalid_definition`.
 - Provide representative payloads: a pole-inspection workflow, a minimal workflow, and invalid

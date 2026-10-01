@@ -52,31 +52,30 @@ explicitly, so a definition can branch and loop.
 
 | `kind` | Purpose | Fields |
 | --- | --- | --- |
-| `agentic` | The LLM does the work, and can ask the user through the `ask_user` tool | `instruction`; optional `prompt`; optional `model`; optional `output`; optional `timeout_seconds`, `max_calls`; optional `on_error`; `next` |
-| `tool` | Call a tool the chat exposes | `tool` (tool id); optional `input`; optional `retry`; optional `timeout_seconds`, `max_calls`; optional `on_error`; `next` |
-| `function` | Run deterministic JavaScript, with no LLM or tool | `expression`; optional `timeout_seconds`, `max_calls`; optional `on_error`; `next` |
+| `agentic` | The LLM does the work, and can ask the user through the `ask_user` tool when `interactive` is true | `instruction`; optional `interactive` (default `false`); optional `model`; optional `output`; optional `timeout_seconds`, `max_calls`; optional `on_error`; optional `next` (default `end`) |
+| `function` | Deterministic work with fixed input, no LLM: call a tool the chat exposes, or run the built-in `js` function | `function` (function id); optional `input`; optional `retry`; optional `timeout_seconds`, `max_calls`; optional `on_error`; optional `next` (default `end`) |
 | `decision` | Choose the next node from data | `cases` (array of `{ when, next }`); `default`; optional `max_calls` |
 
 Shared rules:
 
 - `next`, `on_error`, `default`, and each case's `next` name a node `id` or one of two reserved
   targets. `end` finishes the flow as `completed`. `abort` ends it as `failed` without running
-  further nodes (see [Run outcome](#run-outcome)). `next` may be omitted on `agentic`, `tool` and `function`
+  further nodes (see [Run outcome](#run-outcome)). `next` may be omitted on `agentic` and `function`
   nodes, which means `end`. `on_error` defaults to `abort`. `default` on a `decision` is required.
 - The run starts at the first node in `nodes`. Every node must be reachable from it, and every
   referenced `id` must exist. Later nodes may loop back to the first node.
-- `prompt` is fixed text written by the form author, at most 500 characters. The node asks it through the `ask_user` tool.
 - `instruction` is a short direction for the LLM, at most 500 characters.
-- Every node returns a structured response, described under [State](#state).
+- Every node except `decision` returns a structured response, described under [State](#state).
 
 ### Agentic nodes
 
 - `instruction` is required. The LLM follows it, using the available tools and the user's replies.
-- `prompt` is optional. When present, the node asks it through the `ask_user` tool and lets the LLM use
-  `instruction` to interpret the reply.
-- A flow always runs headless. When it needs feedback, an `agentic` node asks the user through the
-  `ask_user` tool (a `prompt` or one the LLM decides to ask). How `ask_user` collects the answer
-  (for example a custom input) is decided by the host and is not part of this contract.
+- `interactive` is an optional boolean, default `false`. When `true`, the LLM may ask the user through
+  the `ask_user` tool. When `false`, the node works on its own: `ask_user` is not available and the
+  user is never asked. How `ask_user` collects the answer (for example a custom input) is decided by
+  the host and is not part of this contract. `interactive` must be a boolean, otherwise
+  `invalid_definition`.
+- A flow always runs headless, with no chat. `interactive` is the only way a node reaches the user.
 - `model` is optional. It is the `name` of a model in the model reference file (the model catalog).
   An empty or absent value uses `fulcrumite-2b`. A name that is not in the reference file fails
   the node with the code `unknown_model` and follows `on_error`; it is not retried.
@@ -85,63 +84,95 @@ Shared rules:
   object that has those keys and types. When `output` is omitted, the node returns
   `{ "reply": "<text of the LLM's final answer>" }`. A response that does not match `output` fails
   the node with `invalid_output` (not retried) and follows `on_error`.
-- An `agentic` node asks the user only through the `ask_user` tool. A confirmation is an agentic
-  node with `output: { "confirmed": "boolean" }` whose `instruction` tells the LLM to call `ask_user`,
-  followed by a `decision`. The LLM calls `ask_user` with the `prompt` (or its own question) and, if
-  the answer is incomplete, calls it again for what is missing. The author does not write the
+- A confirmation is an `agentic` node with `interactive: true` and `output: { "confirmed": "boolean" }`
+  whose `instruction` tells the LLM what to ask, followed by a `decision`. The LLM calls `ask_user`
+  and, if the answer is incomplete, calls it again for what is missing. The author does not write the
   follow-up questions.
 
-### Tool nodes
+### Function nodes
 
-- `tool` is any tool id the chat exposes, including tools added in the future. It is not restricted
-  to a fixed list. An unknown tool id is not rejected when the definition is validated, because the
-  available tools depend on the device and plan. When the node runs, it fails without retrying
-  and follows `on_error`.
-- `input` is an object of tool arguments. String values may contain [references](#references).
-- The tool's result is the node's structured response. A result that is not an object is returned
+A `function` node does deterministic work: the author fixes the function and its input, and no LLM
+chooses either. It can call a tool the chat exposes, or run JavaScript with the built-in `js`
+function. It can be tested without a model.
+
+- `function` is a function id: any tool id the chat exposes, including tools added in the future,
+  or the built-in `js`. It is not restricted to a fixed list. An unknown id is not rejected when the
+  definition is validated, because the available tools depend on the device and plan. When the node
+  runs, it fails without retrying with `unknown_tool` and follows `on_error`.
+- `input` is an object of arguments. String values may contain [references](#references).
+- The result is the node's structured response. A result that is not an object is returned
   as `{ "result": <value> }`.
 - `retry` is `{ "max_attempts": n, "on": [...] }`. `max_attempts` is 1 to 5 and counts the first
   attempt; default `1` (no retry). `on` lists the failure kinds that retry: `tool_error`,
   `timeout`. Default is both. When attempts are exhausted the node fails and control moves to
   `on_error`.
 
-### Function nodes
+#### The `js` function
 
-A `function` node does deterministic work without the LLM or a tool, such as a counter, a computed
-value or reshaping data.
+`js` runs deterministic JavaScript, such as a counter, a computed value or reshaping data.
 
-- `expression` is a JavaScript expression of at most 4096 characters. It runs in the same
-  expression engine as `FLOW()`, with two read-only variables: `form` (the record's field values,
-  as in `form.<field_data_name>`) and `state` (the global [state](#state)).
-- It must evaluate to a plain object. That object is the node's structured response and is merged
+- `input.expression` is required: a JavaScript string of at most 4096 characters, either an expression or
+  an `async` function body. It runs in the same expression engine as `FLOW()`, with these variables:
+  `form` (the record's field values, as in `form.<field_data_name>`, read-only), `state` (the global
+  [state](#state), read-only) and `tools`. The string is not searched for [references](#references).
+- `tools.<tool_id>(args)` calls a tool the chat exposes, such as `search_records` or `take_photo`, and
+  returns a promise of its result. Use `await`. Each call counts toward the node's `max_calls`
+  and runs under its `timeout_seconds`. A failed call throws. An unknown tool id throws `unknown_tool`.
+- It must evaluate to a plain object, which is the node's structured response and is merged
   into the state. Any other result fails the node with `invalid_output`.
-- It cannot call tools, make network requests, or wait for asynchronous work. It cannot change
-  `form` or `state` directly; only the returned object changes the state.
-- An error thrown by the expression, including a syntax error, fails the node with
-  `function_error`. Neither is retried. Both follow `on_error`.
-- The definition validator checks only that `expression` is a non-empty string within the size
-  limit. It does not parse the code or check the `form` and `state` names it uses.
+- It has no network access. It cannot change `form` or `state` directly; only the returned object
+  changes the state.
+- An error thrown by the code, including a syntax error or a failed tool call, fails the node with
+  `tool_error`. `js` failures are never retried, whatever `retry` says. They follow `on_error`.
+  Tools called before the failure are not undone.
+- The definition validator checks only that `input.expression` is a non-empty string within the size
+  limit when `function` is `js`. It does not parse the code or check the `form` and `state` names it uses.
+
+Authors write the code as a callback in `input.run`. The callback receives `{ form, state, tools }`, may be
+`async`, and returns the node's object:
 
 ```js
-{ id: 'count-up', kind: 'function',
-  expression: '({ attempts: (state.attempts || 0) + 1 })', next: 'check' }
+{ id: 'count-up', kind: 'function', function: 'js',
+  input: { run: ({ state }) => ({ attempts: (state.attempts || 0) + 1 }) }, next: 'check' }
 ```
+
+With a tool call:
+
+```js
+{ id: 'find-duplicates', kind: 'function', function: 'js',
+  input: { run: async ({ form, tools }) => {
+    const r = await tools.search_records({ query: form.name });
+    return { matches: r.count };
+  } },
+  next: 'check' }
+```
+
+The wire format stays a string. The `FLOW()` expression engine converts the callback with `toString()` and
+sends it as `input.expression`, so the payload is the same as a hand-written string. A callback cannot use
+outside variables, because only its source text is sent. Authors may also write `input.expression` directly.
+Exactly one of `input.run` and `input.expression` is allowed in the engine; the payload carries only `expression`.
 
 ### Decision nodes
 
 Each case is `{ "when": { ... }, "next": "<id>" }`. Cases are tested in order and the first match
 wins. If none match, control moves to `default`.
 
-A condition is `{ "ref": "<path>", "op": "<op>", "value": <literal> }`.
+A condition is `{ "ref": "<path>", "op": "<op>", "value": <value> }`. `value` is a JSON literal
+for `eq`, `ne`, `gt`, `gte`, `lt` and `lte` (a number for the numeric ops), an array for `in`, and
+omitted for `exists` and `not_exists`. A `value` of the wrong shape for its `op` is
+`invalid_definition`.
 
 | `op` | Meaning |
 | --- | --- |
 | `eq`, `ne` | Equal, not equal |
 | `gt`, `gte`, `lt`, `lte` | Numeric comparison |
-| `in` | `ref` value is one of the array `value` |
+| `in` | `ref` value is one of the items of the array `value` |
 | `exists`, `not_exists` | `ref` resolves to a value (no `value` field) |
 
 Conditions are data, not JavaScript. `ref` is a bare [reference](#references) path.
+
+A `decision` node returns no response: it is treated as an empty object, so it never changes the
+state. It only chooses the next node.
 
 ## State
 
@@ -167,7 +198,7 @@ A reference reads data from outside the node:
 | `form.<field_data_name>` | Current value of a field in the record being edited |
 | `state.<key>` | A key of the global [state](#state) |
 
-In string values (`prompt`, `instruction`, and tool `input` strings) a reference is written
+In string values (`instruction` and tool `input` strings) a reference is written
 `{{path}}`. In a decision condition, `ref` is the bare path. A reference that cannot be resolved
 at run time is treated as absent: `exists` is false, and a tool input that needs it fails the node
 (handled by `on_error`). A `state.<key>` reference is not checked when the definition is
@@ -184,13 +215,12 @@ form (the callback) is follow-up work, but the vocabulary is fixed here so it st
 | `status` | `termination_reason` | What ended the run |
 | --- | --- | --- |
 | `completed` | Omitted | A node routed to `end`, or a node without `next` finished |
-| `failed` | `tool_error` | A tool call that was found and had its inputs resolved returned a failure without retrying (`max_attempts` of 1, or the failure kind is not in `retry.on`) and `on_error` is `abort` |
-| `failed` | `retries_exhausted` | A tool node retried, used every attempt, failed, and `on_error` is `abort` |
-| `failed` | `unknown_tool` | A tool node names a tool the chat does not expose (not retried) and `on_error` is `abort` |
+| `failed` | `tool_error` | A function (a tool call, or `js` code that threw, has a syntax error or made a failed tool call) that was found and had its inputs resolved returned a failure without retrying (`max_attempts` of 1, or the failure kind is not in `retry.on`) and `on_error` is `abort` |
+| `failed` | `retries_exhausted` | A function node retried, used every attempt, failed, and `on_error` is `abort` |
+| `failed` | `unknown_tool` | A function node names a tool the chat does not expose (not retried) and `on_error` is `abort` |
 | `failed` | `unknown_model` | An agentic node names a model that is not in the reference file and `on_error` is `abort` |
-| `failed` | `invalid_output` | An agentic node's response did not match its `output`, or a function node did not return an object, and `on_error` is `abort` |
-| `failed` | `function_error` | A function node's expression threw an error or has a syntax error and `on_error` is `abort` |
-| `failed` | `input_unresolved` | A tool input reference had no value and `on_error` is `abort` |
+| `failed` | `invalid_output` | An agentic node's response did not match its `output`, or a `js` function did not return an object, and `on_error` is `abort` |
+| `failed` | `input_unresolved` | A function input reference had no value and `on_error` is `abort` |
 | `failed` | `node_timeout` | A node ran longer than its `timeout_seconds` and `on_error` is `abort` |
 | `failed` | `max_calls_exceeded` | A node was about to run more than its `max_calls` times |
 | `failed` | `aborted` | A node routed to `abort` |
@@ -226,7 +256,7 @@ when they have no value.
 | Session | `session_id` | The session that hosts the run |
 | Node | `node_id`, `node_kind` | The node the report refers to |
 | Node | `attempt` | Attempt number for the node, starting at 1 |
-| Tool | `tool` | Tool id of a tool node |
+| Function | `function` | Function id of a function node |
 | Model | `model` | Name of the model that served an agentic node, including the default when it was used |
 | Timing | `started_at`, `ended_at` | UTC ISO 8601 timestamps for the run or node |
 | Timing | `duration_ms` | Elapsed milliseconds for the run or node |
@@ -248,7 +278,7 @@ each node, not to the whole flow:
 
 | Field | Applies to | Description |
 | --- | --- | --- |
-| `timeout_seconds` | `agentic`, `tool` | Integer 1 to 3600, default 300. A node that runs longer fails with `timeout` and follows `on_error` (a `tool` node can retry it). |
+| `timeout_seconds` | `agentic`, `function` | Integer 1 to 3600, default 300. A node that runs longer fails with `timeout` and follows `on_error` (a `function` node can retry it). |
 | `max_calls` | All kinds | Integer 1 to 50, default 10. The most times this node may run in one run. A node about to run more often ends the run as `failed` with `max_calls_exceeded`. |
 
 A non-integer or non-numeric value fails with `invalid_definition`; an integer outside the range
@@ -305,8 +335,8 @@ FLOW({
   flow_id: 'pole-inspection',
   nodes: [
     { id: 'safety-check', kind: 'agentic',
-      prompt: 'Are you wearing a hard hat and safety glasses?',
-      instruction: 'Set confirmed to true only if the user confirms both items.',
+      interactive: true,
+      instruction: 'Ask whether the user is wearing a hard hat and safety glasses. Set confirmed to true only if the user confirms both items.',
       output: { confirmed: 'boolean' },
       max_calls: 3,
       on_error: 'abort', next: 'safety-decision' },
@@ -315,7 +345,7 @@ FLOW({
       cases: [{ when: { ref: 'state.confirmed', op: 'eq', value: true }, next: 'search-pole' }],
       default: 'abort' },
 
-    { id: 'search-pole', kind: 'tool', tool: 'search_records',
+    { id: 'search-pole', kind: 'function', function: 'search_records',
       input: { query: '{{form.pole_number}}' },
       next: 'fill-field' },
 
@@ -329,14 +359,14 @@ FLOW({
       cases: [{ when: { ref: 'state.remaining_fields', op: 'gt', value: 0 }, next: 'fill-field' }],
       default: 'capture-photo' },
 
-    { id: 'capture-photo', kind: 'tool', tool: 'photo_capture_tool',
+    { id: 'capture-photo', kind: 'function', function: 'photo_capture_tool',
       retry: { max_attempts: 3, on: ['timeout', 'tool_error'] },
       timeout_seconds: 120,
       next: 'review' },
 
     { id: 'review', kind: 'agentic',
-      prompt: 'Does everything look correct?',
-      instruction: 'Set approved to true if the user accepts.',
+      interactive: true,
+      instruction: 'Ask whether everything looks correct. Set approved to true if the user accepts.',
       output: { approved: 'boolean' },
       next: 'review-decision' },
 
@@ -344,8 +374,8 @@ FLOW({
       cases: [{ when: { ref: 'state.approved', op: 'eq', value: true }, next: 'save' }],
       default: 'fill-field' },
 
-    { id: 'save', kind: 'tool', tool: 'record_update_tool',
-      input: { record_id: '{{state.record_id}}' } }
+    { id: 'save', kind: 'function', function: 'record_update_tool',
+      input: { approved: '{{state.approved}}' } }
   ]
 });
 ```
@@ -356,7 +386,7 @@ FLOW({
 FLOW({
   schema_version: 1,
   nodes: [
-    { id: 'hello', kind: 'agentic', prompt: 'Hello. Ready to start?', instruction: 'Greet the user.' }
+    { id: 'hello', kind: 'agentic', interactive: true, instruction: 'Greet the user and ask if they are ready to start.' }
   ]
 });
 ```
@@ -370,7 +400,8 @@ FLOW({
 | Two nodes with `id: 'save'` | `duplicate_node_id` |
 | A node that cannot be reached from the first node | `unreachable_node` |
 | 51 nodes | `limit_exceeded` |
-| A `tool` node with no `tool` | `invalid_definition` |
+| A `function` node with no `function` | `invalid_definition` |
+| A `js` function node with no `input.expression` | `invalid_definition` |
 | An `agentic` node with no `instruction` | `invalid_definition` |
 | A node `kind` of `confirmation`, `branch`, or `end` | `invalid_definition` |
 
@@ -392,7 +423,7 @@ Conformance criteria, for every platform:
 | Platform | Acceptance criteria beyond conformance | Status |
 | --- | --- | --- |
 | KMP (shared) | Schema parser and validator pass the conformance checks with no platform code; the fixtures ship as shared test resources. | Backlog items 1a, 1b |
-| Android | `FLOW()` is registered as an `Invocation` gated by the plan attribute and returns `flow_disabled` when off; validation runs off the main thread; the runtime replaces the `execute_workflow` stub; the run starts at once, headless, and asks the user only through `ask_user`. | Backlog items 2, 3a to 3e, 4 |
+| Android | `FLOW()` is registered as an `Invocation` gated by the plan attribute and returns `flow_disabled` when off; validation runs off the main thread; the runtime replaces the `execute_workflow` stub; the run starts at once, headless, and asks the user only through `ask_user`. | Backlog items 2, 3a to 3d, 4 |
 | iOS | The same `FLOW()` function name and options pass the conformance checks using the shared validator; the run is hosted headless by iOS. | Blocked until iOS has the `ask_user` tool and a flow runtime |
 | Web | The same `FLOW()` function name and options pass the conformance checks using the shared validator; the run is hosted headless by Web. | Blocked until Web has the `ask_user` tool and a flow runtime |
 
@@ -405,9 +436,9 @@ Blocked platforms keep these criteria so that they can be scheduled without rede
 | Event name and versioned schema | `FLOW`, `schema_version`, compatibility rules |
 | Identification, start | `flow_id`, the first node in `nodes` |
 | Step/node transitions | `nodes` graph, `next`, `decision`, loops with `max_calls` |
-| Tool interactions | `tool` nodes, `input`, and the global `state` |
+| Tool interactions | `function` nodes, `input`, and the global `state` |
 | Confirmations | An `agentic` node with a boolean `output`, then a `decision` |
-| Retries | `retry` on tool nodes |
+| Retries | `retry` on function nodes |
 | Completion, failure, cancellation, termination reasons | `end` and `abort` targets, and the [run outcome](#run-outcome) table; delivering it to the form is follow-up |
 | Nested workflows | Not supported in version 1 |
 | Idempotency | Not in the definition; the runtime queues runs internally |
@@ -449,13 +480,13 @@ Follow-up implementation backlog, in dependency order. This page does not create
 | # | Item | Owner | Depends on | Acceptance criteria |
 | --- | --- | --- | --- | --- |
 | 1a | **Shared schema and graph validator:** parse the options object (`schema_version`, `flow_id`, `nodes`, size) and validate node ids, `next`/`default`/`on_error`/case targets and reachability; produce `unsupported_schema_version`, `invalid_definition` (structure), `duplicate_node_id`, `unknown_node`, `unreachable_node` and `limit_exceeded` for node count and size (evidence: FLCRM-21818, FLCRM-21822) | Cross-platform owners (KMP) | None | Valid payloads parse; every structural and graph case in the invalid-payload table returns its code. |
-| 1b | **Node content validator:** validate each node kind: `agentic` (`instruction`, `prompt`, `model`, `output`), `tool` (`tool`, `input`, `retry`), `function` (`expression` is a string of 1 to 4096 characters), `decision` (`cases`, ops, `default`), per-node `timeout_seconds` and `max_calls`, and `form.*` references | Cross-platform owners (KMP) | 1a | Every node-level invalid-payload case returns its code; integer limits and reference checks are enforced. |
+| 1b | **Node content validator:** validate each node kind: `agentic` (`instruction`, `interactive`, `model`, `output`), `function` (`function`, `input`, `retry`; for `js`, `input.expression` is a string of 1 to 4096 characters), `decision` (`cases`, ops, `default`), per-node `timeout_seconds` and `max_calls`, and `form.*` references | Cross-platform owners (KMP) | 1a | Every node-level invalid-payload case returns its code; integer limits and reference checks are enforced. |
 | 2 | **Android `FLOW()` invocation:** an `Invocation` subclass gated by a plan attribute (proposed name `DataEventFlowEnabled`), using the shared validator (evidence: `Inference.kt`) | Android | 1a, 1b | The function is registered in the expression engine; a disabled plan returns `flow_disabled`; validation errors use the standard data-event error path; runs off the main thread. |
 | 3a | **Flow engine core:** traverse the node graph, merge each structured response into the global state (add or override keys), resolve `{{form.*}}` and `{{state.*}}` references, evaluate `decision` nodes, enforce per-node `max_calls`, and produce the run outcome (evidence: FLCRM-21822, FLCRM-21818) | KMP | 1a, 1b | Testable with fake nodes and no LLM or tools; traversal, state merge, references, decisions, loops and every outcome in the run outcome table behave as specified. |
-| 3b | **Tool nodes:** call the named tool, wrap a non-object result as `{ result }`, apply `retry` and `timeout_seconds`, and fail with `unknown_tool` for a tool that is not exposed | KMP, Android | 3a | A tool result is merged into the state; retries, timeouts and `unknown_tool` follow `on_error` as specified. |
-| 3c | **Agentic nodes:** select the model (default `fulcrumite-2b`, `unknown_model` for an unknown name), run the LLM with the available tools and `ask_user`, check the `output` declaration (`invalid_output`), and apply `timeout_seconds` | KMP, Android | 3a | The response matches `output` or the node fails without retry; with no `output` the node returns `{ reply }`. |
+| 3b | **Function nodes:** call the named tool, wrap a non-object result as `{ result }`, apply `retry` and `timeout_seconds`, and fail with `unknown_tool` for a tool that is not exposed; also the built-in `js` function: run `input.expression` with read-only `form` and `state` and a `tools` object (calls count toward `max_calls`), require an object result (`invalid_output`), report thrown or syntax errors as `tool_error` without retry | KMP, Android | 3a | A tool result is merged into the state; retries, timeouts and `unknown_tool` follow `on_error` as specified. |
+| 3b-2 | **Callback authoring:** in `FLOW()`, accept a function for `input.run` (the preferred form) and send its `toString()` as `input.expression`; reject a callback that cannot be stringified, or a node with both `run` and `expression` | Cross-platform owners (KMP) | 1b | A callback and the equivalent string produce the same payload. |
+| 3c | **Agentic nodes:** select the model (default `fulcrumite-2b`, `unknown_model` for an unknown name), run the LLM with the available tools (and `ask_user` only when `interactive` is true), check the `output` declaration (`invalid_output`), and apply `timeout_seconds` | KMP, Android | 3a | The response matches `output` or the node fails without retry; with no `output` the node returns `{ reply }`. |
 | 3d | **Run queue and reporting:** queue runs internally, run each to exactly one outcome, and report the runtime correlation fields | KMP, Android | 3a | Runs are queued and each ends with one outcome; the correlation fields are reported. |
-| 3e | **Function nodes:** run `expression` in the expression engine with read-only `form` and `state`, require an object result, merge it into the state, and apply `timeout_seconds`; fail with `function_error` or `invalid_output` | KMP, Android | 3a | A returned object is merged; thrown errors, syntax errors, non-object results and timeouts follow `on_error` as specified. |
-| 4 | **`ask_user` tool for flows:** let an `agentic` node ask the user through the `ask_user` tool, including a first-node prompt that asks whether to run (evidence: FLCRM-21821) | Android | 2, 3a, 3c | The run starts at once, headless; a first `agentic` node with a boolean `output` followed by a `decision` that routes to `abort` ends the run as `failed` (`aborted`) when the user declines. |
+| 4 | **`ask_user` tool for flows:** let an `agentic` node ask the user through the `ask_user` tool, including a first `interactive` node that asks whether to run (evidence: FLCRM-21821) | Android | 2, 3a, 3c | The run starts at once, headless; a first `agentic` node with a boolean `output` followed by a `decision` that routes to `abort` ends the run as `failed` (`aborted`) when the user declines. |
 | 5 | **Validation tests and authoring docs:** tests for every rule above and a form-author guide (evidence: `Inference.kt` and its tests) | QA, docs | 1a, 1b, 2, 3a, 3b, 3c, 3d | Each rule and error code has an automated test; the guide has the pole-inspection example. |
 | 6 | **Deferred:** callback delivery of the run outcome, and progress reporting; iOS and Web; nested workflows | Product, KMP, iOS, Web | 3a, 3b, 3c, 3d | Create as separate tickets when scheduled. iOS and Web are blocked until those platforms have the `ask_user` tool and a flow runtime. |

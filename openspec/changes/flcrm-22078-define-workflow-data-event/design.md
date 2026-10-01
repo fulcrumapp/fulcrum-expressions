@@ -30,15 +30,14 @@ data-event error path. Option keys are `snake_case`, as in `INFERENCE()`.
 
 ### Definition is a graph, embedded in the call
 
-Nodes are `agentic` (uses the LLM), `tool` (calls a tool), `function` (runs deterministic
-JavaScript), and `decision` (chooses the next node from data). Every transition names the next node explicitly, which allows branches and loops. A
+Nodes are `agentic` (uses the LLM), `function` (deterministic: calls a tool the chat exposes, or runs the built-in `js` function), and `decision` (chooses the next node from data). Every transition names the next node explicitly, which allows branches and loops. A
 flow finishes at the reserved target `end` and fails at `abort`. Loops are bounded per node by
 `max_calls`. The definition is embedded in the call and not referenced by id, which keeps version 1
 self-contained. `flow_id` is optional and only labels reports; there is no workflow version or title.
 
 ### Tools are open-ended
 
-A `tool` node names any tool id the chat exposes, including future ones. Unknown tool ids are
+A `function` node names any tool id the chat exposes, including future ones. Unknown tool ids are
 reported when the node runs, because the available tools depend on the device and plan.
 Nested flows are not supported in version 1; a definition that tries to nest one fails with
 `invalid_definition`.
@@ -60,7 +59,7 @@ and `end` are no longer kinds.
 
 ### Retry is a field, not a node
 
-`retry.max_attempts` is set on tool nodes (1 to 5, counting the first attempt; default 1).
+`retry.max_attempts` is set on function nodes (1 to 5, counting the first attempt; default 1).
 
 ### Limits are per node
 
@@ -101,7 +100,7 @@ to point at the wrong node. Nodes may still loop back to it.
 
 ### Start behavior
 
-A run always starts immediately and always runs headless, with no chat. When a node needs feedback it asks the user through the `ask_user` tool. An author who wants the user to decide first makes the first node an `agentic` node with a `prompt` and a boolean `output`.
+A run always starts immediately and always runs headless, with no chat. A node reaches the user only when it is an `agentic` node with `interactive: true`, which lets the LLM call `ask_user`. An author who wants the user to decide first makes the first node `interactive` with a boolean `output`.
 
 ## Risks / Trade-offs
 

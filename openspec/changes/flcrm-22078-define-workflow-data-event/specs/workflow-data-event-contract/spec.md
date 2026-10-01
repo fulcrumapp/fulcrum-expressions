@@ -20,18 +20,18 @@ define a workflow version, title, idempotency key, or flow-level limits.
 #### Scenario: A flow runs
 - **WHEN** a valid definition is passed
 - **THEN** the run starts as soon as the data event fires, always headless with no chat
-- **AND** when a node needs feedback it asks the user through the `ask_user` tool
-- **AND** to ask the user first, the definition makes its first node an `agentic` node with a `prompt`
+- **AND** an `agentic` node asks the user through the `ask_user` tool only when its `interactive` is `true`
+- **AND** to ask the user first, the definition makes its first node an `interactive` `agentic` node
 - **AND** an `interaction` field is not part of the contract and fails with `invalid_definition`.
 
 ### Requirement: Node kinds and transitions
 The contract SHALL rename steps to nodes and define exactly four node kinds: `agentic` (uses the
-LLM), `tool` (calls a tool), `function` (runs deterministic JavaScript), and `decision` (chooses the next node from data). A node of any other
+LLM), `function` (deterministic: calls a tool the chat exposes, or runs the built-in `js` function), and `decision` (chooses the next node from data). A node of any other
 kind, such as `confirmation`, `branch`, or `end`, SHALL fail with `invalid_definition`.
 
 A run SHALL begin at the first node in `nodes`. `next`, `on_error`, `default`, and case targets
 SHALL accept a node id or the reserved targets `end` (completes the flow) and `abort` (fails it).
-`next` MAY be omitted on `agentic`, `tool` and `function` nodes, meaning `end`. `on_error` SHALL default to
+`next` MAY be omitted on `agentic` and `function` nodes, meaning `end`. `on_error` SHALL default to
 `abort`. A `decision` SHALL test its cases in order, use the first match, and require a `default`.
 
 #### Scenario: A decision matches no case
@@ -49,7 +49,7 @@ SHALL accept a node id or the reserved targets `end` (completes the flow) and `a
 - **AND** each node runs at most its `max_calls` times.
 
 ### Requirement: Agentic nodes and models
-The contract SHALL define the `agentic` node with a required `instruction`, an optional `prompt`,
+The contract SHALL define the `agentic` node with a required `instruction`, an optional boolean `interactive` (default `false`),
 an optional `model`, and an optional `output` declaration. `model` SHALL be the `name` of a model
 in the model reference file, SHALL be optional, and SHALL default to `fulcrumite-2b` when empty or
 absent. A model name that is not in the reference file SHALL fail the node with `unknown_model`
@@ -68,34 +68,33 @@ without retrying.
 - **THEN** an `agentic` node declares `output: { "confirmed": "boolean" }`
 - **AND** a following `decision` routes on `state.confirmed`.
 
-### Requirement: Tool nodes and retries
-The contract SHALL allow a `tool` node to name any tool the chat exposes and SHALL define
+### Requirement: Function nodes and retries
+The contract SHALL allow a `function` node to name any tool the chat exposes, or the built-in `js`, and SHALL define
 `retry.max_attempts` (1 to 5, counting the first attempt, default 1) and `retry.on` (`tool_error`,
-`timeout`, default both) on tool nodes.
+`timeout`, default both) on function nodes.
 
-#### Scenario: A tool node names an unknown tool
-- **WHEN** a `tool` node names a tool id the chat does not expose
+#### Scenario: A function node names an unknown tool
+- **WHEN** a `function` node names a tool id the chat does not expose
 - **THEN** the definition still passes validation
 - **AND** when the node runs it fails without retrying and follows `on_error`.
 
 #### Scenario: A tool fails and is retried
-- **WHEN** a tool node fails with a retryable kind and attempts remain
+- **WHEN** a function node fails with a retryable kind and attempts remain
 - **THEN** the node runs again
 - **AND** when attempts are exhausted control moves to `on_error`.
 
-### Requirement: Function nodes
-A `function` node SHALL run `expression` (a JavaScript expression of at most 4096 characters) in the
-`FLOW()` expression engine with read-only `form` and `state` variables, and no tools, network or
-asynchronous work. It SHALL return a plain object that is merged into the state. The validator SHALL
-check only that `expression` is a non-empty string within the limit.
+### Requirement: The `js` function
+The built-in `js` function SHALL run `input.expression` (JavaScript of at most 4096 characters, an expression or an async function body) in the
+`FLOW()` expression engine with read-only `form` and `state` variables and a `tools` object whose calls (for example `search_records` or `take_photo`) count toward `max_calls` and `timeout_seconds`, with no network access. A failed tool call SHALL fail the node with `tool_error`. The wire format SHALL stay a string; authors write a callback in `input.run` (the preferred form), which the expression engine converts with `toString()` into `input.expression`. It SHALL return a plain object that is merged into the state. The validator SHALL
+check only that `input.expression` is a non-empty string within the limit.
 
-#### Scenario: A function returns an object
-- **WHEN** a function node's expression evaluates to an object
+#### Scenario: A `js` function returns an object
+- **WHEN** the expression evaluates to an object
 - **THEN** the object is merged into the state and the node's `next` runs.
 
-#### Scenario: A function fails
+#### Scenario: A `js` function fails
 - **WHEN** the expression throws or has a syntax error
-- **THEN** the node fails with `function_error` without retrying and follows `on_error`
+- **THEN** the node fails with `tool_error` without retrying and follows `on_error`
 - **AND** when it returns a value that is not an object the node fails with `invalid_output`.
 
 ### Requirement: Structured responses and global state
@@ -103,7 +102,7 @@ The contract SHALL require every node to return a structured response and SHALL 
 global state, a JSON object that starts empty. When a node finishes, the runtime SHALL merge its
 response into the state at the top level: a new key is added and an existing key is overridden.
 A failed node SHALL NOT change the state. An `agentic` node SHALL return the keys declared in
-`output`, or `{ "reply": <text> }` when `output` is omitted. A `tool` node SHALL return its result,
+`output`, or `{ "reply": <text> }` when `output` is omitted. A `function` node SHALL return its result,
 wrapping a non-object result as `{ "result": <value> }`.
 
 #### Scenario: A node writes a new key
@@ -125,7 +124,7 @@ objects with a bare path, using the operators `eq`, `ne`, `gt`, `gte`, `lt`, `lt
 `exists`, and `not_exists`, rather than JavaScript.
 
 #### Scenario: A later node uses state
-- **WHEN** a `tool` input references `{{state.<key>}}` and an earlier node wrote that key
+- **WHEN** a `function` input references `{{state.<key>}}` and an earlier node wrote that key
 - **THEN** the value is used as the input value.
 
 #### Scenario: A reference cannot be resolved
@@ -154,7 +153,7 @@ and a stable `termination_reason` vocabulary, and SHALL map each way a run can e
 outcome.
 
 #### Scenario: A tool fails with no retries left
-- **WHEN** a tool node fails, its attempts are exhausted, and `on_error` is `abort`
+- **WHEN** a function node fails, its attempts are exhausted, and `on_error` is `abort`
 - **THEN** the run ends as `failed` with `retries_exhausted` when the node retried and used every attempt
 - **AND** with `tool_error` when the tool call itself failed without retrying
 - **AND** `unknown_tool` and `input_unresolved` take precedence over `tool_error`.
