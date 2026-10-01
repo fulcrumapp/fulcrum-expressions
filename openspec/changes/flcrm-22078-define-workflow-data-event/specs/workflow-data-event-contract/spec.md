@@ -25,13 +25,13 @@ define a workflow version, title, idempotency key, or flow-level limits.
 - **AND** an `interaction` field is not part of the contract and fails with `invalid_definition`.
 
 ### Requirement: Node kinds and transitions
-The contract SHALL rename steps to nodes and define exactly three node kinds: `agentic` (uses the
-LLM), `tool` (calls a tool), and `decision` (chooses the next node from data). A node of any other
+The contract SHALL rename steps to nodes and define exactly four node kinds: `agentic` (uses the
+LLM), `tool` (calls a tool), `function` (runs deterministic JavaScript), and `decision` (chooses the next node from data). A node of any other
 kind, such as `confirmation`, `branch`, or `end`, SHALL fail with `invalid_definition`.
 
 A run SHALL begin at the first node in `nodes`. `next`, `on_error`, `default`, and case targets
 SHALL accept a node id or the reserved targets `end` (completes the flow) and `abort` (fails it).
-`next` MAY be omitted on `agentic` and `tool` nodes, meaning `end`. `on_error` SHALL default to
+`next` MAY be omitted on `agentic`, `tool` and `function` nodes, meaning `end`. `on_error` SHALL default to
 `abort`. A `decision` SHALL test its cases in order, use the first match, and require a `default`.
 
 #### Scenario: A decision matches no case
@@ -82,6 +82,21 @@ The contract SHALL allow a `tool` node to name any tool the chat exposes and SHA
 - **WHEN** a tool node fails with a retryable kind and attempts remain
 - **THEN** the node runs again
 - **AND** when attempts are exhausted control moves to `on_error`.
+
+### Requirement: Function nodes
+A `function` node SHALL run `expression` (a JavaScript expression of at most 4096 characters) in the
+`FLOW()` expression engine with read-only `form` and `state` variables, and no tools, network or
+asynchronous work. It SHALL return a plain object that is merged into the state. The validator SHALL
+check only that `expression` is a non-empty string within the limit.
+
+#### Scenario: A function returns an object
+- **WHEN** a function node's expression evaluates to an object
+- **THEN** the object is merged into the state and the node's `next` runs.
+
+#### Scenario: A function fails
+- **WHEN** the expression throws or has a syntax error
+- **THEN** the node fails with `function_error` without retrying and follows `on_error`
+- **AND** when it returns a value that is not an object the node fails with `invalid_output`.
 
 ### Requirement: Structured responses and global state
 The contract SHALL require every node to return a structured response and SHALL define a single

@@ -30,8 +30,8 @@ data-event error path. Option keys are `snake_case`, as in `INFERENCE()`.
 
 ### Definition is a graph, embedded in the call
 
-Nodes are `agentic` (uses the LLM), `tool` (calls a tool), and `decision` (chooses the next node
-from data). Every transition names the next node explicitly, which allows branches and loops. A
+Nodes are `agentic` (uses the LLM), `tool` (calls a tool), `function` (runs deterministic
+JavaScript), and `decision` (chooses the next node from data). Every transition names the next node explicitly, which allows branches and loops. A
 flow finishes at the reserved target `end` and fails at `abort`. Loops are bounded per node by
 `max_calls`. The definition is embedded in the call and not referenced by id, which keeps version 1
 self-contained. `flow_id` is optional and only labels reports; there is no workflow version or title.

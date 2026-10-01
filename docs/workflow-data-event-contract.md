@@ -54,13 +54,14 @@ explicitly, so a definition can branch and loop.
 | --- | --- | --- |
 | `agentic` | The LLM does the work, and can ask the user through the `ask_user` tool | `instruction`; optional `prompt`; optional `model`; optional `output`; optional `timeout_seconds`, `max_calls`; optional `on_error`; `next` |
 | `tool` | Call a tool the chat exposes | `tool` (tool id); optional `input`; optional `retry`; optional `timeout_seconds`, `max_calls`; optional `on_error`; `next` |
+| `function` | Run deterministic JavaScript, with no LLM or tool | `expression`; optional `timeout_seconds`, `max_calls`; optional `on_error`; `next` |
 | `decision` | Choose the next node from data | `cases` (array of `{ when, next }`); `default`; optional `max_calls` |
 
 Shared rules:
 
 - `next`, `on_error`, `default`, and each case's `next` name a node `id` or one of two reserved
   targets. `end` finishes the flow as `completed`. `abort` ends it as `failed` without running
-  further nodes (see [Run outcome](#run-outcome)). `next` may be omitted on `agentic` and `tool`
+  further nodes (see [Run outcome](#run-outcome)). `next` may be omitted on `agentic`, `tool` and `function`
   nodes, which means `end`. `on_error` defaults to `abort`. `default` on a `decision` is required.
 - The run starts at the first node in `nodes`. Every node must be reachable from it, and every
   referenced `id` must exist. Later nodes may loop back to the first node.
@@ -103,6 +104,28 @@ Shared rules:
   attempt; default `1` (no retry). `on` lists the failure kinds that retry: `tool_error`,
   `timeout`. Default is both. When attempts are exhausted the node fails and control moves to
   `on_error`.
+
+### Function nodes
+
+A `function` node does deterministic work without the LLM or a tool, such as a counter, a computed
+value or reshaping data.
+
+- `expression` is a JavaScript expression of at most 4096 characters. It runs in the same
+  expression engine as `FLOW()`, with two read-only variables: `form` (the record's field values,
+  as in `form.<field_data_name>`) and `state` (the global [state](#state)).
+- It must evaluate to a plain object. That object is the node's structured response and is merged
+  into the state. Any other result fails the node with `invalid_output`.
+- It cannot call tools, make network requests, or wait for asynchronous work. It cannot change
+  `form` or `state` directly; only the returned object changes the state.
+- An error thrown by the expression, including a syntax error, fails the node with
+  `function_error`. Neither is retried. Both follow `on_error`.
+- The definition validator checks only that `expression` is a non-empty string within the size
+  limit. It does not parse the code or check the `form` and `state` names it uses.
+
+```js
+{ id: 'count-up', kind: 'function',
+  expression: '({ attempts: (state.attempts || 0) + 1 })', next: 'check' }
+```
 
 ### Decision nodes
 
@@ -165,7 +188,8 @@ form (the callback) is follow-up work, but the vocabulary is fixed here so it st
 | `failed` | `retries_exhausted` | A tool node retried, used every attempt, failed, and `on_error` is `abort` |
 | `failed` | `unknown_tool` | A tool node names a tool the chat does not expose (not retried) and `on_error` is `abort` |
 | `failed` | `unknown_model` | An agentic node names a model that is not in the reference file and `on_error` is `abort` |
-| `failed` | `invalid_output` | An agentic node's response did not match its `output` and `on_error` is `abort` |
+| `failed` | `invalid_output` | An agentic node's response did not match its `output`, or a function node did not return an object, and `on_error` is `abort` |
+| `failed` | `function_error` | A function node's expression threw an error or has a syntax error and `on_error` is `abort` |
 | `failed` | `input_unresolved` | A tool input reference had no value and `on_error` is `abort` |
 | `failed` | `node_timeout` | A node ran longer than its `timeout_seconds` and `on_error` is `abort` |
 | `failed` | `max_calls_exceeded` | A node was about to run more than its `max_calls` times |
@@ -368,7 +392,7 @@ Conformance criteria, for every platform:
 | Platform | Acceptance criteria beyond conformance | Status |
 | --- | --- | --- |
 | KMP (shared) | Schema parser and validator pass the conformance checks with no platform code; the fixtures ship as shared test resources. | Backlog items 1a, 1b |
-| Android | `FLOW()` is registered as an `Invocation` gated by the plan attribute and returns `flow_disabled` when off; validation runs off the main thread; the runtime replaces the `execute_workflow` stub; the run starts at once, headless, and asks the user only through `ask_user`. | Backlog items 2, 3a to 3d, 4 |
+| Android | `FLOW()` is registered as an `Invocation` gated by the plan attribute and returns `flow_disabled` when off; validation runs off the main thread; the runtime replaces the `execute_workflow` stub; the run starts at once, headless, and asks the user only through `ask_user`. | Backlog items 2, 3a to 3e, 4 |
 | iOS | The same `FLOW()` function name and options pass the conformance checks using the shared validator; the run is hosted headless by iOS. | Blocked until iOS has the `ask_user` tool and a flow runtime |
 | Web | The same `FLOW()` function name and options pass the conformance checks using the shared validator; the run is hosted headless by Web. | Blocked until Web has the `ask_user` tool and a flow runtime |
 
@@ -425,12 +449,13 @@ Follow-up implementation backlog, in dependency order. This page does not create
 | # | Item | Owner | Depends on | Acceptance criteria |
 | --- | --- | --- | --- | --- |
 | 1a | **Shared schema and graph validator:** parse the options object (`schema_version`, `flow_id`, `nodes`, size) and validate node ids, `next`/`default`/`on_error`/case targets and reachability; produce `unsupported_schema_version`, `invalid_definition` (structure), `duplicate_node_id`, `unknown_node`, `unreachable_node` and `limit_exceeded` for node count and size (evidence: FLCRM-21818, FLCRM-21822) | Cross-platform owners (KMP) | None | Valid payloads parse; every structural and graph case in the invalid-payload table returns its code. |
-| 1b | **Node content validator:** validate each node kind: `agentic` (`instruction`, `prompt`, `model`, `output`), `tool` (`tool`, `input`, `retry`), `decision` (`cases`, ops, `default`), per-node `timeout_seconds` and `max_calls`, and `form.*` references | Cross-platform owners (KMP) | 1a | Every node-level invalid-payload case returns its code; integer limits and reference checks are enforced. |
+| 1b | **Node content validator:** validate each node kind: `agentic` (`instruction`, `prompt`, `model`, `output`), `tool` (`tool`, `input`, `retry`), `function` (`expression` is a string of 1 to 4096 characters), `decision` (`cases`, ops, `default`), per-node `timeout_seconds` and `max_calls`, and `form.*` references | Cross-platform owners (KMP) | 1a | Every node-level invalid-payload case returns its code; integer limits and reference checks are enforced. |
 | 2 | **Android `FLOW()` invocation:** an `Invocation` subclass gated by a plan attribute (proposed name `DataEventFlowEnabled`), using the shared validator (evidence: `Inference.kt`) | Android | 1a, 1b | The function is registered in the expression engine; a disabled plan returns `flow_disabled`; validation errors use the standard data-event error path; runs off the main thread. |
 | 3a | **Flow engine core:** traverse the node graph, merge each structured response into the global state (add or override keys), resolve `{{form.*}}` and `{{state.*}}` references, evaluate `decision` nodes, enforce per-node `max_calls`, and produce the run outcome (evidence: FLCRM-21822, FLCRM-21818) | KMP | 1a, 1b | Testable with fake nodes and no LLM or tools; traversal, state merge, references, decisions, loops and every outcome in the run outcome table behave as specified. |
 | 3b | **Tool nodes:** call the named tool, wrap a non-object result as `{ result }`, apply `retry` and `timeout_seconds`, and fail with `unknown_tool` for a tool that is not exposed | KMP, Android | 3a | A tool result is merged into the state; retries, timeouts and `unknown_tool` follow `on_error` as specified. |
 | 3c | **Agentic nodes:** select the model (default `fulcrumite-2b`, `unknown_model` for an unknown name), run the LLM with the available tools and `ask_user`, check the `output` declaration (`invalid_output`), and apply `timeout_seconds` | KMP, Android | 3a | The response matches `output` or the node fails without retry; with no `output` the node returns `{ reply }`. |
 | 3d | **Run queue and reporting:** queue runs internally, run each to exactly one outcome, and report the runtime correlation fields | KMP, Android | 3a | Runs are queued and each ends with one outcome; the correlation fields are reported. |
+| 3e | **Function nodes:** run `expression` in the expression engine with read-only `form` and `state`, require an object result, merge it into the state, and apply `timeout_seconds`; fail with `function_error` or `invalid_output` | KMP, Android | 3a | A returned object is merged; thrown errors, syntax errors, non-object results and timeouts follow `on_error` as specified. |
 | 4 | **`ask_user` tool for flows:** let an `agentic` node ask the user through the `ask_user` tool, including a first-node prompt that asks whether to run (evidence: FLCRM-21821) | Android | 2, 3a, 3c | The run starts at once, headless; a first `agentic` node with a boolean `output` followed by a `decision` that routes to `abort` ends the run as `failed` (`aborted`) when the user declines. |
 | 5 | **Validation tests and authoring docs:** tests for every rule above and a form-author guide (evidence: `Inference.kt` and its tests) | QA, docs | 1a, 1b, 2, 3a, 3b, 3c, 3d | Each rule and error code has an automated test; the guide has the pole-inspection example. |
 | 6 | **Deferred:** callback delivery of the run outcome, and progress reporting; iOS and Web; nested workflows | Product, KMP, iOS, Web | 3a, 3b, 3c, 3d | Create as separate tickets when scheduled. iOS and Web are blocked until those platforms have the `ask_user` tool and a flow runtime. |
