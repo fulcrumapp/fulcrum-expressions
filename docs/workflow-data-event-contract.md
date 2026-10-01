@@ -347,6 +347,13 @@ FLOW({
 
     { id: 'search-pole', kind: 'function', function: 'search_records',
       input: { query: '{{form.pole_number}}' },
+      next: 'check-duplicates' },
+
+    { id: 'check-duplicates', kind: 'function', function: 'js',
+      input: { run: async ({ form, state, tools }) => {
+        const others = await tools.search_records({ query: form.pole_number });
+        return { duplicate_count: others.length - 1, known_pole: state.result !== undefined };
+      } },
       next: 'fill-field' },
 
     { id: 'fill-field', kind: 'agentic',
