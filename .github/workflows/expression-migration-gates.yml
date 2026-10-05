@@ -28,6 +28,8 @@ jobs:
 
       - name: Legacy unit suite
         run: yarn test
+        env:
+          TZ: America/Los_Angeles
 
       - name: Build both channels
         run: yarn build:expressions
