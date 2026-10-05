@@ -14,10 +14,19 @@ yarn
 ```
 
 ### Build
-Build expressions.js and sandbox (expressions-proxy.js and expressions.html)
+Build the legacy and hybrid expression channels, the backwards-compatible
+`dist/expressions.js` legacy entry point, and the sandbox
+(`expressions-proxy.js` and `expressions.html`).
 ```sh
 yarn build
 ```
+The channel entry points are `dist/legacy/expressions.js` and
+`dist/hybrid/expressions.js`. The hybrid channel starts from the full CoffeeScript
+runtime and applies TypeScript implementations for same-named functions;
+functions without a TypeScript override remain CoffeeScript-backed. The isolated
+strict TypeScript check for migration-owned sources is independent of the
+existing project-wide `ts/tsconfig.json` baseline.
+
 Build debug versions
 ```sh
 yarn build:debug
@@ -40,6 +49,17 @@ yarn build:dist
 yarn test
 ```
 
+The migration gates run the CoffeeScript unit suite, the isolated migration
+typecheck, legacy and hybrid contract suites, hybrid-versus-legacy differential
+checks, and deterministic artifact verification:
+```sh
+yarn test:migration-gates
+```
+Contract results are reported by function group. Failures exit nonzero and fail
+the `Expression migration gates` pull-request workflow. Repository branch
+protection must separately require that status check if it is intended to be a
+merge requirement.
+
 ### Console
 Starts an interactive node terminal with the functions available to call
 ```sh
@@ -47,7 +67,17 @@ yarn console
 ```
 
 ### Deploy
-Currently all projects pull the expression.js lib produced by this repo from https://assets.fulcrumapp.com/expv1/expressions.js. Until we are able to move projects over to using the published npm library, we will need to manually deploy by copying the dist/expressions.js file to that S3 bucket for others to see changes.
+Currently all projects pull the legacy expression bundle from
+https://assets.fulcrumapp.com/expv1/expressions.js. `yarn deploy` keeps that
+backwards-compatible URL and publishes both independently addressable channels
+alongside it:
+
+- `https://assets.fulcrumapp.com/expv1/legacy/expressions.js`
+- `https://assets.fulcrumapp.com/expv1/hybrid/expressions.js`
+
+Rails owns the LaunchDarkly `expressions-ts-migration` flag and selects hybrid
+when `true`, or legacy when `false` or unreadable. This repository builds and
+deploys both channels but does not read the flag or target customers.
 
 To deploy to your user's preview environment:
 ```sh

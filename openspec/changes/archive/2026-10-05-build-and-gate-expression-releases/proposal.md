@@ -24,4 +24,4 @@ None. The local OpenSpec baseline contains no existing capability specs.
 
 ## Impact
 
-This change adds OpenSpec artifacts only. It specifies Phase 1 roadmap tasks 1–3; it does not implement build, CI, deployment, Rails integration, or TypeScript function migrations. Phase 2 batch migrations and Phase 3 Rails runtime work remain out of scope. Requiring the migration status check in repository branch protection is an administrator-owned setting, not a deliverable or blocker for this change.
+This change implements the Phase 1 build, adapter, release, and CI gate foundation and updates its OpenSpec artifacts. It does not implement Rails flag evaluation or runtime selection, migrate expression functions, or complete the Phase 2/3 roadmap work. Requiring the migration status check in repository branch protection remains an administrator-owned setting, not a deliverable or blocker.

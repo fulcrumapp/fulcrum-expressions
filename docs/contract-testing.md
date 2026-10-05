@@ -23,15 +23,30 @@ these are reported in the fixture and are not silently omitted.
 The runner normalizes dates, `undefined`, `NaN`, errors, functions, circular
 objects, nested objects, and arrays before comparison. This keeps the contract
 portable across compatible implementations while preserving meaningful result
-shapes. A future runtime can export `createContractAdapter` from a module passed with
-`node test/contract-runner.js --runtime ./path/to/adapter.js`; the adapter must
-provide `invoke(name, args, configure)` and may provide `lifecycle()`. To compare
-it with the legacy baseline, use `--compare` with the candidate adapter:
+shapes. A runtime adapter provides `invoke(name, args, configure)` and `lifecycle()`.
+`invoke` returns `{ value, results }` on success, `{ error, results }` when an
+expression throws, and throws for an unknown expression name. The lifecycle
+probe reports the required runtime and expression globals. To run a custom
+adapter with the harness, pass its module path:
 
 ```sh
 node test/contract-runner.js --runtime ./path/to/adapter.js --compare legacy
 ```
 
-The comparison mode is intended for a later migration adapter and does not alter
-the package entry point, runtime implementation, sandbox files, or published
-behavior.
+The built legacy and hybrid adapters use the same contract. Hybrid runs in an
+isolated JavaScript context so its globals do not overwrite legacy state.
+
+Run `yarn test:contracts:legacy` and `yarn test:contracts:hybrid` to report
+contract results by function group. The hybrid command compares each
+deterministic result with legacy; cases marked `volatile-result` are checked
+against their declared result shape but not for exact values. Failures include
+the channel, function group, case ID, and assertion message. `yarn test:migration-gates`
+also runs CoffeeScript tests, the strict isolated migration typecheck, and
+deterministic build integrity checks.
+
+Each passing TypeScript batch is released in the hybrid channel alongside the
+complete legacy channel. Rails owns release selection:
+`expressions-ts-migration=true` selects hybrid, while `false` or an unreadable
+flag selects legacy. This repository does not evaluate the flag or target
+customers. Requiring the CI status check in branch protection is a separate
+repository-administrator setting.

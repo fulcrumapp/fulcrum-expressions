@@ -8,12 +8,12 @@ project-wide TypeScript configuration has baseline diagnostics; therefore the
 hybrid migration check must be isolated without gating legacy output. The local
 OpenSpec baseline has no capability specs.
 
-PR [#126](https://github.com/fulcrumapp/fulcrum-expressions/pull/126) contains
-candidate implementation work for an adapter, side-by-side build, isolated
-TypeScript configuration, CI workflow, and artifact-integrity checks. It is
-supporting context, not code in this branch or evidence that the new proposal's
-tasks are complete. This change specifies the required outcome independently;
-all implementation tasks remain unchecked.
+PR [#126](https://github.com/fulcrumapp/fulcrum-expressions/pull/126) supplied
+the implementation outline for the adapter, side-by-side build, isolated
+TypeScript configuration, CI workflow, and artifact-integrity checks. This
+branch implements the Phase 1 contract in its own changes; no source branch was
+merged or cherry-picked. The implementation leaves all function-migration and
+Rails runtime work to their explicitly out-of-scope phases.
 
 ## Goals / Non-Goals
 
@@ -29,12 +29,10 @@ all implementation tasks remain unchecked.
 
 **Non-Goals:**
 
-- Implement any build, deployment, CI, or expression-function changes in this
-  proposal.
 - Add a per-function routing manifest or make the project-wide TypeScript
   check a condition of producing legacy artifacts.
 - Implement Rails flag evaluation, targeting, startup fallback, or runtime
-  selection; document only the consumer contract.
+  selection; implement only the consumer contract.
 - Complete the future function-migration batches or the deferred Rails phase.
 
 ## Decisions

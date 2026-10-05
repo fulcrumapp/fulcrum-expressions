@@ -1,0 +1,51 @@
+name: Expression migration gates
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  migration-gates:
+    name: Expression migration gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install locked dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Legacy unit suite
+        run: yarn test
+        env:
+          TZ: America/Los_Angeles
+
+      - name: Build both channels
+        run: yarn build:expressions
+
+      - name: Strict isolated migration typecheck
+        run: yarn typecheck:migration
+
+      - name: Legacy contract suite
+        run: yarn test:contracts:legacy
+
+      - name: Hybrid contracts and legacy differential
+        run: yarn test:contracts:hybrid
+
+      - name: Deterministic artifact integrity
+        run: yarn build:verify
