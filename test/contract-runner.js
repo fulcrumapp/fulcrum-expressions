@@ -5,6 +5,8 @@ process.env.TZ = "UTC";
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
+const createRuntimeAdapter = require("./runtime-adapter");
 
 const corpusPath = path.join(__dirname, "contracts", "expressions.json");
 const corpus = JSON.parse(fs.readFileSync(corpusPath, "utf8"), revive);
@@ -22,19 +24,19 @@ function normalize(value, seen = new WeakSet()) {
   if (value === Infinity) return { $type: "infinity", sign: 1 };
   if (value === -Infinity) return { $type: "infinity", sign: -1 };
   if (Object.is(value, -0)) return { $type: "number", value: "-0" };
-  if (value instanceof Date) {
+  if (Object.prototype.toString.call(value) === "[object Date]") {
     if (Number.isNaN(value.getTime())) return { $type: "invalid-date" };
     return { $date: value.toISOString().slice(0, 10) };
   }
   if (typeof value === "function") return { $type: "function" };
-  if (value instanceof Error) {
+  if (value instanceof Error || Object.prototype.toString.call(value) === "[object Error]") {
     return { $type: "error", name: value.name, message: value.message };
   }
   if (Array.isArray(value)) {
     if (seen.has(value)) return { $type: "circular" };
     seen.add(value);
     try {
-      return value.map((item) => normalize(item, seen));
+      return Array.from(value, (item) => normalize(item, seen));
     } finally {
       seen.delete(value);
     }
@@ -58,7 +60,11 @@ function normalize(value, seen = new WeakSet()) {
 function isPlainObject(value) {
   if (!value || Object.prototype.toString.call(value) !== "[object Object]") return false;
   const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype || prototype === null;
+  return prototype === Object.prototype
+    || prototype === null
+    || Object.getPrototypeOf(prototype) === null
+      && Object.prototype.hasOwnProperty.call(prototype, "constructor")
+      && prototype.constructor.name === "Object";
 }
 
 function normalizeLocalScriptSource(source) {
@@ -85,6 +91,7 @@ function loadMatrix() {
 
 function loadAdapter(moduleName) {
   if (!moduleName || moduleName === "legacy") return createLegacyAdapter();
+  if (moduleName === "hybrid") return createHybridAdapter();
 
   const candidate = require(path.resolve(moduleName));
   const factory = candidate.createContractAdapter || candidate.default || candidate;
@@ -96,44 +103,33 @@ function loadAdapter(moduleName) {
 }
 
 function createLegacyAdapter() {
+  const bundlePath = path.join(__dirname, "..", "dist", "legacy", "expressions.js");
+  if (fs.existsSync(bundlePath)) return createBundledAdapter(bundlePath, "Legacy");
+
   require("coffee-script/register");
   const runtime = require("../runtime");
   require("../functions");
 
-  function reset(configure) {
-    global.RESETCONFIG();
-    global.CONFIGURE(variables);
-    runtime.form = variables.form;
-    runtime.values = variables.values.form_values;
-    runtime.prepare();
-    runtime.setupValues();
-    global.CONFIGURE(configure || {});
-    runtime.resetResults();
-    runtime.isCalculation = false;
+  return createRuntimeAdapter(global, runtime);
+}
+
+function createHybridAdapter() {
+  const bundlePath = path.join(__dirname, "..", "dist", "hybrid", "expressions.js");
+  return createBundledAdapter(bundlePath, "Hybrid");
+}
+
+function createBundledAdapter(bundlePath, channelName) {
+  if (!fs.existsSync(bundlePath)) {
+    throw new Error(`${channelName} expression bundle is missing: ${bundlePath}`);
   }
 
-  reset();
-  return {
-    invoke(name, args, configure) {
-      reset(configure);
-      if (typeof global[name] !== "function") throw new Error(`Unknown expression function: ${name}`);
-      try {
-        const value = global[name].apply(null, args);
-        return { value, results: runtime.results };
-      } catch (error) {
-        return { error, results: runtime.results };
-      }
-    },
-    lifecycle() {
-      reset();
-      return {
-        runtimeGlobals: ["$$runtime", "$$prepare", "$$evaluate", "$$trigger", "$$finishAsync"]
-          .every((name) => Object.prototype.hasOwnProperty.call(global, name)),
-        functionGlobals: ["ARRAY", "CONFIGURE", "RESETCONFIG", "SETVALUE", "GEOMETRYPOINT"]
-          .every((name) => typeof global[name] === "function"),
-      };
-    },
-  };
+  const scope = vm.createContext({ console });
+  vm.runInContext(fs.readFileSync(bundlePath, "utf8"), scope, { filename: bundlePath });
+  if (!scope.$$runtime) {
+    throw new Error(`${channelName} expression bundle did not initialize its runtime`);
+  }
+
+  return createRuntimeAdapter(scope, scope.$$runtime);
 }
 
 function assertPackageContracts() {
@@ -148,32 +144,46 @@ function assertPackageContracts() {
     .includes("finishAsyncCallback"));
 }
 
-function run(adapter, compareAdapter, activeCorpus = corpus) {
+function run(adapter, compareAdapter, activeCorpus = corpus, groupReport = null) {
   let count = 0;
+  const groupCounts = groupReport && groupReport.counts;
   activeCorpus.cases.forEach((contract) => {
-    const actual = invokeAdapter(adapter, contract);
-    if (contract.observe === "results") {
-      assert.strictEqual(actual.error, undefined, `${contract.id}: side-effect invocation threw`);
-    }
-    const observed = contract.observe === "results" ? actual.results : actual.error || actual.value;
-    const normalized = normalize(observed);
-    assertContract(contract, observed, normalized);
-    if (compareAdapter) {
-      const candidate = invokeAdapter(compareAdapter, contract);
+    const label = `${contract.function || "unknown"} (${contract.id})`;
+    try {
+      const actual = invokeAdapter(adapter, contract);
       if (contract.observe === "results") {
-        assert.strictEqual(candidate.error, undefined, `${contract.id}: candidate side-effect invocation threw`);
+        assert.strictEqual(actual.error, undefined, `${label}: side-effect invocation threw`);
       }
-      const candidateObserved = contract.observe === "results"
-        ? candidate.results
-        : candidate.error || candidate.value;
-      const candidateNormalized = normalize(candidateObserved);
-      assertContract(contract, candidateObserved, candidateNormalized);
-      if (!contract.expectedType
-        && !(contract.expected && contract.expected.$type === "object")) {
-        assert.deepStrictEqual(candidateNormalized, normalized, contract.id);
+      const observed = contract.observe === "results" ? actual.results : actual.error || actual.value;
+      const normalized = normalize(observed);
+      assertContract(contract, observed, normalized, label);
+      if (compareAdapter) {
+        const candidate = invokeAdapter(compareAdapter, contract);
+        if (contract.observe === "results") {
+          assert.strictEqual(candidate.error, undefined, `${label}: candidate invocation threw`);
+        }
+        const candidateObserved = contract.observe === "results"
+          ? candidate.results
+          : candidate.error || candidate.value;
+        const candidateNormalized = normalize(candidateObserved);
+        assertContract(contract, candidateObserved, candidateNormalized, label);
+        if (contract.limitation !== "volatile-result") {
+          assert.deepStrictEqual(candidateNormalized, normalized, `${label}: legacy differential`);
+        }
       }
+      if (groupCounts) {
+        const functionName = contract.function || "unknown";
+        groupCounts[functionName] = (groupCounts[functionName] || 0) + 1;
+      }
+      count += 1;
+    } catch (error) {
+      if (groupReport) {
+        console.error(
+          `[${groupReport.channel}] ${contract.function || "unknown"}: FAIL (${contract.id}): ${error.message}`
+        );
+      }
+      throw error;
     }
-    count += 1;
   });
   return count;
 }
@@ -192,16 +202,16 @@ function invokeAdapter(adapter, contract) {
   }
 }
 
-function assertContract(contract, observed, normalized) {
+function assertContract(contract, observed, normalized, label = contract.id) {
   if (contract.expectedType) {
-    assert.strictEqual(typeof observed, contract.expectedType, contract.id);
+    assert.strictEqual(typeof observed, contract.expectedType, label);
     if (contract.expectedType === "number" && contract.finite) {
-      assert.ok(Number.isFinite(observed), `${contract.id}: expected a finite number`);
+      assert.ok(Number.isFinite(observed), `${label}: expected a finite number`);
     }
   } else if (contract.expected && contract.expected.$type === "object") {
-    assert.ok(isPlainObject(observed), contract.id);
+    assert.ok(isPlainObject(observed), label);
   } else {
-    assert.deepStrictEqual(normalized, normalize(contract.expected), contract.id);
+    assert.deepStrictEqual(normalized, normalize(contract.expected), label);
   }
 }
 
@@ -221,22 +231,32 @@ if (require.main === module) {
   const requireMatrix = process.argv.includes("--require-matrix");
   const adapter = loadAdapter(candidate || "legacy");
   const compareAdapter = compare ? loadAdapter(compare) : null;
+  const groupReport = process.argv.includes("--report-groups")
+    ? { channel: candidate || "legacy", counts: {} }
+    : null;
   assertAdapterContracts(adapter);
   if (compareAdapter) assertAdapterContracts(compareAdapter);
-  const count = run(adapter, compareAdapter);
+  const count = run(adapter, compareAdapter, corpus, groupReport);
   const matrix = loadMatrix();
   if (requireMatrix && !matrix) {
     throw new Error("Contract matrix is required but test/contracts/function-matrix.json is missing");
   }
-  const matrixCount = matrix ? run(adapter, compareAdapter, matrix) : 0;
+  const matrixCount = matrix ? run(adapter, compareAdapter, matrix, groupReport) : 0;
   if (matrix) {
     assert.strictEqual(matrix.cases.length, matrix.coverage.cases, "function matrix coverage metadata");
+  }
+  if (groupReport) {
+    const groupCounts = groupReport.counts;
+    Object.keys(groupCounts).sort().forEach((functionName) => {
+      console.log(`[${groupReport.channel}] ${functionName}: PASS (${groupCounts[functionName]} cases)`);
+    });
   }
   console.log(`Contract suite passed: ${count + matrixCount} cases (${count} baseline, ${matrixCount} function matrix)`);
 }
 
 module.exports = {
   createLegacyAdapter,
+  createHybridAdapter,
   extractLocalScriptSources,
   loadAdapter,
   loadMatrix,

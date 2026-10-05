@@ -39,6 +39,24 @@ aws s3 cp \
   --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
   --content-type "application/javascript" \
   --acl "public-read" \
+  ${root_dir}/dist/legacy/expressions.js s3://${bucket}/expv1/legacy/expressions.js
+
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/legacy/expressions.js\n"
+
+aws s3 cp \
+  --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
+  --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
+  --content-type "application/javascript" \
+  --acl "public-read" \
+  ${root_dir}/dist/hybrid/expressions.js s3://${bucket}/expv1/hybrid/expressions.js
+
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/hybrid/expressions.js\n"
+
+aws s3 cp \
+  --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
+  --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
+  --content-type "application/javascript" \
+  --acl "public-read" \
   ${root_dir}/dist/expressions-proxy.js s3://${bucket}/expv1/expressions-proxy.js
 
 printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions-proxy.js\n"

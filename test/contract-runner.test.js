@@ -7,7 +7,9 @@ const {
   isPlainObject,
   normalize,
   normalizeLocalScriptSource,
+  run,
 } = require("./contract-runner");
+const createRuntimeAdapter = require("./runtime-adapter");
 
 assert.strictEqual(process.env.TZ, "UTC");
 assert.strictEqual(normalizeLocalScriptSource("./expressions.js?v=1#runtime"), "expressions.js");
@@ -35,12 +37,60 @@ assert.deepStrictEqual(normalize(new Error("boom")), {
 assert.deepStrictEqual(normalize("thrown"), "thrown");
 
 const adapter = createLegacyAdapter();
-assert.deepStrictEqual(adapter.invoke("ALERT", ["first"]).results, [
+const alertResult = adapter.invoke("ALERT", ["first"]);
+assert.deepStrictEqual(Object.keys(alertResult).sort(), ["results", "value"]);
+assert.deepStrictEqual(normalize(alertResult.results), [
   { type: "message", title: null, message: "first" },
 ]);
-assert.deepStrictEqual(adapter.invoke("OPENURL", ["https://example.com"]).results, [
+const openResult = adapter.invoke("OPENURL", ["https://example.com"]);
+assert.deepStrictEqual(Object.keys(openResult).sort(), ["results", "value"]);
+assert.deepStrictEqual(normalize(openResult.results), [
   { type: "open", value: "\"https://example.com\"" },
 ]);
 assert.strictEqual(adapter.invoke("DATE", [2020, 1, 2]).value.toISOString(), "2020-01-02T00:00:00.000Z");
+let appliedConfiguration;
+const fakeRuntime = {
+  results: ["result"],
+  form: {},
+  values: {},
+  prepare() {},
+  setupValues() {},
+  resetResults() {},
+  isCalculation: false,
+};
+const fakeScope = {
+  RESETCONFIG() {},
+  CONFIGURE(configure) {
+    appliedConfiguration = configure;
+  },
+  TEST() {
+    throw new Error("adapter test");
+  },
+};
+const contractAdapter = createRuntimeAdapter(fakeScope, fakeRuntime);
+assert.deepStrictEqual(contractAdapter.invoke("TEST", [], { locale: "en" }), {
+  error: new Error("adapter test"),
+  results: ["result"],
+});
+assert.deepStrictEqual(appliedConfiguration, { locale: "en" });
+assert.throws(() => contractAdapter.invoke("MISSING", []), /Unknown expression function: MISSING/);
+assert.deepStrictEqual(contractAdapter.lifecycle(), { runtimeGlobals: false, functionGlobals: false });
+
+const originalError = console.error;
+let failureReport = "";
+console.error = (message) => {
+  failureReport = message;
+};
+try {
+  assert.throws(() => run(
+    { invoke: () => ({ value: 2, results: [] }) },
+    { invoke: () => ({ value: 1, results: [] }) },
+    { cases: [{ id: "abs-differential-failure", function: "ABS", args: [], expected: 2 }] },
+    { channel: "hybrid", counts: {} }
+  ), /ABS \(abs-differential-failure\)/);
+} finally {
+  console.error = originalError;
+}
+assert.match(failureReport, /^\[hybrid\] ABS: FAIL \(abs-differential-failure\):/);
 
 console.log("Contract runner focused checks passed");
