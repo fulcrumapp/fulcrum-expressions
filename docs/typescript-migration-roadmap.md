@@ -1,4 +1,4 @@
-# TypeScript expressions migration roadmap
+# TypeScript Expressions migration roadmap
 
 The migration is designed for incremental adoption: keep the complete
 CoffeeScript runtime available while TypeScript implementations are added in
