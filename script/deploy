@@ -6,12 +6,16 @@ root_dir=${script_dir}/..
 
 ENVIRONMENT="${USER}"
 CONFIRM_PRODUCTION=false
+SKIP_COMPATIBILITY=false
 ENVIRONMENT_SET=false
 
 for argument in "$@"; do
   case "${argument}" in
     --yes)
       CONFIRM_PRODUCTION=true
+      ;;
+    --skip-compatibility)
+      SKIP_COMPATIBILITY=true
       ;;
     --*)
       printf "Unknown option: %s\n" "${argument}" >&2
@@ -46,14 +50,18 @@ else
   bucket=fulcrumapp-world-${ENVIRONMENT}
 fi
 
-aws s3 cp \
-  --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
-  --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
-  --content-type "application/javascript" \
-  --acl "public-read" \
-  "${root_dir}/dist/expressions.js" "s3://${bucket}/expv1/expressions.js"
+if [[ "${SKIP_COMPATIBILITY}" != true ]]; then
+  aws s3 cp \
+    --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
+    --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
+    --content-type "application/javascript" \
+    --acl "public-read" \
+    "${root_dir}/dist/expressions.js" "s3://${bucket}/expv1/expressions.js"
 
-printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
+  printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
+else
+  printf "Leaving compatibility bundle unchanged at https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
+fi
 
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \

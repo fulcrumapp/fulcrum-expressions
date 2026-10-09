@@ -70,8 +70,8 @@ The CI job named `Expression migration gates` MUST fail when any required migrat
 - **THEN** requiring `Expression migration gates` is managed in repository settings outside this change
 - **AND** the absence of that administrative setting does not change the CI job's failure behavior
 
-### Requirement: Passing main-branch gates publish all expression bundles
-The migration gate workflow MUST run on every pull request and push to `main`. After the gates pass on a push to `main`, it MUST publish the backwards-compatible expression entry point and the independently addressable legacy and hybrid bundles to production S3.
+### Requirement: Passing main-branch gates publish comparison channels without changing the compatibility baseline
+The migration gate workflow MUST run on every pull request and push to `main`. After the gates pass on a push to `main`, it MUST publish the independently addressable legacy and hybrid bundles to production S3 without overwriting the existing backwards-compatible expression entry point.
 
 #### Scenario: A pull request passes the migration gates
 - **WHEN** a pull request passes all migration gates
@@ -79,7 +79,8 @@ The migration gate workflow MUST run on every pull request and push to `main`. A
 
 #### Scenario: A main-branch push passes the migration gates
 - **WHEN** a push to `main` passes all migration gates
-- **THEN** the workflow builds the release bundles and deploys `expressions.js`, `legacy/expressions.js`, and `hybrid/expressions.js` to their existing production S3 locations
+- **THEN** the workflow builds the release bundles and deploys `legacy/expressions.js` and `hybrid/expressions.js` to their production S3 locations
+- **AND** the existing `expressions.js` compatibility object is left unchanged as the comparison baseline
 
 #### Scenario: A main-branch push fails a migration gate
 - **WHEN** any migration gate fails on a push to `main`
