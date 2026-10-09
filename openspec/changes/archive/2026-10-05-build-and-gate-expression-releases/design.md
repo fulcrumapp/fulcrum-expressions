@@ -100,9 +100,10 @@ Rails runtime work to their explicitly out-of-scope phases.
 6. **Publish production bundles only after the main-branch gates pass.**
    - **Decision:** Run the migration gates on every pull request and push to
      `main`. A separate production-environment job depends on successful gates
-     and publishes the compatibility, legacy, and hybrid bundles only for
-     `main` pushes. Authenticate with GitHub Actions OIDC and an environment-
-     scoped AWS role; pull-request runs never deploy.
+     and publishes the legacy and hybrid channel bundles only for `main`
+     pushes, leaving the existing compatibility URL untouched as the
+     comparison baseline. Authenticate with GitHub Actions OIDC and an
+     environment-scoped AWS role; pull-request runs never deploy.
    - **Rationale:** Reviewers need gate results before merge, while the same
      verified source should publish all three comparable entry points after
      landing. OIDC avoids long-lived AWS credentials in repository secrets.
