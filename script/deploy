@@ -5,16 +5,41 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 root_dir=${script_dir}/..
 
 ENVIRONMENT="${USER}"
+CONFIRM_PRODUCTION=false
+SKIP_COMPATIBILITY=false
+ENVIRONMENT_SET=false
 
-if [[ -n "${1:-}" ]]
-then
-  ENVIRONMENT="${1}"
-fi
+for argument in "$@"; do
+  case "${argument}" in
+    --yes)
+      CONFIRM_PRODUCTION=true
+      ;;
+    --skip-compatibility)
+      SKIP_COMPATIBILITY=true
+      ;;
+    --*)
+      printf "Unknown option: %s\n" "${argument}" >&2
+      exit 2
+      ;;
+    *)
+      if [[ "${ENVIRONMENT_SET}" == true ]]; then
+        printf "Only one deployment environment may be provided.\n" >&2
+        exit 2
+      fi
+      ENVIRONMENT="${argument}"
+      ENVIRONMENT_SET=true
+      ;;
+  esac
+done
 
 if [[ "${ENVIRONMENT}" == "production" ]]
 then
   printf "\nYOU ARE DEPLOYING TO PRODUCTION!!\n\n"
-  read -p "Are you sure you want to continue? (N/y): " confirmation
+  if [[ "${CONFIRM_PRODUCTION}" == true ]]; then
+    confirmation="y"
+  else
+    read -p "Are you sure you want to continue? (N/y): " confirmation
+  fi
   if [[ "${confirmation}" != "y" && "${confirmation}" != "Y" ]]
   then
     printf "Deployment cancelled\n"
@@ -25,21 +50,43 @@ else
   bucket=fulcrumapp-world-${ENVIRONMENT}
 fi
 
+if [[ "${SKIP_COMPATIBILITY}" != true ]]; then
+  aws s3 cp \
+    --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
+    --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
+    --content-type "application/javascript" \
+    --acl "public-read" \
+    "${root_dir}/dist/expressions.js" "s3://${bucket}/expv1/expressions.js"
+
+  printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
+else
+  printf "Leaving compatibility bundle unchanged at https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
+fi
+
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
   --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
   --content-type "application/javascript" \
   --acl "public-read" \
-  ${root_dir}/dist/expressions.js s3://${bucket}/expv1/expressions.js
+  "${root_dir}/dist/legacy/expressions.js" "s3://${bucket}/expv1/legacy/expressions.js"
 
-printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n"
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/legacy/expressions.js\n"
 
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
   --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
   --content-type "application/javascript" \
   --acl "public-read" \
-  ${root_dir}/dist/expressions-proxy.js s3://${bucket}/expv1/expressions-proxy.js
+  "${root_dir}/dist/hybrid/expressions.js" "s3://${bucket}/expv1/hybrid/expressions.js"
+
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/hybrid/expressions.js\n"
+
+aws s3 cp \
+  --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
+  --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
+  --content-type "application/javascript" \
+  --acl "public-read" \
+  "${root_dir}/dist/expressions-proxy.js" "s3://${bucket}/expv1/expressions-proxy.js"
 
 printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions-proxy.js\n"
 
@@ -48,7 +95,7 @@ aws s3 cp \
   --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
   --content-type "text/html" \
   --acl "public-read" \
-  ${root_dir}/dist/expressions.html s3://${bucket}/expv1/expressions.html
+  "${root_dir}/dist/expressions.html" "s3://${bucket}/expv1/expressions.html"
 
 printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.html\n"
 
