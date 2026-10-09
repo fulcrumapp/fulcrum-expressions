@@ -5,16 +5,37 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 root_dir=${script_dir}/..
 
 ENVIRONMENT="${USER}"
+CONFIRM_PRODUCTION=false
+ENVIRONMENT_SET=false
 
-if [[ -n "${1:-}" ]]
-then
-  ENVIRONMENT="${1}"
-fi
+for argument in "$@"; do
+  case "${argument}" in
+    --yes)
+      CONFIRM_PRODUCTION=true
+      ;;
+    --*)
+      printf "Unknown option: %s\n" "${argument}" >&2
+      exit 2
+      ;;
+    *)
+      if [[ "${ENVIRONMENT_SET}" == true ]]; then
+        printf "Only one deployment environment may be provided.\n" >&2
+        exit 2
+      fi
+      ENVIRONMENT="${argument}"
+      ENVIRONMENT_SET=true
+      ;;
+  esac
+done
 
 if [[ "${ENVIRONMENT}" == "production" ]]
 then
   printf "\nYOU ARE DEPLOYING TO PRODUCTION!!\n\n"
-  read -p "Are you sure you want to continue? (N/y): " confirmation
+  if [[ "${CONFIRM_PRODUCTION}" == true ]]; then
+    confirmation="y"
+  else
+    read -p "Are you sure you want to continue? (N/y): " confirmation
+  fi
   if [[ "${confirmation}" != "y" && "${confirmation}" != "Y" ]]
   then
     printf "Deployment cancelled\n"
