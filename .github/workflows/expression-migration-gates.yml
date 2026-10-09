@@ -49,3 +49,51 @@ jobs:
 
       - name: Deterministic artifact integrity
         run: yarn build:verify
+
+  deploy-production:
+    name: Release expression bundles to S3
+    needs: migration-gates
+    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install locked dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build release bundles
+        run: yarn build && yarn build:verify
+
+      - name: Validate AWS release configuration
+        env:
+          AWS_ROLE_ARN: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
+          AWS_REGION: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
+        run: |
+          if [[ -z "${AWS_ROLE_ARN}" ]]; then
+            echo "::error::Set EXPRESSION_RELEASE_AWS_ROLE_ARN in the production environment."
+            exit 1
+          fi
+          if [[ -z "${AWS_REGION}" ]]; then
+            echo "::error::Set EXPRESSION_RELEASE_AWS_REGION in the production environment."
+            exit 1
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
+          aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
+
+      - name: Publish legacy and hybrid bundles
+        run: ./script/deploy production --yes

@@ -97,6 +97,19 @@ Rails runtime work to their explicitly out-of-scope phases.
      release until every function is migrated. Rejected as out of scope and
      inconsistent with the approved release model.
 
+6. **Publish production bundles only after the main-branch gates pass.**
+   - **Decision:** Run the migration gates on every pull request and push to
+     `main`. A separate production-environment job depends on successful gates
+     and publishes the compatibility, legacy, and hybrid bundles only for
+     `main` pushes. Authenticate with GitHub Actions OIDC and an environment-
+     scoped AWS role; pull-request runs never deploy.
+   - **Rationale:** Reviewers need gate results before merge, while the same
+     verified source should publish all three comparable entry points after
+     landing. OIDC avoids long-lived AWS credentials in repository secrets.
+   - **Alternative considered:** Deploy from pull requests or use static AWS
+     credentials. Rejected because pull requests are untrusted inputs and
+     static credentials unnecessarily increase credential exposure.
+
 ## Risks / Trade-offs
 
 - **[Risk] A shared adapter can hide differences if it omits runtime lifecycle

@@ -70,6 +70,22 @@ The CI job named `Expression migration gates` MUST fail when any required migrat
 - **THEN** requiring `Expression migration gates` is managed in repository settings outside this change
 - **AND** the absence of that administrative setting does not change the CI job's failure behavior
 
+### Requirement: Passing main-branch gates publish all expression bundles
+The migration gate workflow MUST run on every pull request and push to `main`. After the gates pass on a push to `main`, it MUST publish the backwards-compatible expression entry point and the independently addressable legacy and hybrid bundles to production S3.
+
+#### Scenario: A pull request passes the migration gates
+- **WHEN** a pull request passes all migration gates
+- **THEN** the workflow reports gate success without running the production S3 deployment
+
+#### Scenario: A main-branch push passes the migration gates
+- **WHEN** a push to `main` passes all migration gates
+- **THEN** the workflow builds the release bundles and deploys `expressions.js`, `legacy/expressions.js`, and `hybrid/expressions.js` to their existing production S3 locations
+
+#### Scenario: A main-branch push fails a migration gate
+- **WHEN** any migration gate fails on a push to `main`
+- **THEN** the production deployment job does not run
+- **AND** no expression bundle is published by that workflow run
+
 ### Requirement: Rails release selection remains a documented consumer contract
 For each migration release, the legacy and hybrid channels MUST be independently addressable for the Rails consumer, while this repository documents but does not implement flag evaluation or customer targeting.
 

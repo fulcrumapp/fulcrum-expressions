@@ -56,9 +56,10 @@ checks, and deterministic artifact verification:
 yarn test:migration-gates
 ```
 Contract results are reported by function group. Failures exit nonzero and fail
-the `Expression migration gates` pull-request workflow. Repository branch
-protection must separately require that status check if it is intended to be a
-merge requirement.
+the `Expression migration gates` workflow on every pull request and push to
+`main`. A successful run on `main` then builds the release bundles and runs the
+production S3 deploy script, publishing the compatibility bundle, legacy
+channel, and hybrid channel together.
 
 ### Console
 Starts an interactive node terminal with the functions available to call
@@ -78,6 +79,16 @@ alongside it:
 Rails owns the LaunchDarkly `expressions-ts-migration` flag and selects hybrid
 when `true`, or legacy when `false` or unreadable. This repository builds and
 deploys both channels but does not read the flag or target customers.
+
+The `Expression migration gates` workflow publishes after all gates pass on
+`main`. The GitHub `production` environment must provide the
+`EXPRESSION_RELEASE_AWS_ROLE_ARN` and `EXPRESSION_RELEASE_AWS_REGION` variables,
+and the AWS role must trust GitHub Actions OIDC for this repository's
+`production` environment. Scope the role to the required objects under
+`fulcrum-assets/expv1/` and invalidation of the existing expression
+CloudFront distribution. Configure any desired production environment
+approvals in GitHub; pull-request runs never receive the production deployment
+job.
 
 To deploy to your user's preview environment:
 ```sh
