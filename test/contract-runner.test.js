@@ -39,7 +39,8 @@ assert.strictEqual(isPlainObject([]), false);
 assert.strictEqual(isPlainObject(new Date()), false);
 assert.strictEqual(isPlainObject(null), false);
 assert.strictEqual(isPlainObject(vm.runInNewContext("({})")), true);
-const timeoutBundlePath = path.join(os.tmpdir(), `expression-timeout-${process.pid}.js`);
+const timeoutFixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-timeout-"));
+const timeoutBundlePath = path.join(timeoutFixtureRoot, "bundle.js");
 fs.writeFileSync(timeoutBundlePath, "while (true) {}");
 try {
   assert.throws(
@@ -47,7 +48,7 @@ try {
     (error) => error.code === "ERR_SCRIPT_EXECUTION_TIMEOUT"
   );
 } finally {
-  fs.rmSync(timeoutBundlePath, { force: true });
+  fs.rmSync(timeoutFixtureRoot, { recursive: true, force: true });
 }
 assert.deepStrictEqual(normalize(new Date(NaN)), { $type: "invalid-date" });
 assert.deepStrictEqual(normalize(new Error("boom")), {
