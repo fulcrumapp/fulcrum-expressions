@@ -5,8 +5,10 @@ const { spawnSync } = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const vm = require("vm");
 const {
   createLegacyAdapter,
+  createBundledAdapter,
   createHybridAdapter,
   assertAdapterContracts,
   extractLocalScriptSources,
@@ -36,6 +38,17 @@ assert.strictEqual(isPlainObject(Object.create(null)), true);
 assert.strictEqual(isPlainObject([]), false);
 assert.strictEqual(isPlainObject(new Date()), false);
 assert.strictEqual(isPlainObject(null), false);
+assert.strictEqual(isPlainObject(vm.runInNewContext("({})")), true);
+const timeoutBundlePath = path.join(os.tmpdir(), `expression-timeout-${process.pid}.js`);
+fs.writeFileSync(timeoutBundlePath, "while (true) {}");
+try {
+  assert.throws(
+    () => createBundledAdapter(timeoutBundlePath, "Timeout fixture", 20),
+    (error) => error.code === "ERR_SCRIPT_EXECUTION_TIMEOUT"
+  );
+} finally {
+  fs.rmSync(timeoutBundlePath, { force: true });
+}
 assert.deepStrictEqual(normalize(new Date(NaN)), { $type: "invalid-date" });
 assert.deepStrictEqual(normalize(new Error("boom")), {
   $type: "error",

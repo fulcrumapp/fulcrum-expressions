@@ -81,11 +81,13 @@ The gates also use mocked AWS commands to assert that preview and production
 deploys upload the two channel bundles and existing sandbox assets without ever
 uploading the frozen compatibility bundle.
 
-`yarn test:types` checks that the generated declaration inventory contains only
-public modules, every expression has a declaration, representative consumers
+`yarn test:types` generates declarations and checks that their inventory
+contains only public modules, every expression has a declaration, representative consumers
 accept valid calls and reject incorrect result types, and regeneration is
 byte-identical. CI also fails if regeneration changes the checked-in
-`ts/api.ts`.
+`ts/api.ts`. After a unified build has generated declarations, CI and the
+migration gates use `yarn test:types:check` directly to avoid regenerating them
+before the same reproducibility check.
 
 The `Expression migration gates` job runs on pull requests and pushes to `main`
 (including merges) and reports contract results by function group. The separate

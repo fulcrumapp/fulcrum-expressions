@@ -5,17 +5,26 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
+const yaml = require("js-yaml");
 
 const root = path.resolve(__dirname, "..");
 const deployScript = path.join(root, "script", "deploy");
-const workflow = fs.readFileSync(
+const workflow = yaml.load(fs.readFileSync(
   path.join(root, ".github", "workflows", "expression-migration-gates.yml"),
   "utf8"
+));
+assert.ok(
+  Object.prototype.hasOwnProperty.call(workflow.on, "pull_request"),
+  "migration gates must run for pull requests"
 );
-assert.match(workflow, /^  pull_request:$/m);
-assert.match(workflow, /^  push:\n    branches:\n      - main$/m);
-assert.match(workflow, /^  migration-gates:\n    name: Expression migration gates$/m);
-assert.match(workflow, /^  deploy-production:\n    name: Deploy to S3 \(main only\)\n    needs: migration-gates\n    if: success\(\) && github\.event_name == 'push' && github\.ref == 'refs\/heads\/main'$/m);
+assert.deepStrictEqual(workflow.on.push.branches, ["main"]);
+assert.strictEqual(workflow.jobs["migration-gates"].name, "Expression migration gates");
+assert.strictEqual(workflow.jobs["deploy-production"].name, "Deploy to S3 (main only)");
+assert.strictEqual(workflow.jobs["deploy-production"].needs, "migration-gates");
+assert.strictEqual(
+  workflow.jobs["deploy-production"].if,
+  "success() && github.event_name == 'push' && github.ref == 'refs/heads/main'"
+);
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
 const binDirectory = path.join(temporaryRoot, "bin");
 const callLog = path.join(temporaryRoot, "aws-calls.jsonl");
