@@ -27,7 +27,9 @@ yarn build
 The channel entry points are `dist/legacy/expressions.js` and
 `dist/hybrid/expressions.js`. The hybrid channel starts from the full CoffeeScript
 runtime and applies TypeScript implementations for same-named functions;
-functions without a TypeScript override remain CoffeeScript-backed. The isolated
+functions without a TypeScript override remain CoffeeScript-backed. The override
+registry is currently empty, so hybrid still runs CoffeeScript for every
+expression until migration batches are added. The isolated
 strict TypeScript check for migration-owned sources is independent of the
 existing project-wide `ts/tsconfig.json` baseline.
 Release bundles retain the original Terser `--mangle` settings; debug bundles
@@ -47,7 +49,10 @@ claim the existing baseline diagnostics are resolved. The strict
 `migration/tsconfig.json` check remains separate and mandatory for hybrid.
 
 Build debug versions
-```sh
+```
+The gates also use mocked AWS commands to assert that preview and production
+deploys upload the two channel bundles and sandbox assets without ever uploading
+the frozen compatibility bundle.sh
 yarn build:debug
 ```
 
@@ -70,7 +75,8 @@ yarn test
 
 The migration gates run the CoffeeScript unit suite, the isolated migration
 typecheck, legacy and hybrid contract suites, hybrid-versus-legacy differential
-checks, public declaration scope/consumer checks, and deterministic artifact verification:
+checks, public declaration scope/consumer checks, deployment-path assertions,
+and deterministic artifact verification:
 ```sh
 yarn test:migration-gates
 ```
@@ -82,9 +88,8 @@ byte-identical. CI also fails if regeneration changes the checked-in
 
 Contract results are reported by function group. Failures exit nonzero and fail
 the `Expression migration gates` workflow on every pull request and push to
-`main`. A successful run on `main` then builds the release bundles and runs the
-production S3 deploy script, publishing the legacy and hybrid channels
-side-by-side.
+`main`. A successful push to `main` then publishes the legacy and hybrid
+channels side-by-side; it never overwrites the frozen compatibility bundle.
 
 ### Console
 Starts an interactive node terminal with the functions available to call
@@ -93,52 +98,66 @@ yarn console
 ```
 
 ### Deploy
-Currently all projects pull the legacy expression bundle from
-https://assets.fulcrumapp.com/expv1/expressions.js. `yarn deploy` keeps that
-backwards-compatible URL and publishes both independently addressable channels
-alongside it:
+**Frozen comparison:** the existing
+`https://assets.fulcrumapp.com/expv1/expressions.js` object is the original
+production runtime and is intentionally never uploaded or replaced by this
+repository's manual or automated deploy scripts. It remains frozen for
+side-by-side comparison. `dist/expressions.js` is still built as a local,
+legacy-compatible package entry point, but it is not published to that URL.
+
+Deployments publish these independently addressable bundles:
 
 - `https://assets.fulcrumapp.com/expv1/legacy/expressions.js`
 - `https://assets.fulcrumapp.com/expv1/hybrid/expressions.js`
 
-Rails owns the LaunchDarkly `expressions-ts-migration` flag and selects hybrid
-when `true`, or legacy when `false` or unreadable. This repository builds and
-deploys both channels but does not read the flag or target customers.
+They also publish the existing sandbox HTML and proxy assets. The sandbox HTML
+still references the frozen `/expv1/expressions.js`; publishing the channels
+does not switch the running Rails application or sandbox to either channel.
+Changing Rails URL selection and wiring the `expressions-ts-migration` flag is
+a separate consumer rollout.
 
-The `Expression migration gates` workflow publishes the legacy and hybrid
-channels after the unified runtime-and-typings build and all gates pass on
-`main`. Generated typings are checked in `ts/api.ts`; this S3 publisher does
-not upload them. It deliberately leaves the existing
-`/expv1/expressions.js` compatibility URL untouched so it remains the current
-comparison baseline. Manual `yarn deploy` continues to publish that URL by
-default. The GitHub `production` environment must provide the
-`EXPRESSION_RELEASE_AWS_ROLE_ARN` and `EXPRESSION_RELEASE_AWS_REGION` variables,
-and the AWS role must trust GitHub Actions OIDC for this repository's
-`production` environment. Scope the role to the required objects under
-`fulcrum-assets/expv1/` and invalidation of the existing expression
-CloudFront distribution. Configure any desired production environment
-approvals in GitHub; pull-request runs never receive the production deployment
-job.
+**Current migration state and plan:** the hybrid override registry is empty;
+no expression has been migrated and no customer is selected for hybrid by this
+repository. For each future batch, add same-name TypeScript overrides, require
+the strict isolated typecheck and legacy/hybrid contract and differential
+gates, then publish that passing hybrid batch alongside the complete legacy
+channel. Rails owns customer targeting and selection: the planned flag contract
+is `true` → hybrid, `false` or unreadable → legacy. Until Rails is changed to
+request those channel URLs, existing runtime consumers continue to use the
+frozen compatibility URL. No all-functions-complete promotion is planned.
 
-To deploy to your user's preview environment:
+**Manual deployment:** `yarn deploy` builds and gates the release, then uploads
+the two channels and sandbox assets to the bucket for the current `$USER`.
+`yarn deploy <environment>` selects a preview bucket. `yarn deploy production`
+prompts for confirmation and requires production AWS access. Neither form
+uploads or replaces `/expv1/expressions.js`; production deployment still
+invalidates cached `/expv1/*` objects. You can run `yarn build:dist` separately
+to build and test without uploading.
+
+**Automated production deployment:** after `Expression migration gates`
+passes on a push to `main`, the production-environment job builds and uploads
+the legacy and hybrid bundles and sandbox assets, leaving the frozen
+compatibility object untouched. Pull requests never run this deployment job.
+The GitHub `production` environment must provide
+`EXPRESSION_RELEASE_AWS_ROLE_ARN` and `EXPRESSION_RELEASE_AWS_REGION`, and the
+AWS role must trust this repository's production-environment GitHub Actions
+OIDC identity. Scope the role to the required `fulcrum-assets/expv1/` objects
+and invalidation of the existing expression CloudFront distribution. Any
+environment approval requirement is configured by administrators. This
+repository's deployment path has only been tested locally with mocked AWS
+commands; real AWS configuration and live publication are not verified here.
+
+To deploy to your user's preview environment (after configuring AWS credentials
+for that bucket):
 ```sh
-aws sso login (or however you login to the chaos aws account)
 yarn deploy
 ```
-You will need to update fulcrum's config to point at your S3 bucket's files. The
-[skaffold.yaml file in fulcrum](https://github.com/fulcrumapp/fulcrum/blob/main/skaffold.yaml)
-has a configuration for the "fulcrum.rails.config.expression_sandbox_url" value which can
-be uncommented.
 
-To deploy to production (requires fulcrum production access):
+For production, use an authorized production AWS identity and explicitly
+confirm the prompt:
 ```sh
-yarn
-yarn build:dist   # Not strictly necessary, it's done in the deploy.  But it's better to know it builds and passes tests before doing that.
-aws sso login (or however you login to the readonly fulcrum aws account)
-mongoose
 yarn deploy production
 ```
-**Please be careful while doing this, as there aren't many guardrails in place at the moment. If unsure, ask.**
 
 ### Documentation
 Documentation is handled using [jsdoc](http://usejsdoc.org/), with functions documented in the [source file here](https://github.com/fulcrumapp/fulcrum-expressions/blob/master/docs/docs.js).

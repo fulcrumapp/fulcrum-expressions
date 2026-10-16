@@ -99,18 +99,23 @@ Rails runtime work to their explicitly out-of-scope phases.
 
 6. **Publish production bundles only after the main-branch gates pass.**
    - **Decision:** Run the migration gates on every pull request and push to
-     `main`. A separate production-environment job depends on successful gates
-     and publishes the legacy and hybrid channel bundles only for `main`
-     pushes, leaving the existing compatibility URL untouched as the
-     comparison baseline. Authenticate with GitHub Actions OIDC and an
-     environment-scoped AWS role; pull-request runs never deploy.
+     `main`. Manual and automated deployment scripts publish the legacy and
+     hybrid channel bundles and sandbox assets, and never upload the existing
+     compatibility object; `/expv1/expressions.js` remains frozen as the
+     comparison baseline. A separate production-environment job depends on
+     successful gates and runs only for `main` pushes. Authenticate with
+     GitHub Actions OIDC and an environment-scoped AWS role; pull-request runs
+     never deploy.
    - **Rationale:** Reviewers need gate results before merge, while the same
-     verified source should publish both comparison channels without replacing
-     the live compatibility baseline. OIDC avoids long-lived AWS credentials
-     in repository secrets.
-   - **Alternative considered:** Deploy from pull requests or use static AWS
-     credentials. Rejected because pull requests are untrusted inputs and
-     static credentials unnecessarily increase credential exposure.
+     verified source should publish both channels while permanently retaining
+     the original production object for comparison. Requiring the same
+     no-compatibility-upload behavior for manual deployments prevents an
+     operator from accidentally replacing the baseline. OIDC avoids
+     long-lived AWS credentials in repository secrets.
+   - **Alternative considered:** Update the compatibility object from manual
+     deployments or deploy from pull requests. Rejected because replacing the
+     comparison baseline defeats side-by-side evaluation, and pull requests
+     are untrusted inputs.
 
 7. **Use one build for runtime artifacts and public declaration generation.**
    - **Decision:** `yarn build` generates the complete channel bundles, sandbox

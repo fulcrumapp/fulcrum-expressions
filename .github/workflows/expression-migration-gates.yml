@@ -63,6 +63,9 @@ jobs:
       - name: Deterministic artifact integrity
         run: yarn build:verify
 
+      - name: Deployment path regression checks
+        run: yarn test:deploy
+
   deploy-production:
     name: Release expression bundles to S3
     needs: migration-gates
@@ -115,4 +118,4 @@ jobs:
           aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
 
       - name: Publish legacy and hybrid bundles
-        run: ./script/deploy production --yes --skip-compatibility
+        run: ./script/deploy production --yes
