@@ -6,6 +6,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
+const { assertSandboxScripts } = require("./sandbox-scripts");
 
 const root = path.resolve(__dirname, "..");
 const buildScript = path.join(root, "script", "build-expressions.js");
@@ -129,10 +130,7 @@ function verifyArtifactInventory() {
     const html = fs.readFileSync(pagePath, "utf8");
     assert.strictEqual(html, fs.readFileSync(path.join(root, channel, "expressions.html"), "utf8"),
       `dist/${channel}/expressions.html must match its source`);
-    const scripts = Array.from(html.matchAll(/<script src="([^"]+)"><\/script>/g),
-      (match) => match[1]).filter((src) => !src.startsWith("https://"));
-    assert.deepStrictEqual(scripts, ["expressions.js", "../expressions-proxy.js"],
-      `${channel} sandbox must load its runtime before the shared proxy`);
+    const scripts = assertSandboxScripts(html, ["expressions.js", "../expressions-proxy.js"]);
     const resolvedScripts = scripts.map((src) => path.resolve(directory, src));
     assert.deepStrictEqual(resolvedScripts, [
       path.join(directory, "expressions.js"),

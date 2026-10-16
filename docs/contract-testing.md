@@ -75,6 +75,11 @@ comparison page is unchanged.
 `yarn build:verify` checks both modes for exact channel inventories, page
 contents and script order, local dependency resolution, unchanged comparison
 HTML, and stable repeated-build hashes including the shared proxy.
+Both build and deployment checks use a shared parse5 HTML parser to verify all
+script elements in document order, including the explicitly allowed IE
+conditional-comment compatibility shim; other HTTPS and inline scripts fail.
+`yarn test:sandbox-scripts` covers quoting/attribute and closing-tag whitespace
+variants, ordering, and unexpected scripts, and runs in both gates.
 `yarn test:deploy` uses an AWS stub to verify preview/production endpoint
 targets, page contents, URL resolution, `text/html`, preserved bundle/proxy
 uploads, and no upload to frozen `/expv1/expressions.js`.

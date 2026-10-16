@@ -6,6 +6,7 @@ const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 const yaml = require("js-yaml");
+const { assertSandboxScripts } = require("../script/sandbox-scripts");
 
 const root = path.resolve(__dirname, "..");
 const deployScript = path.join(root, "script", "deploy");
@@ -89,10 +90,8 @@ function assertUploads(result, bucket) {
     if (target.endsWith(".html")) {
       const html = fs.readFileSync(source, "utf8");
       assert.strictEqual(html, fs.readFileSync(path.join(root, relativePath), "utf8"));
-      const scripts = Array.from(html.matchAll(/<script src="([^"]+)"><\/script>/g),
-        (match) => match[1]).filter((src) => !src.startsWith("https://"));
       const channelPage = relativePath.includes("/");
-      assert.deepStrictEqual(scripts, [
+      const scripts = assertSandboxScripts(html, [
         "expressions.js",
         channelPage ? "../expressions-proxy.js" : "expressions-proxy.js",
       ]);
