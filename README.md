@@ -27,9 +27,12 @@ yarn build
 The channel entry points are `dist/legacy/expressions.js` and
 `dist/hybrid/expressions.js`. The hybrid channel starts from the full CoffeeScript
 runtime and applies TypeScript implementations for same-named functions;
-functions without a TypeScript override remain CoffeeScript-backed. The override
-registry is currently empty, so hybrid still runs CoffeeScript for every
-expression until migration batches are added. The isolated
+functions without a TypeScript override remain CoffeeScript-backed. The first
+prepared migration batch contains same-name overrides for `PI`, `TRUE`, and
+`FALSE`; every other expression remains CoffeeScript-backed. This is local
+preparation only: Rails Phase 1b readiness is still required before the batch
+can be exposed, and passing repository gates will not constitute
+application-runtime acceptance. The isolated
 strict TypeScript check for migration-owned sources is independent of the
 existing project-wide `ts/tsconfig.json` baseline.
 Release bundles retain the original Terser `--mangle` settings; debug bundles
