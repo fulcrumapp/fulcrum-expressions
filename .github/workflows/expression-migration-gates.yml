@@ -67,7 +67,7 @@ jobs:
         run: yarn test:deploy
 
   deploy-production:
-    name: Release expression bundles to S3
+    name: Deploy to S3 (main only)
     needs: migration-gates
     if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
