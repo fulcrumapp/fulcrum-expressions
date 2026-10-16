@@ -116,14 +116,21 @@ They also publish the existing sandbox HTML and proxy assets. The sandbox HTML
 still references the frozen `/expv1/expressions.js`; publishing the channels
 does not switch the running Rails application or sandbox to either channel.
 Changing Rails URL selection and wiring the `expressions-ts-migration` flag is
-a separate consumer rollout ([Phase 3: Rails runtime integration](docs/typescript-migration-roadmap.md#phase-3-rails-runtime-integration-task-7-deferred)).
+a separate consumer prerequisite ([Phase 1b: Rails consumer readiness](docs/typescript-migration-roadmap.md#phase-1b-rails-consumer-readiness-task-7-prerequisite)),
+which must be implemented and exercised before exposing Phase 2 migrated batches,
+not after all functions have been migrated.
 
 **Current migration state and [plan](docs/typescript-migration-roadmap.md):** the hybrid override registry is empty;
 no expression has been migrated and no customer is selected for hybrid by this
-repository. For each future batch, add same-name TypeScript overrides, require
-the strict isolated typecheck and legacy/hybrid contract and differential
-gates, then publish that passing hybrid batch alongside the complete legacy
-channel. Rails owns customer targeting and selection: the planned flag contract
+repository. First, the separate Rails integration must load the deployed channels
+under the flag and verify required lifecycle/host wiring, fallback and rollback;
+the empty-override hybrid can exercise that baseline wiring. For each future
+batch, add same-name TypeScript overrides, pass the automated gates, release
+alongside complete legacy, and exercise the deployed hybrid in the flagged
+application runtime. Record and review actual runtime results before the next
+batch; roll back to legacy and correct/revalidate any failing batch. Publication
+and isolated contracts alone are not runtime acceptance.
+Rails owns customer targeting and selection: the planned flag contract
 is `true` → hybrid, `false` or unreadable → legacy. Until Rails is changed to
 request those channel URLs, existing runtime consumers continue to use the
 frozen compatibility URL. No all-functions-complete promotion is planned.

@@ -113,6 +113,13 @@ CI and manual release builds MUST use a shared build command that generates the 
 ### Requirement: Rails release selection remains a documented consumer contract
 For each migration release, the legacy and hybrid channels MUST be independently addressable for the Rails consumer, while this repository documents but does not implement flag evaluation or customer targeting.
 
+#### Scenario: Consumer readiness precedes migrated batch exposure
+- **WHEN** Phase 2 migrated batches are to be exposed
+- **THEN** the separate Rails integration MUST already load and exercise the real deployed hybrid channel under the flag, including required lifecycle and host wiring
+- **AND** false or unreadable flag selection, startup fallback, and rollback to complete legacy MUST be exercised with reviewable application-runtime evidence
+- **AND** an empty-override hybrid MAY establish baseline wiring but does not establish acceptance of migrated functions
+- **AND** the Phase 1 expressions implementation does not claim this Rails prerequisite is complete
+
 #### Scenario: Rails selects a release channel
 - **WHEN** Rails reads `expressions-ts-migration` as `true`
 - **THEN** Rails selects the hybrid channel
@@ -128,3 +135,11 @@ Each migrated batch that passes its required gates MUST be included in the hybri
 - **THEN** its TypeScript implementations are included in the hybrid release
 - **AND** the complete legacy release is published alongside it
 - **AND** no all-functions-complete promotion is required
+
+#### Scenario: Each released batch is accepted in the application runtime before the next
+- **WHEN** a gated batch is released in hybrid
+- **THEN** the deployed hybrid MUST be exercised through the flagged Rails application runtime
+- **AND** reviewable evidence MUST identify the release and selected channel, affected expression flows, values or errors, lifecycle and host effects, and comparison with legacy
+- **AND** the next batch MUST NOT proceed until the current batch's runtime results are accepted
+- **AND** problems MUST trigger rollback to legacy and correction and revalidation before advancing
+- **AND** publication or isolated contract success alone MUST NOT count as runtime acceptance
