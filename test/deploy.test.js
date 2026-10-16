@@ -61,6 +61,12 @@ function invokeDeploy(args, user) {
 }
 
 function optionValue(call, option, target) {
+  const equalsOption = call.find((argument) => argument.startsWith(`${option}=`));
+  if (equalsOption !== undefined) {
+    const value = equalsOption.slice(option.length + 1);
+    assert.ok(value.length > 0, `missing value for ${option} for ${target}`);
+    return value;
+  }
   const index = call.indexOf(option);
   assert.ok(index >= 0, `missing ${option} for ${target}`);
   assert.ok(index + 1 < call.length && !call[index + 1].startsWith("--"),
@@ -76,6 +82,9 @@ for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]
       { message: `missing value for ${option} for test-target` });
   }
   assert.strictEqual(optionValue(["s3", "cp", option, "value"], option, "test-target"), "value");
+  assert.strictEqual(optionValue(["s3", "cp", `${option}=value`], option, "test-target"), "value");
+  assert.throws(() => optionValue(["s3", "cp", `${option}=`], option, "test-target"),
+    { message: `missing value for ${option} for test-target` });
 }
 
 function assertUploads(result, bucket) {

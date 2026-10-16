@@ -18,7 +18,8 @@ function assertSandboxScripts(html, expectedSources, { comparisonPage = false } 
       const comment = node.data.trim();
       if (comment.toLowerCase().startsWith("[if")) {
         assert.ok(condition === null && comment.startsWith(conditionalStart) &&
-          comment.endsWith(conditionalEnd), "unexpected sandbox conditional comment");
+          comment.endsWith(conditionalEnd),
+        `unexpected conditional comment; expected exactly ${conditionalStart}...${conditionalEnd}`);
         const fragment = comment.slice(conditionalStart.length, -conditionalEnd.length);
         visit(parse5.parseFragment(fragment), "lt IE 9");
       }
@@ -33,4 +34,9 @@ function assertSandboxScripts(html, expectedSources, { comparisonPage = false } 
   return scripts.slice(comparisonPage ? 1 : 0).map((script) => script.source);
 }
 
-module.exports = { assertSandboxScripts };
+module.exports = {
+  assertSandboxScripts,
+  shimSource,
+  conditionalStart,
+  conditionalEnd,
+};

@@ -3,10 +3,14 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
-const { assertSandboxScripts } = require("../script/sandbox-scripts");
+const {
+  assertSandboxScripts,
+  shimSource,
+  conditionalStart,
+  conditionalEnd,
+} = require("../script/sandbox-scripts");
 
-const shimSource = "https://html5shim.googlecode.com/svn/trunk/html5.js";
-const shim = `<!--[if lt IE 9]><script src="${shimSource}"></script><![endif]-->`;
+const shim = `<!--${conditionalStart}<script src="${shimSource}"></script>${conditionalEnd}-->`;
 const expected = ["expressions.js", "../expressions-proxy.js"];
 const runtime = '<script src="expressions.js"></script>';
 const proxy = '<script src="../expressions-proxy.js"></script>';
@@ -42,6 +46,10 @@ const invalidPages = [
 for (const html of invalidPages) {
   assert.throws(() => assertSandboxScripts(html, expected), assert.AssertionError);
 }
+assert.throws(
+  () => assertSandboxScripts(`<!--[IF lt IE 9]><script src="${shimSource}"></script><![endif]-->${runtime}${proxy}`, expected),
+  /expected exactly \[if lt IE 9\]>/
+);
 
 for (const channel of ["hybrid", "legacy", ""]) {
   const html = fs.readFileSync(path.join(__dirname, "..", channel, "expressions.html"), "utf8");
