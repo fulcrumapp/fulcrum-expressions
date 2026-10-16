@@ -67,18 +67,25 @@ The [migration roadmap](typescript-migration-roadmap.md#phase-1b-rails-consumer-
 requires minimum Rails consumer integration and exercised selection, lifecycle,
 host wiring, fallback and rollback before Phase 2 batches are exposed. That
 integration is separate Rails work and is not implemented by this harness.
-Readiness also requires the planned `dist/expressions-hybrid.html` and
-`dist/expressions-legacy.html` build/deploy outputs at root `/expv1/` sibling
-URLs, without changing the original `expressions.html` comparison page.
-Assert that their relative scripts resolve respectively to
-`hybrid/expressions.js` or `legacy/expressions.js`, then the shared
-`expressions-proxy.js`; verify both local packaging and deployed endpoint
-loading. Rails must select those HTML URLs under the flag/fallback, not only
-identify a JavaScript channel. These HTML assets and Rails wiring are currently
-unimplemented; URL-resolution checks alone do not prove browser/host behavior.
+Release and debug builds package `dist/hybrid/expressions.html` and
+`dist/legacy/expressions.html`, deployed at `/expv1/hybrid/expressions.html`
+and `/expv1/legacy/expressions.html`. Each loads adjacent `expressions.js`
+followed by shared `../expressions-proxy.js`; the original `expressions.html`
+comparison page is unchanged.
+`yarn build:verify` checks both modes for exact channel inventories, page
+contents and script order, local dependency resolution, unchanged comparison
+HTML, and stable repeated-build hashes including the shared proxy.
+`yarn test:deploy` uses an AWS stub to verify preview/production endpoint
+targets, page contents, URL resolution, `text/html`, preserved bundle/proxy
+uploads, and no upload to frozen `/expv1/expressions.js`.
+These checks do not deploy assets or establish live endpoint availability.
+After deployment, verify endpoint loading and browser/host behavior separately.
+Rails must select those HTML URLs under the flag/fallback, not only identify a
+JavaScript channel. Rails wiring remains unimplemented in this repository;
+packaging and URL-resolution checks do not satisfy consumer acceptance.
 
 Each gated TypeScript batch is released in hybrid alongside complete legacy,
-then exercised through `expressions-hybrid.html` and the real deployed hybrid
+then exercised through `hybrid/expressions.html` and the real deployed hybrid
 runtime in the flagged application
 runtime. Record the release/channel and affected expression flows, values/errors,
 lifecycle and host effects; review acceptance before advancing to another batch.
