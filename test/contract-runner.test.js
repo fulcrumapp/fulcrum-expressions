@@ -172,6 +172,19 @@ assert.throws(
   () => applyFunctionOverrides({ INVALID: legacyFunction }, { INVALID: "not a function" }),
   /override must be a function: INVALID/
 );
+for (const name of ["__proto__", "constructor", "prototype"]) {
+  const target = {};
+  const originalPrototype = Object.getPrototypeOf(target);
+  const overrides = Object.create(null);
+  overrides[name] = replacementFunction;
+  assert.throws(() => applyFunctionOverrides(target, overrides), /reserved property/);
+  assert.strictEqual(Object.getPrototypeOf(target), originalPrototype);
+  assert.strictEqual(Object.prototype.hasOwnProperty.call(target, name), false);
+}
+assert.throws(
+  () => applyFunctionOverrides(Object.create({ INHERITED: legacyFunction }), { INHERITED: replacementFunction }),
+  /no matching CoffeeScript function: INHERITED/
+);
 
 const overrideFixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-overrides-"));
 try {

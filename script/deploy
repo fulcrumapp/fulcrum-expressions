@@ -4,7 +4,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 root_dir=${script_dir}/..
 
-ENVIRONMENT="${USER}"
+ENVIRONMENT="${USER:-}"
 CONFIRM_PRODUCTION=false
 ENVIRONMENT_SET=false
 
@@ -27,6 +27,14 @@ for argument in "$@"; do
       ;;
   esac
 done
+
+if [[ -z "${ENVIRONMENT}" && "${ENVIRONMENT_SET}" == false ]]; then
+  ENVIRONMENT="$(id -un)"
+fi
+if [[ -z "${ENVIRONMENT}" ]]; then
+  printf "Deployment environment must not be empty.\n" >&2
+  exit 2
+fi
 
 if [[ "${ENVIRONMENT}" == "production" ]]
 then
