@@ -31,7 +31,7 @@ function normalize(value, seen = new WeakSet()) {
     return { $date: Date.prototype.toISOString.call(value).slice(0, 10) };
   }
   if (typeof value === "function") return { $type: "function" };
-  if (value instanceof Error || Object.prototype.toString.call(value) === "[object Error]") {
+  if (types.isNativeError(value)) {
     return { $type: "error", name: value.name, message: value.message };
   }
   if (Array.isArray(value)) {
