@@ -90,7 +90,8 @@ function loadMatrix() {
 }
 
 function loadAdapter(moduleName) {
-  if (!moduleName || moduleName === "legacy") return createLegacyAdapter();
+  if (!moduleName || moduleName === "legacy-source") return createLegacyAdapter();
+  if (moduleName === "legacy") return createBundledLegacyAdapter();
   if (moduleName === "hybrid") return createHybridAdapter();
 
   const candidate = require(path.resolve(moduleName));
@@ -103,14 +104,16 @@ function loadAdapter(moduleName) {
 }
 
 function createLegacyAdapter() {
-  const bundlePath = path.join(__dirname, "..", "dist", "legacy", "expressions.js");
-  if (fs.existsSync(bundlePath)) return createBundledAdapter(bundlePath, "Legacy");
-
   require("coffee-script/register");
   const runtime = require("../runtime");
   require("../functions");
 
   return createRuntimeAdapter(global, runtime);
+}
+
+function createBundledLegacyAdapter() {
+  const bundlePath = path.join(__dirname, "..", "dist", "legacy", "expressions.js");
+  return createBundledAdapter(bundlePath, "Legacy");
 }
 
 function createHybridAdapter() {
@@ -234,10 +237,10 @@ if (require.main === module) {
   const candidate = optionValue("--runtime");
   const compare = optionValue("--compare");
   const requireMatrix = process.argv.includes("--require-matrix");
-  const adapter = loadAdapter(candidate || "legacy");
+  const adapter = loadAdapter(candidate);
   const compareAdapter = compare ? loadAdapter(compare) : null;
   const groupReport = process.argv.includes("--report-groups")
-    ? { channel: candidate || "legacy", counts: {} }
+    ? { channel: candidate || "legacy-source", counts: {} }
     : null;
   assertAdapterContracts(adapter);
   if (compareAdapter) assertAdapterContracts(compareAdapter);
@@ -260,6 +263,7 @@ if (require.main === module) {
 
 module.exports = {
   createLegacyAdapter,
+  createBundledLegacyAdapter,
   createHybridAdapter,
   assertAdapterContracts,
   extractLocalScriptSources,

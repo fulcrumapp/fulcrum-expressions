@@ -11,6 +11,7 @@ const {
   assertAdapterContracts,
   extractLocalScriptSources,
   isPlainObject,
+  loadAdapter,
   normalize,
   normalizeLocalScriptSource,
   run,
@@ -101,6 +102,11 @@ assert.deepStrictEqual(normalize(openResult.results), [
   { type: "open", value: "\"https://example.com\"" },
 ]);
 assert.strictEqual(adapter.invoke("DATE", [2020, 1, 2]).value.toISOString(), "2020-01-02T00:00:00.000Z");
+assert.ok(adapter.invoke("DATE", [2020, 1, 2]).value instanceof Date);
+assert.ok(loadAdapter("legacy-source").invoke("DATE", [2020, 1, 2]).value instanceof Date);
+if (fs.existsSync(path.join(__dirname, "..", "dist", "legacy", "expressions.js"))) {
+  assert.strictEqual(loadAdapter("legacy").invoke("DATE", [2020, 1, 2]).value instanceof Date, false);
+}
 assert.deepStrictEqual(adapter.lifecycle(), { runtimeGlobals: true, functionGlobals: true });
 assert.throws(
   () => assertAdapterContracts({ invoke() {} }),
