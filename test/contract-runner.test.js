@@ -167,6 +167,23 @@ const replacementFunction = () => "typescript";
 assert.strictEqual(applyFunctionOverrides(functions, { REPLACE: replacementFunction }), functions);
 assert.strictEqual(functions.REPLACE(), "typescript");
 assert.strictEqual(functions.FALLBACK(), "fallback");
+for (const overrides of [
+  { __proto__: { REPLACE: replacementFunction } },
+  Object.assign(Object.create({ inherited: true }), { REPLACE: replacementFunction }),
+  null,
+  [],
+  replacementFunction,
+]) {
+  const target = { REPLACE: legacyFunction };
+  assert.throws(() => applyFunctionOverrides(target, overrides), /plain or null-prototype object/);
+  assert.strictEqual(target.REPLACE, legacyFunction);
+  assert.strictEqual(Object.getPrototypeOf(target), Object.prototype);
+}
+const nullPrototypeOverrides = Object.create(null);
+nullPrototypeOverrides.REPLACE = replacementFunction;
+const nullPrototypeTarget = { REPLACE: legacyFunction };
+applyFunctionOverrides(nullPrototypeTarget, nullPrototypeOverrides);
+assert.strictEqual(nullPrototypeTarget.REPLACE(), "typescript");
 assert.throws(
   () => applyFunctionOverrides({}, { MISSING: replacementFunction }),
   /no matching CoffeeScript function: MISSING/
