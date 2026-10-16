@@ -210,6 +210,11 @@ function assertContract(contract, observed, normalized, label = contract.id) {
     }
   } else if (contract.expected && contract.expected.$type === "object") {
     assert.ok(isPlainObject(observed), label);
+  } else if (contract.expected && contract.expected.$type === "error"
+    && contract.expected.messagePattern) {
+    assert.strictEqual(normalized.$type, "error", label);
+    assert.strictEqual(normalized.name, contract.expected.name, label);
+    assert.match(normalized.message, new RegExp(contract.expected.messagePattern), label);
   } else {
     assert.deepStrictEqual(normalized, normalize(contract.expected), label);
   }

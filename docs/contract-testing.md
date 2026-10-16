@@ -16,14 +16,19 @@ yarn test:contracts
 `yarn test:contracts` runs the hand-curated and generated cases. Use
 `yarn test:contracts:check` as the CI-equivalent check when the generated
 fixture is already present; `yarn test:contracts:generate` updates the fixture
-intentionally from the checked-in legacy runtime. The matrix records 14
+intentionally from the checked-in legacy runtime. The matrix records 27
 classified limitations for host-only, time-dependent, or TypeScript-only surfaces;
 these are reported in the fixture and are not silently omitted.
+Generation always loads CoffeeScript source, even when release bundles exist.
 
 The runner normalizes dates, `undefined`, `NaN`, errors, functions, circular
 objects, nested objects, and arrays before comparison. This keeps the contract
 portable across compatible implementations while preserving meaningful result
 shapes. A runtime adapter provides `invoke(name, args, configure)` and `lifecycle()`.
+The two invalid-input `CLEAN` probes assert the `TypeError` name and a narrowly
+anchored message pattern because mangling changes the receiver identifier in
+engine-generated messages. Hybrid-versus-legacy differential checks still compare
+the complete normalized errors exactly.
 `invoke` returns `{ value, results }` on success, `{ error, results }` when an
 expression throws, and throws for an unknown expression name. The lifecycle
 probe reports the required runtime and expression globals. To run a custom

@@ -40,7 +40,7 @@ function bundle(entry) {
   ]);
   if (debug) return source;
   const terser = path.join(root, "node_modules", "terser", "bin", "terser");
-  return runNodeScript(terser, ["--compress", "keep_fargs=true"], source);
+  return runNodeScript(terser, ["--mangle"], source);
 }
 
 function writeBundle(file, source) {

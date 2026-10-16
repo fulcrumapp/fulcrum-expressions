@@ -95,7 +95,11 @@ function verifyMigrationTypecheckScope() {
     if (result.error) throw result.error;
     assert.notStrictEqual(result.status, 0, "migration type diagnostics must fail the compiler");
     assert.match(result.stdout + result.stderr, /TS2322/, "typecheck failure must report the diagnostic");
-    assert.ok(!fs.existsSync(outputPath), "no JavaScript may be emitted when migration typechecking fails");
+    assert.deepStrictEqual(
+      fs.existsSync(outputPath) ? inventory(outputPath) : [],
+      [],
+      "no files may be emitted when migration typechecking fails"
+    );
   } finally {
     fs.rmSync(temporaryRoot, { recursive: true, force: true });
   }

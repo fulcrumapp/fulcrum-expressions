@@ -30,6 +30,8 @@ runtime and applies TypeScript implementations for same-named functions;
 functions without a TypeScript override remain CoffeeScript-backed. The isolated
 strict TypeScript check for migration-owned sources is independent of the
 existing project-wide `ts/tsconfig.json` baseline.
+Release bundles retain the original Terser `--mangle` settings; debug bundles
+remain unmangled.
 
 Both CI and manual releases use this same build command. Public typings are
 generated from the existing `ts/functions` and supporting public types through

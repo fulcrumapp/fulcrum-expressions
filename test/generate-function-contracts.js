@@ -3,7 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
-const { loadAdapter, normalize } = require("./contract-runner");
+const { normalize } = require("./contract-runner");
+const createRuntimeAdapter = require("./runtime-adapter");
+require("coffee-script/register");
+const runtime = require("../runtime");
+require("../functions");
 
 const root = path.join(__dirname, "..");
 const functionsDir = path.join(root, "ts", "functions");
@@ -92,7 +96,7 @@ function configureFor(name) {
   return undefined;
 }
 
-const adapter = loadAdapter("legacy");
+const adapter = createRuntimeAdapter(global, runtime);
 const cases = [];
 const limitations = [];
 const names = sourceNames();
@@ -133,12 +137,19 @@ for (const name of names) {
       });
       continue;
     }
+    const expected = normalize(sideEffects.has(name) ? actual.results : actual.error || actual.value);
+    if (name === "CLEAN" && expected && expected.$type === "error"
+      && expected.name === "TypeError"
+      && /^[A-Za-z_$][\w$]*\.replace is not a function$/.test(expected.message)) {
+      delete expected.message;
+      expected.messagePattern = "^[A-Za-z_$][\\w$]*\\.replace is not a function$";
+    }
     cases.push({
       id,
       function: name,
       args,
       configure: configureFor(name),
-      expected: normalize(sideEffects.has(name) ? actual.results : actual.error || actual.value),
+      expected,
       observe: sideEffects.has(name) ? "results" : undefined,
     });
   }

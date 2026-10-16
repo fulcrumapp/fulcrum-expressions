@@ -43,6 +43,52 @@ assert.deepStrictEqual(normalize(new Error("boom")), {
 });
 assert.deepStrictEqual(normalize("thrown"), "thrown");
 
+const cleanErrorContract = {
+  cases: [{
+    id: "clean-invalid-input",
+    function: "CLEAN",
+    args: [1],
+    expected: {
+      $type: "error",
+      name: "TypeError",
+      messagePattern: "^[A-Za-z_$][\\w$]*\\.replace is not a function$",
+    },
+  }],
+};
+for (const receiver of ["text", "t"]) {
+  assert.strictEqual(run(
+    { invoke: () => ({ error: new TypeError(`${receiver}.replace is not a function`), results: [] }) },
+    null,
+    cleanErrorContract
+  ), 1);
+}
+for (const error of [new Error("t.replace is not a function"), new TypeError("unrelated failure")]) {
+  assert.throws(() => run(
+    { invoke: () => ({ error, results: [] }) },
+    null,
+    cleanErrorContract
+  ), /CLEAN \(clean-invalid-input\)/);
+}
+assert.throws(() => run(
+  { invoke: () => ({ error: new TypeError("text.replace is not a function"), results: [] }) },
+  { invoke: () => ({ error: new TypeError("t.replace is not a function"), results: [] }) },
+  cleanErrorContract
+), /legacy differential/);
+const numericShapeContract = {
+  cases: [{ id: "numeric-shape", function: "ABS", args: [], expectedType: "number" }],
+};
+assert.throws(() => run(
+  { invoke: () => ({ value: 1, results: [] }) },
+  { invoke: () => ({ value: 2, results: [] }) },
+  numericShapeContract
+), /legacy differential/);
+numericShapeContract.cases[0].limitation = "volatile-result";
+assert.strictEqual(run(
+  { invoke: () => ({ value: 1, results: [] }) },
+  { invoke: () => ({ value: 2, results: [] }) },
+  numericShapeContract
+), 1);
+
 const adapter = createLegacyAdapter();
 const alertResult = adapter.invoke("ALERT", ["first"]);
 assert.deepStrictEqual(Object.keys(alertResult).sort(), ["results", "value"]);
@@ -81,10 +127,12 @@ const fakeScope = {
   },
 };
 const contractAdapter = createRuntimeAdapter(fakeScope, fakeRuntime);
-assert.deepStrictEqual(contractAdapter.invoke("TEST", [], { locale: "en" }), {
-  error: new Error("adapter test"),
-  results: ["result"],
-});
+const failedInvocation = contractAdapter.invoke("TEST", [], { locale: "en" });
+assert.deepStrictEqual(Object.keys(failedInvocation).sort(), ["error", "results"]);
+assert.ok(failedInvocation.error instanceof Error);
+assert.strictEqual(failedInvocation.error.name, "Error");
+assert.strictEqual(failedInvocation.error.message, "adapter test");
+assert.deepStrictEqual(failedInvocation.results, ["result"]);
 assert.deepStrictEqual(appliedConfiguration, { locale: "en" });
 assert.throws(() => contractAdapter.invoke("MISSING", []), /Unknown expression function: MISSING/);
 assert.deepStrictEqual(contractAdapter.lifecycle(), { runtimeGlobals: false, functionGlobals: false });
@@ -112,10 +160,14 @@ try {
   const typeRootsPath = path.join(overrideFixtureRoot, "types");
   fs.mkdirSync(outputPath);
   fs.mkdirSync(typeRootsPath);
+  fs.copyFileSync(
+    path.join(__dirname, "..", "migration", "function-overrides.ts"),
+    path.join(overrideFixtureRoot, "registry.ts")
+  );
   fs.writeFileSync(fixturePath, [
-    "type ExpressionFunction = (...args: never[]) => unknown;",
+    "import { ExpressionFunction } from './registry';",
     "const functionOverrides: Readonly<Record<string, ExpressionFunction>> = Object.freeze({",
-    "  REPLACE: () => \"typescript\",",
+    "  REPLACE: (text: string, count: number) => text.repeat(count),",
     "});",
     "export { functionOverrides };",
     "",
@@ -139,7 +191,7 @@ try {
   const compiledOverrides = require(path.join(outputPath, "function-overrides.js")).functionOverrides;
   const hybridFunctions = { REPLACE: legacyFunction, FALLBACK: fallbackFunction };
   applyFunctionOverrides(hybridFunctions, compiledOverrides);
-  assert.strictEqual(hybridFunctions.REPLACE(), "typescript");
+  assert.strictEqual(hybridFunctions.REPLACE("typescript", 2), "typescripttypescript");
   assert.strictEqual(hybridFunctions.FALLBACK(), "fallback");
 } finally {
   fs.rmSync(overrideFixtureRoot, { recursive: true, force: true });
