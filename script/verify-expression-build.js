@@ -117,8 +117,13 @@ function verifyArtifactInventory() {
     );
     result[channel] = files;
   });
+  const compatibilityPath = path.join(dist, "expressions.js");
   assert.ok(
-    fs.readFileSync(path.join(dist, "expressions.js"))
+    fs.existsSync(compatibilityPath) && fs.statSync(compatibilityPath).isFile(),
+    "missing stable dist/expressions.js legacy-compatible entry point"
+  );
+  assert.ok(
+    fs.readFileSync(compatibilityPath)
       .equals(fs.readFileSync(path.join(dist, "legacy", "expressions.js"))),
     "dist/expressions.js must remain the legacy-compatible entry point"
   );
