@@ -6,6 +6,7 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
+const { types } = require("util");
 const createRuntimeAdapter = require("./runtime-adapter");
 
 const BUNDLE_INITIALIZATION_TIMEOUT_MS = 10000;
@@ -25,9 +26,9 @@ function normalize(value, seen = new WeakSet()) {
   if (value === Infinity) return { $type: "infinity", sign: 1 };
   if (value === -Infinity) return { $type: "infinity", sign: -1 };
   if (Object.is(value, -0)) return { $type: "number", value: "-0" };
-  if (Object.prototype.toString.call(value) === "[object Date]") {
-    if (Number.isNaN(value.getTime())) return { $type: "invalid-date" };
-    return { $date: value.toISOString().slice(0, 10) };
+  if (types.isDate(value)) {
+    if (Number.isNaN(Date.prototype.getTime.call(value))) return { $type: "invalid-date" };
+    return { $date: Date.prototype.toISOString.call(value).slice(0, 10) };
   }
   if (typeof value === "function") return { $type: "function" };
   if (value instanceof Error || Object.prototype.toString.call(value) === "[object Error]") {
@@ -37,7 +38,7 @@ function normalize(value, seen = new WeakSet()) {
     if (seen.has(value)) return { $type: "circular" };
     seen.add(value);
     try {
-      return Array.from(value, (item) => normalize(item, seen));
+      return Array.prototype.map.call(value, (item) => normalize(item, seen));
     } finally {
       seen.delete(value);
     }

@@ -51,6 +51,24 @@ try {
   fs.rmSync(timeoutFixtureRoot, { recursive: true, force: true });
 }
 assert.deepStrictEqual(normalize(new Date(NaN)), { $type: "invalid-date" });
+assert.deepStrictEqual(normalize(vm.runInNewContext("new Date('2020-01-02')")), { $date: "2020-01-02" });
+assert.deepStrictEqual(normalize(vm.runInNewContext("new Date(NaN)")), { $type: "invalid-date" });
+assert.deepStrictEqual(normalize({ [Symbol.toStringTag]: "Date", value: 1 }), { value: 1 });
+const overriddenDate = new Date("2020-01-02");
+overriddenDate.getTime = () => { throw new Error("do not call overridden method"); };
+overriddenDate.toISOString = overriddenDate.getTime;
+assert.deepStrictEqual(normalize(overriddenDate), { $date: "2020-01-02" });
+const sparseArray = vm.runInNewContext("[, undefined, 1]");
+const normalizedSparseArray = normalize(sparseArray);
+assert.strictEqual(normalizedSparseArray.length, 3);
+assert.strictEqual(0 in normalizedSparseArray, false);
+assert.deepStrictEqual(normalizedSparseArray[1], { $type: "undefined" });
+assert.deepStrictEqual(normalize(vm.runInNewContext("[1, 2]")), [1, 2]);
+assert.throws(() => run(
+  { invoke: () => ({ value: sparseArray, results: [] }) },
+  { invoke: () => ({ value: [undefined, undefined, 1], results: [] }) },
+  { cases: [{ id: "sparse-array-differential", function: "ARRAY", args: [], expectedType: "object" }] }
+), /legacy differential/);
 assert.deepStrictEqual(normalize(new Error("boom")), {
   $type: "error",
   name: "Error",
