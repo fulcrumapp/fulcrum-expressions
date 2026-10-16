@@ -13,6 +13,7 @@ Incremental TypeScript migration needs a safe release foundation before expressi
 - Unify runtime and public API declaration generation for CI and manual release builds, excluding test/internal declarations and checking reproducibility without broadening the isolated hybrid typecheck.
 - Document the Rails release-selection seam without implementing flag evaluation, targeting, fallback, or startup behavior in this repository.
 - Require the separate minimum Rails consumer integration before Phase 2 batch exposure, and actual flagged application-runtime acceptance of each released batch before the next proceeds; isolated contracts and publication alone are not runtime acceptance.
+- Specify the outstanding parallel sandbox HTML prerequisite: root `expressions-hybrid.html` and `expressions-legacy.html` with correct channel/proxy references, release/debug build and deploy outputs, and Rails HTML URL selection; preserve original `expressions.html` and the frozen runtime as the comparison endpoint. This plan clarification does not implement or deploy those pages.
 
 ## Capabilities
 

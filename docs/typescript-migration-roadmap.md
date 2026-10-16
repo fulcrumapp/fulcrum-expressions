@@ -54,10 +54,30 @@ Before Phase 2 migrated batches are exposed, implement and exercise the minimum
 consumer integration in the Rails repository. This is separate implementation
 work, not work deferred until expression migration finishes:
 
+- First implement parallel sandbox HTML outputs in this repository's release
+  and debug builds and both deployment paths. Do not rewrite the original
+  `expressions.html` or replace its frozen root runtime:
+
+  | Planned build output | Production URL | Relative scripts, in load order |
+  | --- | --- | --- |
+  | `dist/expressions-hybrid.html` | `https://assets.fulcrumapp.com/expv1/expressions-hybrid.html` | `hybrid/expressions.js`, `expressions-proxy.js` |
+  | `dist/expressions-legacy.html` | `https://assets.fulcrumapp.com/expv1/expressions-legacy.html` | `legacy/expressions.js`, `expressions-proxy.js` |
+
+  Root-level sibling pages let both channels reuse the existing root proxy
+  without incorrect subdirectory-relative URLs. The original
+  `/expv1/expressions.html` continues loading `expressions.js` and
+  `expressions-proxy.js` as the frozen-runtime comparison sandbox. Preserve
+  its contents; adding parallel pages must not change baseline selection.
+  The channel HTML outputs are **not currently built or deployed**; this
+  prerequisite includes adding their uploads, HTML content type and build/
+  deployment inventory checks, not just documenting URLs.
 - Load the real deployed hybrid channel when `expressions-ts-migration` is
-  `true`, and the complete deployed legacy channel when it is `false` or
-  unreadable. Verify the selected artifact is the one executing expressions,
-  rather than the frozen compatibility URL or an isolated test adapter.
+  `true` by selecting the hybrid sandbox URL in Rails' expression sandbox URL
+  configuration; select the legacy sandbox URL when it is `false` or
+  unreadable. Verify both endpoints load their intended runtime and proxy,
+  with correct URL resolution locally and after deployment. Verify the selected
+  artifact is actually executing expressions, not the original comparison
+  sandbox or an isolated test adapter.
 - Wire the required application adapter, initialization, host callbacks,
   expression invocation/completion, and startup fallback behavior. Necessary
   lifecycle and fallback behavior cannot be postponed as optional hardening.
@@ -67,7 +87,7 @@ work, not work deferred until expression migration finishes:
   migrated; it is not evidence that future TypeScript functions are accepted.
 
 **Readiness prerequisite:** the Rails integration is implemented and exercised
-against deployed channels, with evidence of flag selection, lifecycle/host
+against both deployed channel sandbox endpoints, with evidence of flag selection, lifecycle/host
 behavior, fallback and rollback. This is not implemented or demonstrated by the
 Phase 1 build/gate work in this repository. Until it is ready, do not expose
 migrated batches or count channel publication as application-runtime use.
@@ -97,8 +117,8 @@ merged or released:
   to make a batch pass.
 
 After the automated gates pass, release that batch in hybrid alongside complete
-legacy and exercise the deployed hybrid through the flagged Rails application
-runtime. Record the release identity, selected channel, affected expression
+legacy and exercise `expressions-hybrid.html` and its deployed hybrid runtime
+through the flagged Rails application. Record the release identity, selected sandbox URL/channel, affected expression
 flows, observed values/errors, lifecycle and host effects, and comparison with
 legacy. Review those results before advancing to the next batch. If problems
 appear, roll back selection to legacy and correct and revalidate the batch;
@@ -133,8 +153,10 @@ settings decision.
 Keep the complete legacy channel available throughout migration. The original
 production `/expv1/expressions.js` object remains frozen for comparison; neither
 manual nor automated deployment replaces it. Local `dist/expressions.js` remains
-a compatibility build artifact. Existing sandbox HTML still loads the frozen
-object until the separate Rails integration changes runtime selection.
+a compatibility build artifact. Existing sandbox HTML continues loading the
+frozen object; Rails must select a parallel channel sandbox URL rather than
+rewrite that original HTML. Neither parallel page nor Rails selection is
+implemented by the current Phase 1 work.
 
 This plan does not delete legacy runtime paths during migration, broaden
 expression behavior beyond parity-targeted changes, or implement Rails

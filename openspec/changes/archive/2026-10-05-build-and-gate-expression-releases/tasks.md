@@ -1,7 +1,8 @@
 # Tasks
 
 These completed tasks cover the Phase 1 expressions foundation and its
-documentation only. The documented Phase 1b Rails consumer prerequisite and
+documentation only. The planned parallel hybrid/legacy sandbox HTML outputs
+are not built or deployed by these completed tasks. The documented Phase 1b Rails consumer prerequisite and
 Phase 2 per-batch application-runtime acceptance remain unimplemented and
 unverified; no completed item below claims that rollout is done.
 

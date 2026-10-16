@@ -96,6 +96,18 @@ Rails runtime work to their explicitly out-of-scope phases.
      application runtime with reviewed results before the next proceeds.
      Failures require legacy rollback, correction and revalidation.
      Branch-protection enforcement remains an administrator setting.
+   - **Sandbox prerequisite (planned, not implemented):** Add root sibling
+     `dist/expressions-hybrid.html` and `dist/expressions-legacy.html` to
+     release/debug builds and both deploy paths, with HTML content types and
+     inventory/URL checks. Their URLs are `/expv1/expressions-hybrid.html` and
+     `/expv1/expressions-legacy.html`; they load the respective
+     `hybrid/expressions.js` or `legacy/expressions.js`, followed by root
+     `expressions-proxy.js`. Root siblings avoid incorrectly resolving the
+     proxy inside a channel subdirectory. Preserve original `expressions.html`
+     contents and the frozen runtime; Rails selects the new hybrid HTML for
+     flag true and legacy HTML for false/unreadable/rollback. Both endpoints,
+     actual runtime selection and lifecycle/host behavior must be exercised
+     before batches; each batch then uses the hybrid sandbox in application.
    - **Rationale:** Selection and targeting belong to the Rails consumer, while
      concurrent complete artifacts enable channel-wide rollback without a
      rebuild. Actual per-batch runtime use catches integration problems while
@@ -168,7 +180,9 @@ Rails runtime work to their explicitly out-of-scope phases.
 3. Add the per-batch contracts, differential/parity reporting, deterministic
    artifact checks, and failing `Expression migration gates` CI job. Document
    the Rails consumer seam without changing Rails behavior.
-4. Before exposing Phase 2 batches, complete the separate Rails consumer
+4. Before exposing Phase 2 batches, implement the parallel sandbox HTML
+   build/deploy prerequisite, verify local relative scripts and both deployed
+   endpoint URLs, then complete the separate Rails consumer
    readiness prerequisite (original task 7) and exercise real deployed channel
    selection, lifecycle/host wiring, startup fallback and legacy rollback.
    This Phase 1 PR documents but does not implement or claim that readiness.

@@ -67,9 +67,19 @@ The [migration roadmap](typescript-migration-roadmap.md#phase-1b-rails-consumer-
 requires minimum Rails consumer integration and exercised selection, lifecycle,
 host wiring, fallback and rollback before Phase 2 batches are exposed. That
 integration is separate Rails work and is not implemented by this harness.
+Readiness also requires the planned `dist/expressions-hybrid.html` and
+`dist/expressions-legacy.html` build/deploy outputs at root `/expv1/` sibling
+URLs, without changing the original `expressions.html` comparison page.
+Assert that their relative scripts resolve respectively to
+`hybrid/expressions.js` or `legacy/expressions.js`, then the shared
+`expressions-proxy.js`; verify both local packaging and deployed endpoint
+loading. Rails must select those HTML URLs under the flag/fallback, not only
+identify a JavaScript channel. These HTML assets and Rails wiring are currently
+unimplemented; URL-resolution checks alone do not prove browser/host behavior.
 
 Each gated TypeScript batch is released in hybrid alongside complete legacy,
-then exercised through the real deployed channel in the flagged application
+then exercised through `expressions-hybrid.html` and the real deployed hybrid
+runtime in the flagged application
 runtime. Record the release/channel and affected expression flows, values/errors,
 lifecycle and host effects; review acceptance before advancing to another batch.
 Problems require rollback to legacy and correction/revalidation, not postponing
