@@ -32,7 +32,16 @@ function runCommand(command, args) {
 
 function runBuild(debug) {
   runCommand(process.execPath, [buildScript, ...(debug ? ["--debug"] : [])]);
-  runCommand("yarn", ["run", debug ? "build:sandbox:debug" : "build:sandbox"]);
+  const packageManagerScript = process.env.npm_execpath;
+  if (packageManagerScript) {
+    runCommand(process.execPath, [
+      packageManagerScript,
+      "run",
+      debug ? "build:sandbox:debug" : "build:sandbox",
+    ]);
+  } else {
+    runCommand("yarn", ["run", debug ? "build:sandbox:debug" : "build:sandbox"]);
+  }
 }
 
 function inventory(directory) {
@@ -141,6 +150,8 @@ function verifyArtifactInventory() {
     result[channel] = files;
   });
   const comparisonSource = fs.readFileSync(path.join(root, "expressions.html"));
+  // Change this fingerprint only with explicit approval to update the frozen comparison page.
+  // After approval, use `sha256sum expressions.html` and review the page diff.
   assert.strictEqual(
     crypto.createHash("sha256").update(comparisonSource).digest("hex"),
     "b858414b6250edef49569ad7ed7bf92cd876cfbb176a5059b2e648e6c063f23b",
