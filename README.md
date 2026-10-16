@@ -120,14 +120,30 @@ a separate consumer prerequisite ([Phase 1b: Rails consumer readiness](docs/type
 which must be implemented and exercised before exposing Phase 2 migrated batches,
 not after all functions have been migrated.
 
+**Planned sandbox endpoints (not yet built or deployed):** add
+`dist/expressions-hybrid.html` at
+`https://assets.fulcrumapp.com/expv1/expressions-hybrid.html`, loading
+`hybrid/expressions.js` then `expressions-proxy.js`, and a sibling
+`dist/expressions-legacy.html` at
+`https://assets.fulcrumapp.com/expv1/expressions-legacy.html`, loading
+`legacy/expressions.js` then the same root proxy. Keeping both HTML files at
+the `/expv1/` root makes those relative paths resolve correctly. Release/debug
+builds and manual/automated deploys must add these assets and verify their
+script URLs before Phase 2 exposure. Preserve the original `expressions.html`
+contents and frozen runtime as the comparison endpoint; do not repoint it.
+Rails must select the hybrid sandbox URL for flag true and the legacy sandbox
+URL for false/unreadable or rollback, and exercise both actual endpoints,
+required lifecycle/host wiring and fallback before batches proceed.
+
 **Current migration state and [plan](docs/typescript-migration-roadmap.md):** the hybrid override registry is empty;
 no expression has been migrated and no customer is selected for hybrid by this
 repository. First, the separate Rails integration must load the deployed channels
-under the flag and verify required lifecycle/host wiring, fallback and rollback;
+through those parallel sandbox endpoints under the flag and verify required
+lifecycle/host wiring, fallback and rollback;
 the empty-override hybrid can exercise that baseline wiring. For each future
 batch, add same-name TypeScript overrides, pass the automated gates, release
-alongside complete legacy, and exercise the deployed hybrid in the flagged
-application runtime. Record and review actual runtime results before the next
+alongside complete legacy, and exercise the deployed hybrid sandbox and runtime
+in the flagged application. Record and review actual runtime results before the next
 batch; roll back to legacy and correct/revalidate any failing batch. Publication
 and isolated contracts alone are not runtime acceptance.
 Rails owns customer targeting and selection: the planned flag contract

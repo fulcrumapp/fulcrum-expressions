@@ -113,10 +113,19 @@ CI and manual release builds MUST use a shared build command that generates the 
 ### Requirement: Rails release selection remains a documented consumer contract
 For each migration release, the legacy and hybrid channels MUST be independently addressable for the Rails consumer, while this repository documents but does not implement flag evaluation or customer targeting.
 
+#### Scenario: Parallel sandbox artifacts precede migrated batch exposure
+- **WHEN** preparing Phase 1b consumer readiness
+- **THEN** release and debug builds and both deployment paths MUST add `expressions-hybrid.html` and `expressions-legacy.html` at the `/expv1/` root
+- **AND** their scripts MUST load `hybrid/expressions.js` or `legacy/expressions.js` respectively, followed by the shared `expressions-proxy.js`
+- **AND** local asset inventories and relative URL resolution and both deployed sandbox endpoints MUST be verified
+- **AND** the original `expressions.html` contents and frozen root runtime MUST remain unchanged as the comparison sandbox
+- **AND** these planned HTML artifacts are not claimed built or deployed by the current Phase 1 implementation
+
 #### Scenario: Consumer readiness precedes migrated batch exposure
 - **WHEN** Phase 2 migrated batches are to be exposed
 - **THEN** the separate Rails integration MUST already load and exercise the real deployed hybrid channel under the flag, including required lifecycle and host wiring
 - **AND** false or unreadable flag selection, startup fallback, and rollback to complete legacy MUST be exercised with reviewable application-runtime evidence
+- **AND** Rails sandbox URL configuration MUST select `/expv1/expressions-hybrid.html` for flag true and `/expv1/expressions-legacy.html` for false, unreadable or rollback
 - **AND** an empty-override hybrid MAY establish baseline wiring but does not establish acceptance of migrated functions
 - **AND** the Phase 1 expressions implementation does not claim this Rails prerequisite is complete
 
@@ -139,6 +148,7 @@ Each migrated batch that passes its required gates MUST be included in the hybri
 #### Scenario: Each released batch is accepted in the application runtime before the next
 - **WHEN** a gated batch is released in hybrid
 - **THEN** the deployed hybrid MUST be exercised through the flagged Rails application runtime
+- **AND** this execution MUST use the parallel `expressions-hybrid.html` endpoint rather than the original comparison sandbox
 - **AND** reviewable evidence MUST identify the release and selected channel, affected expression flows, values or errors, lifecycle and host effects, and comparison with legacy
 - **AND** the next batch MUST NOT proceed until the current batch's runtime results are accepted
 - **AND** problems MUST trigger rollback to legacy and correction and revalidation before advancing
