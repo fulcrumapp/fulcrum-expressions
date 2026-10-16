@@ -60,6 +60,24 @@ function invokeDeploy(args, user) {
   };
 }
 
+function optionValue(call, option, target) {
+  const index = call.indexOf(option);
+  assert.ok(index >= 0, `missing ${option} for ${target}`);
+  assert.ok(index + 1 < call.length && !call[index + 1].startsWith("--"),
+    `missing value for ${option} for ${target}`);
+  return call[index + 1];
+}
+
+for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]) {
+  assert.throws(() => optionValue(["s3", "cp"], option, "test-target"),
+    { message: `missing ${option} for test-target` });
+  for (const suffix of [[], ["--another-option"]]) {
+    assert.throws(() => optionValue(["s3", "cp", option, ...suffix], option, "test-target"),
+      { message: `missing value for ${option} for test-target` });
+  }
+  assert.strictEqual(optionValue(["s3", "cp", option, "value"], option, "test-target"), "value");
+}
+
 function assertUploads(result, bucket) {
   const s3Uploads = result.calls.filter((call) => call[0] === "s3" && call[1] === "cp");
   const targets = s3Uploads.map((call) => call[call.length - 1]);
@@ -77,16 +95,16 @@ function assertUploads(result, bucket) {
     const relativePath = target.split("/expv1/")[1];
     assert.strictEqual(path.resolve(source), path.join(root, "dist", relativePath));
     assert.strictEqual(
-      call[call.indexOf("--content-type") + 1],
+      optionValue(call, "--content-type", target),
       target.endsWith(".html") ? "text/html" : "application/javascript",
       `incorrect content type for ${target}`
     );
-    assert.strictEqual(call[call.indexOf("--acl") + 1], "public-read");
+    assert.strictEqual(optionValue(call, "--acl", target), "public-read");
     assert.strictEqual(
-      call[call.indexOf("--cache-control") + 1],
+      optionValue(call, "--cache-control", target),
       "no-cache, no-store, max-age=0, must-revalidate"
     );
-    assert.strictEqual(call[call.indexOf("--expires") + 1], "Mon, 01 Jan 1990 00:00:00 GMT");
+    assert.strictEqual(optionValue(call, "--expires", target), "Mon, 01 Jan 1990 00:00:00 GMT");
     if (target.endsWith(".html")) {
       const html = fs.readFileSync(source, "utf8");
       assert.strictEqual(html, fs.readFileSync(path.join(root, relativePath), "utf8"));
@@ -94,7 +112,7 @@ function assertUploads(result, bucket) {
       const scripts = assertSandboxScripts(html, [
         "expressions.js",
         channelPage ? "../expressions-proxy.js" : "expressions-proxy.js",
-      ]);
+      ], { comparisonPage: !channelPage });
       const pageUrl = new URL(`/expv1/${relativePath}`, `https://${bucket}.s3.amazonaws.com`);
       assert.deepStrictEqual(scripts.map((src) => new URL(src, pageUrl).pathname), [
         channelPage ? `/expv1/${relativePath.split("/")[0]}/expressions.js` : "/expv1/expressions.js",

@@ -76,8 +76,10 @@ comparison page is unchanged.
 contents and script order, local dependency resolution, unchanged comparison
 HTML, and stable repeated-build hashes including the shared proxy.
 Both build and deployment checks use a shared parse5 HTML parser to verify all
-script elements in document order, including the explicitly allowed IE
-conditional-comment compatibility shim; other HTTPS and inline scripts fail.
+script elements in document order. Channel pages load only their runtime and
+proxy, with no remote compatibility shim; HTTPS, inline, and conditional scripts
+fail. Only the unchanged original comparison page retains its explicitly
+validated historical IE compatibility shim.
 `yarn test:sandbox-scripts` covers quoting/attribute and closing-tag whitespace
 variants, ordering, and unexpected scripts, and runs in both gates.
 `yarn test:deploy` uses an AWS stub to verify preview/production endpoint

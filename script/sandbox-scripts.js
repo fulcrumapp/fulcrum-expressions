@@ -7,7 +7,7 @@ const shimSource = "https://html5shim.googlecode.com/svn/trunk/html5.js";
 const conditionalStart = "[if lt IE 9]>";
 const conditionalEnd = "<![endif]";
 
-function assertSandboxScripts(html, expectedSources) {
+function assertSandboxScripts(html, expectedSources, { comparisonPage = false } = {}) {
   const scripts = [];
   function visit(node, condition = null) {
     if (node.tagName === "script") {
@@ -27,10 +27,10 @@ function assertSandboxScripts(html, expectedSources) {
   }
   visit(parse5.parse(html));
   assert.deepStrictEqual(scripts, [
-    { source: shimSource, condition: "lt IE 9" },
+    ...(comparisonPage ? [{ source: shimSource, condition: "lt IE 9" }] : []),
     ...expectedSources.map((source) => ({ source, condition: null })),
-  ], "sandbox must load only the conditional compatibility shim, runtime, and proxy in order");
-  return scripts.slice(1).map((script) => script.source);
+  ], "sandbox must load only its expected scripts in order");
+  return scripts.slice(comparisonPage ? 1 : 0).map((script) => script.source);
 }
 
 module.exports = { assertSandboxScripts };
