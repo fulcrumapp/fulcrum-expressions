@@ -70,8 +70,16 @@ The CI job named `Expression migration gates` MUST fail when any required migrat
 - **THEN** requiring `Expression migration gates` is managed in repository settings outside this change
 - **AND** the absence of that administrative setting does not change the CI job's failure behavior
 
+### Requirement: Deployments preserve the frozen compatibility comparison
+The existing `/expv1/expressions.js` production object MUST remain a frozen comparison baseline. Manual and automated deployments MUST NOT upload or replace it. The repository MAY continue to build `dist/expressions.js` as a local backwards-compatible legacy entry point.
+
+#### Scenario: A manual deployment publishes channels without changing the frozen baseline
+- **WHEN** a developer runs a preview or confirmed production deployment
+- **THEN** the deployment uploads the legacy and hybrid channel bundles and the sandbox assets
+- **AND** it does not upload `dist/expressions.js` to `/expv1/expressions.js`
+
 ### Requirement: Passing main-branch gates publish comparison channels without changing the compatibility baseline
-The migration gate workflow MUST run on every pull request and push to `main`. After the gates pass on a push to `main`, it MUST publish the independently addressable legacy and hybrid bundles to production S3 without overwriting the existing backwards-compatible expression entry point.
+The migration gate workflow MUST run on every pull request and push to `main`. After the gates pass on a push to `main`, it MUST publish the independently addressable legacy and hybrid bundles to production S3 while preserving the frozen existing backwards-compatible expression object.
 
 #### Scenario: A pull request passes the migration gates
 - **WHEN** a pull request passes all migration gates
@@ -80,7 +88,7 @@ The migration gate workflow MUST run on every pull request and push to `main`. A
 #### Scenario: A main-branch push passes the migration gates
 - **WHEN** a push to `main` passes all migration gates
 - **THEN** the workflow builds the release bundles and deploys `legacy/expressions.js` and `hybrid/expressions.js` to their production S3 locations
-- **AND** the existing `expressions.js` compatibility object is left unchanged as the comparison baseline
+- **AND** no upload targets the frozen `expressions.js` compatibility object
 
 #### Scenario: A main-branch push fails a migration gate
 - **WHEN** any migration gate fails on a push to `main`
