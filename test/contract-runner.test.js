@@ -74,6 +74,24 @@ assert.deepStrictEqual(normalize(new Error("boom")), {
   name: "Error",
   message: "boom",
 });
+assert.deepStrictEqual(normalize(vm.runInNewContext("new TypeError('cross-realm')")), {
+  $type: "error",
+  name: "TypeError",
+  message: "cross-realm",
+});
+assert.deepStrictEqual(normalize({ [Symbol.toStringTag]: "Error", name: "TypeError", message: "spoofed" }), {
+  message: "spoofed",
+  name: "TypeError",
+});
+const errorShapedObject = Object.create(Error.prototype);
+errorShapedObject.name = "Error";
+errorShapedObject.message = "not native";
+assert.deepStrictEqual(normalize(errorShapedObject), { message: "not native", name: "Error" });
+assert.throws(() => run(
+  { invoke: () => ({ value: new Error("mismatch"), results: [] }) },
+  { invoke: () => ({ value: { [Symbol.toStringTag]: "Error", name: "Error", message: "mismatch" }, results: [] }) },
+  { cases: [{ id: "error-brand-differential", function: "ERROR", args: [], expectedType: "object" }] }
+), /legacy differential/);
 assert.deepStrictEqual(normalize("thrown"), "thrown");
 
 const cleanErrorContract = {
