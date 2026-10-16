@@ -86,10 +86,12 @@ accept valid calls and reject incorrect result types, and regeneration is
 byte-identical. CI also fails if regeneration changes the checked-in
 `ts/api.ts`.
 
-Contract results are reported by function group. Failures exit nonzero and fail
-the `Expression migration gates` workflow on every pull request and push to
-`main`. A successful push to `main` then publishes the legacy and hybrid
-channels side-by-side; it never overwrites the frozen compatibility bundle.
+The `Expression migration gates` job runs on pull requests and pushes to `main`
+(including merges) and reports contract results by function group. The separate
+`Deploy to S3 (main only)` job depends on successful migration gates and is
+guarded to run only on pushes to `main`; it appears as **skipped** for pull
+requests. A successful main push then publishes the legacy and hybrid channels
+side-by-side; it never overwrites the frozen compatibility bundle.
 
 ### Console
 Starts an interactive node terminal with the functions available to call

@@ -8,6 +8,14 @@ const { spawnSync } = require("child_process");
 
 const root = path.resolve(__dirname, "..");
 const deployScript = path.join(root, "script", "deploy");
+const workflow = fs.readFileSync(
+  path.join(root, ".github", "workflows", "expression-migration-gates.yml"),
+  "utf8"
+);
+assert.match(workflow, /^  pull_request:$/m);
+assert.match(workflow, /^  push:\n    branches:\n      - main$/m);
+assert.match(workflow, /^  migration-gates:\n    name: Expression migration gates$/m);
+assert.match(workflow, /^  deploy-production:\n    name: Deploy to S3 \(main only\)\n    needs: migration-gates\n    if: success\(\) && github\.event_name == 'push' && github\.ref == 'refs\/heads\/main'$/m);
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
 const binDirectory = path.join(temporaryRoot, "bin");
 const callLog = path.join(temporaryRoot, "aws-calls.jsonl");
