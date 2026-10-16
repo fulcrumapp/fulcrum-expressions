@@ -51,6 +51,7 @@ function writeBundle(file, source) {
 function buildLegacy() {
   const source = bundle("runtime.coffee");
   writeBundle(path.join(legacyDir, "expressions.js"), source);
+  fs.copyFileSync(path.join(root, "legacy", "expressions.html"), path.join(legacyDir, "expressions.html"));
   writeBundle(path.join(dist, "expressions.js"), source);
   fs.copyFileSync(path.join(root, "package.json"), path.join(dist, "package.json"));
 }
@@ -75,6 +76,7 @@ if (legacyOnly) {
       path.join(hybridDir, "expressions.js"),
       bundle("migration/hybrid-entry.js")
     );
+    fs.copyFileSync(path.join(root, "hybrid", "expressions.html"), path.join(hybridDir, "expressions.html"));
   } finally {
     fs.rmSync(migrationBuildDir, { recursive: true, force: true });
   }

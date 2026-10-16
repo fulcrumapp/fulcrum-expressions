@@ -65,9 +65,45 @@ function assertUploads(result, bucket) {
   assert.deepStrictEqual(targets, [
     `s3://${bucket}/expv1/legacy/expressions.js`,
     `s3://${bucket}/expv1/hybrid/expressions.js`,
+    `s3://${bucket}/expv1/legacy/expressions.html`,
+    `s3://${bucket}/expv1/hybrid/expressions.html`,
     `s3://${bucket}/expv1/expressions-proxy.js`,
     `s3://${bucket}/expv1/expressions.html`,
   ]);
+  s3Uploads.forEach((call) => {
+    const target = call[call.length - 1];
+    const source = call[call.length - 2];
+    const relativePath = target.split("/expv1/")[1];
+    assert.strictEqual(path.resolve(source), path.join(root, "dist", relativePath));
+    assert.strictEqual(
+      call[call.indexOf("--content-type") + 1],
+      target.endsWith(".html") ? "text/html" : "application/javascript",
+      `incorrect content type for ${target}`
+    );
+    assert.strictEqual(call[call.indexOf("--acl") + 1], "public-read");
+    assert.strictEqual(
+      call[call.indexOf("--cache-control") + 1],
+      "no-cache, no-store, max-age=0, must-revalidate"
+    );
+    assert.strictEqual(call[call.indexOf("--expires") + 1], "Mon, 01 Jan 1990 00:00:00 GMT");
+    if (target.endsWith(".html")) {
+      const html = fs.readFileSync(source, "utf8");
+      assert.strictEqual(html, fs.readFileSync(path.join(root, relativePath), "utf8"));
+      const scripts = Array.from(html.matchAll(/<script src="([^"]+)"><\/script>/g),
+        (match) => match[1]).filter((src) => !src.startsWith("https://"));
+      const channelPage = relativePath.includes("/");
+      assert.deepStrictEqual(scripts, [
+        "expressions.js",
+        channelPage ? "../expressions-proxy.js" : "expressions-proxy.js",
+      ]);
+      const pageUrl = new URL(`/expv1/${relativePath}`, `https://${bucket}.s3.amazonaws.com`);
+      assert.deepStrictEqual(scripts.map((src) => new URL(src, pageUrl).pathname), [
+        channelPage ? `/expv1/${relativePath.split("/")[0]}/expressions.js` : "/expv1/expressions.js",
+        "/expv1/expressions-proxy.js",
+      ]);
+      assert.ok(result.output.includes(`Deployed ${pageUrl.href}\n`));
+    }
+  });
   assert.ok(!targets.includes(`s3://${bucket}/expv1/expressions.js`));
   assert.ok(!result.output.includes(`Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n`));
 }

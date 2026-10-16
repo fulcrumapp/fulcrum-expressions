@@ -13,8 +13,8 @@ const dist = path.join(root, "dist");
 const channels = ["legacy", "hybrid"];
 const maxBuffer = 50 * 1024 * 1024;
 
-function runBuild() {
-  const result = spawnSync(process.execPath, [buildScript], {
+function runCommand(command, args) {
+  const result = spawnSync(command, args, {
     cwd: root,
     encoding: "utf8",
     maxBuffer,
@@ -22,11 +22,16 @@ function runBuild() {
   if (result.error) throw result.error;
   if (result.status !== 0) {
     throw new Error([
-      `Expression build failed with exit code ${result.status}.`,
+      `${command} ${args.join(" ")} failed with exit code ${result.status}.`,
       result.stdout,
       result.stderr,
     ].filter(Boolean).join("\n"));
   }
+}
+
+function runBuild(debug) {
+  runCommand(process.execPath, [buildScript, ...(debug ? ["--debug"] : [])]);
+  runCommand("yarn", ["run", debug ? "build:sandbox:debug" : "build:sandbox"]);
 }
 
 function inventory(directory) {
@@ -111,12 +116,46 @@ function verifyArtifactInventory() {
     const directory = path.join(dist, channel);
     assert.ok(fs.statSync(directory).isDirectory(), `missing dist/${channel}`);
     const files = inventory(directory);
+    assert.deepStrictEqual(
+      files.map((file) => file.path),
+      ["expressions.html", "expressions.js"],
+      `unexpected dist/${channel} artifact inventory`
+    );
     assert.ok(
       files.some((file) => file.path === "expressions.js" && file.size > 0),
       `missing stable dist/${channel}/expressions.js`
     );
+    const pagePath = path.join(directory, "expressions.html");
+    const html = fs.readFileSync(pagePath, "utf8");
+    assert.strictEqual(html, fs.readFileSync(path.join(root, channel, "expressions.html"), "utf8"),
+      `dist/${channel}/expressions.html must match its source`);
+    const scripts = Array.from(html.matchAll(/<script src="([^"]+)"><\/script>/g),
+      (match) => match[1]).filter((src) => !src.startsWith("https://"));
+    assert.deepStrictEqual(scripts, ["expressions.js", "../expressions-proxy.js"],
+      `${channel} sandbox must load its runtime before the shared proxy`);
+    const resolvedScripts = scripts.map((src) => path.resolve(directory, src));
+    assert.deepStrictEqual(resolvedScripts, [
+      path.join(directory, "expressions.js"),
+      path.join(dist, "expressions-proxy.js"),
+    ]);
+    resolvedScripts.forEach((file) => assert.ok(fs.statSync(file).size > 0,
+      `missing sandbox dependency: ${file}`));
     result[channel] = files;
   });
+  const comparisonSource = fs.readFileSync(path.join(root, "expressions.html"));
+  assert.strictEqual(
+    crypto.createHash("sha256").update(comparisonSource).digest("hex"),
+    "b858414b6250edef49569ad7ed7bf92cd876cfbb176a5059b2e648e6c063f23b",
+    "the original frozen-runtime comparison page must remain unchanged"
+  );
+  assert.ok(fs.readFileSync(path.join(dist, "expressions.html")).equals(comparisonSource),
+    "dist/expressions.html must preserve the comparison page");
+  result.shared = inventory(dist).filter((file) => [
+    "expressions.js", "expressions.html", "expressions-proxy.js",
+  ].includes(file.path));
+  assert.deepStrictEqual(result.shared.map((file) => file.path), [
+    "expressions-proxy.js", "expressions.html", "expressions.js",
+  ]);
   const compatibilityPath = path.join(dist, "expressions.js");
   assert.ok(
     fs.existsSync(compatibilityPath) && fs.statSync(compatibilityPath).isFile(),
@@ -133,9 +172,12 @@ function verifyArtifactInventory() {
 }
 
 verifyMigrationTypecheckScope();
-runBuild();
-const firstInventory = verifyArtifactInventory();
-runBuild();
-const secondInventory = verifyArtifactInventory();
-assert.deepStrictEqual(secondInventory, firstInventory, "repeated builds must be deterministic");
-console.log("Expression build integrity passed: both channels are present and inventories are stable.");
+for (const debug of [true, false]) {
+  runBuild(debug);
+  const firstInventory = verifyArtifactInventory();
+  runBuild(debug);
+  const secondInventory = verifyArtifactInventory();
+  assert.deepStrictEqual(secondInventory, firstInventory,
+    `repeated ${debug ? "debug" : "release"} builds must be deterministic`);
+}
+console.log("Expression build integrity passed: release/debug channel pages resolve correctly and inventories are stable.");
