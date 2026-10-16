@@ -11,6 +11,10 @@ const root = path.resolve(__dirname, "..");
 const apiPath = path.join(root, "ts", "api.ts");
 const rawPath = path.join(root, "dist", "api.raw.d.ts");
 const apiSource = fs.readFileSync(apiPath, "utf8");
+assert.ok(
+  fs.existsSync(rawPath) && fs.statSync(rawPath).isFile(),
+  "Missing dist/api.raw.d.ts; run yarn build:types or yarn build before yarn test:types:check"
+);
 const rawSource = fs.readFileSync(rawPath, "utf8");
 const wrapper = ts.createSourceFile("api.ts", apiSource, ts.ScriptTarget.Latest, true);
 assert.deepStrictEqual(wrapper.parseDiagnostics, [], "public API module must parse");
