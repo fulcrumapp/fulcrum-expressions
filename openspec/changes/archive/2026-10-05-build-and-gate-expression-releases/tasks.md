@@ -1,5 +1,10 @@
 # Tasks
 
+These completed tasks cover the Phase 1 expressions foundation and its
+documentation only. The documented Phase 1b Rails consumer prerequisite and
+Phase 2 per-batch application-runtime acceptance remain unimplemented and
+unverified; no completed item below claims that rollout is done.
+
 ## 1. Shared adapter contract
 
 - [x] 1.1 Define one adapter contract for legacy and hybrid invocation inputs, success/error results, lifecycle probes, and observable host effects; verify contract tests exercise both channels against the same assertions.

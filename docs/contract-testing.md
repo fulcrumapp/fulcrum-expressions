@@ -62,8 +62,18 @@ Declaration generation and these consumer checks do not replace the strict
 migration-owned check or claim the existing project-wide TypeScript baseline
 passes.
 
-Each passing TypeScript batch is released in the hybrid channel alongside the
-complete legacy channel. Rails owns release selection:
+Automated gates are necessary but do not establish application-runtime acceptance.
+The [migration roadmap](typescript-migration-roadmap.md#phase-1b-rails-consumer-readiness-task-7-prerequisite)
+requires minimum Rails consumer integration and exercised selection, lifecycle,
+host wiring, fallback and rollback before Phase 2 batches are exposed. That
+integration is separate Rails work and is not implemented by this harness.
+
+Each gated TypeScript batch is released in hybrid alongside complete legacy,
+then exercised through the real deployed channel in the flagged application
+runtime. Record the release/channel and affected expression flows, values/errors,
+lifecycle and host effects; review acceptance before advancing to another batch.
+Problems require rollback to legacy and correction/revalidation, not postponing
+runtime use until migration ends. Rails owns release selection:
 `expressions-ts-migration=true` selects hybrid, while `false` or an unreadable
 flag selects legacy. This repository does not evaluate the flag or target
 customers. Requiring the CI status check in branch protection is a separate

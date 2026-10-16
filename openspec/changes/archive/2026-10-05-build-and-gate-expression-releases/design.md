@@ -33,7 +33,8 @@ Rails runtime work to their explicitly out-of-scope phases.
   check a condition of producing legacy artifacts.
 - Implement Rails flag evaluation, targeting, startup fallback, or runtime
   selection; implement only the consumer contract.
-- Complete the future function-migration batches or the deferred Rails phase.
+- Implement the separate Rails consumer prerequisite or complete future
+  function-migration batches and their application-runtime acceptance.
 
 ## Decisions
 
@@ -88,14 +89,21 @@ Rails runtime work to their explicitly out-of-scope phases.
      `false`/unreadable → legacy consumer contract and makes both artifacts
      independently addressable. Each passing batch is included in the
      hybrid release as merged/released; the complete legacy release ships
-     alongside it. Branch-protection enforcement remains an administrator
-     setting.
+     alongside it. Minimum Rails selection, lifecycle/host wiring, startup
+     fallback and legacy rollback must be implemented and exercised before
+     exposing Phase 2 batches; the empty-overlay hybrid can verify baseline
+     wiring. Each released batch must then be used through the flagged
+     application runtime with reviewed results before the next proceeds.
+     Failures require legacy rollback, correction and revalidation.
+     Branch-protection enforcement remains an administrator setting.
    - **Rationale:** Selection and targeting belong to the Rails consumer, while
      concurrent complete artifacts enable channel-wide rollback without a
-     rebuild. Incremental inclusion avoids a final all-migration promotion.
-   - **Alternative considered:** Implement flag selection here or defer hybrid
-     release until every function is migrated. Rejected as out of scope and
-     inconsistent with the approved release model.
+     rebuild. Actual per-batch runtime use catches integration problems while
+     batches are bounded, rather than accumulating them behind an unused
+     flag. Publication and isolated contracts alone are not runtime acceptance.
+   - **Alternative considered:** Implement Rails selection here or defer its
+     minimum integration until every function is migrated. The former is
+     outside repository scope; the latter defeats incremental live validation.
 
 6. **Publish production bundles only after the main-branch gates pass.**
    - **Decision:** Run the migration gates on every pull request and push to
@@ -160,9 +168,18 @@ Rails runtime work to their explicitly out-of-scope phases.
 3. Add the per-batch contracts, differential/parity reporting, deterministic
    artifact checks, and failing `Expression migration gates` CI job. Document
    the Rails consumer seam without changing Rails behavior.
-4. For each later migration batch, require all gates before merge/release and
-   include passing overrides in hybrid while publishing complete legacy
-   alongside it. Do not introduce a final all-functions promotion milestone.
+4. Before exposing Phase 2 batches, complete the separate Rails consumer
+   readiness prerequisite (original task 7) and exercise real deployed channel
+   selection, lifecycle/host wiring, startup fallback and legacy rollback.
+   This Phase 1 PR documents but does not implement or claim that readiness.
+5. For each Phase 2 batch, require automated gates before merge/release, publish
+   hybrid alongside complete legacy, and collect reviewed flagged
+   application-runtime results before advancing. Identify release/channel,
+   expression flows, values/errors, lifecycle/host effects and legacy comparison.
+   Roll back, correct and revalidate on problems; publication alone is not
+   acceptance. Broader adoption/retirement or optional extra hardening may be
+   approved later without deferring essential consumer behavior or creating a
+   final all-functions promotion dependency.
 
 Rollback selects the independently addressable complete legacy release; it
 does not require rebuilding and is implemented by the Rails consumer, not this

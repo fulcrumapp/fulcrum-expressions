@@ -12,6 +12,7 @@ Incremental TypeScript migration needs a safe release foundation before expressi
 - Define blocking per-batch contract, differential, parity, and deterministic artifact-integrity gates, with actionable results reported by function group.
 - Unify runtime and public API declaration generation for CI and manual release builds, excluding test/internal declarations and checking reproducibility without broadening the isolated hybrid typecheck.
 - Document the Rails release-selection seam without implementing flag evaluation, targeting, fallback, or startup behavior in this repository.
+- Require the separate minimum Rails consumer integration before Phase 2 batch exposure, and actual flagged application-runtime acceptance of each released batch before the next proceeds; isolated contracts and publication alone are not runtime acceptance.
 
 ## Capabilities
 
@@ -25,4 +26,4 @@ None. The local OpenSpec baseline contains no existing capability specs.
 
 ## Impact
 
-This change implements the Phase 1 build, adapter, release, and CI gate foundation and updates its OpenSpec artifacts. It does not implement Rails flag evaluation or runtime selection, migrate expression functions, or complete the Phase 2/3 roadmap work. Requiring the migration status check in repository branch protection remains an administrator-owned setting, not a deliverable or blocker.
+This change implements the Phase 1 build, adapter, release, and CI gate foundation and updates its OpenSpec artifacts. It does not implement Rails flag evaluation or runtime selection, migrate expression functions, or complete Phase 1b consumer readiness or Phase 2 runtime acceptance. Rails integration is separate repository work but is a prerequisite, not a post-migration phase. Requiring the migration status check in repository branch protection remains an administrator-owned setting, not a deliverable or blocker.
