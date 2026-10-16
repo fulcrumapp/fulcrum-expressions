@@ -105,6 +105,9 @@ assert.strictEqual(run(
 ), 1);
 
 const adapter = createLegacyAdapter();
+for (const args of [undefined, null]) {
+  assert.strictEqual(adapter.invoke("TRUE", args).value, true);
+}
 const alertResult = adapter.invoke("ALERT", ["first"]);
 assert.deepStrictEqual(Object.keys(alertResult).sort(), ["results", "value"]);
 assert.deepStrictEqual(normalize(alertResult.results), [
