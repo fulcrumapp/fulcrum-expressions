@@ -75,6 +75,13 @@ comparison page is unchanged.
 `yarn build:verify` checks both modes for exact channel inventories, page
 contents and script order, local dependency resolution, unchanged comparison
 HTML, and stable repeated-build hashes including the shared proxy.
+The three sandbox HTML sources use enforced LF checkout line endings so the
+byte-level comparison-page fingerprint is stable across Git autocrlf settings.
+Build and verification commands require dev dependencies (including TypeScript,
+Browserify, and parse5); install them with
+`yarn install --frozen-lockfile --non-interactive --production=false` when
+`NODE_ENV=production` is set. Both migration CI and release jobs install dev
+dependencies; production-only runtime installations do not support these gates.
 Both build and deployment checks use a shared parse5 HTML parser to verify all
 script elements in document order. Channel pages load only their runtime and
 proxy, with no remote compatibility shim; HTTPS, inline, and conditional scripts
