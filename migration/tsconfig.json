@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmitOnError": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": ".",
+    "outDir": "../dist/.migration-build",
+    "types": [],
+    "lib": ["ES2015"]
+  },
+  "include": ["function-overrides.ts"]
+}
