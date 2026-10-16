@@ -116,9 +116,9 @@ They also publish the existing sandbox HTML and proxy assets. The sandbox HTML
 still references the frozen `/expv1/expressions.js`; publishing the channels
 does not switch the running Rails application or sandbox to either channel.
 Changing Rails URL selection and wiring the `expressions-ts-migration` flag is
-a separate consumer rollout.
+a separate consumer rollout ([Phase 3: Rails runtime integration](typescript-migration-roadmap.md#phase-3-rails-runtime-integration-task-7-deferred)).
 
-**Current migration state and plan:** the hybrid override registry is empty;
+**Current migration state and [plan](typescript-migration-roadmap.md):** the hybrid override registry is empty;
 no expression has been migrated and no customer is selected for hybrid by this
 repository. For each future batch, add same-name TypeScript overrides, require
 the strict isolated typecheck and legacy/hybrid contract and differential
