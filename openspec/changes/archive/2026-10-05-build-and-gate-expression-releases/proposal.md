@@ -10,6 +10,7 @@ Incremental TypeScript migration needs a safe release foundation before expressi
 - Specify side-by-side legacy and hybrid release artifacts, same-name TypeScript overrides, CoffeeScript fallback, stable channel entry points, and the backwards-compatible legacy entry point.
 - Require a strict, explicit, migration-owned TypeScript dependency closure for hybrid builds; keep legacy builds independent of the known-failing project-wide TypeScript check.
 - Define blocking per-batch contract, differential, parity, and deterministic artifact-integrity gates, with actionable results reported by function group.
+- Unify runtime and public API declaration generation for CI and manual release builds, excluding test/internal declarations and checking reproducibility without broadening the isolated hybrid typecheck.
 - Document the Rails release-selection seam without implementing flag evaluation, targeting, fallback, or startup behavior in this repository.
 
 ## Capabilities

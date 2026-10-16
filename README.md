@@ -1,22 +1,26 @@
 ## Fulcrum Expressions
 This implements the runtime for javascript expressions in Fulcrum.
 
-The current implementation uses coffeescript.
+The legacy runtime uses CoffeeScript. The hybrid channel starts from that
+runtime and can adopt TypeScript function overrides incrementally.
 
-There is a typescript implementation (latest version is likely in fulcrum-components/src/expressions, but there is also a typescript branch on this repo) that is currently being used in fulcrum-components to provide types to the monaco editor used to edit data events, calculations, etc.
-Eventually, this repo should contain that implementation, and ideally move off the coffeescript implementation once we are confident the typescript implementation works.
-Right now, we haven't determined the best way to distribute those types from this package. Until then, any type updates that need to be made (new public facing functions or otherwise) will need to be made in the typescript implementation.
+The existing TypeScript sources in `ts/functions` and `ts/types` also generate
+the public API declaration string in `ts/api.ts` for editor consumers. Public
+API changes must update those sources and regenerate the checked-in declaration
+file. This is not a conventional package `types` entry; distribution to
+consumers remains separate from the runtime S3 publisher.
 
 ### Setup
-Install dependencies
+Install Node.js/Yarn (see `.tool-versions`), Ruby, and Make, then install dependencies.
+Ruby is used by the public declaration generator; CI explicitly sets it up.
 ```sh
 yarn
 ```
 
 ### Build
 Build the legacy and hybrid expression channels, the backwards-compatible
-`dist/expressions.js` legacy entry point, and the sandbox
-(`expressions-proxy.js` and `expressions.html`).
+`dist/expressions.js` legacy entry point, the sandbox
+(`expressions-proxy.js` and `expressions.html`), and the public API typings.
 ```sh
 yarn build
 ```
@@ -26,6 +30,19 @@ runtime and applies TypeScript implementations for same-named functions;
 functions without a TypeScript override remain CoffeeScript-backed. The isolated
 strict TypeScript check for migration-owned sources is independent of the
 existing project-wide `ts/tsconfig.json` baseline.
+
+Both CI and manual releases use this same build command. Public typings are
+generated from the existing `ts/functions` and supporting public types through
+`dts-generator` (`dist/api.raw.d.ts`), then flattened by `script/build.rb` into
+the declaration string exported by `ts/api.ts` for editor consumers. Test
+helpers, fixtures, runtime/host internals, and the generated `ts/api.ts` itself
+are excluded from the declaration output. Regenerate typings alone with
+`yarn build:types` (equivalently `make types`), and commit intentional changes
+to `ts/api.ts` alongside their source changes.
+
+Declaration generation is not a project-wide TypeScript check and does not
+claim the existing baseline diagnostics are resolved. The strict
+`migration/tsconfig.json` check remains separate and mandatory for hybrid.
 
 Build debug versions
 ```sh
@@ -39,7 +56,7 @@ yarn build:docs
 ```
 
 ### Distribute
-Builds everything for distribution
+Clean and run the unified build plus all migration gates, without deploying.
 ```sh
 yarn build:dist
 ```
@@ -51,10 +68,16 @@ yarn test
 
 The migration gates run the CoffeeScript unit suite, the isolated migration
 typecheck, legacy and hybrid contract suites, hybrid-versus-legacy differential
-checks, and deterministic artifact verification:
+checks, public declaration scope/consumer checks, and deterministic artifact verification:
 ```sh
 yarn test:migration-gates
 ```
+`yarn test:types` checks that the generated declaration inventory contains only
+public modules, every expression has a declaration, representative consumers
+accept valid calls and reject incorrect result types, and regeneration is
+byte-identical. CI also fails if regeneration changes the checked-in
+`ts/api.ts`.
+
 Contract results are reported by function group. Failures exit nonzero and fail
 the `Expression migration gates` workflow on every pull request and push to
 `main`. A successful run on `main` then builds the release bundles and runs the
@@ -81,7 +104,9 @@ when `true`, or legacy when `false` or unreadable. This repository builds and
 deploys both channels but does not read the flag or target customers.
 
 The `Expression migration gates` workflow publishes the legacy and hybrid
-channels after all gates pass on `main`. It deliberately leaves the existing
+channels after the unified runtime-and-typings build and all gates pass on
+`main`. Generated typings are checked in `ts/api.ts`; this S3 publisher does
+not upload them. It deliberately leaves the existing
 `/expv1/expressions.js` compatibility URL untouched so it remains the current
 comparison baseline. Manual `yarn deploy` continues to publish that URL by
 default. The GitHub `production` environment must provide the
