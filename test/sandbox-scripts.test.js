@@ -45,6 +45,10 @@ for (const html of invalidPages) {
 
 for (const channel of ["hybrid", "legacy", ""]) {
   const html = fs.readFileSync(path.join(__dirname, "..", channel, "expressions.html"), "utf8");
+  if (channel) {
+    assert.ok(html.includes(`<title>Expressions sandbox (${channel})</title>`),
+      `${channel} sandbox must have a descriptive channel-specific title`);
+  }
   assert.deepStrictEqual(assertSandboxScripts(html, [
     "expressions.js", channel ? "../expressions-proxy.js" : "expressions-proxy.js",
   ], { comparisonPage: channel === "" }),
