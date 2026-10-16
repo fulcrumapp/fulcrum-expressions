@@ -42,7 +42,17 @@ deterministic result with legacy; cases marked `volatile-result` are checked
 against their declared result shape but not for exact values. Failures include
 the channel, function group, case ID, and assertion message. `yarn test:migration-gates`
 also runs CoffeeScript tests, the strict isolated migration typecheck, and
-deterministic build integrity checks.
+the unified runtime/sandbox/public-typings build, public declaration checks,
+and deterministic build integrity checks.
+
+`yarn test:types` generates public API declarations through `make types` and
+checks their syntax, complete expression-name inventory, public-only module
+scope, representative TypeScript consumers, and byte-identical regeneration.
+The generator excludes test helpers/fixtures and runtime/host internals from
+declaration output. CI also rejects stale checked-in `ts/api.ts` content.
+Declaration generation and these consumer checks do not replace the strict
+migration-owned check or claim the existing project-wide TypeScript baseline
+passes.
 
 Each passing TypeScript batch is released in the hybrid channel alongside the
 complete legacy channel. Rails owns release selection:

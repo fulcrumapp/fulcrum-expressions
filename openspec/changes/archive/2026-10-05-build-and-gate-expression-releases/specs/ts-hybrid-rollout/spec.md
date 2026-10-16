@@ -87,6 +87,21 @@ The migration gate workflow MUST run on every pull request and push to `main`. A
 - **THEN** the production deployment job does not run
 - **AND** no expression bundle is published by that workflow run
 
+### Requirement: Release builds generate runtime bundles and public API declarations together
+CI and manual release builds MUST use a shared build command that generates the runtime channels, sandbox assets, `dist/api.raw.d.ts`, and the public declaration string exported by `ts/api.ts`. Public declaration generation MUST exclude test helpers, fixtures, runtime and host internals, and the generated API itself, without replacing the isolated strict migration typecheck or claiming the project-wide TypeScript baseline passes.
+
+#### Scenario: A release build generates public typings
+- **WHEN** either CI or a developer runs the shared release build
+- **THEN** the runtime bundles, sandbox assets, raw declarations, and generated public API are produced from the same source checkout
+- **AND** every public expression source has a corresponding declaration
+- **AND** test helpers and fixture modules are absent from the declaration output
+
+#### Scenario: Public declarations are validated before release
+- **WHEN** the public declaration gate runs
+- **THEN** flattened declarations parse successfully and representative consumers accept valid function calls and reject invalid return types
+- **AND** repeated declaration generation produces byte-identical raw declarations and `ts/api.ts`
+- **AND** CI fails if regeneration differs from the checked-in `ts/api.ts`
+
 ### Requirement: Rails release selection remains a documented consumer contract
 For each migration release, the legacy and hybrid channels MUST be independently addressable for the Rails consumer, while this repository documents but does not implement flag evaluation or customer targeting.
 

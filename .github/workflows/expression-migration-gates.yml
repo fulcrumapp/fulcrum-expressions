@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 defaults:
   run:
     shell: bash
@@ -30,16 +34,25 @@ jobs:
       - name: Install locked dependencies
         run: yarn install --frozen-lockfile --non-interactive
 
+      - name: Set up Ruby for public declarations
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
+        with:
+          ruby-version: '3.4'
+          bundler: none
+
       - name: Legacy unit suite
         run: yarn test
         env:
           TZ: America/Los_Angeles
 
-      - name: Build both channels
-        run: yarn build:expressions
+      - name: Build runtime bundles and public declarations
+        run: yarn build
 
       - name: Strict isolated migration typecheck
         run: yarn typecheck:migration
+
+      - name: Public declaration scope and reproducibility
+        run: yarn test:types && git diff --exit-code -- ts/api.ts
 
       - name: Legacy contract suite
         run: yarn test:contracts:legacy
@@ -72,8 +85,14 @@ jobs:
       - name: Install locked dependencies
         run: yarn install --frozen-lockfile --non-interactive
 
+      - name: Set up Ruby for public declarations
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
+        with:
+          ruby-version: '3.4'
+          bundler: none
+
       - name: Build release bundles
-        run: yarn build && yarn build:verify
+        run: yarn build && yarn test:types && git diff --exit-code -- ts/api.ts && yarn build:verify
 
       - name: Validate AWS release configuration
         env:

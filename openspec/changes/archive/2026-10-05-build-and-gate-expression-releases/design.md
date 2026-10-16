@@ -105,11 +105,27 @@ Rails runtime work to their explicitly out-of-scope phases.
      comparison baseline. Authenticate with GitHub Actions OIDC and an
      environment-scoped AWS role; pull-request runs never deploy.
    - **Rationale:** Reviewers need gate results before merge, while the same
-     verified source should publish all three comparable entry points after
-     landing. OIDC avoids long-lived AWS credentials in repository secrets.
+     verified source should publish both comparison channels without replacing
+     the live compatibility baseline. OIDC avoids long-lived AWS credentials
+     in repository secrets.
    - **Alternative considered:** Deploy from pull requests or use static AWS
      credentials. Rejected because pull requests are untrusted inputs and
      static credentials unnecessarily increase credential exposure.
+
+7. **Use one build for runtime artifacts and public declaration generation.**
+   - **Decision:** `yarn build` generates the complete channel bundles, sandbox
+     assets, raw public declarations, and `ts/api.ts`. Both release paths use
+     this command. `make types` remains a standalone entry point and does not
+     delete the checked-in API before generation or require `asdf`.
+   - **Rationale:** CI and manual releases should not produce different artifact
+     sets. Quoted, project-relative exclusions keep tests, fixtures, runtime
+     internals, and the generated API out of declaration output. Consumer and
+     regeneration checks catch leakage, syntax errors, and nondeterminism.
+   - **Constraint:** Public declarations still come from the existing
+     TypeScript API sources. Declaration generation is not the project-wide
+     strict typecheck; hybrid compilation retains its own strict closure.
+     S3 publication still uploads only the comparison channels, not typings
+     or the existing compatibility baseline.
 
 ## Risks / Trade-offs
 
