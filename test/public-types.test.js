@@ -33,8 +33,19 @@ const expectedModules = [
   ...functionNames.map((name) => `functions/${name}`),
   ...typeNames.map((name) => `types/${name}`),
 ].sort();
-const actualModules = [...rawSource.matchAll(/^declare module '([^']+)'/gm)]
-  .map((match) => match[1]).sort();
+function declaredModuleNames(source) {
+  const parsed = ts.createSourceFile("raw.d.ts", source, ts.ScriptTarget.Latest, true);
+  assert.deepStrictEqual(parsed.parseDiagnostics, [], "raw declarations must parse");
+  return parsed.statements
+    .filter((statement) => ts.isModuleDeclaration(statement) && ts.isStringLiteral(statement.name))
+    .map((statement) => statement.name.text).sort();
+}
+assert.deepStrictEqual(
+  declaredModuleNames("declare module 'functions/SINGLE' {}\ndeclare module \"functions/DOUBLE\" {}"),
+  ["functions/DOUBLE", "functions/SINGLE"],
+  "raw module inventory must accept either quote style"
+);
+const actualModules = declaredModuleNames(rawSource);
 assert.deepStrictEqual(
   actualModules,
   expectedModules,
