@@ -49,10 +49,7 @@ claim the existing baseline diagnostics are resolved. The strict
 `migration/tsconfig.json` check remains separate and mandatory for hybrid.
 
 Build debug versions
-```
-The gates also use mocked AWS commands to assert that preview and production
-deploys upload the two channel bundles and sandbox assets without ever uploading
-the frozen compatibility bundle.sh
+```sh
 yarn build:debug
 ```
 
@@ -80,6 +77,10 @@ and deterministic artifact verification:
 ```sh
 yarn test:migration-gates
 ```
+The gates also use mocked AWS commands to assert that preview and production
+deploys upload the two channel bundles and existing sandbox assets without ever
+uploading the frozen compatibility bundle.
+
 `yarn test:types` checks that the generated declaration inventory contains only
 public modules, every expression has a declaration, representative consumers
 accept valid calls and reject incorrect result types, and regeneration is
