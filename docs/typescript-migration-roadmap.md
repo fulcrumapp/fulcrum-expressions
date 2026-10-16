@@ -103,6 +103,13 @@ verify those exports are present and that functions without overrides continue
 to use the legacy implementation. Do not remove or reduce the complete
 CoffeeScript implementation from the legacy channel.
 
+**Prepared first batch:** `PI`, `TRUE`, and `FALSE` are prepared as the first
+same-name hybrid overrides. This repository preparation and its automated
+gates do not satisfy Phase 1b readiness or application-runtime acceptance.
+Keep the batch unexposed until the Rails readiness prerequisite is established;
+after release, exercise it through the flagged Rails runtime and record the
+required acceptance evidence before advancing.
+
 Every batch must have evidence from all required gate categories before it is
 merged or released:
 
