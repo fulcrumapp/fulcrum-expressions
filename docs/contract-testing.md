@@ -20,6 +20,9 @@ intentionally from the checked-in legacy runtime. The matrix records 27
 classified limitations for host-only, time-dependent, or TypeScript-only surfaces;
 these are reported in the fixture and are not silently omitted.
 Generation always loads CoffeeScript source, even when release bundles exist.
+The default runner and `--runtime legacy-source` always use current CoffeeScript
+source. `--runtime legacy` and `--runtime hybrid` require their respective built
+channel bundles and fail if missing; they never silently fall back to source.
 
 The runner normalizes dates, `undefined`, `NaN`, errors, functions, circular
 objects, nested objects, and arrays before comparison. This keeps the contract

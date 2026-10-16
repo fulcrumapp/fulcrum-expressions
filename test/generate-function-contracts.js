@@ -3,11 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
-const { normalize } = require("./contract-runner");
-const createRuntimeAdapter = require("./runtime-adapter");
-require("coffee-script/register");
-const runtime = require("../runtime");
-require("../functions");
+const { loadAdapter, normalize } = require("./contract-runner");
 
 const root = path.join(__dirname, "..");
 const functionsDir = path.join(root, "ts", "functions");
@@ -96,7 +92,7 @@ function configureFor(name) {
   return undefined;
 }
 
-const adapter = createRuntimeAdapter(global, runtime);
+const adapter = loadAdapter("legacy-source");
 const cases = [];
 const limitations = [];
 const names = sourceNames();
