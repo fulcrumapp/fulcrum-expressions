@@ -8,6 +8,7 @@ const path = require("path");
 const vm = require("vm");
 const createRuntimeAdapter = require("./runtime-adapter");
 
+const BUNDLE_INITIALIZATION_TIMEOUT_MS = 10000;
 const corpusPath = path.join(__dirname, "contracts", "expressions.json");
 const corpus = JSON.parse(fs.readFileSync(corpusPath, "utf8"), revive);
 const matrixPath = path.join(__dirname, "contracts", "function-matrix.json");
@@ -60,11 +61,13 @@ function normalize(value, seen = new WeakSet()) {
 function isPlainObject(value) {
   if (!value || Object.prototype.toString.call(value) !== "[object Object]") return false;
   const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype
-    || prototype === null
-    || Object.getPrototypeOf(prototype) === null
-      && Object.prototype.hasOwnProperty.call(prototype, "constructor")
-      && prototype.constructor.name === "Object";
+  const isNullPrototype = prototype === null;
+  const isCurrentRealmObject = prototype === Object.prototype;
+  const isCrossRealmObject = !isNullPrototype
+    && Object.getPrototypeOf(prototype) === null
+    && Object.prototype.hasOwnProperty.call(prototype, "constructor")
+    && prototype.constructor.name === "Object";
+  return isCurrentRealmObject || isNullPrototype || isCrossRealmObject;
 }
 
 function normalizeLocalScriptSource(source) {
@@ -121,13 +124,16 @@ function createHybridAdapter() {
   return createBundledAdapter(bundlePath, "Hybrid");
 }
 
-function createBundledAdapter(bundlePath, channelName) {
+function createBundledAdapter(bundlePath, channelName, timeout = BUNDLE_INITIALIZATION_TIMEOUT_MS) {
   if (!fs.existsSync(bundlePath)) {
     throw new Error(`${channelName} expression bundle is missing: ${bundlePath}`);
   }
 
   const scope = vm.createContext({ console });
-  vm.runInContext(fs.readFileSync(bundlePath, "utf8"), scope, { filename: bundlePath });
+  vm.runInContext(fs.readFileSync(bundlePath, "utf8"), scope, {
+    filename: bundlePath,
+    timeout,
+  });
   if (!scope.$$runtime) {
     throw new Error(`${channelName} expression bundle did not initialize its runtime`);
   }
@@ -263,6 +269,7 @@ if (require.main === module) {
 
 module.exports = {
   createLegacyAdapter,
+  createBundledAdapter,
   createBundledLegacyAdapter,
   createHybridAdapter,
   assertAdapterContracts,

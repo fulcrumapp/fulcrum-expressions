@@ -52,7 +52,7 @@ jobs:
         run: yarn typecheck:migration
 
       - name: Public declaration scope and reproducibility
-        run: yarn test:types && git diff --exit-code -- ts/api.ts
+        run: yarn test:types:check && git diff --exit-code -- ts/api.ts
 
       - name: Legacy contract suite
         run: yarn test:contracts:legacy
@@ -95,7 +95,7 @@ jobs:
           bundler: none
 
       - name: Build release bundles
-        run: yarn build && yarn test:types && git diff --exit-code -- ts/api.ts && yarn build:verify
+        run: yarn build && yarn test:types:check && git diff --exit-code -- ts/api.ts && yarn build:verify
 
       - name: Validate AWS release configuration
         env:
