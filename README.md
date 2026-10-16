@@ -88,6 +88,9 @@ byte-identical. CI also fails if regeneration changes the checked-in
 `ts/api.ts`. After a unified build has generated declarations, CI and the
 migration gates use `yarn test:types:check` directly to avoid regenerating them
 before the same reproducibility check.
+The exported declaration string is flattened for the editor's global scope:
+geometry types are used as `Point`, `Feature<Point>`, `GeoJSONGeometry` and
+`GeoJSON`, not as members of a UMD `GeoJSON` namespace.
 
 The `Expression migration gates` job runs on pull requests and pushes to `main`
 (including merges) and reports contract results by function group. The separate
@@ -155,7 +158,8 @@ request those channel URLs, existing runtime consumers continue to use the
 frozen compatibility URL. No all-functions-complete promotion is planned.
 
 **Manual deployment:** `yarn deploy` builds and gates the release, then uploads
-the two channels and sandbox assets to the bucket for the current `$USER`.
+the two channels and sandbox assets to the bucket for the current `$USER`
+(falling back to `id -un` when `$USER` is unset or empty).
 `yarn deploy <environment>` selects a preview bucket. `yarn deploy production`
 prompts for confirmation and requires production AWS access. Neither form
 uploads or replaces `/expv1/expressions.js`; production deployment still

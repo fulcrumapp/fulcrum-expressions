@@ -17,7 +17,7 @@ assert.deepStrictEqual(wrapper.parseDiagnostics, [], "public API module must par
 assert.strictEqual(wrapper.statements.length, 1, "public API must export only its declaration string");
 const exported = wrapper.statements[0];
 assert.ok(ts.isExportAssignment(exported), "public API must have a default export");
-assert.strictEqual(exported.isExportEquals, undefined);
+assert.notStrictEqual(exported.isExportEquals, true, "public API must not use export =");
 assert.ok(ts.isNoSubstitutionTemplateLiteral(exported.expression));
 const declarations = exported.expression.text;
 const api = ts.createSourceFile("api.d.ts", declarations, ts.ScriptTarget.Latest, true);
@@ -79,6 +79,11 @@ try {
     "const randomValue: number = RAND();",
     "const locale: string = CONFIG().locale;",
     "const invalidAbsolute: string = ABS(-1);",
+    "const point: Point = { type: 'Point', coordinates: [1, 2] };",
+    "const geometry: GeoJSONGeometry = point;",
+    "const feature: Feature<Point> = GEOMETRYFEATURE(point);",
+    "const geojson: GeoJSON = feature;",
+    "const recordGeometry: GeoJSONGeometry | null = GEOMETRY();",
     "",
   ].join("\n"));
   const program = ts.createProgram([declarationPath, consumerPath], {

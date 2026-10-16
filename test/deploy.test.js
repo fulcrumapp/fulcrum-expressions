@@ -39,15 +39,17 @@ fs.writeFileSync(awsStub, [
 
 function invokeDeploy(args, user) {
   fs.writeFileSync(callLog, "");
+  const env = {
+    ...process.env,
+    AWS_CALL_LOG: callLog,
+    PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
+  };
+  if (user === undefined) delete env.USER;
+  else env.USER = user;
   const result = spawnSync(deployScript, args, {
     cwd: root,
     encoding: "utf8",
-    env: {
-      ...process.env,
-      AWS_CALL_LOG: callLog,
-      PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
-      USER: user,
-    },
+    env,
   });
   if (result.error) throw result.error;
   return {
@@ -75,6 +77,19 @@ try {
   assert.strictEqual(preview.status, 0, preview.output);
   assertUploads(preview, "fulcrumapp-world-expression-preview-test");
   assert.ok(!preview.calls.some((call) => call[0] === "cloudfront"));
+
+  for (const user of [undefined, ""]) {
+    const fallback = invokeDeploy([], user);
+    assert.strictEqual(fallback.status, 0, fallback.output);
+    assertUploads(fallback, `fulcrumapp-world-${os.userInfo().username}`);
+  }
+  const explicitEnvironment = invokeDeploy(["explicit-preview"], undefined);
+  assert.strictEqual(explicitEnvironment.status, 0, explicitEnvironment.output);
+  assertUploads(explicitEnvironment, "fulcrumapp-world-explicit-preview");
+  const emptyEnvironment = invokeDeploy([""], undefined);
+  assert.strictEqual(emptyEnvironment.status, 2);
+  assert.match(emptyEnvironment.output, /environment must not be empty/);
+  assert.deepStrictEqual(emptyEnvironment.calls, []);
 
   const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
