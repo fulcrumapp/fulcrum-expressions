@@ -104,7 +104,6 @@ declare function ALERT(title: ToStringable, message: ToStringable): void;
 // Note: as of the RFC 7946 version of GeoJSON, Coordinate Reference Systems
 // are no longer supported. (See https://tools.ietf.org/html/rfc7946#appendix-B)}
 
- as namespace GeoJSON;
 
 /**
  * The valid values for the "type" property of GeoJSON geometry objects.

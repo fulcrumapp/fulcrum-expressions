@@ -31,6 +31,7 @@ File.readlines(IN_FILE, :encoding => 'UTF-8').each do |line|
   next if line == "\t"
   next if %w[d }].include? line[0]
   next if line.include?('import')
+  next if line.include?('export as namespace')
   next if line.include?('export {}')
   next if line.include?('export default') && !line.include?('function')
   next if line.include?('/* noexport */')

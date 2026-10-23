@@ -3,9 +3,12 @@
 The migration is designed for incremental adoption: keep the complete
 CoffeeScript runtime available while TypeScript implementations are added in
 bounded batches and exposed through a hybrid release. The roadmap follows the
-seven-task sequence in the migration plan: tasks 1–3 establish the release and
-gate foundation, tasks 4–6 migrate and release batches, and task 7 is a deferred
-Rails follow-on. It does not imply that planned work is complete.
+original task IDs for traceability, but not their original execution order:
+tasks 1–3 establish the release and gate foundation, the minimum Rails consumer
+integration from task 7 is a prerequisite to exposing Phase 2 batches, and
+tasks 4–6 migrate, release, and validate each batch in the application runtime.
+Publishing bundles or passing isolated contracts alone is not runtime acceptance.
+This plan does not imply that consumer integration or migration is complete.
 
 ## Phase 1: Build and gate legacy and hybrid releases (tasks 1–3)
 
@@ -45,9 +48,53 @@ migration TypeScript diagnostics are isolated and blocking; and the CI gate
 foundation reports actionable per-batch results for the required gate
 categories.
 
+## Phase 1b: Rails consumer readiness (task 7 prerequisite)
+
+Before Phase 2 migrated batches are exposed, implement and exercise the minimum
+consumer integration in the Rails repository. This is separate implementation
+work, not work deferred until expression migration finishes:
+
+- First implement parallel sandbox HTML outputs in this repository's release
+  and debug builds and both deployment paths. Do not rewrite the original
+  `expressions.html` or replace its frozen root runtime:
+
+  | Planned build output | Production URL | Relative scripts, in load order |
+  | --- | --- | --- |
+  | `dist/expressions-hybrid.html` | `https://assets.fulcrumapp.com/expv1/expressions-hybrid.html` | `hybrid/expressions.js`, `expressions-proxy.js` |
+  | `dist/expressions-legacy.html` | `https://assets.fulcrumapp.com/expv1/expressions-legacy.html` | `legacy/expressions.js`, `expressions-proxy.js` |
+
+  Root-level sibling pages let both channels reuse the existing root proxy
+  without incorrect subdirectory-relative URLs. The original
+  `/expv1/expressions.html` continues loading `expressions.js` and
+  `expressions-proxy.js` as the frozen-runtime comparison sandbox. Preserve
+  its contents; adding parallel pages must not change baseline selection.
+  The channel HTML outputs are **not currently built or deployed**; this
+  prerequisite includes adding their uploads, HTML content type and build/
+  deployment inventory checks, not just documenting URLs.
+- Load the real deployed hybrid channel when `expressions-ts-migration` is
+  `true` by selecting the hybrid sandbox URL in Rails' expression sandbox URL
+  configuration; select the legacy sandbox URL when it is `false` or
+  unreadable. Verify both endpoints load their intended runtime and proxy,
+  with correct URL resolution locally and after deployment. Verify the selected
+  artifact is actually executing expressions, not the original comparison
+  sandbox or an isolated test adapter.
+- Wire the required application adapter, initialization, host callbacks,
+  expression invocation/completion, and startup fallback behavior. Necessary
+  lifecycle and fallback behavior cannot be postponed as optional hardening.
+- Exercise rollback to the complete legacy channel and record reviewable
+  application-runtime results for selection, host effects, and fallback.
+  The empty-override hybrid can verify this wiring before any expression is
+  migrated; it is not evidence that future TypeScript functions are accepted.
+
+**Readiness prerequisite:** the Rails integration is implemented and exercised
+against both deployed channel sandbox endpoints, with evidence of flag selection, lifecycle/host
+behavior, fallback and rollback. This is not implemented or demonstrated by the
+Phase 1 build/gate work in this repository. Until it is ready, do not expose
+migrated batches or count channel publication as application-runtime use.
+
 ## Phase 2: Migrate deterministic batches (tasks 4–6)
 
-Migrate cohesive, deterministic function groups in bounded batches. For each
+After Phase 1b readiness, migrate cohesive, deterministic groups in bounded batches. For each
 batch, add only the intended TypeScript functions to the hybrid override set;
 verify those exports are present and that functions without overrides continue
 to use the legacy implementation. Do not remove or reduce the complete
@@ -69,24 +116,27 @@ merged or released:
   block the batch and provide actionable CI output; assertions are not relaxed
   to make a batch pass.
 
-Include each passing batch in the hybrid release as it is merged and released,
-while publishing the complete legacy release alongside it. This is an
-incremental release model, not a single promotion after all TypeScript work is
-finished. The same per-batch gates apply throughout migration.
+After the automated gates pass, release that batch in hybrid alongside complete
+legacy and exercise `expressions-hybrid.html` and its deployed hybrid runtime
+through the flagged Rails application. Record the release identity, selected sandbox URL/channel, affected expression
+flows, observed values/errors, lifecycle and host effects, and comparison with
+legacy. Review those results before advancing to the next batch. If problems
+appear, roll back selection to legacy and correct and revalidate the batch;
+do not accumulate unobserved batches behind the flag.
 
 **Per-batch acceptance:** the intended override set is explicit, all required
-gate categories pass with reviewable evidence, and the hybrid preserves legacy
-fallback behavior for functions not in that batch. Completion of a batch does
-not itself trigger a global default switch or remove the legacy rollback path.
+gate categories pass, the hybrid preserves legacy fallback for other functions,
+and actual flagged application-runtime use has reviewable accepted results.
+Isolated contract success and publication alone do not satisfy this acceptance.
+Completion does not trigger a global default switch or remove legacy rollback.
 
-## Phase 3: Rails runtime integration (task 7; deferred)
+## Later adoption and optional hardening
 
-After the expressions migration work, a separate Rails follow-on may update the
-application runtime integration: the adapter seam, startup fallback, and
-server-side flag handling/hardening. This work is explicitly deferred and
-outside this repository's implementation scope. The expressions package builds
-and deploys both channels; it does not evaluate LaunchDarkly flags, target
-customers, or implement Rails startup fallback.
+Broader default adoption, retirement of legacy paths, and hardening beyond the
+minimum Phase 1b selection/lifecycle/host/fallback requirements can be separately
+approved later. They are not a final promotion dependency for exercising Phase 2
+batches. Rails implementation remains outside this repository; its prerequisite
+timing does not authorize Rails changes in the Phase 1 expressions PR.
 
 ## Release selection, rollback, and scope
 
@@ -99,6 +149,14 @@ available, so this does not require rebuilding. The rollback is channel-wide,
 not a per-function switch. The workflow can fail a batch on gate errors;
 requiring its status check in branch protection is a separate repository
 settings decision.
+
+Keep the complete legacy channel available throughout migration. The original
+production `/expv1/expressions.js` object remains frozen for comparison; neither
+manual nor automated deployment replaces it. Local `dist/expressions.js` remains
+a compatibility build artifact. Existing sandbox HTML continues loading the
+frozen object; Rails must select a parallel channel sandbox URL rather than
+rewrite that original HTML. Neither parallel page nor Rails selection is
+implemented by the current Phase 1 work.
 
 This plan does not delete legacy runtime paths during migration, broaden
 expression behavior beyond parity-targeted changes, or implement Rails
