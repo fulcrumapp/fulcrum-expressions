@@ -73,6 +73,8 @@ function verifyMigrationTypecheckScope() {
   const migrationConfigPath = path.join(root, "migration", "tsconfig.json");
   const config = JSON.parse(fs.readFileSync(migrationConfigPath, "utf8"));
   assert.strictEqual(config.compilerOptions.strict, true, "migration TypeScript must be strict");
+  assert.strictEqual(config.compilerOptions.rootDir, "..",
+    "migration TypeScript root must include the explicitly imported function sources");
   assert.strictEqual(
     config.compilerOptions.noEmitOnError,
     true,
