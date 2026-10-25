@@ -66,6 +66,9 @@
     "path-parse": "^1.0.7",
     "lodash": "^4.17.21",
     "handlebars": "^4.7.10",
-    "concaveman": "1.2.1"
+    "concaveman": "1.2.1",
+    "@types/query-string/query-string": "^9.5.0",
+    "diff": "8.0.3",
+    "serialize-javascript": "7.0.5"
   }
 }
