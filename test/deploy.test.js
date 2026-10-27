@@ -102,7 +102,8 @@ function assertUploads(result, bucket) {
     const target = call[call.length - 1];
     const source = call[call.length - 2];
     const relativePath = target.split("/expv1/")[1];
-    assert.strictEqual(path.resolve(source), path.join(root, "dist", relativePath));
+    const distPathSegments = relativePath.split("/");
+    assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
     assert.strictEqual(
       optionValue(call, "--content-type", target),
       target.endsWith(".html") ? "text/html" : "application/javascript",
@@ -116,7 +117,7 @@ function assertUploads(result, bucket) {
     assert.strictEqual(optionValue(call, "--expires", target), "Mon, 01 Jan 1990 00:00:00 GMT");
     if (target.endsWith(".html")) {
       const html = fs.readFileSync(source, "utf8");
-      assert.strictEqual(html, fs.readFileSync(path.join(root, relativePath), "utf8"));
+      assert.strictEqual(html, fs.readFileSync(path.join(root, ...distPathSegments), "utf8"));
       const channelPage = relativePath.includes("/");
       const scripts = assertSandboxScripts(html, [
         "expressions.js",

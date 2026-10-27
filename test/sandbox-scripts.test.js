@@ -14,6 +14,11 @@ const shim = `<!--${conditionalStart}<script src="${shimSource}"></script>${cond
 const expected = ["expressions.js", "../expressions-proxy.js"];
 const runtime = '<script src="expressions.js"></script>';
 const proxy = '<script src="../expressions-proxy.js"></script>';
+const validShimVariants = [
+  shim,
+  `<!--[IF lt IE 9]>  <script src="${shimSource}"></script>  <![ENDIF] -->`,
+  `<!--  [if   lt IE 9]>\n<script src="${shimSource}"></script>\n<![endif]  -->`,
+];
 const validPages = [
   `${runtime}${proxy}`,
   `<script src='expressions.js'></script ><script src='../expressions-proxy.js'></script >`,
@@ -34,7 +39,6 @@ const invalidPages = [
   `${runtime}${proxy}<template><script src="unexpected.js"></script></template>`,
   `${proxy}${runtime}`,
   runtime,
-  `${shim}${runtime}${proxy}`,
   `${runtime}${shim}${proxy}`,
   `<script src="${shimSource}"></script>${runtime}${proxy}`,
   `${shim}${shim}${runtime}${proxy}`,
@@ -47,10 +51,12 @@ const invalidPages = [
 for (const html of invalidPages) {
   assert.throws(() => assertSandboxScripts(html, expected), assert.AssertionError);
 }
-assert.throws(() => assertSandboxScripts(
-  `<!--[IF lt IE 9]><script src="${shimSource}"></script><![endif]-->${runtime}${proxy}`,
-  expected
-), /expected exactly \[if lt IE 9\]>/);
+const malformedConditional = `<!--[IF lt IE 9]><script src="${shimSource}"></script><![endif nope]-->${runtime}${proxy}`;
+assert.throws(() => assertSandboxScripts(malformedConditional, expected), (error) => {
+  const offendingComment = malformedConditional.slice(4, -runtime.length - proxy.length - 3);
+  assert.ok(error.message.includes(offendingComment));
+  return true;
+});
 
 for (const channel of ["hybrid", "legacy", ""]) {
   const html = fs.readFileSync(path.join(__dirname, "..", channel, "expressions.html"), "utf8");
@@ -63,8 +69,10 @@ for (const channel of ["hybrid", "legacy", ""]) {
   ], { comparisonPage: channel === "" }),
   ["expressions.js", channel ? "../expressions-proxy.js" : "expressions-proxy.js"]);
 }
-assert.deepStrictEqual(assertSandboxScripts(`${shim}${runtime}${proxy}`, expected,
-  { comparisonPage: true }), expected);
+for (const conditionalShim of validShimVariants) {
+  assert.deepStrictEqual(assertSandboxScripts(`${conditionalShim}${runtime}${proxy}`, expected,
+    { comparisonPage: true }), expected);
+}
 assert.throws(() => assertSandboxScripts(`${runtime}${proxy}`, expected,
   { comparisonPage: true }), assert.AssertionError);
 console.log("Sandbox HTML parser checks passed: syntax variants accepted; unexpected, inline, reordered, and conditional scripts rejected.");

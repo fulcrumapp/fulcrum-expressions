@@ -18,11 +18,10 @@ function assertSandboxScripts(html, expectedSources, { comparisonPage = false } 
       const comment = node.data.trim();
       if (comment.toLowerCase().startsWith("[if")) {
         const received = comment.length > 200 ? `${comment.slice(0, 200)}...` : comment;
-        assert.ok(condition === null && comment.startsWith(conditionalStart) &&
-          comment.endsWith(conditionalEnd),
-        `unexpected conditional comment; expected exactly ${conditionalStart}...${conditionalEnd}; received: ${received}`);
-        const fragment = comment.slice(conditionalStart.length, -conditionalEnd.length);
-        visit(parse5.parseFragment(fragment), "lt IE 9");
+        const conditional = comment.match(/^\[\s*if\s+lt\s+ie\s+9\s*\]>\s*([\s\S]*?)\s*<!\[endif\]\s*$/i);
+        assert.ok(condition === null && conditional,
+          `unexpected conditional comment; expected an lt IE 9 shim bounded by ${conditionalStart} and ${conditionalEnd}; received: ${received}`);
+        visit(parse5.parseFragment(conditional[1]), "lt IE 9");
       }
     }
     for (const child of node.childNodes || []) visit(child, condition);
