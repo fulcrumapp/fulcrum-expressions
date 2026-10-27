@@ -72,6 +72,15 @@ aws s3 cp \
 
 printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/hybrid/expressions.js\n"
 
+aws s3 cp \
+  --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
+  --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
+  --content-type "application/javascript" \
+  --acl "public-read" \
+  "${root_dir}/dist/expressions-proxy.js" "s3://${bucket}/expv1/expressions-proxy.js"
+
+printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions-proxy.js\n"
+
 for channel in legacy hybrid; do
   aws s3 cp \
     --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
@@ -82,15 +91,6 @@ for channel in legacy hybrid; do
 
   printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/${channel}/expressions.html\n"
 done
-
-aws s3 cp \
-  --cache-control "no-cache, no-store, max-age=0, must-revalidate" \
-  --expires "Mon, 01 Jan 1990 00:00:00 GMT" \
-  --content-type "application/javascript" \
-  --acl "public-read" \
-  "${root_dir}/dist/expressions-proxy.js" "s3://${bucket}/expv1/expressions-proxy.js"
-
-printf "Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions-proxy.js\n"
 
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \

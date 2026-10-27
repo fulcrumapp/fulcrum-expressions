@@ -31,6 +31,7 @@ const invalidPages = [
   `${runtime}${proxy}<script src='https://example.com/unexpected.js'></script >`,
   `${runtime}${proxy}<SCRIPT defer SRC=https://example.com/unexpected.js></SCRIPT\n>`,
   `${runtime}${proxy}<script>unexpectedInlineCode()</script>`,
+  `${runtime}${proxy}<template><script src="unexpected.js"></script></template>`,
   `${proxy}${runtime}`,
   runtime,
   `${shim}${runtime}${proxy}`,

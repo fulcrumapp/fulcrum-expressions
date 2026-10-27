@@ -93,9 +93,9 @@ function assertUploads(result, bucket) {
   assert.deepStrictEqual(targets, [
     `s3://${bucket}/expv1/legacy/expressions.js`,
     `s3://${bucket}/expv1/hybrid/expressions.js`,
+    `s3://${bucket}/expv1/expressions-proxy.js`,
     `s3://${bucket}/expv1/legacy/expressions.html`,
     `s3://${bucket}/expv1/hybrid/expressions.html`,
-    `s3://${bucket}/expv1/expressions-proxy.js`,
     `s3://${bucket}/expv1/expressions.html`,
   ]);
   s3Uploads.forEach((call) => {

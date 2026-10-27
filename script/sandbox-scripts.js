@@ -17,14 +17,16 @@ function assertSandboxScripts(html, expectedSources, { comparisonPage = false } 
     if (node.nodeName === "#comment") {
       const comment = node.data.trim();
       if (comment.toLowerCase().startsWith("[if")) {
+        const received = comment.length > 200 ? `${comment.slice(0, 200)}...` : comment;
         assert.ok(condition === null && comment.startsWith(conditionalStart) &&
           comment.endsWith(conditionalEnd),
-        `unexpected conditional comment; expected exactly ${conditionalStart}...${conditionalEnd}`);
+        `unexpected conditional comment; expected exactly ${conditionalStart}...${conditionalEnd}; received: ${received}`);
         const fragment = comment.slice(conditionalStart.length, -conditionalEnd.length);
         visit(parse5.parseFragment(fragment), "lt IE 9");
       }
     }
     for (const child of node.childNodes || []) visit(child, condition);
+    if (node.content) visit(node.content, condition);
   }
   visit(parse5.parse(html));
   assert.deepStrictEqual(scripts, [
