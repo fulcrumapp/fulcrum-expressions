@@ -1,0 +1,200 @@
+# Design
+
+## Context
+
+See `proposal.md` for motivation and `specs/ts-hybrid-rollout/spec.md` for the
+normative behavior contract. The current release is CoffeeScript-based, and the
+project-wide TypeScript configuration has baseline diagnostics; therefore the
+hybrid migration check must be isolated without gating legacy output. The local
+OpenSpec baseline has no capability specs.
+
+PR [#126](https://github.com/fulcrumapp/fulcrum-expressions/pull/126) supplied
+the implementation outline for the adapter, side-by-side build, isolated
+TypeScript configuration, CI workflow, and artifact-integrity checks. This
+branch implements the Phase 1 contract in its own changes; no source branch was
+merged or cherry-picked. The implementation leaves all function-migration and
+Rails runtime work to their explicitly out-of-scope phases.
+
+## Goals / Non-Goals
+
+**Goals:**
+
+- Establish one adapter and lifecycle contract that makes legacy and hybrid
+  execution comparable, including relevant host effects.
+- Keep a complete CoffeeScript release available beside the hybrid release,
+  with hybrid override behavior determined only by same-name TypeScript
+  implementations.
+- Gate each migration batch on strict isolated typechecking, contracts,
+  differential/parity evidence, and deterministic artifact verification.
+
+**Non-Goals:**
+
+- Add a per-function routing manifest or make the project-wide TypeScript
+  check a condition of producing legacy artifacts.
+- Implement Rails flag evaluation, targeting, startup fallback, or runtime
+  selection; implement only the consumer contract.
+- Implement the separate Rails consumer prerequisite or complete future
+  function-migration batches and their application-runtime acceptance.
+
+## Decisions
+
+1. **Define the adapter contract before depending on parity results.**
+   - **Decision:** Specify common invocation inputs, success/error result shape,
+     and lifecycle probes for both channels, with host effects observable to the
+     harness.
+   - **Rationale:** A common observable contract makes channel comparison
+     meaningful and prevents a passing return-value-only test from masking
+     lifecycle or host-effect differences.
+   - **Alternative considered:** Maintain separate channel-specific harnesses.
+     Rejected because they could drift and make results incomparable.
+
+2. **Build the hybrid as a complete legacy runtime plus same-name overrides.**
+   - **Decision:** Keep the complete CoffeeScript implementation in legacy;
+     hybrid starts with the same runtime and replaces only functions with a
+     same-named TypeScript implementation. Preserve the legacy-compatible
+     top-level entry point as well as stable channel entry points.
+   - **Rationale:** This gives every not-yet-migrated function an explicit
+     fallback and keeps rollback independent of migration progress.
+   - **Alternative considered:** Route functions through a separate
+     per-function manifest or rewrite the runtime around TypeScript. Rejected:
+     the roadmap requires same-name overrides and a complete legacy path.
+
+3. **Keep the TypeScript gate strict but bounded to migration-owned sources.**
+   - **Decision:** Define the hybrid compiler input as an explicit dependency
+     closure and fail hybrid work on any diagnostic in that closure. Do not
+     couple legacy output to the known-diagnostic project-wide check or report
+     that check as passing.
+   - **Rationale:** Migration code receives a real strict gate while baseline
+     debt outside its ownership cannot prevent publishing or rolling back to
+     the complete legacy runtime.
+   - **Alternative considered:** Require a clean project-wide check before
+     building either channel. Rejected because existing diagnostics would block
+     legacy output without proving anything about migration-owned code.
+
+4. **Run the full gate set per batch and report actionable evidence.**
+   - **Decision:** CI runs the existing CoffeeScript suite, isolated strict
+     typecheck, legacy and hybrid contract suites, unchanged-function
+     differential checks, migrated-function parity checks, and deterministic
+     build/inventory checks. The `Expression migration gates` job fails if any
+     required category fails and reports failures by function group.
+   - **Rationale:** Channel contracts, differential checks, focused migrated
+     parity, and stable artifacts detect different classes of regression; all
+     must be reviewable for each batch.
+   - **Alternative considered:** Treat a successful build or a single
+     end-of-migration verification as sufficient. Rejected because neither
+     establishes per-batch behavioral safety.
+
+5. **Keep selection with Rails and release batches incrementally.**
+   - **Decision:** This repository documents the `true` → hybrid,
+     `false`/unreadable → legacy consumer contract and makes both artifacts
+     independently addressable. Each passing batch is included in the
+     hybrid release as merged/released; the complete legacy release ships
+     alongside it. Minimum Rails selection, lifecycle/host wiring, startup
+     fallback and legacy rollback must be implemented and exercised before
+     exposing Phase 2 batches; the empty-overlay hybrid can verify baseline
+     wiring. Each released batch must then be used through the flagged
+     application runtime with reviewed results before the next proceeds.
+     Failures require legacy rollback, correction and revalidation.
+     Branch-protection enforcement remains an administrator setting.
+   - **Sandbox prerequisite (planned, not implemented):** Add root sibling
+     `dist/expressions-hybrid.html` and `dist/expressions-legacy.html` to
+     release/debug builds and both deploy paths, with HTML content types and
+     inventory/URL checks. Their URLs are `/expv1/expressions-hybrid.html` and
+     `/expv1/expressions-legacy.html`; they load the respective
+     `hybrid/expressions.js` or `legacy/expressions.js`, followed by root
+     `expressions-proxy.js`. Root siblings avoid incorrectly resolving the
+     proxy inside a channel subdirectory. Preserve original `expressions.html`
+     contents and the frozen runtime; Rails selects the new hybrid HTML for
+     flag true and legacy HTML for false/unreadable/rollback. Both endpoints,
+     actual runtime selection and lifecycle/host behavior must be exercised
+     before batches; each batch then uses the hybrid sandbox in application.
+   - **Rationale:** Selection and targeting belong to the Rails consumer, while
+     concurrent complete artifacts enable channel-wide rollback without a
+     rebuild. Actual per-batch runtime use catches integration problems while
+     batches are bounded, rather than accumulating them behind an unused
+     flag. Publication and isolated contracts alone are not runtime acceptance.
+   - **Alternative considered:** Implement Rails selection here or defer its
+     minimum integration until every function is migrated. The former is
+     outside repository scope; the latter defeats incremental live validation.
+
+6. **Publish production bundles only after the main-branch gates pass.**
+   - **Decision:** Run the migration gates on every pull request and push to
+     `main`. Manual and automated deployment scripts publish the legacy and
+     hybrid channel bundles and sandbox assets, and never upload the existing
+     compatibility object; `/expv1/expressions.js` remains frozen as the
+     comparison baseline. A separate production-environment job depends on
+     successful gates and runs only for `main` pushes. Authenticate with
+     GitHub Actions OIDC and an environment-scoped AWS role; pull-request runs
+     never deploy.
+   - **Rationale:** Reviewers need gate results before merge, while the same
+     verified source should publish both channels while permanently retaining
+     the original production object for comparison. Requiring the same
+     no-compatibility-upload behavior for manual deployments prevents an
+     operator from accidentally replacing the baseline. OIDC avoids
+     long-lived AWS credentials in repository secrets.
+   - **Alternative considered:** Update the compatibility object from manual
+     deployments or deploy from pull requests. Rejected because replacing the
+     comparison baseline defeats side-by-side evaluation, and pull requests
+     are untrusted inputs.
+
+7. **Use one build for runtime artifacts and public declaration generation.**
+   - **Decision:** `yarn build` generates the complete channel bundles, sandbox
+     assets, raw public declarations, and `ts/api.ts`. Both release paths use
+     this command. `make types` remains a standalone entry point and does not
+     delete the checked-in API before generation or require `asdf`.
+   - **Rationale:** CI and manual releases should not produce different artifact
+     sets. Quoted, project-relative exclusions keep tests, fixtures, runtime
+     internals, and the generated API out of declaration output. Consumer and
+     regeneration checks catch leakage, syntax errors, and nondeterminism.
+   - **Constraint:** Public declarations still come from the existing
+     TypeScript API sources. Declaration generation is not the project-wide
+     strict typecheck; hybrid compilation retains its own strict closure.
+     S3 publication still uploads only the comparison channels, not typings
+     or the existing compatibility baseline.
+
+## Risks / Trade-offs
+
+- **[Risk] A shared adapter can hide differences if it omits runtime lifecycle
+  or host effects** → **Mitigation:** Make those observations part of the
+  contract and gate parity on them, not only pure return values.
+- **[Risk] A permissive or implicit TypeScript input set can let unrelated
+  baseline errors escape the intended gate** → **Mitigation:** Require a
+  strict, explicit migration-owned closure and treat its diagnostics as
+  blocking.
+- **[Risk] Early dual-channel releases increase packaging and operational
+  complexity** → **Mitigation:** Verify stable entry points and deterministic
+  inventories on every gated build, while retaining the existing legacy
+  entry point.
+- **[Risk] CI may be green without being required by repository merge rules**
+  → **Mitigation:** Keep the job itself blocking on gate failures and identify
+  branch-protection configuration as a separate repository-administrator
+  action, not a deliverable of this change.
+
+## Migration Plan
+
+1. Define the shared adapter and lifecycle/host-effect contract for both
+   channels.
+2. Build the complete legacy and hybrid channels in the same release flow,
+   preserve the legacy-compatible entry point, and gate hybrid compilation on
+   the strict isolated TypeScript closure.
+3. Add the per-batch contracts, differential/parity reporting, deterministic
+   artifact checks, and failing `Expression migration gates` CI job. Document
+   the Rails consumer seam without changing Rails behavior.
+4. Before exposing Phase 2 batches, implement the parallel sandbox HTML
+   build/deploy prerequisite, verify local relative scripts and both deployed
+   endpoint URLs, then complete the separate Rails consumer
+   readiness prerequisite (original task 7) and exercise real deployed channel
+   selection, lifecycle/host wiring, startup fallback and legacy rollback.
+   This Phase 1 PR documents but does not implement or claim that readiness.
+5. For each Phase 2 batch, require automated gates before merge/release, publish
+   hybrid alongside complete legacy, and collect reviewed flagged
+   application-runtime results before advancing. Identify release/channel,
+   expression flows, values/errors, lifecycle/host effects and legacy comparison.
+   Roll back, correct and revalidate on problems; publication alone is not
+   acceptance. Broader adoption/retirement or optional extra hardening may be
+   approved later without deferring essential consumer behavior or creating a
+   final all-functions promotion dependency.
+
+Rollback selects the independently addressable complete legacy release; it
+does not require rebuilding and is implemented by the Rails consumer, not this
+repository.

@@ -2,9 +2,9 @@
   "version": 1,
   "description": "Generated deterministic probes for every legacy expression function file.",
   "coverage": {
-    "functions": 242,
+    "functions": 243,
     "probesPerFunction": 4,
-    "cases": 887
+    "cases": 891
   },
   "limitations": [
     {
@@ -684,7 +684,7 @@
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "text.replace is not a function"
+        "messagePattern": "^[A-Za-z_$][\\w$]*\\.replace is not a function$"
       }
     },
     {
@@ -712,7 +712,7 @@
       "expected": {
         "$type": "error",
         "name": "TypeError",
-        "message": "text.replace is not a function"
+        "messagePattern": "^[A-Za-z_$][\\w$]*\\.replace is not a function$"
       }
     },
     {
@@ -7404,6 +7404,58 @@
         0
       ],
       "expected": 0
+    },
+    {
+      "id": "matrix-rag-normal",
+      "function": "RAG",
+      "args": [
+        1,
+        2
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
+      "id": "matrix-rag-coercion",
+      "function": "RAG",
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
+      "id": "matrix-rag-blank",
+      "function": "RAG",
+      "args": [
+        null,
+        null
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
+      "id": "matrix-rag-boundary",
+      "function": "RAG",
+      "args": [
+        0,
+        0
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
     },
     {
       "id": "matrix-randbetween-normal",
