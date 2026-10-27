@@ -7,6 +7,7 @@ const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 const { assertSandboxScripts } = require("./sandbox-scripts");
+const { packageManagerCommand } = require("./package-manager-command");
 
 const root = path.resolve(__dirname, "..");
 const buildScript = path.join(root, "script", "build-expressions.js");
@@ -32,16 +33,11 @@ function runCommand(command, args) {
 
 function runBuild(debug) {
   runCommand(process.execPath, [buildScript, ...(debug ? ["--debug"] : [])]);
-  const packageManagerScript = process.env.npm_execpath;
-  if (packageManagerScript) {
-    runCommand(process.execPath, [
-      packageManagerScript,
-      "run",
-      debug ? "build:sandbox:debug" : "build:sandbox",
-    ]);
-  } else {
-    runCommand("yarn", ["run", debug ? "build:sandbox:debug" : "build:sandbox"]);
-  }
+  const [command, args] = packageManagerCommand(
+    process.env.npm_execpath,
+    debug ? "build:sandbox:debug" : "build:sandbox"
+  );
+  runCommand(command, args);
 }
 
 function inventory(directory) {
@@ -122,6 +118,21 @@ function verifyMigrationTypecheckScope() {
 
 function verifyArtifactInventory() {
   const result = {};
+  const rootEntries = fs.readdirSync(dist, { withFileTypes: true })
+    .sort((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
+  assert.deepStrictEqual(
+    rootEntries.map((entry) => [entry.name, entry.isDirectory() ? "directory" : "file"]),
+    [
+      ["api.raw.d.ts", "file"],
+      ["expressions-proxy.js", "file"],
+      ["expressions.html", "file"],
+      ["expressions.js", "file"],
+      ["hybrid", "directory"],
+      ["legacy", "directory"],
+      ["package.json", "file"],
+    ],
+    "unexpected top-level dist artifact"
+  );
   channels.forEach((channel) => {
     const directory = path.join(dist, channel);
     assert.ok(fs.statSync(directory).isDirectory(), `missing dist/${channel}`);

@@ -46,10 +46,10 @@ const invalidPages = [
 for (const html of invalidPages) {
   assert.throws(() => assertSandboxScripts(html, expected), assert.AssertionError);
 }
-assert.throws(
-  () => assertSandboxScripts(`<!--[IF lt IE 9]><script src="${shimSource}"></script><![endif]-->${runtime}${proxy}`, expected),
-  /expected exactly \[if lt IE 9\]>/
-);
+assert.throws(() => assertSandboxScripts(
+  `<!--[IF lt IE 9]><script src="${shimSource}"></script><![endif]-->${runtime}${proxy}`,
+  expected
+), /expected exactly \[if lt IE 9\]>/);
 
 for (const channel of ["hybrid", "legacy", ""]) {
   const html = fs.readFileSync(path.join(__dirname, "..", channel, "expressions.html"), "utf8");

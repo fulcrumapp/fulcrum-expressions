@@ -31,7 +31,7 @@
     "test:contracts:legacy": "node test/contract-runner.test.js && node test/contract-runner.js --runtime legacy --require-matrix --report-groups",
     "test:contracts:hybrid": "node test/contract-runner.js --runtime hybrid --compare legacy --require-matrix --report-groups",
     "test:contracts:generate": "node test/generate-function-contracts.js",
-    "test:sandbox-scripts": "node test/sandbox-scripts.test.js",
+    "test:sandbox-scripts": "node test/sandbox-scripts.test.js && node test/package-manager-command.test.js",
     "test:deploy": "yarn test:sandbox-scripts && node test/deploy.test.js",
     "test:types": "yarn build:types && yarn test:types:check",
     "test:types:check": "node test/public-types.test.js",
