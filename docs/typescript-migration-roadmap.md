@@ -54,23 +54,26 @@ Before Phase 2 migrated batches are exposed, implement and exercise the minimum
 consumer integration in the Rails repository. This is separate implementation
 work, not work deferred until expression migration finishes:
 
-- First implement parallel sandbox HTML outputs in this repository's release
-  and debug builds and both deployment paths. Do not rewrite the original
+- This repository packages parallel sandbox HTML outputs in release
+  and debug builds and includes them in both deployment paths. It does not rewrite the original
   `expressions.html` or replace its frozen root runtime:
 
-  | Planned build output | Production URL | Relative scripts, in load order |
+  | Build output | Production URL | Relative scripts, in load order |
   | --- | --- | --- |
-  | `dist/expressions-hybrid.html` | `https://assets.fulcrumapp.com/expv1/expressions-hybrid.html` | `hybrid/expressions.js`, `expressions-proxy.js` |
-  | `dist/expressions-legacy.html` | `https://assets.fulcrumapp.com/expv1/expressions-legacy.html` | `legacy/expressions.js`, `expressions-proxy.js` |
+  | `dist/hybrid/expressions.html` | `https://assets.fulcrumapp.com/expv1/hybrid/expressions.html` | `expressions.js`, `../expressions-proxy.js` |
+  | `dist/legacy/expressions.html` | `https://assets.fulcrumapp.com/expv1/legacy/expressions.html` | `expressions.js`, `../expressions-proxy.js` |
 
-  Root-level sibling pages let both channels reuse the existing root proxy
-  without incorrect subdirectory-relative URLs. The original
+  Channel-local pages load their adjacent runtime and reuse the existing root
+  proxy through `../expressions-proxy.js`. The original
   `/expv1/expressions.html` continues loading `expressions.js` and
   `expressions-proxy.js` as the frozen-runtime comparison sandbox. Preserve
   its contents; adding parallel pages must not change baseline selection.
-  The channel HTML outputs are **not currently built or deployed**; this
-  prerequisite includes adding their uploads, HTML content type and build/
-  deployment inventory checks, not just documenting URLs.
+  Build integrity checks verify release/debug pages, ordered script paths,
+  dependency resolution, unchanged comparison HTML, and stable inventories.
+  Preview and production deployment upload both pages with `text/html`; AWS-stub
+  tests check targets, contents, and metadata without publishing anything.
+  These checks establish packaging and deployment behavior, not live endpoint
+  availability or browser/host acceptance; verify those after deployment.
 - Load the real deployed hybrid channel when `expressions-ts-migration` is
   `true` by selecting the hybrid sandbox URL in Rails' expression sandbox URL
   configuration; select the legacy sandbox URL when it is `false` or
@@ -117,7 +120,7 @@ merged or released:
   to make a batch pass.
 
 After the automated gates pass, release that batch in hybrid alongside complete
-legacy and exercise `expressions-hybrid.html` and its deployed hybrid runtime
+legacy and exercise `hybrid/expressions.html` and its deployed hybrid runtime
 through the flagged Rails application. Record the release identity, selected sandbox URL/channel, affected expression
 flows, observed values/errors, lifecycle and host effects, and comparison with
 legacy. Review those results before advancing to the next batch. If problems
@@ -155,8 +158,9 @@ production `/expv1/expressions.js` object remains frozen for comparison; neither
 manual nor automated deployment replaces it. Local `dist/expressions.js` remains
 a compatibility build artifact. Existing sandbox HTML continues loading the
 frozen object; Rails must select a parallel channel sandbox URL rather than
-rewrite that original HTML. Neither parallel page nor Rails selection is
-implemented by the current Phase 1 work.
+rewrite that original HTML. Parallel pages are packaged and included in
+deployment by this repository; Rails selection and application-runtime
+acceptance remain separate, unimplemented consumer work.
 
 This plan does not delete legacy runtime paths during migration, broaden
 expression behavior beyond parity-targeted changes, or implement Rails
