@@ -11,6 +11,8 @@ export interface RagRetrievalOptionsV1 {
    * scalar values.
    */
   query: string;
+  /** Retrieval schema version. Only v1 is supported. @default "v1" */
+  schema_version?: "v1";
   /** Maximum result count; an integer from 1 through 20. @default 5 */
   limit?: number;
   /** Inclusive normalized-score threshold from 0 through 1. @default 0.70 */
@@ -35,8 +37,8 @@ export interface RagCitationV1 {
   attachment_id: string;
   /** Non-empty redacted filename of at most 255 Unicode scalar values. */
   filename: string;
-  /** Integer page number from 1 through 100,000. */
-  page_number: number;
+  /** Integer page number from 1 through 100,000, or null when unavailable. */
+  page_number: number | null;
   /** Non-empty opaque chunk ID of at most 128 Unicode scalar values. */
   chunk_id: string;
   /** Optional non-empty redacted heading of at most 500 Unicode scalar values. */
@@ -67,7 +69,7 @@ export interface RagRetrievalResultV1 {
  * The callback is invoked asynchronously exactly once. On failure, `result`
  * is null and `error.code` is one of the stable v1 RAG error codes.
  */
-export default function RAG(
+export default function GETDOCCONTEXT(
   options: RagRetrievalOptionsV1,
   callback: (error: RagErrorV1 | null, result: RagRetrievalResultV1 | null) => void
 ): void

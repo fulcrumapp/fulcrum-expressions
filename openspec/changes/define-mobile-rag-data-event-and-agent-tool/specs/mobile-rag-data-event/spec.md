@@ -5,10 +5,10 @@ active-form local RAG retrieval from a validated offline bundle.
 
 ## ADDED Requirements
 
-### Requirement: RAG is a closed, versioned v1 callback interface
+### Requirement: GETDOCCONTEXT is a closed, versioned v1 callback interface
 
 The system SHALL expose the final public Data Event function
-`RAG(options, callback)` in v1. RAG SHALL be callback-based; for invocations
+`GETDOCCONTEXT(options, callback)` in v1. GETDOCCONTEXT SHALL be callback-based; for invocations
 with a callable callback, it SHALL complete asynchronously, consistent with
 the existing `INFERENCE(options, callback)` host-function pattern. A missing
 or non-callable callback is the sole synchronous validation failure and SHALL
@@ -19,16 +19,18 @@ error-code field without publishing a new contract version.
 This capability specification is the canonical normative definition of the
 shared `RagRetrievalOptionsV1`, `RagRetrievalResultV1`, citation, default,
 bound, query-normalization, score-ordering, and stable-error profile. The
-Android `search_form_knowledge` capability SHALL adopt this shared profile
-without extension and defines only its agent-specific registration, policy,
-and lifecycle behavior. If the capability specifications conflict on shared
-retrieval behavior, this specification controls.
+Android `search_form_knowledge` capability SHALL adopt the shared retrieval
+profile without the Data Event-specific `schema_version` option and defines
+its agent-specific registration, policy, and lifecycle behavior. If the
+capability specifications conflict on shared retrieval behavior, this
+specification controls.
 
 `options` SHALL be an object with exactly these properties:
 
 | Property | Requirement |
 | --- | --- |
 | `query` | Required literal plain-text string; after `trimQueryV1`, 1 through 1,000 Unicode scalar values |
+| `schema_version` | Optional string; only `v1` is supported; default `v1` |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
@@ -39,8 +41,10 @@ selector, document selector, or bundle selector. `null`, coercion,
 non-finite values, and undeclared properties are invalid. In particular,
 `form_id`, `attachment_id`, `document_id`, bundle selectors, and equivalent
 alternate-form inputs are undeclared and invalid.
+Any explicit `schema_version` other than `v1` is invalid. The effective
+`schema_version` SHALL be passed to the native host with the validated options.
 
-If `query` is a string, RAG SHALL apply `trimQueryV1` before it evaluates
+If `query` is a string, GETDOCCONTEXT SHALL apply `trimQueryV1` before it evaluates
 query emptiness or length and before it performs local retrieval.
 `trimQueryV1` removes only contiguous leading and trailing Unicode scalar
 values in this fixed set: `U+0009..U+000D`, `U+0020`, `U+0085`, `U+00A0`,
@@ -57,7 +61,7 @@ Successful calls SHALL invoke `callback(null, result)`. Failed calls SHALL
 invoke `callback(error, null)`, where `error.code` is one of the closed v1
 codes.
 
-For a callable callback, RAG SHALL validate options-object shape, unknown
+For a callable callback, GETDOCCONTEXT SHALL validate options-object shape, unknown
 properties, and optional-field values before it validates `query`; it SHALL
 validate `query` before it evaluates host support, active-form availability,
 or bundle availability. The first failing category is terminal. Therefore an
@@ -69,38 +73,44 @@ not require `query` to be present or valid: `query` presence, string type, and
 `trimQueryV1` length are always evaluated in the `rag_invalid_query` phase
 after unknown-property and optional-field validation pass.
 
-#### Scenario: RAG uses default option values
+#### Scenario: GETDOCCONTEXT uses default option values
 
-- **WHEN** a Data Event calls RAG with a valid `query` and omits `limit`,
-  `min_score`, and `timeout_ms`
-- **THEN** the invocation uses `limit: 5`, `min_score: 0.70`, and
+- **WHEN** a Data Event calls GETDOCCONTEXT with a valid `query` and omits
+  `schema_version`, `limit`, `min_score`, and `timeout_ms`
+- **THEN** the invocation uses `schema_version: 'v1'`, `limit: 5`, `min_score: 0.70`, and
   `timeout_ms: 2000`
 
-#### Scenario: RAG rejects an unsupported selector or option
+#### Scenario: An unsupported schema version is supplied
+
+- **WHEN** a Data Event supplies a `schema_version` other than `v1`
+- **THEN** the callback completes asynchronously with `rag_invalid_options`
+  before query or host availability validation, and no retrieval begins
+
+#### Scenario: GETDOCCONTEXT rejects an unsupported selector or option
 
 - **WHEN** a Data Event supplies an undeclared property such as `form_id`,
   `attachment_id`, `document_id`, or a non-integer `limit`
 - **THEN** the callback completes asynchronously with `rag_invalid_options`
   and no retrieval begins
 
-#### Scenario: RAG rejects an invalid query
+#### Scenario: GETDOCCONTEXT rejects an invalid query
 
 - **WHEN** `query` is missing, non-string, empty after `trimQueryV1`, or
   longer than 1,000 Unicode scalar values after `trimQueryV1`
 - **THEN** the callback completes asynchronously with `rag_invalid_query`
   and no retrieval begins
 
-#### Scenario: RAG applies the v1 query-trimming rule
+#### Scenario: GETDOCCONTEXT applies the v1 query-trimming rule
 
 - **WHEN** a string `query` has leading or trailing `U+00A0` or `U+2003`
   whitespace and valid non-whitespace text
-- **THEN** RAG removes only that boundary whitespace with `trimQueryV1`,
+- **THEN** GETDOCCONTEXT removes only that boundary whitespace with `trimQueryV1`,
   preserves interior text and whitespace, and uses the resulting Unicode
   scalar-value sequence for validation and local retrieval
 
-#### Scenario: RAG requires a callback
+#### Scenario: GETDOCCONTEXT requires a callback
 
-- **WHEN** RAG is called without a callable callback
+- **WHEN** GETDOCCONTEXT is called without a callable callback
 - **THEN** it synchronously throws `rag_invalid_options` before local
   retrieval starts
 
@@ -110,47 +120,47 @@ after unknown-property and optional-field validation pass.
 - **THEN** the callback completes asynchronously with `rag_invalid_options`
   rather than `rag_unavailable`, and no retrieval begins
 
-### Requirement: RAG is mobile-only and active-form-only
+### Requirement: GETDOCCONTEXT is mobile-only and active-form-only
 
 In v1, only iOS and Android native ExpressionEngine hosts SHALL implement
-RAG. For an invocation with a callable callback whose v1 options and query
+GETDOCCONTEXT. For an invocation with a callable callback whose v1 options and query
 validation succeed, web execution SHALL complete asynchronously with
 `rag_unavailable` and MUST NOT contact Synapse. A supported mobile host SHALL
 capture the current active form for a valid request after input validation
 succeeds and SHALL retrieve only from that form's local signed and validated
 RAG bundle.
 
-RAG MUST NOT enumerate all downloaded bundles, retrieve from another form,
+GETDOCCONTEXT MUST NOT enumerate all downloaded bundles, retrieve from another form,
 aggregate multiple forms, select an attachment or document independently of
 the active form, use a caller-provided bundle, or fall back to any other local
 or remote source. If no active form is available or its required local bundle
-is missing, invalid, or unusable, RAG SHALL return `rag_unavailable`; it MUST
+is missing, invalid, or unusable, GETDOCCONTEXT SHALL return `rag_unavailable`; it MUST
 NOT substitute an empty-success or another retrieval source.
 
-#### Scenario: RAG runs in web execution
+#### Scenario: GETDOCCONTEXT runs in web execution
 
-- **WHEN** a Data Event invokes RAG in a web host with a callable callback
+- **WHEN** a Data Event invokes GETDOCCONTEXT in a web host with a callable callback
   and v1-valid options and query
 - **THEN** the callback completes asynchronously with `rag_unavailable` and
   the host makes no Synapse request
 
 #### Scenario: The active form has a valid local bundle
 
-- **WHEN** a valid RAG invocation runs on iOS or Android with a current active
+- **WHEN** a valid GETDOCCONTEXT invocation runs on iOS or Android with a current active
   form whose signed and validated local bundle is available
 - **THEN** every candidate considered and every result returned originates
   only from that active form's bundle
 
 #### Scenario: The active form has no usable local bundle
 
-- **WHEN** a valid RAG invocation runs without an active form or with an
+- **WHEN** a valid GETDOCCONTEXT invocation runs without an active form or with an
   absent, invalid, or unusable active-form bundle
 - **THEN** the callback completes asynchronously with `rag_unavailable` without a
   cross-form, all-bundles, empty-success, or remote fallback
 
-### Requirement: RAG returns the exact v1 retrieval result
+### Requirement: GETDOCCONTEXT returns the exact v1 retrieval result
 
-For a successful invocation, RAG SHALL return a closed result object with
+For a successful invocation, GETDOCCONTEXT SHALL return a closed result object with
 exactly `bundle_version`, `result_count`, and `results`. `bundle_version`
 SHALL be a non-empty opaque local-bundle identifier of at most 128 Unicode
 scalar values. `result_count` SHALL equal `results.length` and SHALL be an
@@ -170,16 +180,16 @@ scalar values. `citation` SHALL have exactly:
 | --- | --- |
 | `attachment_id` | Non-empty opaque identifier of at most 128 Unicode scalar values |
 | `filename` | Non-empty redacted display filename of at most 255 Unicode scalar values |
-| `page_number` | Integer in the inclusive range `1..100000` |
+| `page_number` | Integer in the inclusive range `1..100000`, or null when unavailable |
 | `chunk_id` | Non-empty opaque identifier of at most 128 Unicode scalar values |
 | `section_heading` | Optional; when present, non-empty redacted plain text of at most 500 Unicode scalar values |
 
-RAG MUST NOT return a source URL, credential, authentication material, user
+GETDOCCONTEXT MUST NOT return a source URL, credential, authentication material, user
 token, raw engine score, cross-form metadata, or any undeclared result field.
 An empty matching set SHALL be a successful result with `result_count: 0` and
 `results: []`.
 
-#### Scenario: RAG returns bounded ranked passages
+#### Scenario: GETDOCCONTEXT returns bounded ranked passages
 
 - **WHEN** local retrieval finds eligible matching passages for the active
   form
@@ -187,7 +197,7 @@ An empty matching set SHALL be a successful result with `result_count: 0` and
   bounded passages, citations, one-based contiguous ranks, and normalized
   scores
 
-#### Scenario: RAG finds no eligible passages
+#### Scenario: GETDOCCONTEXT finds no eligible passages
 
 - **WHEN** no active-form candidate satisfies the retrieval and output rules
 - **THEN** the callback asynchronously succeeds with the active bundle version,
@@ -198,39 +208,39 @@ An empty matching set SHALL be a successful result with `result_count: 0` and
 - **WHEN** a retrieval candidate contains a source URL, credential,
   authentication material, user token, raw score, cross-form metadata, or
   another undeclared output field
-- **THEN** RAG omits or redacts the prohibited value before delivery and never
+- **THEN** GETDOCCONTEXT omits or redacts the prohibited value before delivery and never
   exposes it in the asynchronous callback's v1 result
 
-### Requirement: RAG has no generative, remote, or document-egress path
+### Requirement: GETDOCCONTEXT has no generative, remote, or document-egress path
 
-RAG SHALL perform local retrieval only. It MUST NOT generate an answer, invoke
+GETDOCCONTEXT SHALL perform local retrieval only. It MUST NOT generate an answer, invoke
 an LLM, make a query-time Synapse call, or transmit the query, document
 content, passage text, or citation data to Synapse, an LLM, or any other
 remote endpoint. Delivering the bounded v1 result through the invoking local
 Data Event callback is permitted local retrieval output and is not
 document-content egress.
 
-RAG SHALL redact prohibited credential, authentication, user-token,
+GETDOCCONTEXT SHALL redact prohibited credential, authentication, user-token,
 source-URL, and cross-form metadata from text fields before callback delivery.
 If a candidate cannot retain every required result and citation field after
-sanitization and bounds enforcement, RAG SHALL omit it. Errors and logs MUST
+sanitization and bounds enforcement, GETDOCCONTEXT SHALL omit it. Errors and logs MUST
 NOT contain query text, passage text, filenames, citation values, document
 content, source URLs, credentials, authentication material, or user tokens.
 
-#### Scenario: RAG returns local retrieval data
+#### Scenario: GETDOCCONTEXT returns local retrieval data
 
-- **WHEN** RAG successfully retrieves passages for the active form
+- **WHEN** GETDOCCONTEXT successfully retrieves passages for the active form
 - **THEN** it asynchronously delivers only the bounded v1 result to the local
   callback and does not generate an answer, invoke an LLM, or make a remote
   request
 
-#### Scenario: RAG emits diagnostics
+#### Scenario: GETDOCCONTEXT emits diagnostics
 
-- **WHEN** RAG reports an error or writes a diagnostic log
+- **WHEN** GETDOCCONTEXT reports an error or writes a diagnostic log
 - **THEN** the diagnostic omits query text, retrieval content, citation data,
   source URLs, credentials, authentication material, and user tokens
 
-### Requirement: RAG filters before limiting and uses deterministic ranking
+### Requirement: GETDOCCONTEXT filters before limiting and uses deterministic ranking
 
 The shared local retrieval core SHALL normalize candidate scores before output
 and SHALL apply the effective `min_score` inclusively before it applies the
@@ -248,25 +258,25 @@ delivered candidates.
 
 - **WHEN** more than the effective `limit` candidates exist but some have a
   normalized score below `min_score`
-- **THEN** RAG removes below-threshold candidates before selecting at most the
+- **THEN** GETDOCCONTEXT removes below-threshold candidates before selecting at most the
   effective `limit` highest-ranked remaining candidates
 
 #### Scenario: Candidates have equal normalized scores
 
 - **WHEN** two retained candidates have equal normalized `score` values
-- **THEN** RAG orders them by ascending `citation.chunk_id` in Unicode
+- **THEN** GETDOCCONTEXT orders them by ascending `citation.chunk_id` in Unicode
   code-point order
 
 #### Scenario: A candidate cannot satisfy the v1 output bounds
 
 - **WHEN** a candidate cannot be safely redacted or bounded while retaining
   every required result and citation field
-- **THEN** RAG omits that candidate and may return an otherwise successful
+- **THEN** GETDOCCONTEXT omits that candidate and may return an otherwise successful
   empty result
 
-### Requirement: RAG has closed terminal errors and cancellation behavior
+### Requirement: GETDOCCONTEXT has closed terminal errors and cancellation behavior
 
-RAG SHALL expose only these stable v1 terminal error codes:
+GETDOCCONTEXT SHALL expose only these stable v1 terminal error codes:
 `rag_invalid_options`, `rag_invalid_query`, `rag_unavailable`, `rag_timeout`,
 and `rag_cancelled`. `rag_invalid_options` covers a missing/non-object options
 value, unknown option, invalid optional value, or missing/non-callable
@@ -292,7 +302,7 @@ Errors and logs MUST NOT contain query text, passage text, filename, citation
 values, document content, source URLs, credentials, authentication material,
 or user tokens.
 
-#### Scenario: RAG exceeds its effective timeout
+#### Scenario: GETDOCCONTEXT exceeds its effective timeout
 
 - **WHEN** a valid local request has not completed by its effective
   `timeout_ms`
@@ -301,13 +311,13 @@ or user tokens.
 
 #### Scenario: A record or editor unloads during retrieval
 
-- **WHEN** the record or editor associated with an in-flight RAG call unloads
+- **WHEN** the record or editor associated with an in-flight GETDOCCONTEXT call unloads
 - **THEN** the host asynchronously completes the call as `rag_cancelled`
   before context disposal and suppresses all later retrieval output
 
 #### Scenario: Cancellation and timeout occur together
 
-- **WHEN** cancellation and timeout race for the same in-flight RAG call
+- **WHEN** cancellation and timeout race for the same in-flight GETDOCCONTEXT call
 - **THEN** the callback asynchronously completes exactly once with the first
   terminal transition, either `rag_cancelled` or `rag_timeout`
 

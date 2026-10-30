@@ -9,17 +9,17 @@ strict offline, active-form, and privacy boundaries.
 ## What Changes
 
 - Define the final v1 public Data Event
-  `RAG(options, callback)` for Fulcrum's user-authored JavaScript subset. It
+  `GETDOCCONTEXT(options, callback)` for Fulcrum's user-authored JavaScript subset. It
   is asynchronous and callback-based, following the `INFERENCE` host-function
   model.
 - Lock the closed v1 RAG request, result, citation, error, default, and
   boundary contracts, including the exact options
-  `{ query, limit?, min_score?, timeout_ms? }`.
-- Restrict RAG to iOS and Android native hosts. After v1 options and query
+  `{ query, schema_version?, limit?, min_score?, timeout_ms? }`.
+- Restrict GETDOCCONTEXT to iOS and Android native hosts. After v1 options and query
   validation succeeds for a callable callback, web completes asynchronously
   with `rag_unavailable` and never contacts Synapse.
 - Require local retrieval from only the current active form's signed and
-  validated bundle. RAG accepts no form, attachment, document, or bundle
+  validated bundle. GETDOCCONTEXT accepts no form, attachment, document, or bundle
   selector and cannot search across, aggregate, or fall back between forms.
 - Define retrieval-only results: ranked, normalized-score passages and
   citations with bundle correlation; no answer generation, LLM invocation,

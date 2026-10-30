@@ -49,7 +49,7 @@
 ## 3. Data Event language and native hosts
 
 - [ ] 3.1 In [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289),
-  add final `RAG(options, callback)` language/source documentation using the
+  add final `GETDOCCONTEXT(options, callback)` language/source documentation using the
   existing `INFERENCE`-style asynchronous host boundary; verify callable
   callbacks receive exactly one `callback(null, result)` or
   `callback(error, null)` terminal outcome, a missing/non-callable callback
@@ -66,11 +66,13 @@
   or extra result fields.
 - [ ] 3.4 In [FLCRM-22293](https://fulcrumapp.atlassian.net/browse/FLCRM-22293),
   add the Android native ExpressionEngine RAG adapter over the shared KMP core;
-  verify it captures the active form, maps every v1 terminal code, cancels on
+  accept the effective `schema_version: 'v1'` sent by Expressions and verify it
+  captures the active form, maps every v1 terminal code, cancels on
   record/editor unload, and passes Android Data Event golden fixtures.
 - [ ] 3.5 In [FLCRM-22294](https://fulcrumapp.atlassian.net/browse/FLCRM-22294),
   add the iOS native ExpressionEngine RAG adapter over the shared KMP core;
-  verify it captures the active form, maps every v1 terminal code, cancels on
+  accept the effective `schema_version: 'v1'` sent by Expressions and verify it
+  captures the active form, maps every v1 terminal code, cancels on
   record/editor unload, and passes iOS Data Event golden fixtures.
 
 ## 4. Android conversational-agent tool
