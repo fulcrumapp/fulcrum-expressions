@@ -8,7 +8,7 @@
 
 ## Goal
 
-Expose the ratified v1 `RAG(options, callback)` function in the Expressions
+Expose the ratified v1 `GETDOCCONTEXT(options, callback)` function in the Expressions
 runtime. The function validates its public request, asynchronously delegates
 to the native RAG host operation, and returns only the closed v1 retrieval
 result or a stable error. It must not implement retrieval or answer
@@ -22,7 +22,7 @@ native host adapters, Android agent tool, or editor integration.
 
 ### Public options and validation
 
-`RAG(options, callback)` accepts exactly:
+`GETDOCCONTEXT(options, callback)` accepts exactly:
 
 | Property | Contract |
 | --- | --- |
@@ -127,7 +127,7 @@ material, or user tokens.
 
 Use the established `INFERENCE` and asynchronous host-function patterns,
 adjusted to the stricter RAG v1 callback/error contract. The implementation
-must expose `RAG` as a Data Event function and prevent its use in calculations.
+must expose `GETDOCCONTEXT` as a Data Event function and prevent its use in calculations.
 Keep the library's public TypeScript declaration aligned with the runtime;
 do not implement the separate Fulcrum Components Monaco/editor integration
 tracked by FLCRM-22292.
@@ -149,7 +149,7 @@ public v1 option or field.
 
 ## Acceptance criteria
 
-1. `RAG` validates the exact v1 options and Unicode query rule, with unknown
+1. `GETDOCCONTEXT` validates the exact v1 options and Unicode query rule, with unknown
    properties rejected and no coercion.
 2. With a callable callback, invalid options/query and host results complete
    asynchronously and exactly once with the specified stable error code; a
@@ -160,7 +160,7 @@ public v1 option or field.
    exists in this JavaScript package.
 4. Web returns asynchronous `rag_unavailable` after validation and does not
    dispatch a retrieval request.
-5. `RAG` is registered as a Data Event function, not enabled for calculations.
+5. `GETDOCCONTEXT` is registered as a Data Event function, not enabled for calculations.
 6. Public type declarations and language documentation describe only the
    closed v1 contract.
 7. Function-level tests cover defaults, each validation/error category,

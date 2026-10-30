@@ -49,7 +49,7 @@
 ## 3. Data Event language and native hosts
 
 - [ ] 3.1 In [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289),
-  add final `RAG(options, callback)` language/source documentation using the
+  add final `GETDOCCONTEXT(options, callback)` language/source documentation using the
   existing `INFERENCE`-style asynchronous host boundary; verify callable
   callbacks receive exactly one `callback(null, result)` or
   `callback(error, null)` terminal outcome, a missing/non-callable callback

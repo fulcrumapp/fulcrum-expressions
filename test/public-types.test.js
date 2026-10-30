@@ -67,6 +67,8 @@ api.statements.forEach((statement) => {
 functionNames.forEach((name) => {
   assert.ok(publicNames.has(name), `missing public expression declaration: ${name}`);
 });
+assert.ok(publicNames.has("GETDOCCONTEXT"), "missing GETDOCCONTEXT declaration");
+assert.ok(!publicNames.has("RAG"), "legacy RAG declaration must not be exposed");
 assert.ok(
   !/\b(prepareRuntime|finishAsync|extendToBeWithinRange|extendContainAllElements|_default)\b/.test(declarations),
   "test helpers and fixture declarations must not leak into the public API"

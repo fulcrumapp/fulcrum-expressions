@@ -416,12 +416,12 @@ function PROMPT() {}
 function REQUEST() {}
 
 
-////RAG
+////GETDOCCONTEXT
 
 /**
- * RAG
+ * GETDOCCONTEXT
  * Retrieves ranked passages from the current form's local, validated RAG bundle.
- * RAG is a Data Event function and is supported only by the iOS and Android
+ * GETDOCCONTEXT is a Data Event function and is supported only by the iOS and Android
  * Expressions hosts. Web calls complete with `rag_unavailable`; a missing
  * active form or usable bundle also returns `rag_unavailable`.
  *
@@ -454,7 +454,7 @@ function REQUEST() {}
  * 100,000, and an optional redacted heading is non-empty and at most 500
  * scalar values.
  *
- * RAG returns local retrieval results only. It does not generate an answer,
+ * GETDOCCONTEXT returns local retrieval results only. It does not generate an answer,
  * invoke an LLM, make a remote request, or search another form or bundle.
  *
  * @param {Object} options The closed v1 retrieval options
@@ -471,7 +471,7 @@ function REQUEST() {}
  * filenames, citations, document content, source URLs, or credentials.
  *
  * @example
- * RAG({query: 'soil moisture', limit: 5}, function(error, result) {
+ * GETDOCCONTEXT({query: 'soil moisture', limit: 5}, function(error, result) {
  *   if (error) {
  *     if (error.code === 'rag_unavailable') {
  *       // Handle a host or active-bundle that is unavailable.
@@ -484,7 +484,7 @@ function REQUEST() {}
  *   }
  * });
  */
-function RAG() {}
+function GETDOCCONTEXT() {}
 
 
 ////SETASSIGNMENT

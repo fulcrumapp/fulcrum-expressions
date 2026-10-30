@@ -67,7 +67,7 @@ export interface RagRetrievalResultV1 {
  * The callback is invoked asynchronously exactly once. On failure, `result`
  * is null and `error.code` is one of the stable v1 RAG error codes.
  */
-export default function RAG(
+export default function GETDOCCONTEXT(
   options: RagRetrievalOptionsV1,
   callback: (error: RagErrorV1 | null, result: RagRetrievalResultV1 | null) => void
 ): void

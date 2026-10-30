@@ -19,7 +19,7 @@ Android's existing inference bridge uses ExpressionEngine `$$inference`, and
 iOS uses `ExpressionEngineInvocation`; future RAG adapters follow that
 asynchronous boundary without making the bridge implementation itself public.
 
-This change is documentation only. It does not add RAG to CoffeeScript,
+This change is documentation only. It does not add GETDOCCONTEXT to CoffeeScript,
 TypeScript declarations, generated help, native code, KMP code, CI,
 dependencies, or configuration outside `openspec/`.
 
@@ -48,7 +48,7 @@ dependencies, or configuration outside `openspec/`.
 
 ### Publish two versioned v1 surfaces over one retrieval profile
 
-`RAG(options, callback)` is the final public mobile Data Event function.
+`GETDOCCONTEXT(options, callback)` is the final public mobile Data Event function.
 `search_form_knowledge` is the final Android conversational-agent tool name.
 Both are closed v1 compatibility surfaces. The mobile RAG capability
 specification is the canonical normative definition of the shared v1 request,
@@ -127,7 +127,7 @@ units or grapheme clusters.
 
 ### Validate before availability and use explicit callback terminal semantics
 
-RAG requires an options object and a callable callback. A missing or
+GETDOCCONTEXT requires an options object and a callable callback. A missing or
 non-callable callback SHALL synchronously throw an Error-compatible
 `rag_invalid_options` error before retrieval because no valid callback delivery
 channel exists. For an invocation with a callable callback, the callback
@@ -210,7 +210,7 @@ empty, error, timeout, and cancellation paths.
 
 ### Use independent adapters for Data Events and conversational agents
 
-Native iOS and Android ExpressionEngine adapters validate `RAG` input,
+Native iOS and Android ExpressionEngine adapters validate `GETDOCCONTEXT` input,
 capture the active form, call the KMP core, and translate its terminal state
 to the callback contract. Web implements only the terminal
 `rag_unavailable` callback behavior.
@@ -279,7 +279,7 @@ is fixed by the existing epic children:
    from the [Synapse foundation PR](https://github.com/fulcrumapp/synapse/pull/1).
 2. Implement the KMP v1 retrieval core and golden fixtures in
    [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288).
-3. Add the RAG language function/source docs in
+3. Add the GETDOCCONTEXT language function/source docs in
    [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289) and
    editor declarations in [FLCRM-22292](https://fulcrumapp.atlassian.net/browse/FLCRM-22292).
 4. Add native Data Event adapters in

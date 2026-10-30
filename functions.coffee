@@ -1625,7 +1625,7 @@ ragScheduleAsync = (callback) ->
   if typeof Promise isnt 'undefined' and _.isFunction(Promise.resolve)
     Promise.resolve().then(callback)
 
-exports.RAG = (options, callback) ->
+exports.GETDOCCONTEXT = (options, callback) ->
   throw ragError('rag_invalid_options') unless _.isFunction(callback)
 
   completed = false

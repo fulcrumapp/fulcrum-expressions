@@ -2973,18 +2973,22 @@ describe "SETMODE", ->
         (-> INFERENCE params).should.throw('options.config cannot contain both size (Vision ML) and prompt/systemPrompt (Generative LLM)')
 
 
-  describe 'RAG', ->
+  describe 'GETDOCCONTEXT', ->
+    it 'exposes only the new expression name', ->
+      runtime.functions.should.have.property('GETDOCCONTEXT')
+      runtime.functions.should.not.have.property('RAG')
+
     it 'throws a coded error synchronously when the callback is missing or not callable', ->
       missingCallbackError = null
       nonCallableCallbackError = null
 
       try
-        RAG(query: 'private query')
+        GETDOCCONTEXT(query: 'private query')
       catch error
         missingCallbackError = error
 
       try
-        RAG({query: 'private query'}, null)
+        GETDOCCONTEXT({query: 'private query'}, null)
       catch error
         nonCallableCallbackError = error
 
@@ -2996,7 +3000,7 @@ describe "SETMODE", ->
       runtime.isCalculation = true
 
       try
-        (-> RAG({query: 'query'}, ->)).should.throw('RAG cannot be used in a calculation')
+        (-> GETDOCCONTEXT({query: 'query'}, ->)).should.throw('GETDOCCONTEXT cannot be used in a calculation')
       finally
         runtime.isCalculation = false
 
@@ -3014,7 +3018,7 @@ describe "SETMODE", ->
         runtime.finishAsync()
 
       callbackCalled = false
-      RAG({query: allV1Whitespace + expectedQuery + allV1Whitespace}, (error, result) ->
+      GETDOCCONTEXT({query: allV1Whitespace + expectedQuery + allV1Whitespace}, (error, result) ->
         try
           callbackCalled.should.be.false()
           callbackCalled = true
@@ -3047,7 +3051,7 @@ describe "SETMODE", ->
         runtime.callbackArguments = [null, newRagResult([])]
         runtime.finishAsync()
 
-      RAG({query: 'soil', limit: 20, min_score: 0.85, timeout_ms: 6500}, (error, result) ->
+      GETDOCCONTEXT({query: 'soil', limit: 20, min_score: 0.85, timeout_ms: 6500}, (error, result) ->
         try
           shouldBeNull(error)
           result.should.eql(newRagResult([]))
@@ -3074,7 +3078,7 @@ describe "SETMODE", ->
         runtime.callbackArguments = [null, newRagResult([])]
         runtime.finishAsync()
 
-      RAG({query: query}, (error, result) ->
+      GETDOCCONTEXT({query: query}, (error, result) ->
         try
           shouldBeNull(error)
           result.should.eql(newRagResult([]))
@@ -3122,7 +3126,7 @@ describe "SETMODE", ->
 
       for options in cases
         do (options) ->
-          RAG(options, (error, result) ->
+          GETDOCCONTEXT(options, (error, result) ->
             try
               error.code.should.eql('rag_invalid_options')
               shouldBeNull(result)
@@ -3154,7 +3158,7 @@ describe "SETMODE", ->
 
       for options in cases
         do (options) ->
-          RAG(options, (error, result) ->
+          GETDOCCONTEXT(options, (error, result) ->
             try
               error.code.should.eql('rag_invalid_query')
               shouldBeNull(result)
@@ -3175,7 +3179,7 @@ describe "SETMODE", ->
         dispatchCount += 1
 
       callbackCalled = false
-      RAG({query: 'valid query'}, (error, result) ->
+      GETDOCCONTEXT({query: 'valid query'}, (error, result) ->
         try
           callbackCalled.should.be.false()
           callbackCalled = true
@@ -3195,7 +3199,7 @@ describe "SETMODE", ->
       delete runtime.$$rag
 
       callbackCalled = false
-      RAG({query: 'valid query'}, (error, result) ->
+      GETDOCCONTEXT({query: 'valid query'}, (error, result) ->
         try
           callbackCalled.should.be.false()
           callbackCalled = true
@@ -3222,7 +3226,7 @@ describe "SETMODE", ->
 
       for testCase in cases
         do (testCase) ->
-          RAG(testCase[0], (error, result) ->
+          GETDOCCONTEXT(testCase[0], (error, result) ->
             try
               error.code.should.eql(testCase[1])
               shouldBeNull(result)
@@ -3242,7 +3246,7 @@ describe "SETMODE", ->
         runtime.callbackArguments = [null, newRagResult([])]
         runtime.finishAsync()
 
-      RAG({query: 'empty'}, (error, result) ->
+      GETDOCCONTEXT({query: 'empty'}, (error, result) ->
         try
           shouldBeNull(error)
           result.should.eql(newRagResult([]))
@@ -3324,7 +3328,7 @@ describe "SETMODE", ->
 
       for response in responses
         do (response) ->
-          RAG({query: 'valid'}, (error, result) ->
+          GETDOCCONTEXT({query: 'valid'}, (error, result) ->
             try
               error.code.should.eql('rag_unavailable')
               error.message.should.eql('RAG is unavailable.')
@@ -3350,7 +3354,7 @@ describe "SETMODE", ->
         runtime.callbackArguments = [null, validResult]
         runtime.finishAsync()
 
-      RAG({query: 'valid'}, (error, result) ->
+      GETDOCCONTEXT({query: 'valid'}, (error, result) ->
         try
           shouldBeNull(error)
           result.results[0].citation.chunk_id.should.eql('\ue000')
@@ -3377,7 +3381,7 @@ describe "SETMODE", ->
 
       for code in codes
         do (code) ->
-          RAG({query: 'secret query'}, (error, result) ->
+          GETDOCCONTEXT({query: 'secret query'}, (error, result) ->
             try
               error.code.should.eql(code)
               error.message.should.not.containEql('secret query')
@@ -3405,7 +3409,7 @@ describe "SETMODE", ->
 
       callbackCount = 0
 
-      RAG({query: 'once'}, (error, result) ->
+      GETDOCCONTEXT({query: 'once'}, (error, result) ->
         try
           callbackCount += 1
           shouldBeNull(error)
@@ -3438,7 +3442,7 @@ describe "SETMODE", ->
         ]
         runtime.finishAsync()
 
-      RAG({query: 'private query'}, (error, result) ->
+      GETDOCCONTEXT({query: 'private query'}, (error, result) ->
         try
           error.code.should.eql('rag_unavailable')
           error.message.should.eql('RAG is unavailable.')

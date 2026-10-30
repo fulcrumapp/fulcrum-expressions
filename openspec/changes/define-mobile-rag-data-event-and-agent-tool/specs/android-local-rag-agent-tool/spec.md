@@ -9,7 +9,7 @@ authorized, active-form local RAG retrieval without Data Event JavaScript.
 
 Android conversational agents SHALL expose the local retrieval tool named
 `search_form_knowledge`. It SHALL be a closed, versioned v1 agent-tool
-surface, distinct from the public Data Event `RAG(options, callback)`. The
+surface, distinct from the public Data Event `GETDOCCONTEXT(options, callback)`. The
 tool MUST NOT register as a Data Event function, expose a Data Event callback
 API, start an expression engine, or invoke Data Event JavaScript.
 
@@ -57,7 +57,7 @@ type, and `trimQueryV1` length are always evaluated in the
 pass.
 
 The tool's successful output SHALL be the same closed
-`RagRetrievalResultV1` schema used by RAG:
+`RagRetrievalResultV1` schema used by GETDOCCONTEXT:
 
 ```text
 {
@@ -178,7 +178,7 @@ or unusable, the tool SHALL terminate with `rag_unavailable`.
 
 ### Requirement: The agent tool preserves exact v1 retrieval semantics
 
-The agent tool SHALL apply the same v1 retrieval semantics as RAG. The shared
+The agent tool SHALL apply the same v1 retrieval semantics as GETDOCCONTEXT. The shared
 core SHALL normalize each internal engine score to one finite `score` in the
 inclusive range `0..1`, apply the effective `min_score` inclusively before the
 effective `limit`, sort retained results by `score` descending, and sort equal
