@@ -19,16 +19,18 @@ error-code field without publishing a new contract version.
 This capability specification is the canonical normative definition of the
 shared `RagRetrievalOptionsV1`, `RagRetrievalResultV1`, citation, default,
 bound, query-normalization, score-ordering, and stable-error profile. The
-Android `search_form_knowledge` capability SHALL adopt this shared profile
-without extension and defines only its agent-specific registration, policy,
-and lifecycle behavior. If the capability specifications conflict on shared
-retrieval behavior, this specification controls.
+Android `search_form_knowledge` capability SHALL adopt the shared retrieval
+profile without the Data Event-specific `schema_version` option and defines
+its agent-specific registration, policy, and lifecycle behavior. If the
+capability specifications conflict on shared retrieval behavior, this
+specification controls.
 
 `options` SHALL be an object with exactly these properties:
 
 | Property | Requirement |
 | --- | --- |
 | `query` | Required literal plain-text string; after `trimQueryV1`, 1 through 1,000 Unicode scalar values |
+| `schema_version` | Optional string; only `v1` is supported; default `v1` |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
@@ -39,6 +41,8 @@ selector, document selector, or bundle selector. `null`, coercion,
 non-finite values, and undeclared properties are invalid. In particular,
 `form_id`, `attachment_id`, `document_id`, bundle selectors, and equivalent
 alternate-form inputs are undeclared and invalid.
+Any explicit `schema_version` other than `v1` is invalid. The effective
+`schema_version` SHALL be passed to the native host with the validated options.
 
 If `query` is a string, GETDOCCONTEXT SHALL apply `trimQueryV1` before it evaluates
 query emptiness or length and before it performs local retrieval.
@@ -71,10 +75,16 @@ after unknown-property and optional-field validation pass.
 
 #### Scenario: GETDOCCONTEXT uses default option values
 
-- **WHEN** a Data Event calls GETDOCCONTEXT with a valid `query` and omits `limit`,
-  `min_score`, and `timeout_ms`
-- **THEN** the invocation uses `limit: 5`, `min_score: 0.70`, and
+- **WHEN** a Data Event calls GETDOCCONTEXT with a valid `query` and omits
+  `schema_version`, `limit`, `min_score`, and `timeout_ms`
+- **THEN** the invocation uses `schema_version: 'v1'`, `limit: 5`, `min_score: 0.70`, and
   `timeout_ms: 2000`
+
+#### Scenario: An unsupported schema version is supplied
+
+- **WHEN** a Data Event supplies a `schema_version` other than `v1`
+- **THEN** the callback completes asynchronously with `rag_invalid_options`
+  before query or host availability validation, and no retrieval begins
 
 #### Scenario: GETDOCCONTEXT rejects an unsupported selector or option
 

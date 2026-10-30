@@ -14,7 +14,7 @@ strict offline, active-form, and privacy boundaries.
   model.
 - Lock the closed v1 RAG request, result, citation, error, default, and
   boundary contracts, including the exact options
-  `{ query, limit?, min_score?, timeout_ms? }`.
+  `{ query, schema_version?, limit?, min_score?, timeout_ms? }`.
 - Restrict GETDOCCONTEXT to iOS and Android native hosts. After v1 options and query
   validation succeeds for a callable callback, web completes asynchronously
   with `rag_unavailable` and never contacts Synapse.

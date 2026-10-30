@@ -1335,7 +1335,7 @@ ragOwnKeys = (object) ->
   keys
 
 ragIsAllowedOption = (key) ->
-  key is 'query' or key is 'limit' or key is 'min_score' or key is 'timeout_ms'
+  key is 'query' or key is 'schema_version' or key is 'limit' or key is 'min_score' or key is 'timeout_ms'
 
 ragIsTrimQueryWhitespace = (code) ->
   (code >= 0x09 and code <= 0x0d) or
@@ -1426,9 +1426,12 @@ ragNormalizeOptions = (options) ->
   for key of options
     throw ragError('rag_invalid_options') unless ragIsAllowedOption(key)
 
+  schemaVersion = if ragHasOwn(options, 'schema_version') then options.schema_version else 'v1'
   limit = if ragHasOwn(options, 'limit') then options.limit else 5
   minScore = if ragHasOwn(options, 'min_score') then options.min_score else 0.70
   timeout = if ragHasOwn(options, 'timeout_ms') then options.timeout_ms else 2000
+
+  throw ragError('rag_invalid_options') unless schemaVersion is 'v1'
 
   unless typeof limit is 'number' and isFinite(limit) and limit % 1 is 0 and limit >= 1 and limit <= 20
     throw ragError('rag_invalid_options')
@@ -1451,6 +1454,7 @@ ragNormalizeOptions = (options) ->
   throw ragError('rag_invalid_query') unless queryLength >= 1 and queryLength <= 1000
 
   query: query
+  schema_version: schemaVersion
   limit: limit
   min_score: minScore
   timeout_ms: timeout

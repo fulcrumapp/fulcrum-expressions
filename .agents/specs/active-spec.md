@@ -27,6 +27,7 @@ native host adapters, Android agent tool, or editor integration.
 | Property | Contract |
 | --- | --- |
 | `query` | Required string; trim with the normative `trimQueryV1` rule, then require 1–1,000 Unicode scalar values |
+| `schema_version` | Optional string; only `v1` is supported; default `v1` |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer; default `2000`; inclusive range `2000..10000` |
@@ -105,7 +106,7 @@ the stable v1 error set.
 
 On iOS and Android, dispatch asynchronously through the dedicated native RAG
 host operation using the active form's signed, validated local bundle. Pass
-the validated options, including the effective timeout, across the existing
+the validated options, including the effective schema version and timeout, across the existing
 host-function boundary. Do not query Synapse, invoke an LLM, generate an
 answer, search another form/bundle, or add retrieval logic in this package.
 

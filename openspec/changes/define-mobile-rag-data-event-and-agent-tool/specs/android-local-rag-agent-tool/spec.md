@@ -16,7 +16,8 @@ API, start an expression engine, or invoke Data Event JavaScript.
 The mobile RAG capability specification is the canonical normative definition
 of the shared `RagRetrievalOptionsV1`, `RagRetrievalResultV1`, citation,
 default, bound, query-normalization, score-ordering, and stable-error profile.
-This capability specification SHALL adopt that profile without extension and
+This capability specification SHALL adopt that profile without the Data
+Event-specific `schema_version` option and
 defines only agent-specific registration, policy, and lifecycle behavior. If
 the capability specifications conflict on shared retrieval behavior, the
 mobile RAG capability specification controls.

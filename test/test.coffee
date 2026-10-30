@@ -3025,6 +3025,7 @@ describe "SETMODE", ->
           shouldBeNull(error)
           request.should.eql(
             query: expectedQuery
+            schema_version: 'v1'
             limit: 5
             min_score: 0.70
             timeout_ms: 2000
@@ -3051,12 +3052,13 @@ describe "SETMODE", ->
         runtime.callbackArguments = [null, newRagResult([])]
         runtime.finishAsync()
 
-      GETDOCCONTEXT({query: 'soil', limit: 20, min_score: 0.85, timeout_ms: 6500}, (error, result) ->
+      GETDOCCONTEXT({query: 'soil', schema_version: 'v1', limit: 20, min_score: 0.85, timeout_ms: 6500}, (error, result) ->
         try
           shouldBeNull(error)
           result.should.eql(newRagResult([]))
           request.should.eql(
             query: 'soil'
+            schema_version: 'v1'
             limit: 20
             min_score: 0.85
             timeout_ms: 6500
@@ -3097,6 +3099,13 @@ describe "SETMODE", ->
         null
         'not an object'
         {query: '', form_id: 'another-form'}
+        {query: '', schema_version: 'v2'}
+        {query: 'valid', schema_version: 'v2'}
+        {query: 'valid', schema_version: ''}
+        {query: 'valid', schema_version: null}
+        {query: 'valid', schema_version: undefined}
+        {query: 'valid', schema_version: 1}
+        {query: 'valid', schema_version: {}}
         {query: '', limit: '5'}
         {query: '', limit: null}
         {query: '', limit: NaN}

@@ -54,18 +54,20 @@ Both are closed v1 compatibility surfaces. The mobile RAG capability
 specification is the canonical normative definition of the shared v1 request,
 result, citation, default, bound, score-ordering, query-normalization, and
 stable-error contract. The Android agent-tool capability specification
-normatively adopts that shared profile without extension and defines only its
-agent-specific registration, policy, and lifecycle behavior. If the two
+normatively adopts that shared profile without the Data Event-specific
+`schema_version` option and defines its agent-specific registration, policy,
+and lifecycle behavior. If the two
 capability specifications conflict on shared retrieval behavior, the mobile
 RAG capability specification controls. This design's restatement is
 non-normative implementation guidance.
 
-For readability, the shared retrieval request and success-result schemas are
-summarized below:
+For readability, the Data Event request and shared success-result schemas are
+summarized below. The Android agent tool does not accept `schema_version`:
 
 ```text
 RagRetrievalOptionsV1 = {
   query: string,
+  schema_version?: "v1",
   limit?: integer,
   min_score?: number,
   timeout_ms?: integer
@@ -91,15 +93,17 @@ RagRetrievalResultV1 = {
 
 The schemas are closed: no unlisted input, result, result-item, or citation
 property is valid in v1. `bundle_version` correlates results to the local
-bundle; it is not a contract-version field. Contract versioning is carried by
-the named v1 surface. A behavior change or additional public field requires a
-new contract version rather than a silent v1 extension.
+bundle; it is not a contract-version field. GETDOCCONTEXT defaults its
+`schema_version` to `v1`, rejects other values, and forwards the effective
+version to the native host. A behavior change or additional public field
+requires a new contract version rather than a silent v1 extension.
 
-The two surfaces use the same values and defaults:
+The two surfaces use the same values and defaults for their shared fields:
 
 | Field | Rule |
 | --- | --- |
 | `query` | Required literal plain-text string; 1 through 1,000 Unicode scalar values after `trimQueryV1`; no query DSL, form selector, document selector, or source selector |
+| `schema_version` | GETDOCCONTEXT only; optional string; only `v1` is supported; default `v1` |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |

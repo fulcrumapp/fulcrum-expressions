@@ -90,6 +90,10 @@ try {
     "const feature: Feature<Point> = GEOMETRYFEATURE(point);",
     "const geojson: GeoJSON = feature;",
     "const recordGeometry: GeoJSONGeometry | null = GEOMETRY();",
+    "GETDOCCONTEXT({ query: 'soil' }, () => {});",
+    "GETDOCCONTEXT({ query: 'soil', schema_version: 'v1' }, () => {});",
+    "// @ts-expect-error Unsupported schema versions are rejected.",
+    "GETDOCCONTEXT({ query: 'soil', schema_version: 'v2' }, () => {});",
     "",
   ].join("\n"));
   const program = ts.createProgram([declarationPath, consumerPath], {

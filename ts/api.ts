@@ -2662,6 +2662,8 @@ interface RagRetrievalOptionsV1 {
      * scalar values.
      */
     query: string;
+    /** Retrieval schema version. Only v1 is supported. @default "v1" */
+    schema_version?: "v1";
     /** Maximum result count; an integer from 1 through 20. @default 5 */
     limit?: number;
     /** Inclusive normalized-score threshold from 0 through 1. @default 0.70 */

@@ -425,10 +425,12 @@ function REQUEST() {}
  * Expressions hosts. Web calls complete with `rag_unavailable`; a missing
  * active form or usable bundle also returns `rag_unavailable`.
  *
- * The options object accepts only `query`, `limit`, `min_score`, and
+ * The options object accepts only `query`, `schema_version`, `limit`, `min_score`, and
  * `timeout_ms`; selectors such as `form_id`, `attachment_id`, and
  * `document_id` are not supported. Defaults are `limit: 5`, `min_score: 0.70`,
- * and `timeout_ms: 2000`. `limit` must be an integer from 1 through 20,
+ * `timeout_ms: 2000`, and `schema_version: 'v1'`. Only `v1` is supported;
+ * other schema versions are rejected with `rag_invalid_options`. The effective
+ * schema version is sent to the native host. `limit` must be an integer from 1 through 20,
  * `min_score` a finite number from 0 through 1, and `timeout_ms` an integer
  * from 2,000 through 10,000.
  * The inclusive `min_score` threshold is applied before `limit`.
@@ -459,6 +461,7 @@ function REQUEST() {}
  *
  * @param {Object} options The closed v1 retrieval options
  * @param {string} options.query Required literal plain-text query
+ * @param {string} [options.schema_version=v1] Retrieval schema version; only v1 is supported
  * @param {number} [options.limit=5] Maximum result count, an integer from 1 through 20
  * @param {number} [options.min_score=0.70] Inclusive normalized-score threshold from 0 through 1
  * @param {number} [options.timeout_ms=2000] Timeout in milliseconds, an integer from 2,000 through 10,000
