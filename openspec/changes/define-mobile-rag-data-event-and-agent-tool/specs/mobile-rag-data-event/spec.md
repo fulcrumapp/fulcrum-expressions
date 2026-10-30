@@ -180,7 +180,7 @@ scalar values. `citation` SHALL have exactly:
 | --- | --- |
 | `attachment_id` | Non-empty opaque identifier of at most 128 Unicode scalar values |
 | `filename` | Non-empty redacted display filename of at most 255 Unicode scalar values |
-| `page_number` | Integer in the inclusive range `1..100000` |
+| `page_number` | Integer in the inclusive range `1..100000`, or null when unavailable |
 | `chunk_id` | Non-empty opaque identifier of at most 128 Unicode scalar values |
 | `section_heading` | Optional; when present, non-empty redacted plain text of at most 500 Unicode scalar values |
 

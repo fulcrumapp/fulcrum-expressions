@@ -453,7 +453,7 @@ function REQUEST() {}
  * `page_number`, and `chunk_id`, with optional `section_heading`: IDs are
  * non-empty and at most 128 scalar values, a redacted filename is non-empty
  * and at most 255 scalar values, the page number is an integer from 1 through
- * 100,000, and an optional redacted heading is non-empty and at most 500
+ * 100,000 or null when unavailable, and an optional redacted heading is non-empty and at most 500
  * scalar values.
  *
  * GETDOCCONTEXT returns local retrieval results only. It does not generate an answer,

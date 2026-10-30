@@ -2680,8 +2680,8 @@ interface RagCitationV1 {
     attachment_id: string;
     /** Non-empty redacted filename of at most 255 Unicode scalar values. */
     filename: string;
-    /** Integer page number from 1 through 100,000. */
-    page_number: number;
+    /** Integer page number from 1 through 100,000, or null when unavailable. */
+    page_number: number | null;
     /** Non-empty opaque chunk ID of at most 128 Unicode scalar values. */
     chunk_id: string;
     /** Optional non-empty redacted heading of at most 500 Unicode scalar values. */

@@ -78,7 +78,7 @@ type RagRetrievalResultV1 = {
     citation: {
       attachment_id: string;
       filename: string;
-      page_number: number;
+      page_number: number | null;
       chunk_id: string;
       section_heading?: string;
     };
@@ -91,7 +91,7 @@ scalar values); `result_count === results.length` and no more than the
 effective limit; one-based contiguous ranks; finite normalized scores in
 `0..1`; non-empty passage text up to 2,000 Unicode scalar values; non-empty
 `attachment_id` and `chunk_id` up to 128 scalar values; non-empty redacted
-filename up to 255 scalar values; integer page number `1..100000`; and
+filename up to 255 scalar values; integer page number `1..100000` or null; and
 optional non-empty redacted section heading up to 500 scalar values.
 
 The host contract applies the inclusive `min_score` threshold before

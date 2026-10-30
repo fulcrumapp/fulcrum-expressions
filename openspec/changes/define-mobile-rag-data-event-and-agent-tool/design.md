@@ -83,7 +83,7 @@ RagRetrievalResultV1 = {
     citation: {
       attachment_id: string,
       filename: string,
-      page_number: integer,
+      page_number: integer | null,
       chunk_id: string,
       section_heading?: string
     }
@@ -114,7 +114,7 @@ The two surfaces use the same values and defaults for their shared fields:
 | `text` | Non-empty redacted passage text; at most 2,000 Unicode scalar values |
 | `attachment_id` | Non-empty opaque identifier; at most 128 Unicode scalar values |
 | `filename` | Non-empty redacted display filename; at most 255 Unicode scalar values |
-| `page_number` | Integer in the inclusive range `1..100000` |
+| `page_number` | Integer in the inclusive range `1..100000`, or null when unavailable |
 | `chunk_id` | Non-empty opaque identifier; at most 128 Unicode scalar values |
 | `section_heading` | Optional; when present, non-empty redacted plain text of at most 500 Unicode scalar values |
 

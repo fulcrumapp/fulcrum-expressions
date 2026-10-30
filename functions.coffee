@@ -1563,7 +1563,8 @@ ragValidateResultV1 = (result, requestOptions) ->
 
     return null unless ragIsBoundedNonEmptyString(attachmentID, 128)
     return null unless ragIsBoundedNonEmptyString(filename, 255)
-    return null unless typeof pageNumber is 'number' and isFinite(pageNumber) and pageNumber % 1 is 0 and pageNumber >= 1 and pageNumber <= 100000
+    unless pageNumber is null or (typeof pageNumber is 'number' and isFinite(pageNumber) and pageNumber % 1 is 0 and pageNumber >= 1 and pageNumber <= 100000)
+      return null
     return null unless ragIsBoundedNonEmptyString(chunkID, 128)
 
     sectionHeading = undefined

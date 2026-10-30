@@ -3264,6 +3264,27 @@ describe "SETMODE", ->
           done(error)
       )
 
+    it 'preserves a null page number in a valid native result', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+
+      response = newRagResult([newRagItem()])
+      response.results[0].citation.page_number = null
+      runtime.$$rag = (options, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [null, response]
+        runtime.finishAsync()
+
+      GETDOCCONTEXT({query: 'valid'}, (error, result) ->
+        try
+          shouldBeNull(error)
+          shouldBeNull(result.results[0].citation.page_number)
+          result.should.eql(response)
+          done()
+        catch error
+          done(error)
+      )
+
     it 'rejects malformed or non-closed native result shapes', (done) ->
       CONFIGURE({ platform: 'Android' })
       mockAsyncHostTimer()
@@ -3287,6 +3308,15 @@ describe "SETMODE", ->
 
       badPageNumber = newRagResult([newRagItem()])
       badPageNumber.results[0].citation.page_number = 100001
+
+      zeroPageNumber = newRagResult([newRagItem()])
+      zeroPageNumber.results[0].citation.page_number = 0
+
+      missingPageNumber = newRagResult([newRagItem()])
+      delete missingPageNumber.results[0].citation.page_number
+
+      undefinedPageNumber = newRagResult([newRagItem()])
+      undefinedPageNumber.results[0].citation.page_number = undefined
 
       badBundleVersion = newRagResult([])
       badBundleVersion.bundle_version = new Array(130).join('v')
@@ -3319,6 +3349,9 @@ describe "SETMODE", ->
         ascendingScoreViolation
         codePointOrderViolation
         badPageNumber
+        zeroPageNumber
+        missingPageNumber
+        undefinedPageNumber
         badBundleVersion
         tooManyResults
         badPassageLength
