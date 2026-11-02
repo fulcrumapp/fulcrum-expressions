@@ -62,14 +62,14 @@ describe 'Documentation', ->
         actual.should.eql(returnValue)
 
 describe 'Data Event Documentation', ->
-  ragDoc = _.find(eventDocs.functions, (func) -> func.name is 'RAG')
+  ragDoc = _.find(eventDocs.functions, (func) -> func.name is 'GETDOCCONTEXT')
 
-  it 'includes executable RAG examples for both callback outcomes', ->
+  it 'includes executable GETDOCCONTEXT examples for both callback outcomes', ->
     ragDoc.should.be.ok()
     ragDoc.examples.should.have.length(1)
 
     example = ragDoc.examples[0]
-    executeExample = new Function('RAG', 'SETVALUE', example)
+    executeExample = new Function('GETDOCCONTEXT', 'SETVALUE', example)
 
     rag = (options, callback) ->
       options.query.should.eql('soil moisture')

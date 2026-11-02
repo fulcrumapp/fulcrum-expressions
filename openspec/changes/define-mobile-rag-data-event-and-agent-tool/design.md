@@ -19,7 +19,7 @@ Android's existing inference bridge uses ExpressionEngine `$$inference`, and
 iOS uses `ExpressionEngineInvocation`; future RAG adapters follow that
 asynchronous boundary without making the bridge implementation itself public.
 
-This change is documentation only. It does not add RAG to CoffeeScript,
+This change is documentation only. It does not add GETDOCCONTEXT to CoffeeScript,
 TypeScript declarations, generated help, native code, KMP code, CI,
 dependencies, or configuration outside `openspec/`.
 
@@ -48,24 +48,26 @@ dependencies, or configuration outside `openspec/`.
 
 ### Publish two versioned v1 surfaces over one retrieval profile
 
-`RAG(options, callback)` is the final public mobile Data Event function.
+`GETDOCCONTEXT(options, callback)` is the final public mobile Data Event function.
 `search_form_knowledge` is the final Android conversational-agent tool name.
 Both are closed v1 compatibility surfaces. The mobile RAG capability
 specification is the canonical normative definition of the shared v1 request,
 result, citation, default, bound, score-ordering, query-normalization, and
 stable-error contract. The Android agent-tool capability specification
-normatively adopts that shared profile without extension and defines only its
-agent-specific registration, policy, and lifecycle behavior. If the two
+normatively adopts that shared profile without the Data Event-specific
+`schema_version` option and defines its agent-specific registration, policy,
+and lifecycle behavior. If the two
 capability specifications conflict on shared retrieval behavior, the mobile
 RAG capability specification controls. This design's restatement is
 non-normative implementation guidance.
 
-For readability, the shared retrieval request and success-result schemas are
-summarized below:
+For readability, the Data Event request and shared success-result schemas are
+summarized below. The Android agent tool does not accept `schema_version`:
 
 ```text
 RagRetrievalOptionsV1 = {
   query: string,
+  schema_version?: "v1",
   limit?: integer,
   min_score?: number,
   timeout_ms?: integer
@@ -81,7 +83,7 @@ RagRetrievalResultV1 = {
     citation: {
       attachment_id: string,
       filename: string,
-      page_number: integer,
+      page_number: integer | null,
       chunk_id: string,
       section_heading?: string
     }
@@ -91,15 +93,17 @@ RagRetrievalResultV1 = {
 
 The schemas are closed: no unlisted input, result, result-item, or citation
 property is valid in v1. `bundle_version` correlates results to the local
-bundle; it is not a contract-version field. Contract versioning is carried by
-the named v1 surface. A behavior change or additional public field requires a
-new contract version rather than a silent v1 extension.
+bundle; it is not a contract-version field. GETDOCCONTEXT defaults its
+`schema_version` to `v1`, rejects other values, and forwards the effective
+version to the native host. A behavior change or additional public field
+requires a new contract version rather than a silent v1 extension.
 
-The two surfaces use the same values and defaults:
+The two surfaces use the same values and defaults for their shared fields:
 
 | Field | Rule |
 | --- | --- |
 | `query` | Required literal plain-text string; 1 through 1,000 Unicode scalar values after `trimQueryV1`; no query DSL, form selector, document selector, or source selector |
+| `schema_version` | GETDOCCONTEXT only; optional string; only `v1` is supported; default `v1` |
 | `limit` | Optional integer; default `5`; inclusive range `1..20` |
 | `min_score` | Optional finite normalized number; default `0.70`; inclusive range `0..1` |
 | `timeout_ms` | Optional integer in milliseconds; default `2000`; inclusive range `2000..10000` |
@@ -110,7 +114,7 @@ The two surfaces use the same values and defaults:
 | `text` | Non-empty redacted passage text; at most 2,000 Unicode scalar values |
 | `attachment_id` | Non-empty opaque identifier; at most 128 Unicode scalar values |
 | `filename` | Non-empty redacted display filename; at most 255 Unicode scalar values |
-| `page_number` | Integer in the inclusive range `1..100000` |
+| `page_number` | Integer in the inclusive range `1..100000`, or null when unavailable |
 | `chunk_id` | Non-empty opaque identifier; at most 128 Unicode scalar values |
 | `section_heading` | Optional; when present, non-empty redacted plain text of at most 500 Unicode scalar values |
 
@@ -127,7 +131,7 @@ units or grapheme clusters.
 
 ### Validate before availability and use explicit callback terminal semantics
 
-RAG requires an options object and a callable callback. A missing or
+GETDOCCONTEXT requires an options object and a callable callback. A missing or
 non-callable callback SHALL synchronously throw an Error-compatible
 `rag_invalid_options` error before retrieval because no valid callback delivery
 channel exists. For an invocation with a callable callback, the callback
@@ -210,7 +214,7 @@ empty, error, timeout, and cancellation paths.
 
 ### Use independent adapters for Data Events and conversational agents
 
-Native iOS and Android ExpressionEngine adapters validate `RAG` input,
+Native iOS and Android ExpressionEngine adapters validate `GETDOCCONTEXT` input,
 capture the active form, call the KMP core, and translate its terminal state
 to the callback contract. Web implements only the terminal
 `rag_unavailable` callback behavior.
@@ -279,7 +283,7 @@ is fixed by the existing epic children:
    from the [Synapse foundation PR](https://github.com/fulcrumapp/synapse/pull/1).
 2. Implement the KMP v1 retrieval core and golden fixtures in
    [FLCRM-22288](https://fulcrumapp.atlassian.net/browse/FLCRM-22288).
-3. Add the RAG language function/source docs in
+3. Add the GETDOCCONTEXT language function/source docs in
    [FLCRM-22289](https://fulcrumapp.atlassian.net/browse/FLCRM-22289) and
    editor declarations in [FLCRM-22292](https://fulcrumapp.atlassian.net/browse/FLCRM-22292).
 4. Add native Data Event adapters in

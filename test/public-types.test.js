@@ -67,6 +67,8 @@ api.statements.forEach((statement) => {
 functionNames.forEach((name) => {
   assert.ok(publicNames.has(name), `missing public expression declaration: ${name}`);
 });
+assert.ok(publicNames.has("GETDOCCONTEXT"), "missing GETDOCCONTEXT declaration");
+assert.ok(!publicNames.has("RAG"), "legacy RAG declaration must not be exposed");
 assert.ok(
   !/\b(prepareRuntime|finishAsync|extendToBeWithinRange|extendContainAllElements|_default)\b/.test(declarations),
   "test helpers and fixture declarations must not leak into the public API"
@@ -88,6 +90,13 @@ try {
     "const feature: Feature<Point> = GEOMETRYFEATURE(point);",
     "const geojson: GeoJSON = feature;",
     "const recordGeometry: GeoJSONGeometry | null = GEOMETRY();",
+    "GETDOCCONTEXT({ query: 'soil' }, () => {});",
+    "GETDOCCONTEXT({ query: 'soil', schema_version: 'v1' }, () => {});",
+    "const citationWithoutPage: RagCitationV1 = { attachment_id: 'a', filename: 'f', page_number: null, chunk_id: 'c' };",
+    "// @ts-expect-error page_number remains required.",
+    "const citationMissingPage: RagCitationV1 = { attachment_id: 'a', filename: 'f', chunk_id: 'c' };",
+    "// @ts-expect-error Unsupported schema versions are rejected.",
+    "GETDOCCONTEXT({ query: 'soil', schema_version: 'v2' }, () => {});",
     "",
   ].join("\n"));
   const program = ts.createProgram([declarationPath, consumerPath], {

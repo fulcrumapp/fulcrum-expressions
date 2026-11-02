@@ -416,19 +416,21 @@ function PROMPT() {}
 function REQUEST() {}
 
 
-////RAG
+////GETDOCCONTEXT
 
 /**
- * RAG
+ * GETDOCCONTEXT
  * Retrieves ranked passages from the current form's local, validated RAG bundle.
- * RAG is a Data Event function and is supported only by the iOS and Android
+ * GETDOCCONTEXT is a Data Event function and is supported only by the iOS and Android
  * Expressions hosts. Web calls complete with `rag_unavailable`; a missing
  * active form or usable bundle also returns `rag_unavailable`.
  *
- * The options object accepts only `query`, `limit`, `min_score`, and
+ * The options object accepts only `query`, `schema_version`, `limit`, `min_score`, and
  * `timeout_ms`; selectors such as `form_id`, `attachment_id`, and
  * `document_id` are not supported. Defaults are `limit: 5`, `min_score: 0.70`,
- * and `timeout_ms: 2000`. `limit` must be an integer from 1 through 20,
+ * `timeout_ms: 2000`, and `schema_version: 'v1'`. Only `v1` is supported;
+ * other schema versions are rejected with `rag_invalid_options`. The effective
+ * schema version is sent to the native host. `limit` must be an integer from 1 through 20,
  * `min_score` a finite number from 0 through 1, and `timeout_ms` an integer
  * from 2,000 through 10,000.
  * The inclusive `min_score` threshold is applied before `limit`.
@@ -451,14 +453,15 @@ function REQUEST() {}
  * `page_number`, and `chunk_id`, with optional `section_heading`: IDs are
  * non-empty and at most 128 scalar values, a redacted filename is non-empty
  * and at most 255 scalar values, the page number is an integer from 1 through
- * 100,000, and an optional redacted heading is non-empty and at most 500
+ * 100,000 or null when unavailable, and an optional redacted heading is non-empty and at most 500
  * scalar values.
  *
- * RAG returns local retrieval results only. It does not generate an answer,
+ * GETDOCCONTEXT returns local retrieval results only. It does not generate an answer,
  * invoke an LLM, make a remote request, or search another form or bundle.
  *
  * @param {Object} options The closed v1 retrieval options
  * @param {string} options.query Required literal plain-text query
+ * @param {string} [options.schema_version=v1] Retrieval schema version; only v1 is supported
  * @param {number} [options.limit=5] Maximum result count, an integer from 1 through 20
  * @param {number} [options.min_score=0.70] Inclusive normalized-score threshold from 0 through 1
  * @param {number} [options.timeout_ms=2000] Timeout in milliseconds, an integer from 2,000 through 10,000
@@ -471,7 +474,7 @@ function REQUEST() {}
  * filenames, citations, document content, source URLs, or credentials.
  *
  * @example
- * RAG({query: 'soil moisture', limit: 5}, function(error, result) {
+ * GETDOCCONTEXT({query: 'soil moisture', limit: 5}, function(error, result) {
  *   if (error) {
  *     if (error.code === 'rag_unavailable') {
  *       // Handle a host or active-bundle that is unavailable.
@@ -484,7 +487,7 @@ function REQUEST() {}
  *   }
  * });
  */
-function RAG() {}
+function GETDOCCONTEXT() {}
 
 
 ////SETASSIGNMENT

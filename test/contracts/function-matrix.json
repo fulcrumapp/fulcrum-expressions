@@ -4777,6 +4777,58 @@
       }
     },
     {
+      "id": "matrix-getdoccontext-normal",
+      "function": "GETDOCCONTEXT",
+      "args": [
+        1,
+        2
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
+      "id": "matrix-getdoccontext-coercion",
+      "function": "GETDOCCONTEXT",
+      "args": [
+        "1",
+        "1"
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
+      "id": "matrix-getdoccontext-blank",
+      "function": "GETDOCCONTEXT",
+      "args": [
+        null,
+        null
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
+      "id": "matrix-getdoccontext-boundary",
+      "function": "GETDOCCONTEXT",
+      "args": [
+        0,
+        0
+      ],
+      "expected": {
+        "$type": "error",
+        "name": "Error",
+        "message": "Invalid RAG options."
+      }
+    },
+    {
       "id": "matrix-getresult-normal",
       "function": "GETRESULT",
       "args": [],
@@ -7404,58 +7456,6 @@
         0
       ],
       "expected": 0
-    },
-    {
-      "id": "matrix-rag-normal",
-      "function": "RAG",
-      "args": [
-        1,
-        2
-      ],
-      "expected": {
-        "$type": "error",
-        "name": "Error",
-        "message": "Invalid RAG options."
-      }
-    },
-    {
-      "id": "matrix-rag-coercion",
-      "function": "RAG",
-      "args": [
-        "1",
-        "1"
-      ],
-      "expected": {
-        "$type": "error",
-        "name": "Error",
-        "message": "Invalid RAG options."
-      }
-    },
-    {
-      "id": "matrix-rag-blank",
-      "function": "RAG",
-      "args": [
-        null,
-        null
-      ],
-      "expected": {
-        "$type": "error",
-        "name": "Error",
-        "message": "Invalid RAG options."
-      }
-    },
-    {
-      "id": "matrix-rag-boundary",
-      "function": "RAG",
-      "args": [
-        0,
-        0
-      ],
-      "expected": {
-        "$type": "error",
-        "name": "Error",
-        "message": "Invalid RAG options."
-      }
     },
     {
       "id": "matrix-randbetween-normal",
