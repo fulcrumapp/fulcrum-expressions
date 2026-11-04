@@ -65,6 +65,21 @@ Clean and run the unified build plus all migration gates, without deploying.
 yarn build:dist
 ```
 
+### GitHub Packages releases
+
+Pull requests, merge queue entries and main changes run the migration gates on
+GitHub-hosted runners. After main validation succeeds, a GitHub App commits the
+next version to `package.json` and creates its matching SemVer tag. Do not edit
+the root package version manually. Tag creation builds and publishes the package
+to GitHub Packages, not npmjs.org. The existing production S3 deployment remains
+separate.
+
+Before enabling releases, configure fork-run approval, required CI checks,
+GitHub Packages access, and the release App's branch and tag protection
+bypasses. Disable the old Tekton publisher at cutover. If publishing fails,
+rerun the tag workflow against the same tag; it verifies the release commit and
+the package version before publishing.
+
 ### Tests
 ```sh
 yarn test
