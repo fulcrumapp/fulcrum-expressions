@@ -167,9 +167,23 @@ jobs:
       - name: Publish legacy and hybrid bundles
         run: ./script/deploy production --yes
 
+  build-and-test:
+    if: always()
+    needs: migration-gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require migration gates to succeed
+        env:
+          CI_RESULT: ${{ needs.migration-gates.result }}
+        run: |
+          if [ "$CI_RESULT" != success ]; then
+            echo "::error::Migration gates did not succeed: $CI_RESULT"
+            exit 1
+          fi
+
   tag:
     name: Create npm release tag
-    needs: migration-gates
+    needs: build-and-test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     concurrency:
