@@ -2,8 +2,6 @@ name: Expression migration gates
 
 on:
   pull_request:
-  merge_group:
-    types: [checks_requested]
   create:
   push:
     branches:
@@ -33,7 +31,7 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'create' && github.ref || github.sha }}
+          ref: ${{ github.event_name == 'create' && github.ref || '' }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -41,7 +39,8 @@ jobs:
         id: release-tag
         if: github.event_name == 'create' && github.ref_type == 'tag'
         run: |
-          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]] ||
+             [[ "$(git rev-parse --verify "${GITHUB_REF}^{commit}")" != "$GITHUB_SHA" ]]; then
             echo "::error::The checked-out tag does not match the triggering commit."
             exit 1
           fi
@@ -59,48 +58,6 @@ jobs:
 
       - name: Install locked dependencies
         run: yarn install --frozen-lockfile --non-interactive
-
-      - name: Protect release-managed version
-        if: github.event_name == 'merge_group' || github.base_ref == 'main' || github.ref == 'refs/heads/main'
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
-        run: |
-          node <<'NODE'
-          const { execFileSync } = require('node:child_process');
-          const base = process.env.BASE_SHA || '';
-          if (!/^[0-9a-f]{40,64}$/.test(base) || /^0+$/.test(base)) {
-            console.error('::error::Cannot determine the base commit for the release version check.');
-            process.exit(1);
-          }
-          function version(ref) {
-            let manifest;
-            try {
-              manifest = JSON.parse(execFileSync('git', ['show', `${ref}:package.json`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }));
-            } catch (error) {
-              console.error(`::error::Cannot read or parse package.json at ${ref}: ${error.message}`);
-              process.exit(1);
-            }
-            if (!manifest || typeof manifest.version !== 'string' || !manifest.version.trim()) {
-              console.error(`::error::package.json at ${ref} must have a nonempty version string.`);
-              process.exit(1);
-            }
-            return manifest.version;
-          }
-          if (version(base) !== version('HEAD')) {
-            console.error('::error file=package.json::Do not manually change the root package.json version. Revert that version change; GitHub Actions manages release versions.');
-            process.exit(1);
-          }
-          NODE
-
-      - name: Test release workflow contracts
-        run: node --test .github/tests/*.cjs
-
-      - name: Preserve CI configuration
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: npm-ci-config-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ci/config.yaml
-          if-no-files-found: error
 
       - name: Set up Ruby for public declarations
         uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
@@ -154,11 +111,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Verify triggering tag
         run: |
-          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]] ||
+             [[ "$(git rev-parse --verify "${GITHUB_REF}^{commit}")" != "$GITHUB_SHA" ]]; then
             echo "::error::The checked-out tag does not match the triggering commit."
             exit 1
           fi
@@ -203,18 +162,28 @@ jobs:
 
       - name: Reject stale production release
         run: |
-          git ls-remote --tags --refs origin > "$RUNNER_TEMP/expression-release-tags"
+          git ls-remote --tags origin > "$RUNNER_TEMP/expression-release-tags"
           node <<'NODE'
           const fs = require('node:fs');
           const pattern = /^refs\/tags\/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/;
           const current = pattern.exec(process.env.GITHUB_REF || '');
           if (!current) throw new Error('The deployment ref is not a stable release tag.');
           const currentVersion = current.slice(1).map(BigInt);
-          let found = false;
+          let tagObject;
+          let peeledTag;
           for (const line of fs.readFileSync(`${process.env.RUNNER_TEMP}/expression-release-tags`, 'utf8').trim().split('\n')) {
-            const match = /^([0-9a-f]{40,64})\t(refs\/tags\/\S+)$/.exec(line);
+            const match = /^([0-9a-f]{40,64})\t(refs\/tags\/[^\s^]+)(\^\{\})?$/.exec(line);
             if (!match) throw new Error('Unable to parse the remote tag listing.');
-            if (match[2] === process.env.GITHUB_REF) found = true;
+            if (match[2] === process.env.GITHUB_REF) {
+              if (match[3]) {
+                if (peeledTag) throw new Error('Duplicate peeled release tag in remote listing.');
+                peeledTag = match[1];
+              } else {
+                if (tagObject) throw new Error('Duplicate release tag in remote listing.');
+                tagObject = match[1];
+              }
+            }
+            if (match[3]) continue;
             const tag = pattern.exec(match[2]);
             if (!tag) continue;
             const version = tag.slice(1).map(BigInt);
@@ -225,52 +194,11 @@ jobs:
               if (version[i] < currentVersion[i]) break;
             }
           }
-          if (!found) throw new Error('The triggering release tag no longer exists on origin.');
+          if (!tagObject) throw new Error('The triggering release tag no longer exists on origin.');
+          if ((peeledTag || tagObject) !== process.env.GITHUB_SHA) {
+            throw new Error('The remote release tag no longer points to the triggering commit.');
+          }
           NODE
 
       - name: Publish legacy and hybrid bundles
         run: ./script/deploy production --yes
-
-  build-and-test:
-    if: always() && (github.event_name != 'create' || github.ref_type == 'tag')
-    needs: migration-gates
-    runs-on: ubuntu-latest
-    steps:
-      - name: Require migration gates to succeed
-        env:
-          CI_RESULT: ${{ needs.migration-gates.result }}
-        run: |
-          if [ "$CI_RESULT" != success ]; then
-            echo "::error::Migration gates did not succeed: $CI_RESULT"
-            exit 1
-          fi
-
-  tag:
-    name: Create npm release tag
-    needs: build-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.repository }}-npm-release-tag
-      cancel-in-progress: false
-      queue: max
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: '22.14.0'
-      - name: Create scoped GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
-        with:
-          app-id: ${{ secrets.FULCRUM_CI_APP_ID_PUBLIC }}
-          private-key: ${{ secrets.FULCRUM_CI_APP_PRIVATE_KEY_PUBLIC }}
-          permission-contents: write
-      - name: Commit release version to main and tag it
-        uses: ./.github/actions/npm-create-tag
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          CHECK_NPMJS: 'false'

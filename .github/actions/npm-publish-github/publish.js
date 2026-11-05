@@ -5,6 +5,7 @@ const { readFileSync } = require("node:fs");
 const { createHash } = require("node:crypto");
 const { isDeepStrictEqual } = require("node:util");
 const { verifyRemoteIdentity } = require("../npm-release-identity/identity.js");
+const { npmErrorResponse } = require("../npm-common/error-response.js");
 
 const registry = "https://npm.pkg.github.com/";
 const stableTag = /^refs\/tags\/v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
@@ -38,15 +39,14 @@ function verifyRelease(ref, packageJson, git) {
   return packageJson;
 }
 
-function npmErrorResponse(output) {
-  const text = (output || "").trim();
-  if (!text) return null;
-  const embedded = text.match(/^(\{\s*\n[\s\S]*?^\})\s*$/m)?.[1];
-  try {
-    return JSON.parse(embedded || text);
-  } catch {
-    return null;
+function verifyCheckout(ref, eventSha, git) {
+  if (!stableTag.test(ref || "")) throw new Error("Publishing requires a stable SemVer tag");
+  if (!/^[0-9a-f]{40,64}$/.test(eventSha || "") ||
+      git("rev-parse", "HEAD") !== eventSha ||
+      git("rev-parse", "--verify", `${ref}^{commit}`) !== eventSha) {
+    throw new Error("Checked-out tag differs from the triggering revision");
   }
+  return eventSha;
 }
 
 function publishPackage(packageJson, npm, tarball, integrity = () =>
@@ -98,11 +98,11 @@ if (require.main === module) {
   try {
     const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
     verifyRelease(process.env.GITHUB_REF, packageJson, git);
-    if (git("rev-parse", "HEAD") !== process.env.GITHUB_SHA) throw new Error("Checked-out tag differs from the triggering revision");
+    const tagSha = verifyCheckout(process.env.GITHUB_REF, process.env.GITHUB_SHA, git);
     if (!process.env.GH_TOKEN) throw new Error("GH_TOKEN is required to verify the release commit");
     verifyRemoteIdentity((args, input) => execFileSync("gh", args, {
       encoding: "utf8", input, stdio: ["pipe", "pipe", "pipe"]
-    }), process.env.GITHUB_REPOSITORY, process.env.GITHUB_SHA);
+    }), process.env.GITHUB_REPOSITORY, tagSha);
     if (process.argv[2] === "verify") {
       console.log(`Verified ${packageJson.name}@${packageJson.version}`);
     } else if (process.argv[2] === "publish" && process.argv[3]) {
@@ -127,4 +127,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { verifyRelease, publishPackage };
+module.exports = { verifyRelease, verifyCheckout, publishPackage };

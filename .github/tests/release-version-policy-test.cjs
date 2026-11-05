@@ -6,9 +6,9 @@ const path = require("node:path");
 const { test } = require("node:test");
 
 const workflows = path.resolve(__dirname, "../workflows");
-const workflow = readFileSync(path.join(workflows, "expression-migration-gates.yml"), "utf8");
-const buildJob = workflow.match(/^  migration-gates:\n([\s\S]*?)(?=^  deploy-production:)/m)?.[1];
-assert.ok(buildJob, "migration-gates job is present");
+const workflow = readFileSync(path.join(workflows, "ci.yml"), "utf8");
+const buildJob = workflow.match(/^  ci:\n([\s\S]*?)(?=^  build-and-test:)/m)?.[1];
+assert.ok(buildJob, "CI job is present");
 const guard = buildJob.match(/node <<'NODE'\n([\s\S]*?)^\s*NODE$/m)?.[1];
 assert.ok(guard, "version guard is present");
 
@@ -92,6 +92,36 @@ test("publish workflows use tag creation and appropriate runners", () => {
   }
 });
 
+test("only stable tags reach package publishing and release notes", () => {
+  const yaml = require("js-yaml");
+  const publish = yaml.load(readFileSync(path.join(workflows, "publish.yml"), "utf8"));
+  const classifier = publish.jobs["classify-tag"];
+  assert.equal(classifier.if, "github.ref_type == 'tag'");
+  assert.equal(classifier.outputs.is_stable, "${{ steps.classify.outputs.is_stable }}");
+  assert.equal(publish.jobs.publish.needs, "classify-tag");
+  assert.equal(publish.jobs.publish.if, "needs.classify-tag.outputs.is_stable == 'true'");
+  assert.equal(publish.jobs.release.needs, "publish");
+  const dir = mkdtempSync(path.join(os.tmpdir(), "publish-tag-policy-"));
+  try {
+    const output = path.join(dir, "output");
+    const script = classifier.steps.find((step) => step.id === "classify").run;
+    for (const [ref, stable] of [
+      ["refs/tags/v0.0.0", true], ["refs/tags/v12.3.456", true],
+      ["refs/tags/v1.2.3-rc.1", false], ["refs/tags/v1.2.3+build", false],
+      ["refs/tags/v01.2.3", false], ["refs/tags/v1.2", false], ["refs/heads/main", false]
+    ]) {
+      writeFileSync(output, "");
+      const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", script], {
+        encoding: "utf8", env: { ...process.env, GITHUB_REF: ref, GITHUB_OUTPUT: output }
+      });
+      assert.equal(result.status, 0, result.stderr);
+      assert.equal(readFileSync(output, "utf8"), `is_stable=${stable}\n`, ref);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("GitHub Packages publishing installs npm 11 before packing without scripts", () => {
   const action = readFileSync(path.join(__dirname, "../actions/npm-publish-github/action.yml"), "utf8");
   const install = action.indexOf("npm install --global npm@11.5.1 --ignore-scripts");
@@ -106,7 +136,10 @@ test("Yarn commands cannot modify the tagged package manifest through Corepack a
     assert.equal(step.env?.COREPACK_ENABLE_AUTO_PIN, "0", step.name);
   }
   const config = yaml.load(workflow);
-  for (const job of ["migration-gates", "deploy-production"]) {
-    assert.equal(config.jobs[job].env.COREPACK_ENABLE_AUTO_PIN, "0", job);
-  }
+  assert.equal(config.jobs.ci.env.COREPACK_ENABLE_AUTO_PIN, "0");
+  const migration = yaml.load(readFileSync(path.join(workflows, "expression-migration-gates.yml"), "utf8"));
+  for (const job of ["migration-gates", "deploy-production"])
+    assert.equal(migration.jobs[job].env.COREPACK_ENABLE_AUTO_PIN, "0", job);
+  assert.match(config.jobs.ci.steps.find((step) => step.name === "Run build and expression migration gates").run,
+    /yarn test:migration-gates/);
 });

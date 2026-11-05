@@ -125,6 +125,26 @@ test("refuses a version at or below an existing stable npmjs.org version", () =>
     () => ({ status: 1, stdout: '{"error":{"code":"E401"}}' })), /lookup failed/);
 });
 
+test("accepts only unambiguous structured E404 responses from either registry stream", () => {
+  const e404 = JSON.stringify({ error: { code: "E404" } }, null, 2);
+  const e401 = JSON.stringify({ error: { code: "E401" } }, null, 2);
+  for (const result of [
+    { status: 1, stdout: e404, stderr: "npm error code E404" },
+    { status: 1, stdout: "", stderr: `npm error code E404\n${e404}\nnpm error log` },
+  ]) {
+    assert.doesNotThrow(() => checkPublicRegistry("@fulcrumapp/new", "0.0.1", () => result));
+  }
+  for (const result of [
+    { status: 1, stdout: "malformed", stderr: e404 },
+    { status: 1, stdout: e401, stderr: e404 },
+    { status: 1, stdout: "", stderr: "npm error code E404" },
+    { status: 2, stdout: "", stderr: e404 },
+    { status: 1, stdout: "", stderr: e401 },
+  ]) {
+    assert.throws(() => checkPublicRegistry("@fulcrumapp/new", "0.0.1", () => result));
+  }
+});
+
 test("checks the public registry before creating any refs", () => {
   const { calls, options } = fixture({ checkPublicRegistry: () => { throw new Error("registry conflict"); } });
   assert.throws(() => createReleaseTag(options), /registry conflict/);

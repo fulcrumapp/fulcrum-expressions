@@ -19,8 +19,8 @@ assert.ok(
   "migration gates must run for pull requests"
 );
 assert.deepStrictEqual(workflow.on.push.branches, ["main"]);
-assert.deepStrictEqual(workflow.on.merge_group.types, ["checks_requested"]);
 assert.ok(Object.prototype.hasOwnProperty.call(workflow.on, "create"));
+assert.ok(!Object.prototype.hasOwnProperty.call(workflow.on, "merge_group"));
 const gates = workflow.jobs["migration-gates"];
 const deployment = workflow.jobs["deploy-production"];
 assert.strictEqual(gates.name, "Expression migration gates");
@@ -32,12 +32,10 @@ assert.strictEqual(
   deployment.if,
   "success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'"
 );
-assert.strictEqual(
-  workflow.jobs["build-and-test"].if,
-  "always() && (github.event_name != 'create' || github.ref_type == 'tag')"
-);
+assert.ok(!workflow.jobs["build-and-test"]);
+assert.ok(!workflow.jobs.tag);
 assert.strictEqual(gates.steps.find((step) => step.name === "Check out source").with.ref,
-  "${{ github.event_name == 'create' && github.ref || github.sha }}");
+  "${{ github.event_name == 'create' && github.ref || '' }}");
 assert.strictEqual(deployment.steps.find((step) => step.name === "Check out source").with.ref, "${{ github.ref }}");
 assert.strictEqual(deployment.environment, "production");
 assert.strictEqual(deployment.concurrency.group, "${{ github.repository }}-expression-production-deploy");
@@ -160,6 +158,7 @@ try {
   fs.writeFileSync(gitStub, [
     "#!/bin/sh",
     'if [ "$1" = ls-remote ]; then printf "%s" "$MOCK_GIT_TAGS";',
+    'elif [ "$2" = --verify ]; then printf "%s\\n" "$MOCK_GIT_TAG";',
     'else printf "%s\\n" "$MOCK_GIT_HEAD"; fi',
     "",
   ].join("\n"), { mode: 0o755 });
@@ -167,7 +166,7 @@ try {
   assert.strictEqual(tagStep.if, "github.event_name == 'create' && github.ref_type == 'tag'");
   const sha = "a".repeat(40);
   const outputFile = path.join(temporaryRoot, "tag-output");
-  function runTagStep(ref, head = sha) {
+  function runTagStep(ref, head = sha, tag = sha) {
     fs.writeFileSync(outputFile, "");
     const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", tagStep.run], {
       encoding: "utf8",
@@ -177,6 +176,7 @@ try {
         GITHUB_REF: ref,
         GITHUB_SHA: sha,
         MOCK_GIT_HEAD: head,
+        MOCK_GIT_TAG: tag,
         GITHUB_OUTPUT: outputFile,
       },
     });
@@ -196,26 +196,30 @@ try {
   assert.notStrictEqual(movedTag.status, 0);
   assert.match(movedTag.stdout, /does not match the triggering commit/);
   assert.strictEqual(movedTag.output, "");
+  const movedRef = runTagStep("refs/tags/v1.2.3", sha, "b".repeat(40));
+  assert.notStrictEqual(movedRef.status, 0);
+  assert.strictEqual(movedRef.output, "");
   const verifyDeployment = deployment.steps.find((step) => step.name === "Verify triggering tag").run;
-  for (const [head, valid] of [[sha, true], ["b".repeat(40), false]]) {
+  for (const [head, tag, valid] of [[sha, sha, true], ["b".repeat(40), sha, false], [sha, "b".repeat(40), false]]) {
     const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", verifyDeployment], {
       encoding: "utf8",
-      env: { ...process.env, PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`, GITHUB_SHA: sha, MOCK_GIT_HEAD: head },
+      env: { ...process.env, PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`, GITHUB_REF: "refs/tags/v1.2.3", GITHUB_SHA: sha, MOCK_GIT_HEAD: head, MOCK_GIT_TAG: tag },
     });
     assert.strictEqual(result.status === 0, valid);
   }
   const staleCheck = deployment.steps.find((step) => step.name === "Reject stale production release").run;
   assert.ok(deployment.steps.findIndex((step) => step.name === "Reject stale production release") <
     deployment.steps.findIndex((step) => step.name === "Publish legacy and hybrid bundles"));
-  function runStaleCheck(refs, ref = "refs/tags/v1.2.3") {
+  function runStaleCheck(refs, ref = "refs/tags/v1.2.3", raw = false) {
     return spawnSync("bash", ["-e", "-o", "pipefail", "-c", staleCheck], {
       encoding: "utf8",
       env: {
         ...process.env,
         PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
         GITHUB_REF: ref,
+        GITHUB_SHA: sha,
         RUNNER_TEMP: temporaryRoot,
-        MOCK_GIT_TAGS: refs.map((tag) => `${sha}\trefs/tags/${tag}\n`).join(""),
+        MOCK_GIT_TAGS: raw ? refs : refs.map((tag) => `${sha}\trefs/tags/${tag}\n`).join(""),
       },
     });
   }
@@ -238,6 +242,46 @@ try {
     const result = runStaleCheck(refs);
     assert.notStrictEqual(result.status, 0, refs.join(", "));
   }
+  const other = "b".repeat(40);
+  const currentRef = "refs/tags/v1.2.3";
+  for (const [listing, valid] of [
+    [`${sha}\t${currentRef}\n`, true],
+    [`${other}\t${currentRef}\n`, false],
+    [`${other}\t${currentRef}\n${sha}\t${currentRef}^{}\n`, true],
+    [`${other}\t${currentRef}\n${other}\t${currentRef}^{}\n`, false],
+    [`${sha}\t${currentRef}^{}\n`, false],
+    [`${sha}\t${currentRef}\n${other}\t${currentRef}\n`, false],
+    ["invalid remote output\n", false],
+  ]) {
+    const result = runStaleCheck(listing, currentRef, true);
+    assert.strictEqual(result.status === 0, valid, `${listing}: ${result.stderr}`);
+  }
+  function realGit(args, cwd = root, input) {
+    const result = spawnSync("git", args, { cwd, input, encoding: "utf8" });
+    assert.strictEqual(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  }
+  const bare = path.join(temporaryRoot, "remote.git");
+  const client = path.join(temporaryRoot, "client");
+  const actualSha = realGit(["rev-parse", "HEAD"]);
+  realGit(["init", "--bare", bare]);
+  realGit(["--git-dir", bare, "fetch", root, "HEAD:refs/tags/v1.2.3"]);
+  realGit(["init", client]);
+  realGit(["remote", "add", "origin", bare], client);
+  function runAgainstRemote() {
+    return spawnSync("bash", ["-e", "-o", "pipefail", "-c", staleCheck], {
+      cwd: client, encoding: "utf8",
+      env: { ...process.env, RUNNER_TEMP: temporaryRoot, GITHUB_REF: currentRef, GITHUB_SHA: actualSha },
+    });
+  }
+  assert.strictEqual(runAgainstRemote().status, 0);
+  const tagObject = realGit(["--git-dir", bare, "hash-object", "-t", "tag", "-w", "--stdin"], root,
+    `object ${actualSha}\ntype commit\ntag v1.2.3\ntagger Test <test@example.com> 0 +0000\n\nrelease\n`);
+  realGit(["--git-dir", bare, "update-ref", currentRef, tagObject]);
+  const annotated = runAgainstRemote();
+  assert.strictEqual(annotated.status, 0, annotated.stderr);
+  realGit(["--git-dir", bare, "update-ref", "refs/tags/v1.2.4", actualSha]);
+  assert.notStrictEqual(runAgainstRemote().status, 0);
 
   const preview = invokeDeploy([], "expression-preview-test");
   assert.strictEqual(preview.status, 0, preview.output);

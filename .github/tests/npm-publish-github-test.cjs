@@ -3,7 +3,7 @@
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const { test } = require("node:test");
-const { publishPackage, verifyRelease } = require("../actions/npm-publish-github/publish.js");
+const { publishPackage, verifyRelease, verifyCheckout } = require("../actions/npm-publish-github/publish.js");
 
 const pkg = { name: "@fulcrumapp/fulcrum-expressions", version: "3.2.1" };
 const registry = "https://npm.pkg.github.com/";
@@ -116,4 +116,19 @@ test("requires the generated release commit message and an actual version change
   }
   assert.throws(() => verifyRelease("refs/tags/v3.2.1", pkg,
     releaseGit({ "show parent:package.json": JSON.stringify(pkg) })), /must change/);
+});
+
+test("the checked-out commit and tag must both match the create event snapshot", () => {
+  const sha = "a".repeat(40);
+  const ref = "refs/tags/v3.2.1";
+  const git = (head, tag) => (...args) => {
+    if (args.join(" ") === "rev-parse HEAD") return head;
+    if (args.join(" ") === `rev-parse --verify ${ref}^{commit}`) return tag;
+    throw new Error("Unexpected git call");
+  };
+  assert.equal(verifyCheckout(ref, sha, git(sha, sha)), sha);
+  assert.throws(() => verifyCheckout(ref, sha, git("b".repeat(40), sha)), /triggering revision/);
+  assert.throws(() => verifyCheckout(ref, sha, git(sha, "b".repeat(40))), /triggering revision/);
+  assert.throws(() => verifyCheckout(ref, "", git(sha, sha)), /triggering revision/);
+  assert.throws(() => verifyCheckout("refs/heads/main", sha, git(sha, sha)), /stable SemVer/);
 });

@@ -67,8 +67,10 @@ yarn build:dist
 
 ### GitHub Packages releases
 
-Pull requests, merge queue entries and main changes run the migration gates on
-GitHub-hosted runners. After main validation succeeds, a GitHub App commits the
+The standard npm CI workflow runs the migration gates on pull requests into
+`main`, merge queue entries and main changes on GitHub-hosted runners. The
+existing expression migration workflow also continues to run on pull requests
+and main pushes. After main CI validation succeeds, a GitHub App commits the
 next version to `package.json` and creates its matching SemVer tag. Do not edit
 the root package version manually. Tag creation builds and publishes the package
 to GitHub Packages, not npmjs.org. The existing production S3 deployment remains
@@ -107,12 +109,13 @@ The exported declaration string is flattened for the editor's global scope:
 geometry types are used as `Point`, `Feature<Point>`, `GeoJSONGeometry` and
 `GeoJSON`, not as members of a UMD `GeoJSON` namespace.
 
-The `Expression migration gates` job runs on pull requests and pushes to `main`
-(including merges) and reports contract results by function group. The separate
-`Deploy to S3 (main only)` job depends on successful migration gates and is
-guarded to run only on pushes to `main`; it appears as **skipped** for pull
-requests. A successful main push then publishes the legacy and hybrid channels
-side-by-side; it never overwrites the frozen compatibility bundle.
+The existing `Expression migration gates` workflow runs on pull requests,
+pushes to `main`, and tag creation, and reports contract results by function
+group. The separate npm CI workflow also runs those gates on merge queue entries
+and before creating a release tag. The production deployment depends on
+successful expression gates and runs only for stable release tag creation; it
+is skipped for pull requests and main pushes. It publishes the legacy and hybrid
+channels side-by-side without overwriting the frozen compatibility bundle.
 
 ### Console
 Starts an interactive node terminal with the functions available to call
@@ -190,7 +193,7 @@ object untouched. Pull requests, branch creation, pushes to `main`, and
 prerelease tags never run this deployment job. Production deployments are
 queued rather than canceled or run concurrently. Immediately before publishing,
 the deployment fails if a newer stable tag exists or the triggering tag has
-been deleted. This check is not atomic with the S3 uploads: a tag created while
+been deleted or moved to another commit. This check is not atomic with the S3 uploads: a tag created while
 an upload is already in progress cannot stop it, and its own deployment must
 still pass the gates. GitHub Packages publishing runs independently in the
 tag-triggered package workflow; success in one workflow does not imply success

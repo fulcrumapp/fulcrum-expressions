@@ -6,6 +6,7 @@ const { devNull } = require("node:os");
 const { isDeepStrictEqual } = require("node:util");
 const { calculateVersion } = require("../npm-next-version/next-version.js");
 const { verifyIdentity, verifyRemoteIdentity } = require("../npm-release-identity/identity.js");
+const { npmErrorResponse } = require("../npm-common/error-response.js");
 
 const releaseMessage = /^chore\(release\): (v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)) \[skip ci\]$/;
 const commitMutation = `
@@ -28,14 +29,23 @@ function command(program, args, input) {
 function checkPublicRegistry(name, version, npm) {
   const result = npm("view", name, "versions", "--json",
     "--registry=https://registry.npmjs.org/", "--@fulcrumapp:registry=https://registry.npmjs.org/");
+  if (result.status !== 0) {
+    const stdout = npmErrorResponse(result.stdout);
+    const stderr = npmErrorResponse(result.stderr);
+    if ((result.stdout || "").trim() && !stdout) throw new Error("Unable to read npmjs.org versions before tagging");
+    if (stdout && stderr && stdout?.error?.code !== stderr?.error?.code) {
+      throw new Error("npmjs.org returned conflicting errors");
+    }
+    const response = stdout || stderr;
+    if (result.status === 1 && response?.error?.code === "E404") return;
+    throw new Error(`npmjs.org version lookup failed: ${response?.error?.code || result.status}`);
+  }
   let versions;
   try {
     versions = JSON.parse(result.stdout || "");
   } catch {
     throw new Error("Unable to read npmjs.org versions before tagging");
   }
-  if (result.status === 1 && versions?.error?.code === "E404") return;
-  if (result.status !== 0) throw new Error(`npmjs.org version lookup failed: ${versions?.error?.code || result.status}`);
   versions = Array.isArray(versions) ? versions : [versions];
   if (!versions.every((item) => typeof item === "string")) {
     throw new Error("npmjs.org returned malformed version data");
