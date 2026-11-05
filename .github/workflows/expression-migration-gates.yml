@@ -2,9 +2,7 @@ name: Expression migration gates
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+  create:
 
 permissions:
   contents: read
@@ -18,12 +16,53 @@ defaults:
     shell: bash
 
 jobs:
+  classify-tag:
+    name: Identify stable release tag
+    if: github.event_name == 'create' && github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    outputs:
+      is_stable: ${{ steps.classify.outputs.is_stable }}
+    steps:
+      - name: Classify tag
+        id: classify
+        run: |
+          if [[ "$GITHUB_REF" =~ ^refs/tags/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "is_stable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_stable=false" >> "$GITHUB_OUTPUT"
+          fi
+
   migration-gates:
     name: Expression migration gates
+    needs: classify-tag
+    if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'create' && github.ref_type == 'tag' && needs.classify-tag.result == 'success' && needs.classify-tag.outputs.is_stable == 'true')) }}
     runs-on: ubuntu-latest
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
+    outputs:
+      stable_release_tag: ${{ steps.release-tag.outputs.is_stable }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'create' && github.ref || '' }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Identify and verify release tag
+        id: release-tag
+        if: github.event_name == 'create' && github.ref_type == 'tag'
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]] ||
+             [[ "$(git rev-parse --verify "${GITHUB_REF}^{commit}")" != "$GITHUB_SHA" ]]; then
+            echo "::error::The checked-out tag does not match the triggering commit."
+            exit 1
+          fi
+          if [[ "$GITHUB_REF" =~ ^refs/tags/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "is_stable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_stable=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -67,17 +106,35 @@ jobs:
         run: yarn test:deploy
 
   deploy-production:
-    name: Deploy to S3 (main only)
+    name: Deploy to S3 (release tag only)
     needs: migration-gates
-    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'
     runs-on: ubuntu-latest
     environment: production
+    concurrency:
+      group: ${{ github.repository }}-expression-production-deploy
+      cancel-in-progress: false
+      queue: max
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
     permissions:
       contents: read
       id-token: write
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify triggering tag
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]] ||
+             [[ "$(git rev-parse --verify "${GITHUB_REF}^{commit}")" != "$GITHUB_SHA" ]]; then
+            echo "::error::The checked-out tag does not match the triggering commit."
+            exit 1
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -116,6 +173,9 @@ jobs:
         with:
           role-to-assume: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
           aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
+
+      - name: Reject stale production release
+        run: node .github/actions/npm-common/remote-tag.js --reject-newer
 
       - name: Publish legacy and hybrid bundles
         run: ./script/deploy production --yes

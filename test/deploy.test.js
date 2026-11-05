@@ -18,14 +18,40 @@ assert.ok(
   Object.prototype.hasOwnProperty.call(workflow.on, "pull_request"),
   "migration gates must run for pull requests"
 );
-assert.deepStrictEqual(workflow.on.push.branches, ["main"]);
-assert.strictEqual(workflow.jobs["migration-gates"].name, "Expression migration gates");
-assert.strictEqual(workflow.jobs["deploy-production"].name, "Deploy to S3 (main only)");
-assert.strictEqual(workflow.jobs["deploy-production"].needs, "migration-gates");
+assert.ok(!Object.prototype.hasOwnProperty.call(workflow.on, "push"));
+assert.ok(Object.prototype.hasOwnProperty.call(workflow.on, "create"));
+assert.ok(!Object.prototype.hasOwnProperty.call(workflow.on, "merge_group"));
+const ci = yaml.load(fs.readFileSync(path.join(root, ".github", "workflows", "ci.yml"), "utf8"));
+assert.deepStrictEqual(ci.on.push.branches, ["main"]);
+assert.match(ci.jobs.ci.steps.find((step) => step.name === "Run build and expression migration gates").run,
+  /yarn test:migration-gates/);
+const gates = workflow.jobs["migration-gates"];
+const deployment = workflow.jobs["deploy-production"];
+const classifier = workflow.jobs["classify-tag"];
+assert.strictEqual(classifier.if, "github.event_name == 'create' && github.ref_type == 'tag'");
+assert.strictEqual(classifier.outputs.is_stable, "${{ steps.classify.outputs.is_stable }}");
+assert.strictEqual(gates.name, "Expression migration gates");
+assert.strictEqual(gates.needs, "classify-tag");
+assert.strictEqual(gates.if, "${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'create' && github.ref_type == 'tag' && needs.classify-tag.result == 'success' && needs.classify-tag.outputs.is_stable == 'true')) }}");
+assert.strictEqual(gates.outputs.stable_release_tag, "${{ steps.release-tag.outputs.is_stable }}");
+assert.strictEqual(deployment.name, "Deploy to S3 (release tag only)");
+assert.strictEqual(deployment.needs, "migration-gates");
 assert.strictEqual(
-  workflow.jobs["deploy-production"].if,
-  "success() && github.event_name == 'push' && github.ref == 'refs/heads/main'"
+  deployment.if,
+  "success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'"
 );
+assert.ok(!workflow.jobs["build-and-test"]);
+assert.ok(!workflow.jobs.tag);
+assert.strictEqual(gates.steps.find((step) => step.name === "Check out source").with.ref,
+  "${{ github.event_name == 'create' && github.ref || '' }}");
+assert.strictEqual(deployment.steps.find((step) => step.name === "Check out source").with.ref, "${{ github.ref }}");
+assert.strictEqual(deployment.environment, "production");
+assert.strictEqual(deployment.concurrency.group, "${{ github.repository }}-expression-production-deploy");
+assert.strictEqual(deployment.concurrency["cancel-in-progress"], false);
+assert.strictEqual(deployment.concurrency.queue, "max");
+assert.strictEqual(deployment.steps.find((step) => step.name === "Publish legacy and hybrid bundles").run,
+  "./script/deploy production --yes");
+
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
 const binDirectory = path.join(temporaryRoot, "bin");
 const callLog = path.join(temporaryRoot, "aws-calls.jsonl");
@@ -136,6 +162,150 @@ function assertUploads(result, bucket) {
 }
 
 try {
+  const gitStub = path.join(binDirectory, "git");
+  fs.writeFileSync(gitStub, [
+    "#!/bin/sh",
+    'if [ "$1" = ls-remote ]; then printf "%s" "$MOCK_GIT_TAGS";',
+    'elif [ "$2" = --verify ]; then printf "%s\\n" "$MOCK_GIT_TAG";',
+    'else printf "%s\\n" "$MOCK_GIT_HEAD"; fi',
+    "",
+  ].join("\n"), { mode: 0o755 });
+  const tagStep = gates.steps.find((step) => step.id === "release-tag");
+  assert.strictEqual(tagStep.if, "github.event_name == 'create' && github.ref_type == 'tag'");
+  const sha = "a".repeat(40);
+  const outputFile = path.join(temporaryRoot, "tag-output");
+  function runClassification(ref) {
+    fs.writeFileSync(outputFile, "");
+    const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c",
+      classifier.steps.find((step) => step.id === "classify").run], {
+      encoding: "utf8", env: { ...process.env, GITHUB_REF: ref, GITHUB_OUTPUT: outputFile },
+    });
+    return { ...result, output: fs.readFileSync(outputFile, "utf8") };
+  }
+  function runTagStep(ref, head = sha, tag = sha) {
+    fs.writeFileSync(outputFile, "");
+    const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", tagStep.run], {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
+        GITHUB_REF: ref,
+        GITHUB_SHA: sha,
+        MOCK_GIT_HEAD: head,
+        MOCK_GIT_TAG: tag,
+        GITHUB_OUTPUT: outputFile,
+      },
+    });
+    return { ...result, output: fs.readFileSync(outputFile, "utf8") };
+  }
+  for (const tag of ["v0.0.0", "v1.2.3", "v123.456.789"]) {
+    const result = runTagStep(`refs/tags/${tag}`);
+    assert.strictEqual(result.status, 0, result.stderr);
+    assert.strictEqual(result.output, "is_stable=true\n");
+    const classification = runClassification(`refs/tags/${tag}`);
+    assert.strictEqual(classification.status, 0, classification.stderr);
+    assert.strictEqual(classification.output, "is_stable=true\n");
+  }
+  for (const tag of ["1.2.3", "v01.2.3", "v1.02.3", "v1.2.03", "v1.2", "v1.2.3-rc.1", "v1.2.3+build", "v1.2.3\n"]) {
+    const result = runTagStep(`refs/tags/${tag}`);
+    assert.strictEqual(result.status, 0, result.stderr);
+    assert.strictEqual(result.output, "is_stable=false\n", tag);
+    const classification = runClassification(`refs/tags/${tag}`);
+    assert.strictEqual(classification.status, 0, classification.stderr);
+    assert.strictEqual(classification.output, "is_stable=false\n", tag);
+  }
+  const movedTag = runTagStep("refs/tags/v1.2.3", "b".repeat(40));
+  assert.notStrictEqual(movedTag.status, 0);
+  assert.match(movedTag.stdout, /does not match the triggering commit/);
+  assert.strictEqual(movedTag.output, "");
+  const movedRef = runTagStep("refs/tags/v1.2.3", sha, "b".repeat(40));
+  assert.notStrictEqual(movedRef.status, 0);
+  assert.strictEqual(movedRef.output, "");
+  const verifyDeployment = deployment.steps.find((step) => step.name === "Verify triggering tag").run;
+  for (const [head, tag, valid] of [[sha, sha, true], ["b".repeat(40), sha, false], [sha, "b".repeat(40), false]]) {
+    const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", verifyDeployment], {
+      encoding: "utf8",
+      env: { ...process.env, PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`, GITHUB_REF: "refs/tags/v1.2.3", GITHUB_SHA: sha, MOCK_GIT_HEAD: head, MOCK_GIT_TAG: tag },
+    });
+    assert.strictEqual(result.status === 0, valid);
+  }
+  const staleCheck = deployment.steps.find((step) => step.name === "Reject stale production release").run;
+  assert.ok(deployment.steps.findIndex((step) => step.name === "Reject stale production release") <
+    deployment.steps.findIndex((step) => step.name === "Publish legacy and hybrid bundles"));
+  function runStaleCheck(refs, ref = "refs/tags/v1.2.3", raw = false) {
+    return spawnSync("bash", ["-e", "-o", "pipefail", "-c", staleCheck], {
+      cwd: root,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
+        GITHUB_REF: ref,
+        GITHUB_SHA: sha,
+        RUNNER_TEMP: temporaryRoot,
+        MOCK_GIT_TAGS: raw ? refs : refs.map((tag) => `${sha}\trefs/tags/${tag}\n`).join(""),
+      },
+    });
+  }
+  for (const refs of [
+    ["v1.2.3"],
+    ["v1.2.2", "v1.2.3", "v1.2.4-rc.1", "v01.2.4"],
+    ["v1.2.3", "v0.999999999999999999999999.0"],
+  ]) {
+    const result = runStaleCheck(refs);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }
+  for (const refs of [
+    ["v1.2.3", "v1.2.4"],
+    ["v1.2.3", "v1.3.0"],
+    ["v1.2.3", "v2.0.0"],
+    ["v1.2.3", "v999999999999999999999999.0.0"],
+    ["v1.2.2"],
+    [],
+  ]) {
+    const result = runStaleCheck(refs);
+    assert.notStrictEqual(result.status, 0, refs.join(", "));
+  }
+  const other = "b".repeat(40);
+  const currentRef = "refs/tags/v1.2.3";
+  for (const [listing, valid] of [
+    [`${sha}\t${currentRef}\n`, true],
+    [`${other}\t${currentRef}\n`, false],
+    [`${other}\t${currentRef}\n${sha}\t${currentRef}^{}\n`, true],
+    [`${other}\t${currentRef}\n${other}\t${currentRef}^{}\n`, false],
+    [`${sha}\t${currentRef}^{}\n`, false],
+    [`${sha}\t${currentRef}\n${other}\t${currentRef}\n`, false],
+    ["invalid remote output\n", false],
+  ]) {
+    const result = runStaleCheck(listing, currentRef, true);
+    assert.strictEqual(result.status === 0, valid, `${listing}: ${result.stderr}`);
+  }
+  function realGit(args, cwd = root, input) {
+    const result = spawnSync("git", args, { cwd, input, encoding: "utf8" });
+    assert.strictEqual(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  }
+  const bare = path.join(temporaryRoot, "remote.git");
+  const client = path.join(temporaryRoot, "client");
+  const actualSha = realGit(["rev-parse", "HEAD"]);
+  realGit(["init", "--bare", bare]);
+  realGit(["--git-dir", bare, "fetch", root, "HEAD:refs/tags/v1.2.3"]);
+  realGit(["init", client]);
+  realGit(["remote", "add", "origin", bare], client);
+  function runAgainstRemote() {
+    return spawnSync(process.execPath, [path.join(root, ".github/actions/npm-common/remote-tag.js"), "--reject-newer"], {
+      cwd: client, encoding: "utf8",
+      env: { ...process.env, RUNNER_TEMP: temporaryRoot, GITHUB_REF: currentRef, GITHUB_SHA: actualSha },
+    });
+  }
+  assert.strictEqual(runAgainstRemote().status, 0);
+  const tagObject = realGit(["--git-dir", bare, "hash-object", "-t", "tag", "-w", "--stdin"], root,
+    `object ${actualSha}\ntype commit\ntag v1.2.3\ntagger Test <test@example.com> 0 +0000\n\nrelease\n`);
+  realGit(["--git-dir", bare, "update-ref", currentRef, tagObject]);
+  const annotated = runAgainstRemote();
+  assert.strictEqual(annotated.status, 0, annotated.stderr);
+  realGit(["--git-dir", bare, "update-ref", "refs/tags/v1.2.4", actualSha]);
+  assert.notStrictEqual(runAgainstRemote().status, 0);
+
   const preview = invokeDeploy([], "expression-preview-test");
   assert.strictEqual(preview.status, 0, preview.output);
   assertUploads(preview, "fulcrumapp-world-expression-preview-test");
