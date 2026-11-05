@@ -286,9 +286,13 @@ try {
   }
   const bare = path.join(temporaryRoot, "remote.git");
   const client = path.join(temporaryRoot, "client");
+  const taggedSource = path.join(temporaryRoot, "tagged-source.git");
   const actualSha = realGit(["rev-parse", "HEAD"]);
+  realGit(["init", "--bare", taggedSource]);
+  realGit(["--git-dir", taggedSource, "fetch", "--no-tags", root, "HEAD:refs/heads/main"]);
+  realGit(["--git-dir", taggedSource, "update-ref", "refs/tags/v99.0.0", actualSha]);
   realGit(["init", "--bare", bare]);
-  realGit(["--git-dir", bare, "fetch", root, "HEAD:refs/tags/v1.2.3"]);
+  realGit(["--git-dir", bare, "fetch", "--no-tags", taggedSource, "refs/heads/main:refs/tags/v1.2.3"]);
   realGit(["init", client]);
   realGit(["remote", "add", "origin", bare], client);
   function runAgainstRemote() {
@@ -297,7 +301,8 @@ try {
       env: { ...process.env, RUNNER_TEMP: temporaryRoot, GITHUB_REF: currentRef, GITHUB_SHA: actualSha },
     });
   }
-  assert.strictEqual(runAgainstRemote().status, 0);
+  const lightweight = runAgainstRemote();
+  assert.strictEqual(lightweight.status, 0, lightweight.stderr);
   const tagObject = realGit(["--git-dir", bare, "hash-object", "-t", "tag", "-w", "--stdin"], root,
     `object ${actualSha}\ntype commit\ntag v1.2.3\ntagger Test <test@example.com> 0 +0000\n\nrelease\n`);
   realGit(["--git-dir", bare, "update-ref", currentRef, tagObject]);
