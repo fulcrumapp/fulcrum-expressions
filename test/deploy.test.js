@@ -27,8 +27,12 @@ assert.match(ci.jobs.ci.steps.find((step) => step.name === "Run build and expres
   /yarn test:migration-gates/);
 const gates = workflow.jobs["migration-gates"];
 const deployment = workflow.jobs["deploy-production"];
+const classifier = workflow.jobs["classify-tag"];
+assert.strictEqual(classifier.if, "github.event_name == 'create' && github.ref_type == 'tag'");
+assert.strictEqual(classifier.outputs.is_stable, "${{ steps.classify.outputs.is_stable }}");
 assert.strictEqual(gates.name, "Expression migration gates");
-assert.strictEqual(gates.if, "github.event_name != 'create' || github.ref_type == 'tag'");
+assert.strictEqual(gates.needs, "classify-tag");
+assert.strictEqual(gates.if, "${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'create' && github.ref_type == 'tag' && needs.classify-tag.result == 'success' && needs.classify-tag.outputs.is_stable == 'true')) }}");
 assert.strictEqual(gates.outputs.stable_release_tag, "${{ steps.release-tag.outputs.is_stable }}");
 assert.strictEqual(deployment.name, "Deploy to S3 (release tag only)");
 assert.strictEqual(deployment.needs, "migration-gates");
@@ -170,6 +174,14 @@ try {
   assert.strictEqual(tagStep.if, "github.event_name == 'create' && github.ref_type == 'tag'");
   const sha = "a".repeat(40);
   const outputFile = path.join(temporaryRoot, "tag-output");
+  function runClassification(ref) {
+    fs.writeFileSync(outputFile, "");
+    const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c",
+      classifier.steps.find((step) => step.id === "classify").run], {
+      encoding: "utf8", env: { ...process.env, GITHUB_REF: ref, GITHUB_OUTPUT: outputFile },
+    });
+    return { ...result, output: fs.readFileSync(outputFile, "utf8") };
+  }
   function runTagStep(ref, head = sha, tag = sha) {
     fs.writeFileSync(outputFile, "");
     const result = spawnSync("bash", ["-e", "-o", "pipefail", "-c", tagStep.run], {
@@ -190,11 +202,17 @@ try {
     const result = runTagStep(`refs/tags/${tag}`);
     assert.strictEqual(result.status, 0, result.stderr);
     assert.strictEqual(result.output, "is_stable=true\n");
+    const classification = runClassification(`refs/tags/${tag}`);
+    assert.strictEqual(classification.status, 0, classification.stderr);
+    assert.strictEqual(classification.output, "is_stable=true\n");
   }
   for (const tag of ["1.2.3", "v01.2.3", "v1.02.3", "v1.2.03", "v1.2", "v1.2.3-rc.1", "v1.2.3+build", "v1.2.3\n"]) {
     const result = runTagStep(`refs/tags/${tag}`);
     assert.strictEqual(result.status, 0, result.stderr);
     assert.strictEqual(result.output, "is_stable=false\n", tag);
+    const classification = runClassification(`refs/tags/${tag}`);
+    assert.strictEqual(classification.status, 0, classification.stderr);
+    assert.strictEqual(classification.output, "is_stable=false\n", tag);
   }
   const movedTag = runTagStep("refs/tags/v1.2.3", "b".repeat(40));
   assert.notStrictEqual(movedTag.status, 0);

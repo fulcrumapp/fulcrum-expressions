@@ -109,13 +109,15 @@ The exported declaration string is flattened for the editor's global scope:
 geometry types are used as `Point`, `Feature<Point>`, `GeoJSONGeometry` and
 `GeoJSON`, not as members of a UMD `GeoJSON` namespace.
 
-The existing `Expression migration gates` workflow runs on pull requests
-and tag creation, and reports contract results by function
+The existing `Expression migration gates` workflow runs its full gates on pull
+requests and stable release tag creation, and reports contract results by function
 group. The separate npm CI workflow also runs those gates on merge queue entries
 and before creating a release tag. The production deployment depends on
 successful expression gates and runs only for stable release tag creation; it
 is skipped for pull requests. It publishes the legacy and hybrid
 channels side-by-side without overwriting the frozen compatibility bundle.
+GitHub may still start a workflow run for other `create` events, but branch
+creation is skipped and non-stable tags stop after tag classification.
 
 ### Console
 Starts an interactive node terminal with the functions available to call

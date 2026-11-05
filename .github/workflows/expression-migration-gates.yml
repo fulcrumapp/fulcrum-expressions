@@ -16,9 +16,26 @@ defaults:
     shell: bash
 
 jobs:
+  classify-tag:
+    name: Identify stable release tag
+    if: github.event_name == 'create' && github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    outputs:
+      is_stable: ${{ steps.classify.outputs.is_stable }}
+    steps:
+      - name: Classify tag
+        id: classify
+        run: |
+          if [[ "$GITHUB_REF" =~ ^refs/tags/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "is_stable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_stable=false" >> "$GITHUB_OUTPUT"
+          fi
+
   migration-gates:
     name: Expression migration gates
-    if: github.event_name != 'create' || github.ref_type == 'tag'
+    needs: classify-tag
+    if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'create' && github.ref_type == 'tag' && needs.classify-tag.result == 'success' && needs.classify-tag.outputs.is_stable == 'true')) }}
     runs-on: ubuntu-latest
     env:
       COREPACK_ENABLE_AUTO_PIN: '0'
