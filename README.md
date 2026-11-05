@@ -181,14 +181,24 @@ uploads or replaces `/expv1/expressions.js`; production deployment still
 invalidates cached `/expv1/*` objects. You can run `yarn build:dist` separately
 to build and test without uploading.
 
-**Automated production deployment:** after `Expression migration gates`
-passes on a push to `main`, the production-environment job builds and uploads
-the legacy and hybrid bundles and sandbox assets, leaving the frozen
-compatibility object untouched. Pull requests never run this deployment job.
+**Automated production deployment:** creating a stable release tag in the form
+`vMAJOR.MINOR.PATCH` runs `Expression migration gates` against that tag. After
+the gates pass, the production-environment job checks out the same tag and
+verifies it still points to the triggering commit, then builds and uploads the
+legacy and hybrid bundles and sandbox assets, leaving the frozen compatibility
+object untouched. Pull requests, branch creation, pushes to `main`, and
+prerelease tags never run this deployment job. Production deployments are
+queued rather than canceled or run concurrently. Immediately before publishing,
+the deployment fails if a newer stable tag exists or the triggering tag has
+been deleted. This check is not atomic with the S3 uploads: a tag created while
+an upload is already in progress cannot stop it, and its own deployment must
+still pass the gates. GitHub Packages publishing runs independently in the
+tag-triggered package workflow; success in one workflow does not imply success
+in the other.
 The GitHub `production` environment must provide
 `EXPRESSION_RELEASE_AWS_ROLE_ARN` and `EXPRESSION_RELEASE_AWS_REGION`, and the
 AWS role must trust this repository's production-environment GitHub Actions
-OIDC identity. Scope the role to the required `fulcrum-assets/expv1/` objects
+OIDC identity for tag-triggered runs. Scope the role to the required `fulcrum-assets/expv1/` objects
 and invalidation of the existing expression CloudFront distribution. Any
 environment approval requirement is configured by administrators. This
 repository's deployment path has only been tested locally with mocked AWS

@@ -21,12 +21,16 @@ function verifyRelease(ref, packageJson, git) {
   const commits = git("rev-list", "--parents", "-n", "1", "HEAD").split(/\s+/);
   if (commits.length !== 2) throw new Error("The release commit must have exactly one parent");
   git("merge-base", "--is-ancestor", "HEAD", "refs/remotes/origin/main");
+  if (git("show", "-s", "--format=%B", "HEAD") !== `chore(release): v${packageJson.version} [skip ci]`) {
+    throw new Error("The release commit message must match the release tag");
+  }
   if (git("diff", "--name-only", `${commits[1]}..HEAD`) !== "package.json") {
     throw new Error("The release commit must only change package.json");
   }
   const previous = JSON.parse(git("show", `${commits[1]}:package.json`));
   const current = JSON.parse(git("show", "HEAD:package.json"));
   if (!isDeepStrictEqual(current, packageJson)) throw new Error("The workspace package.json differs from the tagged commit");
+  if (previous.version === current.version) throw new Error("The release commit must change the package version");
   delete previous.version;
   const withoutVersion = { ...current };
   delete withoutVersion.version;
@@ -34,16 +38,27 @@ function verifyRelease(ref, packageJson, git) {
   return packageJson;
 }
 
+function npmErrorResponse(output) {
+  const text = (output || "").trim();
+  if (!text) return null;
+  const embedded = text.match(/^(\{\s*\n[\s\S]*?^\})\s*$/m)?.[1];
+  try {
+    return JSON.parse(embedded || text);
+  } catch {
+    return null;
+  }
+}
+
 function publishPackage(packageJson, npm, tarball, integrity = () =>
   `sha512-${createHash("sha512").update(readFileSync(tarball)).digest("base64")}`) {
   const result = npm("view", `${packageJson.name}@${packageJson.version}`, "version", "--json", `--registry=${registry}`);
-  let response;
-  try {
-    response = JSON.parse(result.stdout || "");
-  } catch {
-    throw new Error(`Unable to query the package registry (exit ${result.status})`);
-  }
   if (result.status === 0) {
+    let response;
+    try {
+      response = JSON.parse(result.stdout || "");
+    } catch {
+      throw new Error("Unable to read the package registry version");
+    }
     if (response !== packageJson.version) throw new Error("Package registry returned a mismatched version");
     const stored = npm("view", `${packageJson.name}@${packageJson.version}`, "dist.integrity", "--json", `--registry=${registry}`);
     let storedIntegrity;
@@ -57,6 +72,16 @@ function publishPackage(packageJson, npm, tarball, integrity = () =>
     }
     return "already published";
   }
+  const stdoutResponse = npmErrorResponse(result.stdout);
+  const stderrResponse = npmErrorResponse(result.stderr);
+  if ((result.stdout || "").trim() && !stdoutResponse) {
+    throw new Error(`Unable to query the package registry (exit ${result.status})`);
+  }
+  if (stdoutResponse && stderrResponse && stdoutResponse?.error?.code !== stderrResponse?.error?.code) {
+    throw new Error("Package registry returned conflicting errors");
+  }
+  const response = stdoutResponse || stderrResponse;
+  if (!response) throw new Error(`Unable to query the package registry (exit ${result.status})`);
   if (result.status !== 1 || response?.error?.code !== "E404") {
     throw new Error(`Package registry query failed: ${response?.error?.code || result.status}`);
   }

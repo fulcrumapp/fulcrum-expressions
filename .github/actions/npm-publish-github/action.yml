@@ -17,6 +17,8 @@ runs:
       run: npm install --global npm@11.5.1 --ignore-scripts
     - name: Enable the configured Yarn version
       shell: bash
+      env:
+        COREPACK_ENABLE_AUTO_PIN: '0'
       run: |
         set -euo pipefail
         corepack enable
@@ -26,8 +28,11 @@ runs:
       run: yarn install --frozen-lockfile --production=false --ignore-scripts --non-interactive
       env:
         NODE_AUTH_TOKEN: ${{ inputs.token }}
+        COREPACK_ENABLE_AUTO_PIN: '0'
     - name: Build package
       shell: bash
+      env:
+        COREPACK_ENABLE_AUTO_PIN: '0'
       run: yarn build
     - name: Pack without lifecycle scripts
       id: pack

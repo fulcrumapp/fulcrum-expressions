@@ -98,3 +98,15 @@ test("GitHub Packages publishing installs npm 11 before packing without scripts"
   const pack = action.indexOf("npm pack --ignore-scripts --json");
   assert.ok(install >= 0 && pack > install, "npm 11 must be installed before packing");
 });
+
+test("Yarn commands cannot modify the tagged package manifest through Corepack auto-pinning", () => {
+  const yaml = require("js-yaml");
+  const action = yaml.load(readFileSync(path.join(__dirname, "../actions/npm-publish-github/action.yml"), "utf8"));
+  for (const step of action.runs.steps.filter((step) => /(?:corepack|yarn)\b/.test(step.run || ""))) {
+    assert.equal(step.env?.COREPACK_ENABLE_AUTO_PIN, "0", step.name);
+  }
+  const config = yaml.load(workflow);
+  for (const job of ["migration-gates", "deploy-production"]) {
+    assert.equal(config.jobs[job].env.COREPACK_ENABLE_AUTO_PIN, "0", job);
+  }
+});

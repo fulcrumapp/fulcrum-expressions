@@ -4,6 +4,7 @@ on:
   pull_request:
   merge_group:
     types: [checks_requested]
+  create:
   push:
     branches:
       - main
@@ -22,13 +23,33 @@ defaults:
 jobs:
   migration-gates:
     name: Expression migration gates
+    if: github.event_name != 'create' || github.ref_type == 'tag'
     runs-on: ubuntu-latest
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
+    outputs:
+      stable_release_tag: ${{ steps.release-tag.outputs.is_stable }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event_name == 'create' && github.ref || github.sha }}
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Identify and verify release tag
+        id: release-tag
+        if: github.event_name == 'create' && github.ref_type == 'tag'
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "::error::The checked-out tag does not match the triggering commit."
+            exit 1
+          fi
+          if [[ "$GITHUB_REF" =~ ^refs/tags/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "is_stable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_stable=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -114,17 +135,33 @@ jobs:
         run: yarn test:deploy
 
   deploy-production:
-    name: Deploy to S3 (main only)
+    name: Deploy to S3 (release tag only)
     needs: migration-gates
-    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'
     runs-on: ubuntu-latest
     environment: production
+    concurrency:
+      group: ${{ github.repository }}-expression-production-deploy
+      cancel-in-progress: false
+      queue: max
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
     permissions:
       contents: read
       id-token: write
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          persist-credentials: false
+
+      - name: Verify triggering tag
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "::error::The checked-out tag does not match the triggering commit."
+            exit 1
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -164,11 +201,38 @@ jobs:
           role-to-assume: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
           aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
 
+      - name: Reject stale production release
+        run: |
+          git ls-remote --tags --refs origin > "$RUNNER_TEMP/expression-release-tags"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const pattern = /^refs\/tags\/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/;
+          const current = pattern.exec(process.env.GITHUB_REF || '');
+          if (!current) throw new Error('The deployment ref is not a stable release tag.');
+          const currentVersion = current.slice(1).map(BigInt);
+          let found = false;
+          for (const line of fs.readFileSync(`${process.env.RUNNER_TEMP}/expression-release-tags`, 'utf8').trim().split('\n')) {
+            const match = /^([0-9a-f]{40,64})\t(refs\/tags\/\S+)$/.exec(line);
+            if (!match) throw new Error('Unable to parse the remote tag listing.');
+            if (match[2] === process.env.GITHUB_REF) found = true;
+            const tag = pattern.exec(match[2]);
+            if (!tag) continue;
+            const version = tag.slice(1).map(BigInt);
+            for (let i = 0; i < version.length; i++) {
+              if (version[i] > currentVersion[i]) {
+                throw new Error(`A newer stable release tag exists: ${match[2]}. Refusing to deploy ${process.env.GITHUB_REF}.`);
+              }
+              if (version[i] < currentVersion[i]) break;
+            }
+          }
+          if (!found) throw new Error('The triggering release tag no longer exists on origin.');
+          NODE
+
       - name: Publish legacy and hybrid bundles
         run: ./script/deploy production --yes
 
   build-and-test:
-    if: always()
+    if: always() && (github.event_name != 'create' || github.ref_type == 'tag')
     needs: migration-gates
     runs-on: ubuntu-latest
     steps:
