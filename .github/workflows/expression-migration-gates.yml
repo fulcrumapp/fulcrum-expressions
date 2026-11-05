@@ -3,9 +3,6 @@ name: Expression migration gates
 on:
   pull_request:
   create:
-  push:
-    branches:
-      - main
 
 permissions:
   contents: read

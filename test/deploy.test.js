@@ -18,9 +18,13 @@ assert.ok(
   Object.prototype.hasOwnProperty.call(workflow.on, "pull_request"),
   "migration gates must run for pull requests"
 );
-assert.deepStrictEqual(workflow.on.push.branches, ["main"]);
+assert.ok(!Object.prototype.hasOwnProperty.call(workflow.on, "push"));
 assert.ok(Object.prototype.hasOwnProperty.call(workflow.on, "create"));
 assert.ok(!Object.prototype.hasOwnProperty.call(workflow.on, "merge_group"));
+const ci = yaml.load(fs.readFileSync(path.join(root, ".github", "workflows", "ci.yml"), "utf8"));
+assert.deepStrictEqual(ci.on.push.branches, ["main"]);
+assert.match(ci.jobs.ci.steps.find((step) => step.name === "Run build and expression migration gates").run,
+  /yarn test:migration-gates/);
 const gates = workflow.jobs["migration-gates"];
 const deployment = workflow.jobs["deploy-production"];
 assert.strictEqual(gates.name, "Expression migration gates");
