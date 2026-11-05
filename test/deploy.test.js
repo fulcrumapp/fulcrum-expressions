@@ -234,6 +234,7 @@ try {
     deployment.steps.findIndex((step) => step.name === "Publish legacy and hybrid bundles"));
   function runStaleCheck(refs, ref = "refs/tags/v1.2.3", raw = false) {
     return spawnSync("bash", ["-e", "-o", "pipefail", "-c", staleCheck], {
+      cwd: root,
       encoding: "utf8",
       env: {
         ...process.env,
@@ -291,7 +292,7 @@ try {
   realGit(["init", client]);
   realGit(["remote", "add", "origin", bare], client);
   function runAgainstRemote() {
-    return spawnSync("bash", ["-e", "-o", "pipefail", "-c", staleCheck], {
+    return spawnSync(process.execPath, [path.join(root, ".github/actions/npm-common/remote-tag.js"), "--reject-newer"], {
       cwd: client, encoding: "utf8",
       env: { ...process.env, RUNNER_TEMP: temporaryRoot, GITHUB_REF: currentRef, GITHUB_SHA: actualSha },
     });

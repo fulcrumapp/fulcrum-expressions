@@ -175,44 +175,7 @@ jobs:
           aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
 
       - name: Reject stale production release
-        run: |
-          git ls-remote --tags origin > "$RUNNER_TEMP/expression-release-tags"
-          node <<'NODE'
-          const fs = require('node:fs');
-          const pattern = /^refs\/tags\/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/;
-          const current = pattern.exec(process.env.GITHUB_REF || '');
-          if (!current) throw new Error('The deployment ref is not a stable release tag.');
-          const currentVersion = current.slice(1).map(BigInt);
-          let tagObject;
-          let peeledTag;
-          for (const line of fs.readFileSync(`${process.env.RUNNER_TEMP}/expression-release-tags`, 'utf8').trim().split('\n')) {
-            const match = /^([0-9a-f]{40,64})\t(refs\/tags\/[^\s^]+)(\^\{\})?$/.exec(line);
-            if (!match) throw new Error('Unable to parse the remote tag listing.');
-            if (match[2] === process.env.GITHUB_REF) {
-              if (match[3]) {
-                if (peeledTag) throw new Error('Duplicate peeled release tag in remote listing.');
-                peeledTag = match[1];
-              } else {
-                if (tagObject) throw new Error('Duplicate release tag in remote listing.');
-                tagObject = match[1];
-              }
-            }
-            if (match[3]) continue;
-            const tag = pattern.exec(match[2]);
-            if (!tag) continue;
-            const version = tag.slice(1).map(BigInt);
-            for (let i = 0; i < version.length; i++) {
-              if (version[i] > currentVersion[i]) {
-                throw new Error(`A newer stable release tag exists: ${match[2]}. Refusing to deploy ${process.env.GITHUB_REF}.`);
-              }
-              if (version[i] < currentVersion[i]) break;
-            }
-          }
-          if (!tagObject) throw new Error('The triggering release tag no longer exists on origin.');
-          if ((peeledTag || tagObject) !== process.env.GITHUB_SHA) {
-            throw new Error('The remote release tag no longer points to the triggering commit.');
-          }
-          NODE
+        run: node .github/actions/npm-common/remote-tag.js --reject-newer
 
       - name: Publish legacy and hybrid bundles
         run: ./script/deploy production --yes

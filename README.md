@@ -80,7 +80,12 @@ Before enabling releases, configure fork-run approval, required CI checks,
 GitHub Packages access, and the release App's branch and tag protection
 bypasses. Disable the old Tekton publisher at cutover. If publishing fails,
 rerun the tag workflow against the same tag; it verifies the release commit and
-the package version before publishing.
+the package version before publishing. The remote tag is rechecked immediately
+before publishing or confirming a package and before creating or confirming
+release notes. These checks are not atomic with the registry or GitHub writes.
+If an existing stable tag descends from the tested main commit but is not on
+main, release tagging fails instead of treating that commit as already released;
+reconcile that tag before retrying.
 
 ### Tests
 ```sh

@@ -6,6 +6,7 @@ const { createHash } = require("node:crypto");
 const { isDeepStrictEqual } = require("node:util");
 const { verifyRemoteIdentity } = require("../npm-release-identity/identity.js");
 const { npmErrorResponse } = require("../npm-common/error-response.js");
+const { verifyOriginTag } = require("../npm-common/remote-tag.js");
 
 const registry = "https://npm.pkg.github.com/";
 const stableTag = /^refs\/tags\/v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
@@ -49,8 +50,9 @@ function verifyCheckout(ref, eventSha, git) {
   return eventSha;
 }
 
-function publishPackage(packageJson, npm, tarball, integrity = () =>
+function publishPackage(packageJson, npm, tarball, verifyTag, integrity = () =>
   `sha512-${createHash("sha512").update(readFileSync(tarball)).digest("base64")}`) {
+  if (typeof verifyTag !== "function") throw new Error("Remote tag verification is required");
   const result = npm("view", `${packageJson.name}@${packageJson.version}`, "version", "--json", `--registry=${registry}`);
   if (result.status === 0) {
     let response;
@@ -70,6 +72,7 @@ function publishPackage(packageJson, npm, tarball, integrity = () =>
     if (stored.status !== 0 || storedIntegrity !== integrity()) {
       throw new Error("Existing package registry integrity does not match the release tarball");
     }
+    verifyTag();
     return "already published";
   }
   const stdoutResponse = npmErrorResponse(result.stdout);
@@ -85,6 +88,7 @@ function publishPackage(packageJson, npm, tarball, integrity = () =>
   if (result.status !== 1 || response?.error?.code !== "E404") {
     throw new Error(`Package registry query failed: ${response?.error?.code || result.status}`);
   }
+  verifyTag();
   const publish = npm("publish", tarball, "--ignore-scripts", `--registry=${registry}`, `--@fulcrumapp:registry=${registry}`);
   if (publish.status !== 0) throw new Error(`npm publish failed (exit ${publish.status}): ${publish.stderr || ""}`);
   return "published";
@@ -117,7 +121,9 @@ if (require.main === module) {
         if (result.stderr) result.stderr = result.stderr.split(process.env.NODE_AUTH_TOKEN).join("[REDACTED]");
         return result;
       };
-      console.log(`${packageJson.name}@${packageJson.version}: ${publishPackage(packageJson, npm, process.argv[3])}`);
+      console.log(`${packageJson.name}@${packageJson.version}: ${publishPackage(
+        packageJson, npm, process.argv[3], () => verifyOriginTag(process.env.GITHUB_REF, tagSha)
+      )}`);
     } else {
       throw new Error("Expected verify or publish <tarball>");
     }

@@ -3,7 +3,11 @@
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const { test } = require("node:test");
-const { publishPackage, verifyRelease, verifyCheckout } = require("../actions/npm-publish-github/publish.js");
+const { publishPackage: publish, verifyRelease, verifyCheckout } = require("../actions/npm-publish-github/publish.js");
+
+function publishPackage(pkg, npm, tarball, integrity) {
+  return publish(pkg, npm, tarball, () => {}, integrity);
+}
 
 const pkg = { name: "@fulcrumapp/fulcrum-expressions", version: "3.2.1" };
 const registry = "https://npm.pkg.github.com/";
@@ -85,6 +89,27 @@ test("publish errors are propagated", () => {
   ]);
   assert.throws(() => publishPackage(pkg, npm, "package.tgz"), /npm publish failed.*permission denied/);
   assert.equal(calls.length, 2);
+});
+
+test("rechecks the remote tag immediately before publishing or accepting an existing package", () => {
+  const missing = npmSequence([{ status: 1, stdout: e404 }, { status: 0 }]);
+  assert.throws(() => publish(pkg, missing.npm, "package.tgz", () => {
+    assert.equal(missing.calls.length, 1);
+    throw new Error("tag moved");
+  }), /tag moved/);
+  assert.equal(missing.calls.length, 1);
+
+  const existing = npmSequence([
+    { status: 0, stdout: JSON.stringify(pkg.version) },
+    { status: 0, stdout: '"sha512-matching"' }
+  ]);
+  assert.throws(() => publish(pkg, existing.npm, "package.tgz", () => {
+    assert.equal(existing.calls.length, 2);
+    throw new Error("tag deleted");
+  }, () => "sha512-matching"), /tag deleted/);
+  assert.equal(existing.calls.length, 2);
+  assert.throws(() => publish(pkg, () => { throw new Error("unexpected npm call"); }, "package.tgz"),
+    /Remote tag verification is required/);
 });
 
 function releaseGit(overrides = {}) {

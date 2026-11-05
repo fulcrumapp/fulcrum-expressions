@@ -144,7 +144,15 @@ function createReleaseTag(options) {
   }
   const plan = options.calculateVersion(head);
   if (plan.head !== head) throw new Error("Version plan does not match the tested commit");
-  if (plan.alreadyReleased) return { tag: plan.tag, alreadyReleased: true };
+  if (plan.alreadyReleased) {
+    if (!/^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(plan.tag || "")) {
+      throw new Error("Already-released plan must identify a stable release tag");
+    }
+    if (git("rev-parse", "--verify", `refs/tags/${plan.tag}^{commit}`) !== head) {
+      throw new Error(`Tag ${plan.tag} does not point to the current validated main commit; reconcile the release tag before retrying`);
+    }
+    return { tag: plan.tag, alreadyReleased: true };
+  }
   if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(plan.version) ||
       plan.tag !== `v${plan.version}`) {
     throw new Error("Version plan does not contain a matching stable SemVer tag");

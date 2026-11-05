@@ -13,6 +13,7 @@ function fixture(overrides = {}) {
     calls.push(["git", ...args]);
     if (args[0] === "show") return '{\n  "name": "@fulcrumapp/example",\n  "version": "0.1.0",\n  "packageManager": "yarn@1.22.22"\n}\n';
     if (args[0] === "ls-tree") return "yarn.lock";
+    if (args[0] === "rev-parse") return head;
     return "";
   };
   const gh = (args, input) => {
@@ -65,6 +66,20 @@ test("does not create refs for an already released commit", () => {
   });
   assert.equal(createReleaseTag(options).alreadyReleased, true);
   assert.equal(calls.some((entry) => entry[1]?.includes("POST")), false);
+});
+
+test("does not silently treat an off-main descendant tag as a validated release", () => {
+  const calls = [];
+  const { options } = fixture({
+    calculateVersion: () => ({ head, tag: "v1.2.3", alreadyReleased: true }),
+    git: (...args) => {
+      calls.push(args);
+      if (args.join(" ") === "rev-parse --verify refs/tags/v1.2.3^{commit}") return releaseCommit;
+      throw new Error("unexpected git command");
+    }
+  });
+  assert.throws(() => createReleaseTag(options), /does not point to the current validated main commit/);
+  assert.equal(calls.length, 1);
 });
 
 test("does not tag an unsigned release commit", () => {

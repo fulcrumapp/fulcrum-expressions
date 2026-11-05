@@ -7,6 +7,7 @@ const { tmpdir } = require("node:os");
 const path = require("node:path");
 const { test } = require("node:test");
 const { calculateVersion, classify } = require("../actions/npm-next-version/next-version.js");
+const { createReleaseTag } = require("../actions/npm-create-tag/create-tag.js");
 
 function inRepository(callback) {
   const directory = mkdtempSync(path.join(tmpdir(), "npm-next-version-"));
@@ -133,6 +134,21 @@ test("handles a release-only commit and recognizes a rerun", () => {
     const result = calculateVersion(head);
     assert.equal(result.base, releasedMain);
     assert.equal(result.tag, "v1.0.1");
+  });
+});
+
+test("does not suppress a main release because an off-main descendant has a higher tag", () => {
+  inRepository((git, directory) => {
+    const head = commit(git, directory, "feat: validated main", '{"version":"1.0.0"}');
+    commit(git, directory, "chore: legacy release", '{"version":"2.0.0"}');
+    git("tag", "v2.0.0");
+    git("checkout", "--quiet", "-b", "tested-main", head);
+    const options = {
+      head, repository: "fulcrumapp/example", runId: "1", attempt: "1", eventName: "push",
+      ref: "refs/heads/main", git, calculateVersion,
+      gh: () => JSON.stringify({ object: { sha: head } }),
+    };
+    assert.throws(() => createReleaseTag(options), /does not point to the current validated main commit/);
   });
 });
 
