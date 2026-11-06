@@ -251,9 +251,11 @@ as the error message and does not copy `error.message` or `message` from that re
 - **THEN** each item lists its dependencies and acceptance criteria
 - **AND** lists its evidence where existing tickets or code apply.
 
-### Requirement: Documentation-only scope
-The change SHALL NOT add production code, dependencies, or orchestration changes.
+### Requirement: Expression callback only
+The change MAY add the expression-engine completion callback and its generated declarations.
+It SHALL NOT add a workflow runtime, new dependencies, or orchestration changes.
 
 #### Scenario: The change is reviewed
 - **WHEN** the change is validated
-- **THEN** only documentation and OpenSpec files differ from the base branch.
+- **THEN** production changes are limited to the `FLOW()` completion callback and its generated declarations
+- **AND** no workflow runtime, dependency, or orchestration change is included.

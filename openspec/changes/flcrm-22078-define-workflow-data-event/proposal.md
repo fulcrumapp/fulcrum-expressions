@@ -32,8 +32,8 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 
 ### Modified Capabilities
 
-- None. This spike introduces a contract and documentation; it does not alter existing runtime
-  requirements.
+- None. This spike introduces a contract and documentation. The expression-engine completion
+  callback and its generated declarations are the only production change. It does not add a workflow runtime.
 
 ## Impact
 

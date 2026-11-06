@@ -26,4 +26,4 @@
 
 - [x] 4.1 Publish the contract and backlog in the architecture documentation.
 - [x] 4.2 Record cross-platform owner review and the open questions as follow-ups; no external sign-off is claimed.
-- [x] 4.3 Record documentation-only validation; no production code was added.
+- [x] 4.3 The workflow runtime was not added. The expression completion callback and its generated declarations are the production exception.
