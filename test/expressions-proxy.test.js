@@ -125,6 +125,28 @@ function createSandbox(origins, request = () => { throw new Error("Unexpected HT
 }
 
 {
+  const sandbox = createSandbox([trustedOrigin]);
+  const captures = [{}, { device_name: "Receiver", latitude: 28.5 }];
+
+  captures.forEach((capture, index) => {
+    sandbox.send({
+      name: "values",
+      id: index,
+      values: {},
+      featureVariables: { featureGpsDeviceCapture: capture },
+    });
+    assert.strictEqual(sandbox.replies.length, index + 1, "GPS feature variables must be accepted");
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(sandbox.runtime.featureGpsDeviceCapture)), capture);
+    assert.strictEqual(sandbox.replies[index].data.name, "values");
+    assert.strictEqual(sandbox.replies[index].data.id, index);
+  });
+
+  sandbox.send({ name: "values", values: {}, featureVariables: { unknownFeature: true } });
+  assert.strictEqual(sandbox.replies.length, captures.length, "unknown feature variables must be rejected");
+  assert.strictEqual(sandbox.runtime.unknownFeature, undefined);
+}
+
+{
   const sandbox = createSandbox([trustedOrigin, "https://other.example"]);
   const commands = [
     { name: "globals", id: "1", globals: { locale: "en_US" } },

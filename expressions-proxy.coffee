@@ -13,7 +13,7 @@ featureKeys = """
   recordHorizontalAccuracy recordCreatedLatitude recordCreatedLongitude recordCreatedAltitude
   recordCreatedAccuracy recordUpdatedLatitude recordUpdatedLongitude recordUpdatedAltitude
   recordUpdatedAccuracy recordCreatedDuration recordUpdatedDuration recordEditedDuration
-  repeatable featureID featureIndex featureIsNew featureCreatedAt featureUpdatedAt
+  repeatable featureID featureIndex featureIsNew featureCreatedAt featureUpdatedAt featureGpsDeviceCapture
   featureGeometry featureCreatedLatitude featureCreatedLongitude featureCreatedAltitude
   featureCreatedAccuracy featureUpdatedLatitude featureUpdatedLongitude featureUpdatedAltitude
   featureUpdatedAccuracy featureCreatedDuration featureUpdatedDuration featureEditedDuration
