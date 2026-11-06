@@ -141,8 +141,11 @@ function assertUploads(result, bucket) {
     const distPathSegments = relativePath.split("/");
     if (relativePath === "expressions-proxy.js") {
       assert.match(path.basename(source), /^expression-proxy\./);
-      assert.ok(result.proxy.includes("https://web.example.com"));
-      assert.ok(!result.proxy.includes("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__"));
+      assert.strictEqual(
+        result.proxy,
+        fs.readFileSync(path.join(root, "dist", "expressions-proxy.js"), "utf8")
+          .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__", "https://web.example.com")
+      );
     } else {
       assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
     }
@@ -338,6 +341,13 @@ try {
   assert.strictEqual(preview.status, 0, preview.output);
   assertUploads(preview, "fulcrumapp-world-expression-preview-test");
   assert.ok(!preview.calls.some((call) => call[0] === "cloudfront"));
+
+  const spoofedOrigin = invokeDeploy(["explicit-preview"], undefined, "https://web.example.com.attacker.invalid");
+  assert.strictEqual(spoofedOrigin.status, 0, spoofedOrigin.output);
+  assert.throws(
+    () => assertUploads(spoofedOrigin, "fulcrumapp-world-explicit-preview"),
+    (error) => error instanceof assert.AssertionError && error.actual === spoofedOrigin.proxy
+  );
 
   for (const user of [undefined, ""]) {
     const fallback = invokeDeploy([], user);
