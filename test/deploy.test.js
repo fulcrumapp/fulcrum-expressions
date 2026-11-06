@@ -4,6 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const vm = require("vm");
 const { spawnSync } = require("child_process");
 const yaml = require("js-yaml");
 const { assertSandboxScripts } = require("../script/sandbox-scripts");
@@ -51,26 +52,38 @@ assert.strictEqual(deployment.concurrency["cancel-in-progress"], false);
 assert.strictEqual(deployment.concurrency.queue, "max");
 assert.strictEqual(deployment.steps.find((step) => step.name === "Publish legacy and hybrid bundles").run,
   "./script/deploy production --yes");
+assert.strictEqual(
+  deployment.steps.find((step) => step.name === "Publish legacy and hybrid bundles").env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS,
+  "${{ vars.EXPRESSION_SANDBOX_ALLOWED_ORIGINS }}"
+);
 
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
 const binDirectory = path.join(temporaryRoot, "bin");
 const callLog = path.join(temporaryRoot, "aws-calls.jsonl");
 const awsStub = path.join(binDirectory, "aws");
+const deployedProxy = path.join(temporaryRoot, "deployed-expressions-proxy.js");
+const trustedOrigins = ["https://web.example.com", "https://preview-a.example.com", "https://preview-b.example.com"];
 fs.mkdirSync(binDirectory);
 fs.writeFileSync(awsStub, [
   `#!${process.execPath}`,
   "const fs = require('fs');",
   "fs.appendFileSync(process.env.AWS_CALL_LOG, `${JSON.stringify(process.argv.slice(2))}\\n`);",
+  "if (process.argv[process.argv.length - 1].endsWith('/expv1/expressions-proxy.js')) {",
+  "  fs.copyFileSync(process.argv[process.argv.length - 2], process.env.DEPLOYED_PROXY);",
+  "}",
   "",
 ].join("\n"), { mode: 0o755 });
 
-function invokeDeploy(args, user) {
+function invokeDeploy(args, user, policy = JSON.stringify(trustedOrigins)) {
   fs.writeFileSync(callLog, "");
   const env = {
     ...process.env,
     AWS_CALL_LOG: callLog,
+    DEPLOYED_PROXY: deployedProxy,
     PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
   };
+  if (policy === null) delete env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS;
+  else env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS = policy;
   if (user === undefined) delete env.USER;
   else env.USER = user;
   const result = spawnSync(deployScript, args, {
@@ -113,7 +126,7 @@ for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]
     { message: `missing value for ${option} for test-target` });
 }
 
-function assertUploads(result, bucket) {
+function assertUploads(result, bucket, origins = trustedOrigins) {
   const s3Uploads = result.calls.filter((call) => call[0] === "s3" && call[1] === "cp");
   const targets = s3Uploads.map((call) => call[call.length - 1]);
   assert.deepStrictEqual(targets, [
@@ -129,7 +142,9 @@ function assertUploads(result, bucket) {
     const source = call[call.length - 2];
     const relativePath = target.split("/expv1/")[1];
     const distPathSegments = relativePath.split("/");
-    assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
+    if (!target.endsWith("/expressions-proxy.js")) {
+      assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
+    }
     assert.strictEqual(
       optionValue(call, "--content-type", target),
       target.endsWith(".html") ? "text/html" : "application/javascript",
@@ -159,6 +174,32 @@ function assertUploads(result, bucket) {
   });
   assert.ok(!targets.includes(`s3://${bucket}/expv1/expressions.js`));
   assert.ok(!result.output.includes(`Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n`));
+  const configuredProxy = fs.readFileSync(deployedProxy, "utf8");
+  assert.ok(configuredProxy.startsWith(`window.EXPRESSION_SANDBOX_ALLOWED_ORIGINS = ${JSON.stringify(origins)};\n`));
+  assert.ok(configuredProxy.endsWith(fs.readFileSync(path.join(root, "dist", "expressions-proxy.js"), "utf8")));
+  for (const senderOrigin of [...origins, "https://untrusted.example.com"]) {
+    let listener;
+    const replies = [];
+    const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
+    const window = { parent, addEventListener: (_, fn) => { listener = fn; } };
+    const runtime = {};
+    vm.runInNewContext(configuredProxy, {
+      window, URL, console, XMLHttpRequest: function () {}, $$runtime: runtime,
+    });
+    listener({
+      source: parent, origin: senderOrigin, isTrusted: true,
+      data: JSON.stringify({ name: "globals", globals: { locale: "en" }, id: 0 }),
+    });
+    if (origins.includes(senderOrigin)) {
+      assert.strictEqual(runtime.locale, "en");
+      assert.strictEqual(replies.length, 1);
+      assert.strictEqual(replies[0].origin, senderOrigin);
+      assert.strictEqual(replies[0].data.id, 0);
+    } else {
+      assert.strictEqual(runtime.locale, undefined);
+      assert.strictEqual(replies.length, 0);
+    }
+  }
 }
 
 try {
@@ -315,6 +356,20 @@ try {
   assert.strictEqual(preview.status, 0, preview.output);
   assertUploads(preview, "fulcrumapp-world-expression-preview-test");
   assert.ok(!preview.calls.some((call) => call[0] === "cloudfront"));
+
+  const localOrigins = ["http://localhost:3000", "http://127.0.0.1:3000", "http://[::1]:3000"];
+  const local = invokeDeploy(["local-test"], undefined, JSON.stringify(localOrigins));
+  assert.strictEqual(local.status, 0, local.output);
+  assertUploads(local, "fulcrumapp-world-local-test", localOrigins);
+
+  for (const policy of [null, "", "not-json", "[]", '["*"]',
+    '["https://web.example.com/path"]', '["https://web.example.com","https://*.example.com"]',
+    '["http://web.example.com"]', '["https://web.example.com","http://preview.example.com"]']) {
+    const invalid = invokeDeploy(["production", "--yes"], "expression-preview-test", policy);
+    assert.notStrictEqual(invalid.status, 0, `invalid policy: ${policy}`);
+    assert.match(invalid.output, /EXPRESSION_SANDBOX_ALLOWED_ORIGINS/);
+    assert.deepStrictEqual(invalid.calls, [], "invalid policy must not upload any assets");
+  }
 
   for (const user of [undefined, ""]) {
     const fallback = invokeDeploy([], user);
