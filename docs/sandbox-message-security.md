@@ -40,8 +40,16 @@ check is not a complete schema for every field or nested repeatable. HTTP
 `form` and object `qs` values with their own `hasOwnProperty`
 field are rejected because browser-request cannot serialize them.
 For example, a numeric field can accept an object that subsequently throws
-during evaluation, leaving the request without a response. The value schema
-and error handling therefore still require work before deployment.
+during evaluation, leaving the request without a response. Handling this
+specific malformed numeric value and introducing a general protocol-level
+error response are deferred from this ticket. The known consumers do not
+handle a shared protocol-level error for these commands, so an explicit error
+response would require a coordinated consumer contract.
+
+The proxy accepts negative numeric `groupingSize` values. A configured value of
+`-1` can make `FIXED` exhaust memory or hang; this behavior predates the
+origin-validation change. Validating `groupingSize` is deferred from this
+ticket.
 
 ## Deployment and security gaps
 
@@ -57,18 +65,21 @@ The proxy cannot distinguish a same-origin replacement of a parent document
 using `WindowProxy` and `postMessage` alone. Exact target origins prevent
 cross-origin delivery, but a pending response may reach a replacement document
 at the same origin. A separate document/session binding protocol and consumer
-changes are needed to close that gap. Host calls made outside a request's
-synchronous execution have no safe request context and throw an error rather
-than being silently dropped. For example, a native timer or promise created by
-a Data Event may call a host function after its request has returned. The
-proxy cannot infer which concurrent request created that task. A compatible
-way to associate these calls with an authorized context has not yet been
-demonstrated; coordinated consumer or runtime changes may be necessary. This
-remains a compatibility blocker. The legacy runtime registers its callback before
-invoking the host function, so this error can also leave an entry in
-`asyncCallbacks`; rejected `SETTIMEOUT` calls can also leave wrappers in
-`HostFunctions.timeouts`. Removing a callback solely by the supplied ID is
-unsafe because the ID may belong to a different pending call.
+changes are needed to close that gap. Deferred host calls use the first
+authorized request's context and ID when no request is currently being
+dispatched; nested calls use the active request's context. The session ID is
+not the ID of the request that created the deferred task. Tests with the
+Fulcrum and External Contributions engines exercised interleaved calls and
+callbacks, but full application and expression tester compatibility remain to
+be verified.
+
+The local runtime removes its own callback and timer wrapper when a host call
+throws; the proxy registers a callback only after sending its notification.
+If a nested host call cannot be sent during `finishAsyncCallback`, that request
+can still fail without a response. An interval can also retain an entry after
+a failed reschedule.
+The deployed frozen comparison runtime does not include those runtime changes,
+so its failure cleanup still needs verification.
 
 This change does **not** restrict JavaScript evaluation or isolate Data Events,
 scripts or mutable globals. It does not configure effective framing headers.
