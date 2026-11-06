@@ -242,8 +242,9 @@ including platforms that are blocked.
 
 ### Requirement: Evidence and implementation backlog
 The contract SHALL link existing tickets and code as evidence and SHALL provide a
-dependency-ordered backlog with owners and acceptance criteria and, where it exists, evidence, marking the result callback,
-progress reporting, iOS and Web, and nested flows as deferred.
+dependency-ordered backlog with owners and acceptance criteria and, where it exists, evidence. The completion
+callback is specified: an error, or the global state. A failed or cancelled run uses `termination_reason`
+as the error message. Progress reporting, iOS and Web, and nested flows stay deferred.
 
 #### Scenario: A platform team starts implementation
 - **WHEN** a team reads the backlog

@@ -20,7 +20,7 @@
 - [x] 3.1 Add the shared schema and validator item.
 - [x] 3.2 Add the Android `FLOW()` invocation and runtime items.
 - [x] 3.3 Add the chat start surface and validation and documentation items.
-- [x] 3.4 Mark the result callback, progress reporting, iOS and Web, and nested workflows as deferred.
+- [x] 3.4 Specify the completion callback as an error or the global state. Progress reporting, iOS and Web, and nested workflows stay deferred.
 
 ## 4. Documentation and Validation
 

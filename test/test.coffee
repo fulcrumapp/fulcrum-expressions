@@ -3671,12 +3671,14 @@ describe "SETMODE", ->
     it 'gives the callback an error when the run fails', ->
       runtime.$$flow = (payload, callbackID) ->
         runtime.callbackID = callbackID
-        runtime.callbackArguments = [ null, { status: 'failed', termination_reason: 'aborted', error: { code: 'aborted', message: 'stopped' } } ]
+        runtime.callbackArguments = [ null, { status: 'failed', termination_reason: 'aborted', message: 'tool output', error: { code: 'aborted', message: 'field value secret' } } ]
         runtime.finishAsync()
 
       FLOW { schema_version: 1, nodes: [] }, (error, state) ->
         error.code.should.eql('aborted')
-        error.message.should.eql('stopped')
+        error.message.should.eql('aborted')
+        error.message.should.not.containEql('secret')
+        error.message.should.not.containEql('tool output')
         (state is undefined).should.be.true()
 
     it 'rejects a non-function callback before the host call', ->

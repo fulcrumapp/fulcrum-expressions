@@ -19,8 +19,9 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 - Define the run outcome statuses and termination reasons.
 - Define the runtime correlation fields (flow, run, agent, session, node, tool, model, timing, outcome, error).
 - Define conformance and per-platform acceptance criteria for KMP, Android, iOS, and Web.
-- **Out of scope:** callback delivery of the outcome, progress reporting, the runtime, iOS and Web
-  implementation, and any client code change.
+- The optional completion callback delivers an error or the global state. A failed or cancelled
+  run uses `termination_reason` as the error message, not host prose.
+- **Out of scope:** progress reporting, the runtime, iOS and Web implementation, and nested workflows.
 
 ## Capabilities
 

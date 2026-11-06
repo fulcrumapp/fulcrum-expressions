@@ -108,8 +108,8 @@ A run always starts immediately and always runs headless, with no chat. A node r
   bound node counts and calls, and add capabilities only through new schema versions.
 - **[Risk] Definitions in form JavaScript expose their content.** → State that definitions are
   visible to form readers and must hold no secrets or user data.
-- **[Risk] The result contract is deferred, so form authors cannot react to the outcome yet.** →
-  Track it as an explicit backlog item.
+- **[Risk] A host failure message can contain field values or tool output.** → The completion
+  callback uses `termination_reason` as the error message and does not copy host prose.
 - **[Risk] Numeric limits may need tuning.** → The per-node values are proposed; revisit them when the runtime is measured.
 - **[Risk] The spike expands into runtime work.** → Keep implementation in follow-up tickets.
 

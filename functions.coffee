@@ -1802,7 +1802,7 @@ flowParseResult = (result) ->
     null
 
 flowRunFailure = (result) ->
-  message = result?.error?.message or result?.termination_reason or result?.message or 'FLOW run failed'
+  message = result?.termination_reason or result?.status or 'FLOW run failed'
   error = new Error(message)
   error.code = result?.error?.code or result?.termination_reason or result?.status or 'failed'
   error

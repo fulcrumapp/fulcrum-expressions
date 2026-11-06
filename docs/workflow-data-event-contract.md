@@ -6,7 +6,8 @@ intended for KMP, Android, iOS, and Web. It defines the **options payload**. The
 also accepts an optional completion callback. The host calls that callback with an error, or with
 the global state when the run succeeds. A host result that is not JSON becomes an error with
 code `invalid_result` and the message `FLOW result was not JSON`; the raw host text is not copied
-into the message. Progress reporting and the runtime that executes a workflow
+into the message. A failed or cancelled run uses `termination_reason` as the callback error
+message. Host `error.message` and `message` text are not copied. Progress reporting and the runtime that executes a workflow
 remain follow-up work (see [Out of scope](#out-of-scope)).
 
 ## Where it fits
