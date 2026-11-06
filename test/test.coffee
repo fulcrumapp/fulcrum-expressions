@@ -3499,6 +3499,155 @@ describe "SETMODE", ->
       )
 
 
+  describe 'FLOW', ->
+    captureFlowPayload = (options, callback) ->
+      captured = null
+
+      runtime.$$flow = (payload, callbackID) ->
+        captured = payload
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [ null, { status: 'completed' } ]
+        runtime.finishAsync()
+
+      FLOW options, callback
+      captured
+
+    it 'sends a callback and the equivalent expression as the same payload', ->
+      callback = ({ state }) ->
+        attempts: (state.attempts or 0) + 1
+
+      fromCallback = captureFlowPayload({
+        schema_version: 1
+        nodes: [
+          { id: 'count-up', kind: 'function', function: 'js', input: { run: callback }, next: 'check' }
+        ]
+      })
+      fromExpression = captureFlowPayload({
+        schema_version: 1
+        nodes: [
+          { id: 'count-up', kind: 'function', function: 'js', input: { expression: callback.toString() }, next: 'check' }
+        ]
+      })
+
+      JSON.parse(fromCallback).should.eql(JSON.parse(fromExpression))
+      JSON.parse(fromCallback).nodes[0].input.should.not.have.property('run')
+      JSON.parse(fromCallback).nodes[0].input.expression.should.eql(callback.toString())
+
+    it 'rejects a js node with both run and expression', ->
+      callback = -> { attempts: 1 }
+
+      try
+        captureFlowPayload({
+          schema_version: 1
+          nodes: [
+            { id: 'count-up', kind: 'function', function: 'js', input: { run: callback, expression: callback.toString() } }
+          ]
+        })
+        throw new Error('expected invalid_definition')
+      catch error
+        error.code.should.eql('invalid_definition')
+        error.message.should.eql('js node cannot have both input.run and input.expression')
+
+    it 'rejects a js node with neither run nor expression', ->
+      try
+        captureFlowPayload({
+          schema_version: 1
+          nodes: [
+            { id: 'count-up', kind: 'function', function: 'js', input: {} }
+          ]
+        })
+        throw new Error('expected invalid_definition')
+      catch error
+        error.code.should.eql('invalid_definition')
+
+    it 'treats an explicit null as absent', ->
+      callback = -> { attempts: 1 }
+
+      payload = captureFlowPayload({
+        schema_version: 1
+        nodes: [
+          { id: 'count-up', kind: 'function', function: 'js', input: { run: callback, expression: null } }
+        ]
+      })
+
+      JSON.parse(payload).nodes[0].input.should.eql({ expression: callback.toString() })
+
+    it 'accepts a callback whose source contains the native-code text', ->
+      callback = -> '[native code]'
+
+      payload = captureFlowPayload({
+        schema_version: 1
+        nodes: [
+          { id: 'count-up', kind: 'function', function: 'js', input: { run: callback } }
+        ]
+      })
+
+      JSON.parse(payload).nodes[0].input.expression.should.eql(callback.toString())
+
+    it 'rejects a callback that cannot be stringified', ->
+      nativeError = null
+      thrownError = null
+
+      try
+        captureFlowPayload({
+          schema_version: 1
+          nodes: [
+            { id: 'count-up', kind: 'function', function: 'js', input: { run: Math.max } }
+          ]
+        })
+      catch error
+        nativeError = error
+
+      bad = -> { attempts: 1 }
+      bad.toString = -> throw new Error('nope')
+
+      try
+        captureFlowPayload({
+          schema_version: 1
+          nodes: [
+            { id: 'count-up', kind: 'function', function: 'js', input: { run: bad } }
+          ]
+        })
+      catch error
+        thrownError = error
+
+      nativeError.code.should.eql('invalid_definition')
+      thrownError.code.should.eql('invalid_definition')
+      nativeError.message.should.eql('input.run cannot be stringified')
+      thrownError.message.should.eql('input.run cannot be stringified')
+
+    it 'rejects input.run on a non-js node', ->
+      try
+        captureFlowPayload({
+          schema_version: 1
+          nodes: [
+            { id: 'search', kind: 'function', function: 'search_records', input: { run: -> { ok: true } } }
+          ]
+        })
+        throw new Error('expected invalid_definition')
+      catch error
+        error.code.should.eql('invalid_definition')
+
+    it 'does not change the author options object', ->
+      callback = -> { attempts: 1 }
+      options =
+        schema_version: 1
+        nodes: [
+          { id: 'count-up', kind: 'function', function: 'js', input: { run: callback } }
+        ]
+
+      captureFlowPayload(options)
+      options.nodes[0].input.should.have.property('run')
+      options.nodes[0].input.should.not.have.property('expression')
+
+    it 'cannot be used in a calculation', ->
+      runtime.isCalculation = true
+
+      try
+        (-> FLOW({ schema_version: 1, nodes: [] }, ->)).should.throw('FLOW cannot be used in a calculation')
+      finally
+        runtime.isCalculation = false
+
   describe 'LOADFILE', ->
     it 'calls loadFile', ->
       params =

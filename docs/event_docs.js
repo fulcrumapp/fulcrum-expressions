@@ -490,6 +490,31 @@ function REQUEST() {}
 function GETDOCCONTEXT() {}
 
 
+////FLOW
+
+/**
+ * FLOW
+ * Run a headless workflow from a form data event.
+ * FLOW sends an options object to the host. A `js` function node should set
+ * `input.run` to a callback. The engine sends `input.run.toString()` as
+ * `input.expression` and does not send `input.run`. A callback and the same
+ * source string produce the same payload. A node with both, or neither, is
+ * rejected with `invalid_definition`. A callback that cannot be stringified is
+ * rejected. The callback cannot use variables from outside its own source.
+ * @param {Object} options The flow options, including `schema_version` and `nodes`
+ * @example
+ * FLOW({
+ *   schema_version: 1,
+ *   nodes: [
+ *     { id: 'count-up', kind: 'function', function: 'js',
+ *       input: { run: function(args) { return { attempts: (args.state.attempts || 0) + 1 }; } },
+ *       next: 'check' }
+ *   ]
+ * });
+ */
+function FLOW() {}
+
+
 ////SETASSIGNMENT
 
 /**

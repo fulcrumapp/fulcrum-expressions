@@ -498,6 +498,25 @@
             ]
         },
         {
+            "name": "FLOW",
+            "access": "",
+            "virtual": false,
+            "description": "FLOW\nRun a headless workflow from a form data event.\nFLOW sends an options object to the host. A `js` function node should set\n`input.run` to a callback. The engine sends `input.run.toString()` as\n`input.expression` and does not send `input.run`. A callback and the same\nsource string produce the same payload. A node with both, or neither, is\nrejected with `invalid_definition`. A callback that cannot be stringified is\nrejected. The callback cannot use variables from outside its own source.",
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "Object",
+                    "description": "The flow options, including `schema_version` and `nodes`",
+                    "default": "",
+                    "optional": "",
+                    "nullable": ""
+                }
+            ],
+            "examples": [
+                "FLOW({\n  schema_version: 1,\n  nodes: [\n    { id: 'count-up', kind: 'function', function: 'js',\n      input: { run: function(args) { return { attempts: (args.state.attempts || 0) + 1 }; } },\n      next: 'check' }\n  ]\n});"
+            ]
+        },
+        {
             "name": "SETASSIGNMENT",
             "access": "",
             "virtual": false,

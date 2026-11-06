@@ -1711,6 +1711,101 @@ exports.GETDOCCONTEXT = (options, callback) ->
   ragScheduleAsync(dispatch)
   return
 
+flowInvalidDefinition = (message) ->
+  error = new Error(message)
+  error.code = 'invalid_definition'
+  error
+
+flowFieldPresent = (object, key) ->
+  return false unless object? and _.isObject(object) and not _.isArray(object)
+  return false unless Object.prototype.hasOwnProperty.call(object, key)
+  object[key]?
+
+flowIsNativeFunction = (callback) ->
+  try
+    source = Function.prototype.toString.call(callback)
+  catch
+    return false
+
+  /^\s*function\s*[^(]*\([^)]*\)\s*\{\s*\[native code\]\s*\}\s*$/.test(source)
+
+flowCallbackSource = (callback) ->
+  unless _.isFunction(callback)
+    throw flowInvalidDefinition('input.run must be a function')
+
+  if flowIsNativeFunction(callback)
+    throw flowInvalidDefinition('input.run cannot be stringified')
+
+  try
+    source = callback.toString()
+  catch
+    throw flowInvalidDefinition('input.run cannot be stringified')
+
+  unless _.isString(source) and source.length > 0
+    throw flowInvalidDefinition('input.run cannot be stringified')
+
+  source
+
+flowNormalizeJsInput = (input) ->
+  input = {} unless _.isObject(input) and not _.isArray(input)
+  hasRun = flowFieldPresent(input, 'run')
+  hasExpression = flowFieldPresent(input, 'expression')
+
+  if hasRun and hasExpression
+    throw flowInvalidDefinition('js node cannot have both input.run and input.expression')
+
+  unless hasRun or hasExpression
+    throw flowInvalidDefinition('js node must have input.run or input.expression')
+
+  normalized = {}
+
+  for key, value of input
+    continue if key is 'run'
+    continue if key is 'expression' and not value?
+    normalized[key] = value
+
+  normalized.expression = flowCallbackSource(input.run) if hasRun
+  normalized
+
+flowNormalizeNode = (node) ->
+  return node unless _.isObject(node) and not _.isArray(node)
+
+  input = node.input
+  hasRun = flowFieldPresent(input, 'run')
+  isJs = node.kind is 'function' and node.function is 'js'
+
+  if isJs
+    normalized = _.clone(node)
+    normalized.input = flowNormalizeJsInput(input)
+    return normalized
+
+  if hasRun
+    throw flowInvalidDefinition('input.run is only allowed on a js function node')
+
+  node
+
+flowNormalizeOptions = (options) ->
+  ERROR('options must be provided') unless options? and _.isObject(options) and not _.isArray(options)
+
+  return options unless _.isArray(options.nodes)
+
+  normalized = _.clone(options)
+  normalized.nodes = options.nodes.map(flowNormalizeNode)
+  normalized
+
+exports.FLOW = (options, callback) ->
+  ERROR('options must be provided') unless options?
+  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+
+  callback ?= () ->
+
+  normalized = flowNormalizeOptions(options)
+
+  completion = (error, result) =>
+    callback(error, result)
+
+  HostFunctions.flow(JSON.stringify(normalized), completion)
+
 exports.LOADFILE = (options, callback) ->
   ERROR('options must be provided') unless options?
   ERROR('options.name must be a string') if not _.isString(options.name)
@@ -2945,6 +3040,14 @@ host.recognizeText = (options, callback) ->
 
   if hostFunctionExists('recognizeText')
     hostAsyncFunctionCall('recognizeText', args, callback)
+  else
+    callback(new Error('Not Supported'), null, null)
+
+host.flow = (options, callback) ->
+  args = [options]
+
+  if hostFunctionExists('flow')
+    hostAsyncFunctionCall('flow', args, callback)
   else
     callback(new Error('Not Supported'), null, null)
 
