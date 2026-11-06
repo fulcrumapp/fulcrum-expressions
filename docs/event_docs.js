@@ -501,7 +501,9 @@ function GETDOCCONTEXT() {}
  * source string produce the same payload. A node with both, or neither, is
  * rejected with `invalid_definition`. A callback that cannot be stringified is
  * rejected. The callback cannot use variables from outside its own source.
+ * An optional completion callback receives an error, or the global state on success.
  * @param {Object} options The flow options, including `schema_version` and `nodes`
+ * @param {Function} [callback] Called with `(error, state)` when the run finishes
  * @example
  * FLOW({
  *   schema_version: 1,

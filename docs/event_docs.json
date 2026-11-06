@@ -501,7 +501,7 @@
             "name": "FLOW",
             "access": "",
             "virtual": false,
-            "description": "FLOW\nRun a headless workflow from a form data event.\nFLOW sends an options object to the host. A `js` function node should set\n`input.run` to a callback. The engine sends `input.run.toString()` as\n`input.expression` and does not send `input.run`. A callback and the same\nsource string produce the same payload. A node with both, or neither, is\nrejected with `invalid_definition`. A callback that cannot be stringified is\nrejected. The callback cannot use variables from outside its own source.",
+            "description": "FLOW\nRun a headless workflow from a form data event.\nFLOW sends an options object to the host. A `js` function node should set\n`input.run` to a callback. The engine sends `input.run.toString()` as\n`input.expression` and does not send `input.run`. A callback and the same\nsource string produce the same payload. A node with both, or neither, is\nrejected with `invalid_definition`. A callback that cannot be stringified is\nrejected. The callback cannot use variables from outside its own source.\nAn optional completion callback receives an error, or the global state on success.",
             "parameters": [
                 {
                     "name": "options",
@@ -509,6 +509,14 @@
                     "description": "The flow options, including `schema_version` and `nodes`",
                     "default": "",
                     "optional": "",
+                    "nullable": ""
+                },
+                {
+                    "name": "callback",
+                    "type": "function",
+                    "description": "Called with `(error, state)` when the run finishes",
+                    "default": "",
+                    "optional": true,
                     "nullable": ""
                 }
             ],

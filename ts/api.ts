@@ -2437,9 +2437,11 @@ interface FlowOptions {
 /**
  * Sends a flow definition to the host. \`input.run\` is stringified first.
  * On an authoring failure, this throws an error whose \`code\` is \`invalid_definition\`.
- * The completion callback is not part of this contract.
+ * The completion callback is optional. It is called with an error when the run
+ * does not start or does not succeed, and with the global state object when it does.
  */
-declare function FLOW(options: FlowOptions): void;
+ type FlowCompletion = (error: Error | null, state?: Record<string, unknown>) => void;
+declare function FLOW(options: FlowOptions, callback?: FlowCompletion): void;
 
 /**
  * Returns the current form object.

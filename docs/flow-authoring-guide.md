@@ -47,8 +47,20 @@ FLOW({
 `flow_id` is optional. If you set it, use lowercase letters, digits, and `-`,
 at most 64 characters. It is copied into reports.
 
-Delivering the run outcome back to the form is not part of this contract. Do not
-invent a callback shape here.
+The completion callback is optional. On success it receives the global state.
+On a run that does not start, or a run whose status is `failed` or `cancelled`,
+it receives an error and no state.
+
+```js
+FLOW({
+  schema_version: 1,
+  nodes: [ /* nodes */ ]
+}, function(error, state) {
+  if (error) {
+    return;
+  }
+});
+```
 
 If the plan attribute that enables `FLOW()` is off, the call fails with
 `flow_disabled` and nothing is validated further.

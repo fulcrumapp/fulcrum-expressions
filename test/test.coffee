@@ -3648,6 +3648,37 @@ describe "SETMODE", ->
       finally
         runtime.isCalculation = false
 
+    it 'starts the flow when no callback is passed', ->
+      payload = captureFlowPayload({
+        schema_version: 1
+        nodes: [
+          { id: 'hello', kind: 'agentic', instruction: 'Start' }
+        ]
+      })
+
+      JSON.parse(payload).nodes[0].id.should.eql('hello')
+
+    it 'gives the callback the global state on success', ->
+      runtime.$$flow = (payload, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [ null, JSON.stringify(status: 'completed', state: { attempts: 2 }) ]
+        runtime.finishAsync()
+
+      FLOW { schema_version: 1, nodes: [] }, (error, state) ->
+        shouldBeNull(error)
+        state.should.eql({ attempts: 2 })
+
+    it 'gives the callback an error when the run fails', ->
+      runtime.$$flow = (payload, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [ null, { status: 'failed', termination_reason: 'aborted', error: { code: 'aborted', message: 'stopped' } } ]
+        runtime.finishAsync()
+
+      FLOW { schema_version: 1, nodes: [] }, (error, state) ->
+        error.code.should.eql('aborted')
+        error.message.should.eql('stopped')
+        (state is undefined).should.be.true()
+
   describe 'LOADFILE', ->
     it 'calls loadFile', ->
       params =
