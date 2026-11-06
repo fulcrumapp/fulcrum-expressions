@@ -178,4 +178,6 @@ jobs:
         run: node .github/actions/npm-common/remote-tag.js --reject-newer
 
       - name: Publish legacy and hybrid bundles
+        env:
+          EXPRESSION_SANDBOX_ALLOWED_ORIGINS: ${{ vars.EXPRESSION_SANDBOX_ALLOWED_ORIGINS }}
         run: ./script/deploy production --yes

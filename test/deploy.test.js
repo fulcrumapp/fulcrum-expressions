@@ -55,22 +55,31 @@ assert.strictEqual(deployment.steps.find((step) => step.name === "Publish legacy
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
 const binDirectory = path.join(temporaryRoot, "bin");
 const callLog = path.join(temporaryRoot, "aws-calls.jsonl");
+const proxyCapture = path.join(temporaryRoot, "uploaded-proxy.js");
 const awsStub = path.join(binDirectory, "aws");
 fs.mkdirSync(binDirectory);
 fs.writeFileSync(awsStub, [
   `#!${process.execPath}`,
   "const fs = require('fs');",
-  "fs.appendFileSync(process.env.AWS_CALL_LOG, `${JSON.stringify(process.argv.slice(2))}\\n`);",
+  "const args = process.argv.slice(2);",
+  "fs.appendFileSync(process.env.AWS_CALL_LOG, `${JSON.stringify(args)}\\n`);",
+  "if (args[0] === 's3' && args[1] === 'cp' && args[args.length - 1].endsWith('/expressions-proxy.js')) {",
+  "  fs.copyFileSync(args[args.length - 2], process.env.PROXY_CAPTURE);",
+  "}",
   "",
 ].join("\n"), { mode: 0o755 });
 
-function invokeDeploy(args, user) {
+function invokeDeploy(args, user, origins = "https://web.example.com") {
   fs.writeFileSync(callLog, "");
+  if (fs.existsSync(proxyCapture)) fs.unlinkSync(proxyCapture);
   const env = {
     ...process.env,
     AWS_CALL_LOG: callLog,
+    PROXY_CAPTURE: proxyCapture,
     PATH: `${binDirectory}${path.delimiter}${process.env.PATH}`,
   };
+  if (origins === null) delete env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS;
+  else env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS = origins;
   if (user === undefined) delete env.USER;
   else env.USER = user;
   const result = spawnSync(deployScript, args, {
@@ -83,6 +92,7 @@ function invokeDeploy(args, user) {
     status: result.status,
     output: result.stdout + result.stderr,
     calls: fs.readFileSync(callLog, "utf8").trim().split("\n").filter(Boolean).map(JSON.parse),
+    proxy: fs.existsSync(proxyCapture) ? fs.readFileSync(proxyCapture, "utf8") : null,
   };
 }
 
@@ -129,7 +139,13 @@ function assertUploads(result, bucket) {
     const source = call[call.length - 2];
     const relativePath = target.split("/expv1/")[1];
     const distPathSegments = relativePath.split("/");
-    assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
+    if (relativePath === "expressions-proxy.js") {
+      assert.match(path.basename(source), /^expression-proxy\./);
+      assert.ok(result.proxy.includes("https://web.example.com"));
+      assert.ok(!result.proxy.includes("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__"));
+    } else {
+      assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
+    }
     assert.strictEqual(
       optionValue(call, "--content-type", target),
       target.endsWith(".html") ? "text/html" : "application/javascript",
@@ -310,6 +326,13 @@ try {
   assert.strictEqual(annotated.status, 0, annotated.stderr);
   realGit(["--git-dir", bare, "update-ref", "refs/tags/v1.2.4", actualSha]);
   assert.notStrictEqual(runAgainstRemote().status, 0);
+
+  for (const origins of [null, "https://*.example.com"]) {
+    const invalid = invokeDeploy(["explicit-preview"], undefined, origins);
+    assert.notStrictEqual(invalid.status, 0);
+    assert.match(invalid.output, /trusted origins/i);
+    assert.deepStrictEqual(invalid.calls, []);
+  }
 
   const preview = invokeDeploy([], "expression-preview-test");
   assert.strictEqual(preview.status, 0, preview.output);
