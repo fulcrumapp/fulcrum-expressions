@@ -2365,7 +2365,7 @@ declare function FIXED(num: any): string | undefined;
  *
  * A \`js\` function node accepts \`input.run\` as a callback. The engine sends
  * that callback's source as \`input.expression\` and never sends \`input.run\`.
- * Delivering the run outcome to the form is not part of this contract.
+ * An optional completion callback receives an error, or the global state on success.
  */
 interface FlowJsRunArgs {
     form: Record<string, unknown>;

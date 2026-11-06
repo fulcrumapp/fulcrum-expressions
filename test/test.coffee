@@ -3679,6 +3679,46 @@ describe "SETMODE", ->
         error.message.should.eql('stopped')
         (state is undefined).should.be.true()
 
+    it 'rejects a non-function callback before the host call', ->
+      called = false
+      runtime.$$flow = -> called = true
+
+      for callback in [false, 0, '']
+        (-> FLOW({ schema_version: 1, nodes: [] }, callback)).should.throw('callback must be a function')
+
+      called.should.eql(false)
+
+    it 'gives the callback the host error', ->
+      runtime.$$flow = (payload, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [ new Error('host down'), null ]
+        runtime.finishAsync()
+
+      FLOW { schema_version: 1, nodes: [] }, (error, state) ->
+        error.message.should.eql('host down')
+        (state is undefined).should.be.true()
+
+    it 'gives the callback an error when the result is not JSON', ->
+      runtime.$$flow = (payload, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [ null, 'not-json' ]
+        runtime.finishAsync()
+
+      FLOW { schema_version: 1, nodes: [] }, (error, state) ->
+        error.message.should.eql('not-json')
+        (state is undefined).should.be.true()
+
+    it 'gives the callback an error when the run is cancelled', ->
+      runtime.$$flow = (payload, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [ null, { status: 'cancelled', termination_reason: 'cancelled' } ]
+        runtime.finishAsync()
+
+      FLOW { schema_version: 1, nodes: [] }, (error, state) ->
+        error.code.should.eql('cancelled')
+        error.message.should.eql('cancelled')
+        (state is undefined).should.be.true()
+
   describe 'LOADFILE', ->
     it 'calls loadFile', ->
       params =
