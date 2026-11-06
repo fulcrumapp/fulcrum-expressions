@@ -78,7 +78,6 @@ export interface FlowJsFunctionNode extends FlowNodeLimits {
 
 type FlowToolInput = Record<string, unknown> & {
   run?: never;
-  expression?: never;
 };
 
 export interface FlowToolFunctionNode extends FlowNodeLimits {
@@ -122,7 +121,7 @@ export type FlowCompletion = (
  * The completion callback is optional. It is called with an error when the run
  * does not start or does not succeed, and with the global state object when it does.
  * A `js` node must set exactly one of `input.run` or `input.expression`.
- * Other function nodes must not set `run` or `expression`.
+ * Other function nodes must not set `run`. `expression` remains a normal tool argument.
  */
 export default function FLOW<N extends FlowNodeOptions>(
   options: Omit<FlowOptions, 'nodes'> & { nodes: Array<CheckedFlowNode<N>> },
