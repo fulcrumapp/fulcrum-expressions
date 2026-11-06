@@ -20,6 +20,11 @@ FLOW({
 });
 ```
 
+Form authors should follow [flow-authoring-guide.md](flow-authoring-guide.md).
+That guide shows how to write a flow, including the pole-inspection example. It
+does not restate these rules. Validation stays in the shared KMP validator. Do
+not add a second copy in the expression engine.
+
 ## Contract identity
 
 | Field | Requirement |

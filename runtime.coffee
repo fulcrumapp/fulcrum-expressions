@@ -367,6 +367,7 @@ class Runtime
       OPENURL: true
       OPENEXTENSION: true
       PROGRESS: true
+      FLOW: true
       GETDOCCONTEXT: true
       RECOGNIZETEXT: true
       REQUEST: true

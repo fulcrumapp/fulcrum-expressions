@@ -2361,6 +2361,51 @@ declare function FIXED(num: number, decimals?: number): string | undefined;
 declare function FIXED(num: any): string | undefined;
 
 /**
+ * Runs a headless FLOW() data event.
+ *
+ * A \`js\` function node accepts \`input.run\` as a callback. The engine sends
+ * that callback's source as \`input.expression\` and never sends \`input.run\`.
+ */
+interface FlowJsRunArgs {
+    form: object;
+    state: object;
+    tools: object;
+}
+interface FlowJsInput {
+    /**
+     * Authoring callback. Converted with \`toString()\` before the payload is sent.
+     * Do not set this together with \`expression\`.
+     */
+    run?: (args: FlowJsRunArgs) => object;
+    /**
+     * Wire form of a \`js\` node. A string of 1 to 4096 characters.
+     * Do not set this together with \`run\`.
+     */
+    expression?: string;
+}
+interface FlowNodeOptions {
+    id: string;
+    kind: 'agentic' | 'function' | 'decision';
+    function?: string;
+    input?: FlowJsInput | object;
+    instruction?: string;
+    next?: string;
+}
+interface FlowOptions {
+    schema_version: number;
+    flow_id?: string;
+    nodes: FlowNodeOptions[];
+}
+interface FlowError extends Error {
+    code: 'invalid_definition';
+}
+/**
+ * Sends a flow definition to the host. \`input.run\` is stringified first.
+ * On an authoring failure, this throws an error whose \`code\` is \`invalid_definition\`.
+ */
+declare function FLOW(options: FlowOptions, callback?: (error: Error | null, result: object | null) => void): void;
+
+/**
  * Returns the current form object.
  *
  * View Documentation - https://docs.fulcrumapp.com/docs/calculations-ref-form
