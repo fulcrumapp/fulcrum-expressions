@@ -2,9 +2,31 @@ const assert = require("assert");
 const fs = require("fs");
 const vm = require("vm");
 const coffee = require("coffee-script");
+const trustedOrigins = require("../trusted-origins");
 
 const source = coffee.compile(fs.readFileSync("expressions-proxy.coffee", "utf8"));
 const origin = "https://web.example.com";
+
+{
+  const allowed = [origin, "http://localhost:3000", "http://127.0.0.1:3000", "http://[::1]:3000"];
+  const result = trustedOrigins(allowed);
+  assert.deepStrictEqual(result, allowed);
+  assert.notStrictEqual(result, allowed);
+  allowed.push("https://another.example.com");
+  assert.strictEqual(result.length, 4);
+
+  for (const invalid of [
+    null, [], Array(1), [origin, null], [origin, "https://*.example.com"],
+    ["https://user@web.example.com"], ["https://:password@web.example.com"],
+    ["https://user:password@web.example.com"], ["https://web.example.com/"],
+    ["https://web.example.com?query=1"], ["https://web.example.com:443"],
+    ["HTTPS://web.example.com"], ["http://web.example.com"],
+    ["http://localhost.example.com"], ["http://192.168.1.1"],
+    ["file:///tmp/file"], ["null"],
+  ]) {
+    assert.deepStrictEqual(trustedOrigins(invalid), [], `invalid policy ${JSON.stringify(invalid)}`);
+  }
+}
 
 function harness(policy = [origin], requestImpl) {
   const replies = [];
