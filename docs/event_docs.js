@@ -502,7 +502,6 @@ function GETDOCCONTEXT() {}
  * rejected with `invalid_definition`. A callback that cannot be stringified is
  * rejected. The callback cannot use variables from outside its own source.
  * @param {Object} options The flow options, including `schema_version` and `nodes`
- * @param {Function} [callback] Called with `(error, result)` when the host finishes
  * @example
  * FLOW({
  *   schema_version: 1,

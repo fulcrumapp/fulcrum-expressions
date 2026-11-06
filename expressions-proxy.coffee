@@ -99,6 +99,8 @@ class ExpressionEngine
       @respond(name: 'hostFunction', functionName: 'loadForm', argumentList: [options, callbackID])
     $$runtime["$$recognizeText"] = (options, callbackID) =>
       @respond(name: 'hostFunction', functionName: 'recognizeText', argumentList: [options, callbackID])
+    $$runtime["$$flow"] = (options, callbackID) =>
+      @respond(name: 'hostFunction', functionName: 'flow', argumentList: [options, callbackID])
 
 proxy = new ExpressionEngine
 

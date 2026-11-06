@@ -3572,6 +3572,18 @@ describe "SETMODE", ->
 
       JSON.parse(payload).nodes[0].input.should.eql({ expression: callback.toString() })
 
+    it 'accepts a callback whose source contains the native-code text', ->
+      callback = -> '[native code]'
+
+      payload = captureFlowPayload({
+        schema_version: 1
+        nodes: [
+          { id: 'count-up', kind: 'function', function: 'js', input: { run: callback } }
+        ]
+      })
+
+      JSON.parse(payload).nodes[0].input.expression.should.eql(callback.toString())
+
     it 'rejects a callback that cannot be stringified', ->
       nativeError = null
       thrownError = null

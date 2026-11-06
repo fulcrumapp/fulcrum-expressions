@@ -510,14 +510,6 @@
                     "default": "",
                     "optional": "",
                     "nullable": ""
-                },
-                {
-                    "name": "callback",
-                    "type": "function",
-                    "description": "Called with `(error, result)` when the host finishes",
-                    "default": "",
-                    "optional": true,
-                    "nullable": ""
                 }
             ],
             "examples": [

@@ -2365,45 +2365,81 @@ declare function FIXED(num: any): string | undefined;
  *
  * A \`js\` function node accepts \`input.run\` as a callback. The engine sends
  * that callback's source as \`input.expression\` and never sends \`input.run\`.
+ * Delivering the run outcome to the form is not part of this contract.
  */
 interface FlowJsRunArgs {
-    form: object;
-    state: object;
-    tools: object;
+    form: Record<string, unknown>;
+    state: Record<string, unknown>;
+    tools: Record<string, (args: Record<string, unknown>) => Promise<unknown>>;
 }
+ type FlowJsCallback = (args: FlowJsRunArgs) => object | Promise<object>;
 interface FlowJsInput {
     /**
      * Authoring callback. Converted with \`toString()\` before the payload is sent.
      * Do not set this together with \`expression\`.
      */
-    run?: (args: FlowJsRunArgs) => object;
+    run?: FlowJsCallback;
     /**
      * Wire form of a \`js\` node. A string of 1 to 4096 characters.
      * Do not set this together with \`run\`.
      */
     expression?: string;
 }
-interface FlowNodeOptions {
-    id: string;
-    kind: 'agentic' | 'function' | 'decision';
-    function?: string;
-    input?: FlowJsInput | object;
-    instruction?: string;
+interface FlowOutputDeclaration {
+    [key: string]: 'string' | 'number' | 'boolean';
+}
+interface FlowRetry {
+    max_attempts: number;
+    on?: Array<'tool_error' | 'timeout'>;
+}
+interface FlowDecisionWhen {
+    ref: string;
+    op: 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'exists' | 'not_exists';
+    value?: unknown;
+}
+interface FlowNodeLimits {
+    timeout_seconds?: number;
+    max_calls?: number;
+    on_error?: string;
     next?: string;
 }
+interface FlowAgenticNode extends FlowNodeLimits {
+    id: string;
+    kind: 'agentic';
+    instruction: string;
+    interactive?: boolean;
+    model?: string;
+    output?: FlowOutputDeclaration;
+}
+interface FlowFunctionNode extends FlowNodeLimits {
+    id: string;
+    kind: 'function';
+    function: string;
+    input?: FlowJsInput | Record<string, unknown>;
+    retry?: FlowRetry;
+}
+interface FlowDecisionNode {
+    id: string;
+    kind: 'decision';
+    cases: Array<{
+        when: FlowDecisionWhen;
+        next: string;
+    }>;
+    default: string;
+    max_calls?: number;
+}
+ type FlowNodeOptions = FlowAgenticNode | FlowFunctionNode | FlowDecisionNode;
 interface FlowOptions {
-    schema_version: number;
+    schema_version: 1;
     flow_id?: string;
     nodes: FlowNodeOptions[];
-}
-interface FlowError extends Error {
-    code: 'invalid_definition';
 }
 /**
  * Sends a flow definition to the host. \`input.run\` is stringified first.
  * On an authoring failure, this throws an error whose \`code\` is \`invalid_definition\`.
+ * The completion callback is not part of this contract.
  */
-declare function FLOW(options: FlowOptions, callback?: (error: Error | null, result: object | null) => void): void;
+declare function FLOW(options: FlowOptions): void;
 
 /**
  * Returns the current form object.

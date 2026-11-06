@@ -1721,16 +1721,27 @@ flowFieldPresent = (object, key) ->
   return false unless Object.prototype.hasOwnProperty.call(object, key)
   object[key]?
 
+flowIsNativeFunction = (callback) ->
+  try
+    source = Function.prototype.toString.call(callback)
+  catch
+    return false
+
+  /^\s*function\s*[^(]*\([^)]*\)\s*\{\s*\[native code\]\s*\}\s*$/.test(source)
+
 flowCallbackSource = (callback) ->
   unless _.isFunction(callback)
     throw flowInvalidDefinition('input.run must be a function')
+
+  if flowIsNativeFunction(callback)
+    throw flowInvalidDefinition('input.run cannot be stringified')
 
   try
     source = callback.toString()
   catch
     throw flowInvalidDefinition('input.run cannot be stringified')
 
-  unless _.isString(source) and source.length > 0 and source.indexOf('[native code]') is -1
+  unless _.isString(source) and source.length > 0
     throw flowInvalidDefinition('input.run cannot be stringified')
 
   source
