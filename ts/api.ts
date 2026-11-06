@@ -2372,19 +2372,24 @@ interface FlowJsRunArgs {
     state: Record<string, unknown>;
     tools: Record<string, (args: Record<string, unknown>) => Promise<unknown>>;
 }
- type FlowJsCallback = (args: FlowJsRunArgs) => object | Promise<object>;
-interface FlowJsInput {
+ type FlowJsResult = Record<string, unknown>;
+ type FlowJsCallback = (args: FlowJsRunArgs) => FlowJsResult | Promise<FlowJsResult>;
+/**
+ * Exactly one of \`run\` or \`expression\`. The engine sends \`run\` as \`expression\`.
+ */
+ type FlowJsInput = {
     /**
      * Authoring callback. Converted with \`toString()\` before the payload is sent.
-     * Do not set this together with \`expression\`.
      */
-    run?: FlowJsCallback;
+    run: FlowJsCallback;
+    expression?: never;
+} | {
     /**
      * Wire form of a \`js\` node. A string of 1 to 4096 characters.
-     * Do not set this together with \`run\`.
      */
-    expression?: string;
-}
+    expression: string;
+    run?: never;
+};
 interface FlowOutputDeclaration {
     [key: string]: 'string' | 'number' | 'boolean';
 }
@@ -2411,13 +2416,25 @@ interface FlowAgenticNode extends FlowNodeLimits {
     model?: string;
     output?: FlowOutputDeclaration;
 }
-interface FlowFunctionNode extends FlowNodeLimits {
+interface FlowJsFunctionNode extends FlowNodeLimits {
+    id: string;
+    kind: 'function';
+    function: 'js';
+    input: FlowJsInput;
+    retry?: FlowRetry;
+}
+type FlowToolInput = Record<string, unknown> & {
+    run?: never;
+    expression?: never;
+};
+interface FlowToolFunctionNode extends FlowNodeLimits {
     id: string;
     kind: 'function';
     function: string;
-    input?: FlowJsInput | Record<string, unknown>;
+    input?: FlowToolInput;
     retry?: FlowRetry;
 }
+ type FlowFunctionNode = FlowJsFunctionNode | FlowToolFunctionNode;
 interface FlowDecisionNode {
     id: string;
     kind: 'decision';
@@ -2434,14 +2451,24 @@ interface FlowOptions {
     flow_id?: string;
     nodes: FlowNodeOptions[];
 }
+type CheckedFlowNode<N> = N extends {
+    kind: 'function';
+    function: 'js';
+} ? (N extends {
+    input: FlowJsInput;
+} ? N : never) : N;
+ type FlowCompletion = (error: Error | null, state?: Record<string, unknown>) => void;
 /**
  * Sends a flow definition to the host. \`input.run\` is stringified first.
  * On an authoring failure, this throws an error whose \`code\` is \`invalid_definition\`.
  * The completion callback is optional. It is called with an error when the run
  * does not start or does not succeed, and with the global state object when it does.
+ * A \`js\` node must set exactly one of \`input.run\` or \`input.expression\`.
+ * Other function nodes must not set \`run\` or \`expression\`.
  */
- type FlowCompletion = (error: Error | null, state?: Record<string, unknown>) => void;
-declare function FLOW(options: FlowOptions, callback?: FlowCompletion): void;
+declare function FLOW<N extends FlowNodeOptions>(options: Omit<FlowOptions, 'nodes'> & {
+    nodes: Array<CheckedFlowNode<N>>;
+}, callback?: FlowCompletion): void;
 
 /**
  * Returns the current form object.
