@@ -19,8 +19,9 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 - Define the run outcome statuses and termination reasons.
 - Define the runtime correlation fields (flow, run, agent, session, node, tool, model, timing, outcome, error).
 - Define conformance and per-platform acceptance criteria for KMP, Android, iOS, and Web.
-- **Out of scope:** callback delivery of the outcome, progress reporting, the runtime, iOS and Web
-  implementation, and any client code change.
+- The optional completion callback delivers an error or the global state. A failed or cancelled
+  run uses `termination_reason` as the error message, not `error.message` from the run result. A host-level error is forwarded unchanged.
+- **Out of scope:** progress reporting, the runtime, iOS and Web implementation, and nested workflows.
 
 ## Capabilities
 
@@ -31,8 +32,8 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 
 ### Modified Capabilities
 
-- None. This spike introduces a contract and documentation; it does not alter existing runtime
-  requirements.
+- None. This spike introduces a contract and documentation. The expression-engine completion
+  callback and its generated declarations are the only production change. It does not add a workflow runtime.
 
 ## Impact
 

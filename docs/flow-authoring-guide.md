@@ -47,8 +47,24 @@ FLOW({
 `flow_id` is optional. If you set it, use lowercase letters, digits, and `-`,
 at most 64 characters. It is copied into reports.
 
-Delivering the run outcome back to the form is not part of this contract. Do not
-invent a callback shape here.
+The completion callback is optional. On success it receives the global state.
+On a run that does not start, or a run whose status is `failed` or `cancelled`,
+it receives an error and no state. A run that does not start forwards the host
+error unchanged. A failed or cancelled run uses `termination_reason` as the
+message, not `error.message` or `message` from the run result. A host result that is not JSON uses the message
+`FLOW result was not JSON` and code `invalid_result`. The host calls that callback. Progress
+events are still out of scope in the workflow contract.
+
+```js
+FLOW({
+  schema_version: 1,
+  nodes: [ /* nodes */ ]
+}, function(error, state) {
+  if (error) {
+    return;
+  }
+});
+```
 
 If the plan attribute that enables `FLOW()` is off, the call fails with
 `flow_disabled` and nothing is validated further.

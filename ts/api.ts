@@ -2365,7 +2365,7 @@ declare function FIXED(num: any): string | undefined;
  *
  * A \`js\` function node accepts \`input.run\` as a callback. The engine sends
  * that callback's source as \`input.expression\` and never sends \`input.run\`.
- * Delivering the run outcome to the form is not part of this contract.
+ * An optional completion callback receives an error, or the global state on success.
  */
 interface FlowJsRunArgs {
     form: Record<string, unknown>;
@@ -2457,16 +2457,18 @@ type CheckedFlowNode<N> = N extends {
 } ? (N extends {
     input: FlowJsInput;
 } ? N : never) : N;
+ type FlowCompletion = (error: Error | null, state?: Record<string, unknown>) => void;
 /**
  * Sends a flow definition to the host. \`input.run\` is stringified first.
  * On an authoring failure, this throws an error whose \`code\` is \`invalid_definition\`.
- * The completion callback is not part of this contract.
+ * The completion callback is optional. It is called with an error when the run
+ * does not start or does not succeed, and with the global state object when it does.
  * A \`js\` node must set exactly one of \`input.run\` or \`input.expression\`.
  * Other function nodes must not set \`run\`. \`expression\` remains a normal tool argument.
  */
 declare function FLOW<N extends FlowNodeOptions>(options: Omit<FlowOptions, 'nodes'> & {
     nodes: Array<CheckedFlowNode<N>>;
-}): void;
+}, callback?: FlowCompletion): void;
 
 /**
  * Returns the current form object.

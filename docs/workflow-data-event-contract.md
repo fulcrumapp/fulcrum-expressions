@@ -2,9 +2,13 @@
 
 This document defines the input of the `FLOW()` data event: the options object a form's
 JavaScript passes to create a flow. The host always runs it headless, with no chat. It is platform-neutral and is
-intended for KMP, Android, iOS, and Web. It defines the **options payload only**. The callback
-result, progress reporting, and the runtime that executes a workflow are follow-up work (see
-[Out of scope](#out-of-scope)).
+intended for KMP, Android, iOS, and Web. It defines the **options payload**. The expression
+also accepts an optional completion callback. The host calls that callback with an error, or with
+the global state when the run succeeds. A host result that is not JSON becomes an error with
+code `invalid_result` and the message `FLOW result was not JSON`; the raw host text is not copied
+into the message. A failed or cancelled run uses `termination_reason` as the callback error
+message. `error.message` and `message` inside that run result are not copied. A host-level error, the Error from the host call itself, is forwarded unchanged. Progress reporting and the runtime that executes a workflow
+remain follow-up work (see [Out of scope](#out-of-scope)).
 
 ## Where it fits
 
@@ -216,8 +220,9 @@ validated, because keys are created by nodes at run time.
 Every run ends in exactly one outcome: a `status` and, unless it completed, a `termination_reason`.
 The definition never sets the reason directly; the runtime derives it from what ended the run.
 A run ends only when nothing routes it onward: a failure that `on_error` sends to another node
-does not end the run. Each row below is exclusive of the others. Reporting the outcome back to the
-form (the callback) is follow-up work, but the vocabulary is fixed here so it stays consistent.
+does not end the run. Each row below is exclusive of the others. The optional completion
+callback reports that outcome to the form: an error, or the global state. Progress events
+remain follow-up work. This table fixes the vocabulary.
 
 | `status` | `termination_reason` | What ended the run |
 | --- | --- | --- |
@@ -250,9 +255,9 @@ These fields identify a run and describe what happened in it. The runtime assign
 `flow_id`, which it copies from the options. Any other field in this table that appears at the top
 level of the options fails validation with `invalid_definition`. The reservation does not apply
 inside nodes, where names such as `tool` and `model` keep their node meaning.
-They travel with the run outcome and with the progress reporting that is still follow-up work, so
-that every report about a run can be joined to the same identifiers. Optional fields are omitted
-when they have no value.
+They travel with the run report. The completion callback carries an error or the global state,
+not this table. Progress events that carry these fields are still follow-up work. Optional fields
+are omitted when they have no value.
 
 | Group | Field | Description |
 | --- | --- | --- |
@@ -275,8 +280,8 @@ Rules:
 - `record_id`, `form_id`, `session_id`, `agent_id`, and `model` are identifiers, not content. The
   [privacy](#privacy) rules apply to `error.message`.
 - Node fields appear only on node-level reports. Run-level reports omit them.
-- Which of these fields are carried by the callback and by progress events is decided in those
-  follow-ups; this table fixes their names and meanings.
+- The completion callback carries an error or the global state, not this table. Which of these
+  fields a progress event carries is still follow-up work. This table fixes their names and meanings.
 
 ## Loops and limits
 
@@ -458,19 +463,19 @@ Blocked platforms keep these criteria so that they can be scheduled without rede
 | Tool interactions | `function` nodes, `input`, and the global `state` |
 | Confirmations | An `agentic` node with a boolean `output`, then a `decision` |
 | Retries | `retry` on function nodes |
-| Completion, failure, cancellation, termination reasons | `end` and `abort` targets, and the [run outcome](#run-outcome) table; delivering it to the form is follow-up |
+| Completion, failure, cancellation, termination reasons | `end` and `abort` targets, and the [run outcome](#run-outcome) table. The form receives an error or the global state through the optional completion callback |
 | Nested workflows | Not supported in version 1 |
 | Idempotency | Not in the definition; the runtime queues runs internally |
 | Privacy, cardinality | Privacy section, size and count limits |
 | Ordering, sampling | Not applicable to the input; they belong to progress reporting (follow-up) |
-| Correlation fields (flow, agent, session, run, node, tool, model, timing, outcome, error) | [Runtime correlation fields](#runtime-correlation-fields); assigned by the runtime, delivered by the callback and progress follow-up |
+| Correlation fields (flow, agent, session, run, node, tool, model, timing, outcome, error) | [Runtime correlation fields](#runtime-correlation-fields); assigned by the runtime. The completion callback does not carry this table. Progress events that do are still follow-up |
 | Representative payloads and acceptance criteria across KMP, Android, iOS, and Web | [Representative payloads](#representative-payloads) and [cross-platform acceptance criteria](#cross-platform-acceptance-criteria) |
 
 ## Out of scope
 
-- Delivering the run outcome to the form through the callback, and progress reporting (node-level
-  events). A previous draft of this page described an event
-  log for that purpose; it can return as a separate contract.
+- Progress reporting (node-level events). The terminal outcome is the optional completion
+  callback: an error, or the global state. A previous draft of this page described an event
+  log for progress; it can return as a separate contract.
 - The runtime that executes a definition. On Android, `execute_workflow` is currently a stub that
   always returns `workflow_execution_unavailable`.
 - iOS and Web implementation, which is blocked until those platforms have the `ask_user` tool and a flow runtime.
@@ -508,4 +513,4 @@ Follow-up implementation backlog, in dependency order. This page does not create
 | 3d | **Run queue and reporting:** queue runs internally, run each to exactly one outcome, and report the runtime correlation fields | KMP, Android | 3a | Runs are queued and each ends with one outcome; the correlation fields are reported. |
 | 4 | **`ask_user` tool for flows:** let an `agentic` node ask the user through the `ask_user` tool, including a first `interactive` node that asks whether to run (evidence: FLCRM-21821) | Android | 2, 3a, 3c | The run starts at once, headless; a first `agentic` node with a boolean `output` followed by a `decision` that routes to `abort` ends the run as `failed` (`aborted`) when the user declines. |
 | 5 | **Validation tests and authoring docs:** tests for every rule above and a form-author guide (evidence: `Inference.kt` and its tests) | QA, docs | 1a, 1b, 2, 3a, 3b, 3c, 3d | Each rule and error code has an automated test; the guide has the pole-inspection example. |
-| 6 | **Deferred:** callback delivery of the run outcome, and progress reporting; iOS and Web; nested workflows | Product, KMP, iOS, Web | 3a, 3b, 3c, 3d | Create as separate tickets when scheduled. iOS and Web are blocked until those platforms have the `ask_user` tool and a flow runtime. |
+| 6 | **Deferred:** progress reporting; iOS and Web; nested workflows | Product, KMP, iOS, Web | 3a, 3b, 3c, 3d | The terminal outcome is the optional completion callback. Progress, iOS, and Web remain separate tickets. iOS and Web are blocked until those platforms have the `ask_user` tool and a flow runtime. |

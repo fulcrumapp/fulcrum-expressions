@@ -3,7 +3,7 @@
  *
  * A `js` function node accepts `input.run` as a callback. The engine sends
  * that callback's source as `input.expression` and never sends `input.run`.
- * Delivering the run outcome to the form is not part of this contract.
+ * An optional completion callback receives an error, or the global state on success.
  */
 
 export interface FlowJsRunArgs {
@@ -111,14 +111,21 @@ type CheckedFlowNode<N> = N extends { kind: 'function'; function: 'js' }
   ? (N extends { input: FlowJsInput } ? N : never)
   : N;
 
+export type FlowCompletion = (
+  error: Error | null,
+  state?: Record<string, unknown>
+) => void;
+
 /**
  * Sends a flow definition to the host. `input.run` is stringified first.
  * On an authoring failure, this throws an error whose `code` is `invalid_definition`.
- * The completion callback is not part of this contract.
+ * The completion callback is optional. It is called with an error when the run
+ * does not start or does not succeed, and with the global state object when it does.
  * A `js` node must set exactly one of `input.run` or `input.expression`.
  * Other function nodes must not set `run`. `expression` remains a normal tool argument.
  */
 export default function FLOW<N extends FlowNodeOptions>(
-  options: Omit<FlowOptions, 'nodes'> & { nodes: Array<CheckedFlowNode<N>> }
+  options: Omit<FlowOptions, 'nodes'> & { nodes: Array<CheckedFlowNode<N>> },
+  callback?: FlowCompletion
 ): void
 {}

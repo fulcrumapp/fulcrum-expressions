@@ -1793,18 +1793,53 @@ flowNormalizeOptions = (options) ->
   normalized.nodes = options.nodes.map(flowNormalizeNode)
   normalized
 
+flowParseResult = (result) ->
+  return result unless _.isString(result)
+
+  try
+    JSON.parse(result)
+  catch
+    null
+
+flowRunFailure = (result) ->
+  message = result?.termination_reason or result?.status or 'FLOW run failed'
+  error = new Error(message)
+  error.code = result?.error?.code or result?.termination_reason or result?.status or 'failed'
+  error
+
+flowStateFromResult = (result) ->
+  return {} unless result? and _.isObject(result) and not _.isArray(result)
+  return result.state if _.isObject(result.state) and not _.isArray(result.state)
+  return {} if result.status?
+  result
+
+flowDeliverResult = (callback, error, result) ->
+  return callback(error) if error
+
+  if _.isString(result)
+    parsed = flowParseResult(result)
+    unless parsed?
+      error = new Error('FLOW result was not JSON')
+      error.code = 'invalid_result'
+      return callback(error)
+    result = parsed
+
+  if result?.status is 'failed' or result?.status is 'cancelled'
+    return callback(flowRunFailure(result))
+
+  callback(null, flowStateFromResult(result))
+
 exports.FLOW = (options, callback) ->
   ERROR('options must be provided') unless options?
-  ERROR('callback must be a function') if callback and not _.isFunction(callback)
+  ERROR('callback must be a function') if callback isnt undefined and not _.isFunction(callback)
 
   callback ?= () ->
 
   normalized = flowNormalizeOptions(options)
 
-  completion = (error, result) =>
-    callback(error, result)
-
-  HostFunctions.flow(JSON.stringify(normalized), completion)
+  HostFunctions.flow(JSON.stringify(normalized), (error, result) ->
+    flowDeliverResult(callback, error, result)
+  )
 
 exports.LOADFILE = (options, callback) ->
   ERROR('options must be provided') unless options?
