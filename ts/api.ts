@@ -2375,20 +2375,21 @@ interface FlowJsRunArgs {
  type FlowJsResult = Record<string, unknown>;
  type FlowJsCallback = (args: FlowJsRunArgs) => FlowJsResult | Promise<FlowJsResult>;
 /**
- * Exactly one of \`run\` or \`expression\`. The engine sends \`run\` as \`expression\`.
+ * Exactly one of \`run\` or \`expression\`. Null counts as absent, matching the runtime.
+ * The engine sends \`run\` as \`expression\`.
  */
  type FlowJsInput = {
     /**
      * Authoring callback. Converted with \`toString()\` before the payload is sent.
      */
     run: FlowJsCallback;
-    expression?: never;
+    expression?: null;
 } | {
     /**
      * Wire form of a \`js\` node. A string of 1 to 4096 characters.
      */
     expression: string;
-    run?: never;
+    run?: null;
 };
 interface FlowOutputDeclaration {
     [key: string]: 'string' | 'number' | 'boolean';
