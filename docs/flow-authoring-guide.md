@@ -49,7 +49,8 @@ at most 64 characters. It is copied into reports.
 
 The completion callback is optional. On success it receives the global state.
 On a run that does not start, or a run whose status is `failed` or `cancelled`,
-it receives an error and no state. The host calls that callback. Progress
+it receives an error and no state. A host result that is not JSON uses the message
+`FLOW result was not JSON` and code `invalid_result`. The host calls that callback. Progress
 events are still out of scope in the workflow contract.
 
 ```js

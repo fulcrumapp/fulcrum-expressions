@@ -1818,7 +1818,10 @@ flowDeliverResult = (callback, error, result) ->
 
   if _.isString(result)
     parsed = flowParseResult(result)
-    return callback(new Error(result)) unless parsed?
+    unless parsed?
+      error = new Error('FLOW result was not JSON')
+      error.code = 'invalid_result'
+      return callback(error)
     result = parsed
 
   if result?.status is 'failed' or result?.status is 'cancelled'

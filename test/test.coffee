@@ -3705,7 +3705,8 @@ describe "SETMODE", ->
         runtime.finishAsync()
 
       FLOW { schema_version: 1, nodes: [] }, (error, state) ->
-        error.message.should.eql('not-json')
+        error.code.should.eql('invalid_result')
+        error.message.should.eql('FLOW result was not JSON')
         (state is undefined).should.be.true()
 
     it 'gives the callback an error when the run is cancelled', ->
