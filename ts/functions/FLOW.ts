@@ -12,22 +12,30 @@ export interface FlowJsRunArgs {
   tools: Record<string, (args: Record<string, unknown>) => Promise<unknown>>;
 }
 
+export type FlowJsResult = Record<string, unknown>;
+
 export type FlowJsCallback = (
   args: FlowJsRunArgs
-) => object | Promise<object>;
+) => FlowJsResult | Promise<FlowJsResult>;
 
-export interface FlowJsInput {
-  /**
-   * Authoring callback. Converted with `toString()` before the payload is sent.
-   * Do not set this together with `expression`.
-   */
-  run?: FlowJsCallback;
-  /**
-   * Wire form of a `js` node. A string of 1 to 4096 characters.
-   * Do not set this together with `run`.
-   */
-  expression?: string;
-}
+/**
+ * Exactly one of `run` or `expression`. The engine sends `run` as `expression`.
+ */
+export type FlowJsInput =
+  | {
+      /**
+       * Authoring callback. Converted with `toString()` before the payload is sent.
+       */
+      run: FlowJsCallback;
+      expression?: never;
+    }
+  | {
+      /**
+       * Wire form of a `js` node. A string of 1 to 4096 characters.
+       */
+      expression: string;
+      run?: never;
+    };
 
 export interface FlowOutputDeclaration {
   [key: string]: 'string' | 'number' | 'boolean';
@@ -60,13 +68,28 @@ export interface FlowAgenticNode extends FlowNodeLimits {
   output?: FlowOutputDeclaration;
 }
 
-export interface FlowFunctionNode extends FlowNodeLimits {
+export interface FlowJsFunctionNode extends FlowNodeLimits {
+  id: string;
+  kind: 'function';
+  function: 'js';
+  input: FlowJsInput;
+  retry?: FlowRetry;
+}
+
+type FlowToolInput = Record<string, unknown> & {
+  run?: never;
+  expression?: never;
+};
+
+export interface FlowToolFunctionNode extends FlowNodeLimits {
   id: string;
   kind: 'function';
   function: string;
-  input?: FlowJsInput | Record<string, unknown>;
+  input?: FlowToolInput;
   retry?: FlowRetry;
 }
+
+export type FlowFunctionNode = FlowJsFunctionNode | FlowToolFunctionNode;
 
 export interface FlowDecisionNode {
   id: string;
@@ -84,10 +107,18 @@ export interface FlowOptions {
   nodes: FlowNodeOptions[];
 }
 
+type CheckedFlowNode<N> = N extends { kind: 'function'; function: 'js' }
+  ? (N extends { input: FlowJsInput } ? N : never)
+  : N;
+
 /**
  * Sends a flow definition to the host. `input.run` is stringified first.
  * On an authoring failure, this throws an error whose `code` is `invalid_definition`.
  * The completion callback is not part of this contract.
+ * A `js` node must set exactly one of `input.run` or `input.expression`.
+ * Other function nodes must not set `run` or `expression`.
  */
-export default function FLOW(options: FlowOptions): void
+export default function FLOW<N extends FlowNodeOptions>(
+  options: Omit<FlowOptions, 'nodes'> & { nodes: Array<CheckedFlowNode<N>> }
+): void
 {}
