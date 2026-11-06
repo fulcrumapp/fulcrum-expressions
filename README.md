@@ -191,6 +191,29 @@ uploads or replaces `/expv1/expressions.js`; production deployment still
 invalidates cached `/expv1/*` objects. You can run `yarn build:dist` separately
 to build and test without uploading.
 
+Set `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` to a comma-separated list of exact,
+canonical HTTP(S) origins for the applications allowed to embed the sandbox.
+Configure this independently for each deployment environment. Deployments
+reject missing or invalid values before uploading any assets; wildcard and
+opaque origins are not accepted. The production GitHub Actions environment
+must provide the variable `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` before a release.
+The checked-in configuration does not establish which origins are authorized;
+the deployment owner must verify the complete list.
+
+The local build leaves the proxy unconfigured, so it rejects all messages. To
+use a local sandbox, configure a copy of the proxy for the local parent origin:
+
+```sh
+EXPRESSION_SANDBOX_ALLOWED_ORIGINS=http://localhost:3000 \
+  node script/configure-sandbox-proxy.js dist/expressions-proxy.js /path/to/served/expressions-proxy.js
+```
+
+For an installed npm package, the same configurator is available under
+`node_modules/@fulcrumapp/fulcrum-expressions/script/`.
+
+This validation limits which embedding pages may send sandbox commands. It
+does not restrict JavaScript that a trusted page passes to the expression runtime.
+
 **Automated production deployment:** creating a stable release tag in the form
 `vMAJOR.MINOR.PATCH` runs `Expression migration gates` against that tag. After
 the gates pass, the production-environment job checks out the same tag and

@@ -4,6 +4,7 @@ console
 docs
 *.coffee
 *.md
-script
+script/*
+!script/configure-sandbox-proxy.js
 test
 coverage
