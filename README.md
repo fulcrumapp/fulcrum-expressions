@@ -40,9 +40,10 @@ generated from the existing `ts/functions` and supporting public types through
 `dts-generator` (`dist/api.raw.d.ts`), then flattened by `script/build.rb` into
 the declaration string exported by `ts/api.ts` for editor consumers. Test
 helpers, fixtures, runtime/host internals, and the generated `ts/api.ts` itself
-are excluded from the declaration output. Regenerate typings alone with
-`yarn build:types` (equivalently `make types`), and commit intentional changes
-to `ts/api.ts` alongside their source changes.
+are excluded from the declaration output. To update public declarations, edit
+individual `ts/functions` stubs independently of `ts/functions/index.ts`,
+regenerate with `yarn build:types` (equivalently `make types`), and commit
+intentional `ts/api.ts` changes alongside their sources.
 
 Declaration generation is not a project-wide TypeScript check and does not
 claim the existing baseline diagnostics are resolved. The strict
