@@ -1831,7 +1831,7 @@ flowDeliverResult = (callback, error, result) ->
 
 exports.FLOW = (options, callback) ->
   ERROR('options must be provided') unless options?
-  ERROR('callback must be a function') if callback? and not _.isFunction(callback)
+  ERROR('callback must be a function') if callback isnt undefined and not _.isFunction(callback)
 
   callback ?= () ->
 

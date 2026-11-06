@@ -3683,7 +3683,7 @@ describe "SETMODE", ->
       called = false
       runtime.$$flow = -> called = true
 
-      for callback in [false, 0, '']
+      for callback in [false, 0, '', null]
         (-> FLOW({ schema_version: 1, nodes: [] }, callback)).should.throw('callback must be a function')
 
       called.should.eql(false)
