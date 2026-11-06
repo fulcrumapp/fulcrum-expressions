@@ -159,7 +159,11 @@ class Runtime
 
     @asyncCallbacks[id] = callback
 
-    func.apply(@, args.concat([id]))
+    try
+      func.apply(@, args.concat([id]))
+    catch error
+      delete @asyncCallbacks[id] if @asyncCallbacks[id] is callback
+      throw error
 
   finishAsync: ->
     id = +@callbackID

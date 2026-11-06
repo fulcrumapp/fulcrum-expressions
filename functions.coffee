@@ -2968,7 +2968,11 @@ host.setTimeout = (callback, timeout) ->
         delete host.timeouts[id]
         callback()
 
-    hostAsyncFunctionCall('setTimeout', args, host.timeouts[id])
+    try
+      hostAsyncFunctionCall('setTimeout', args, wrapper)
+    catch error
+      delete host.timeouts[id] if host.timeouts[id] is wrapper
+      throw error
 
     return id
 

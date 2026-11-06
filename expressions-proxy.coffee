@@ -115,6 +115,7 @@ class ExpressionEngine
     console.error 'Expression sandbox disabled: trusted origins are missing or invalid' unless @origins.length
     @pendingCallbacks = Object.create(null)
     @context = null
+    @sessionContext = null
     @parentOrigin = null
 
   validMessage: (message) ->
@@ -157,6 +158,7 @@ class ExpressionEngine
     @parentOrigin ?= event.origin
     context = {source: event.source, origin: event.origin}
     context.id = message.id if Object.prototype.hasOwnProperty.call(message, 'id')
+    @sessionContext ?= context
     @context = context
     try
       switch message.name
@@ -211,14 +213,15 @@ class ExpressionEngine
     @respond(name: 'finishAsyncCallback', results: results)
 
   respond: (message, context = @context) ->
-    return unless context?
+    return false unless context?
     try
       message.id = context.id if Object.prototype.hasOwnProperty.call(context, 'id')
       response = JSON.stringify(message)
     catch e
       console.log 'Error sending object', message
-      return
+      return false
     context.source.postMessage(response, context.origin)
+    true
 
   httpRequest: (message, context) ->
     delete message.options.followRedirect
@@ -229,9 +232,11 @@ class ExpressionEngine
     for name in ['httpRequest', 'messageBox', 'setTimeout', 'inference', 'loadFile', 'loadRecords', 'loadForm', 'recognizeText']
       do (name) =>
         $$runtime["$$#{name}"] = (options, callbackID) =>
-          throw new Error('Host call has no authorized request context') unless @context?
+          context = @context or @sessionContext
+          throw new Error('Host call has no authorized request context') unless context?
+          sent = @respond({name: 'hostFunction', functionName: name, argumentList: [options, callbackID]}, context)
+          throw new Error('Unable to send host call') unless sent
           @pendingCallbacks[callbackID] = true
-          @respond(name: 'hostFunction', functionName: name, argumentList: [options, callbackID])
 
 proxy = new ExpressionEngine
 

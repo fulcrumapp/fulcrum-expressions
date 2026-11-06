@@ -215,12 +215,22 @@ for (const trusted of ["http://localhost:3000", "http://127.0.0.1:3000",
   assert.ok(tester.replies.every(reply => !Object.hasOwn(reply.data, "id")));
 }
 
-{
+for (const id of ["sandbox-1/1", 0, undefined]) {
   const h = harness();
-  h.send({ name: "prepare", form: { elements: [] }, id: "sandbox-1/1" });
-  h.send({ name: "evaluate", id: "sandbox-1/2" });
-  assert.throws(() => h.runtime.$$setTimeout(10, 12), /no authorized request context/i);
-  assert.strictEqual(h.replies.length, 2);
+  const prepare = { name: "prepare", form: { elements: [] } };
+  if (id !== undefined) prepare.id = id;
+  h.send(prepare);
+  h.send({ name: "globals", globals: { locale: "en" }, id: "later" });
+  h.send({ name: "globals", globals: { locale: "bad" }, id: "untrusted" },
+    h.parent, "https://evil.example");
+  h.runtime.$$setTimeout(10, 12);
+  const host = h.replies[h.replies.length - 1];
+  assert.strictEqual(host.data.name, "hostFunction");
+  assert.strictEqual(host.data.id, id);
+  assert.strictEqual(Object.hasOwn(host.data, "id"), id !== undefined);
+  assert.strictEqual(host.target, origin);
+  h.send({ name: "finishAsyncCallback", callbackID: 12, id: "completed" });
+  assert.strictEqual(h.replies[h.replies.length - 1].data.id, "completed");
 }
 
 {
@@ -434,7 +444,10 @@ for (const trusted of ["http://localhost:3000", "http://127.0.0.1:3000",
   assert.strictEqual(hostCall.id, "event");
   const pendingCallback = runtime.asyncCallbacks[hostCall.argumentList[1]];
   assert.strictEqual(typeof pendingCallback, "function");
-  assert.throws(() => runtime.$$setTimeout(1, hostCall.argumentList[1]), /no authorized request context/i);
+  const invalidOptions = {};
+  invalidOptions.circular = invalidOptions;
+  assert.throws(() => runtime.$$setTimeout(invalidOptions, hostCall.argumentList[1]),
+    /unable to send host call/i);
   assert.strictEqual(runtime.asyncCallbacks[hostCall.argumentList[1]], pendingCallback);
   h.send({ name: "finishAsyncCallback", callbackID: hostCall.argumentList[1], callbackArguments: [], id: "callback" });
   const callback = h.replies[h.replies.length - 1].data;
@@ -445,8 +458,36 @@ for (const trusted of ["http://localhost:3000", "http://127.0.0.1:3000",
   assert.strictEqual(JSON.parse(callback.results[0].value), "done");
   h.send({ name: "finishAsyncCallback", callbackID: nestedHostCall.argumentList[1], callbackArguments: null, id: "callback-2" });
   assert.strictEqual(h.replies[h.replies.length - 1].data.id, "callback-2");
-  assert.throws(() => global.__proxyDeferredHost(), /no authorized request context/i);
+  global.__proxyDeferredHost();
+  const deferredHostCall = h.replies[h.replies.length - 1].data;
+  assert.strictEqual(deferredHostCall.name, "hostFunction");
+  assert.strictEqual(deferredHostCall.id, 1);
+  h.send({ name: "finishAsyncCallback", callbackID: deferredHostCall.argumentList[1], id: "deferred" });
+  assert.strictEqual(h.replies[h.replies.length - 1].data.id, "deferred");
   delete global.__proxyDeferredHost;
+}
+
+{
+  const runtime = require("../runtime");
+  const host = require("../functions").HostFunctions;
+  const callbacksBefore = Object.keys(runtime.asyncCallbacks);
+  const timeoutsBefore = Object.keys(host.timeouts);
+  const failure = new Error("host unavailable");
+  const original = runtime.$$setTimeout;
+  runtime.$$setTimeout = () => { throw failure; };
+  try {
+    assert.throws(() => host.setTimeout(() => {}, 1), error => error === failure);
+    assert.deepStrictEqual(Object.keys(runtime.asyncCallbacks), callbacksBefore);
+    assert.deepStrictEqual(Object.keys(host.timeouts), timeoutsBefore);
+  } finally {
+    runtime.$$setTimeout = original;
+  }
+
+  const invalidOptions = {};
+  invalidOptions.circular = invalidOptions;
+  assert.throws(() => host.setTimeout(() => {}, invalidOptions), /unable to send host call/i);
+  assert.deepStrictEqual(Object.keys(runtime.asyncCallbacks), callbacksBefore);
+  assert.deepStrictEqual(Object.keys(host.timeouts), timeoutsBefore);
 }
 
 console.log("expressions proxy security tests passed");
