@@ -20,7 +20,7 @@ versioned, platform-neutral options contract so the chat can create and run a wo
 - Define the runtime correlation fields (flow, run, agent, session, node, tool, model, timing, outcome, error).
 - Define conformance and per-platform acceptance criteria for KMP, Android, iOS, and Web.
 - The optional completion callback delivers an error or the global state. A failed or cancelled
-  run uses `termination_reason` as the error message, not host prose.
+  run uses `termination_reason` as the error message, not `error.message` from the run result. A host-level error is forwarded unchanged.
 - **Out of scope:** progress reporting, the runtime, iOS and Web implementation, and nested workflows.
 
 ## Capabilities

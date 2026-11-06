@@ -244,7 +244,7 @@ including platforms that are blocked.
 The contract SHALL link existing tickets and code as evidence and SHALL provide a
 dependency-ordered backlog with owners and acceptance criteria and, where it exists, evidence. The completion
 callback is specified: an error, or the global state. A failed or cancelled run uses `termination_reason`
-as the error message. Progress reporting, iOS and Web, and nested flows stay deferred.
+as the error message and does not copy `error.message` or `message` from that result. A host-level error is forwarded unchanged. Progress reporting, iOS and Web, and nested flows stay deferred.
 
 #### Scenario: A platform team starts implementation
 - **WHEN** a team reads the backlog

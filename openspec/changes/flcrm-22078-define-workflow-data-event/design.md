@@ -16,7 +16,7 @@ On Android, `execute_workflow` is currently a stub, so the runtime is separate f
 
 **Non-Goals:**
 
-- Delivering the run outcome through the callback, and progress reporting (a follow-up).
+- Progress reporting (a follow-up).
 - The runtime that executes a definition, and any client implementation.
 - iOS and Web work (blocked until those platforms have the `ask_user` tool and a flow runtime).
 - Nested workflows.
@@ -81,12 +81,12 @@ The queue behavior is a runtime concern.
 ### A fixed run outcome vocabulary
 
 Every run ends as `completed`, `failed`, or `cancelled`, with a stable `termination_reason` derived by
-the runtime. The vocabulary is defined now so the later callback is consistent.
+the runtime. The vocabulary is defined now so the completion callback stays consistent.
 
 ### Runtime-assigned correlation fields
 
 The runtime assigns `run_id`, agent, session, node, model, timing, and error fields, so a definition
-cannot forge them. Which fields the callback and progress events carry is left to those follow-ups.
+cannot forge them. The completion callback carries an error or the global state. Which fields progress events carry is left to that follow-up.
 
 ### Shared fixtures as the conformance test
 
@@ -109,7 +109,7 @@ A run always starts immediately and always runs headless, with no chat. A node r
 - **[Risk] Definitions in form JavaScript expose their content.** → State that definitions are
   visible to form readers and must hold no secrets or user data.
 - **[Risk] A host failure message can contain field values or tool output.** → The completion
-  callback uses `termination_reason` as the error message and does not copy host prose.
+  callback uses `termination_reason` for a failed or cancelled run and does not copy `error.message` or `message` from that result. A host-level error is forwarded unchanged.
 - **[Risk] Numeric limits may need tuning.** → The per-node values are proposed; revisit them when the runtime is measured.
 - **[Risk] The spike expands into runtime work.** → Keep implementation in follow-up tickets.
 
@@ -126,5 +126,5 @@ A run always starts immediately and always runs headless, with no chat. A node r
   function name `FLOW()`, the default of starting immediately, and the numeric limits (50 nodes,
   32 KB) were confirmed by the requester of this spike.
 - Confirm the model reference file and that `fulcrumite-2b` is the catalog name of the default model.
-- Confirm whether the callback result and progress reporting are one follow-up or two.
+- Progress reporting remains a separate follow-up.
 - Confirm whether an epic-level ticket exists for iOS and Web chat support.
