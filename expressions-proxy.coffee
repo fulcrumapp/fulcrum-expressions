@@ -65,7 +65,7 @@ validStatusField = (field) ->
 validRequestOptions = (options) ->
   return false unless isObject(options) and typeof (options.url or options.uri) is 'string'
   return false if options.proxy or options._redirectsFollowed or options.maxRedirects
-  return false if options.headers? and (not isObject(options.headers) or options.headers.host)
+  return false if options.headers? and (not isObject(options.headers) or Object.keys(options.headers).some((key) -> key.toLowerCase() is 'host'))
   return false if options.method? and typeof options.method isnt 'string'
   return false if options.form? and not isObject(options.form)
   return false if options.qs? and typeof options.qs isnt 'string' and not isObject(options.qs)

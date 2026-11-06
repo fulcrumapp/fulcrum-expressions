@@ -10,7 +10,7 @@ const marker = "__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__";
 const trustedOrigin = "https://trusted.example";
 const source = fs.readFileSync(path.join(__dirname, "..", "expressions-proxy.coffee"), "utf8");
 
-function createSandbox(origins) {
+function createSandbox(origins, request = () => { throw new Error("Unexpected HTTP request"); }) {
   const replies = [];
   const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
   const window = {
@@ -26,7 +26,7 @@ function createSandbox(origins) {
     console: { log() {}, error() {} },
     require: (name) => {
       assert.strictEqual(name, "browser-request");
-      return () => { throw new Error("Unexpected HTTP request"); };
+      return request;
     },
     $$runtime: runtime,
     $$prepare: () => {},
@@ -81,6 +81,28 @@ function createSandbox(origins) {
   ].forEach((message) => sandbox.send(message));
   assert.strictEqual(sandbox.replies.length, 0);
   assert.strictEqual(sandbox.runtime.form, undefined);
+}
+
+{
+  const requests = [];
+  const sandbox = createSandbox([trustedOrigin], (options, callback) => {
+    requests.push(options);
+    callback(null, { statusCode: 200 }, "ok");
+  });
+  const url = "https://example.com";
+  for (const header of ["host", "Host", "HOST", "hOsT"]) {
+    for (const value of ["other.example", "", null, false, 0]) {
+      sandbox.send({ name: "httpRequest", options: { url, headers: { [header]: value } } });
+    }
+  }
+  assert.strictEqual(requests.length, 0, "Host headers must be rejected regardless of case or value");
+  assert.strictEqual(sandbox.replies.length, 0);
+
+  sandbox.send({ name: "httpRequest", options: { url, headers: { "X-Host": "allowed", Hostname: "allowed" } } });
+  sandbox.send({ name: "httpRequest", options: { url } });
+  assert.strictEqual(requests.length, 2, "other headers and requests without headers must remain valid");
+  assert.strictEqual(requests[0].headers["X-Host"], "allowed");
+  assert.deepStrictEqual(sandbox.replies.map((reply) => reply.data.name), ["httpRequest", "httpRequest"]);
 }
 
 {
