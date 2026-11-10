@@ -4,6 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const vm = require("vm");
 const { spawnSync } = require("child_process");
 const yaml = require("js-yaml");
 const { assertSandboxScripts } = require("../script/sandbox-scripts");
@@ -144,7 +145,8 @@ function assertUploads(result, bucket) {
       assert.strictEqual(
         result.proxy,
         fs.readFileSync(path.join(root, "dist", "expressions-proxy.js"), "utf8")
-          .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__", "https://web.example.com")
+          .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__",
+            "https://web.example.com,https://*.thefulcrum.team")
       );
     } else {
       assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
@@ -365,6 +367,23 @@ try {
   const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
   assertUploads(production, "fulcrum-assets");
+  const replies = [];
+  const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
+  const window = { parent, addEventListener: (name, handler) => { window.onMessage = handler; } };
+  vm.runInNewContext(production.proxy, {
+    window, console, XMLHttpRequest: function () {}, $$evaluate: () => ["calculation"],
+  });
+  const send = (origin) => window.onMessage({
+    isTrusted: true, source: parent, origin, data: JSON.stringify({ name: "evaluate" }),
+  });
+  send("https://rails11522.thefulcrum.team.attacker.invalid");
+  assert.strictEqual(replies.length, 0);
+  send("https://rails11522.thefulcrum.team");
+  assert.strictEqual(replies.length, 1);
+  assert.strictEqual(replies[0].origin, "https://rails11522.thefulcrum.team");
+  assert.deepStrictEqual(replies[0].data.results, ["calculation"]);
+  send("https://web.example.com");
+  assert.strictEqual(replies.length, 1, "deployed proxy must bind the accepted parent origin");
   assert.deepStrictEqual(
     production.calls.filter((call) => call[0] === "cloudfront"),
     [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/expv1/*"]]

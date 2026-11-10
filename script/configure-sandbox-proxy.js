@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const marker = "__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__";
 const originPattern = /^https?:\/\/(?:[a-z0-9.-]+|\[[a-f0-9:]+\])(?::[0-9]+)?$/i;
+const previewOrigins = "https://*.thefulcrum.team";
 
 function configureProxy(source, value) {
   if (typeof value !== "string" || !value.trim()) {
@@ -28,7 +29,7 @@ function configureProxy(source, value) {
   if (index === -1 || index !== source.lastIndexOf(marker)) {
     throw new Error("Sandbox trusted-origin marker must occur exactly once.");
   }
-  return source.replace(marker, [...new Set(origins)].join(","));
+  return source.replace(marker, [...new Set([...origins, previewOrigins])].join(","));
 }
 
 if (require.main === module) {
