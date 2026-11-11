@@ -19,7 +19,7 @@ concurrency:
 jobs:
   ci:
     if: github.event_name != 'pull_request' || !github.event.pull_request.draft
-    runs-on: gha-runner-set-iops-dind
+    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || 'gha-runner-set-iops-dind' }}
     timeout-minutes: 20
     env:
       COREPACK_ENABLE_AUTO_PIN: '0'
@@ -96,7 +96,7 @@ jobs:
   build-and-test:
     if: always() && (github.event_name != 'pull_request' || !github.event.pull_request.draft)
     needs: ci
-    runs-on: gha-runner-set-iops-dind
+    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || 'gha-runner-set-iops-dind' }}
     steps:
       - name: Require CI to succeed
         env:

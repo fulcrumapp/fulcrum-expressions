@@ -36,7 +36,7 @@ jobs:
     name: Expression migration gates
     needs: classify-tag
     if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'create' && github.ref_type == 'tag' && needs.classify-tag.result == 'success' && needs.classify-tag.outputs.is_stable == 'true')) }}
-    runs-on: gha-runner-set-iops-dind
+    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || 'gha-runner-set-iops-dind' }}
     env:
       COREPACK_ENABLE_AUTO_PIN: '0'
     outputs:

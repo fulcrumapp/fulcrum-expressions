@@ -68,14 +68,15 @@ yarn build:dist
 ### GitHub Packages releases
 
 The standard npm CI workflow runs the migration gates on pull requests into
-`main`, merge queue entries and main changes on the approved internal
-`gha-runner-set-iops-dind` runners, as do the release and deployment jobs. The
-existing expression migration workflow also continues to run on pull requests
-and tag creation. After main CI validation succeeds, a GitHub App commits the
-next version to `package.json` and creates its matching SemVer tag. Do not edit
-the root package version manually. Tag creation builds and publishes the package
-to GitHub Packages, not npmjs.org. The existing production S3 deployment remains
-separate.
+`main`, merge queue entries and main changes. Pull requests from forks use
+GitHub-hosted runners; trusted pull requests and the release and deployment jobs
+use the approved internal `gha-runner-set-iops-dind` runners. The existing
+expression migration workflow also continues to run on pull requests and tag
+creation, with fork pull requests kept on GitHub-hosted runners. After main CI
+validation succeeds, a GitHub App commits the next version to `package.json` and
+creates its matching SemVer tag. Do not edit the root package version manually.
+Tag creation builds and publishes the package to GitHub Packages, not npmjs.org.
+The existing production S3 deployment remains separate.
 
 Before enabling releases, configure fork-run approval, required CI checks,
 GitHub Packages access, and the release App's branch and tag protection

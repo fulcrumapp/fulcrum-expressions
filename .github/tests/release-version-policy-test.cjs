@@ -7,10 +7,12 @@ const { test } = require("node:test");
 
 const workflows = path.resolve(__dirname, "../workflows");
 const workflow = readFileSync(path.join(workflows, "ci.yml"), "utf8");
+const migrationWorkflow = readFileSync(path.join(workflows, "expression-migration-gates.yml"), "utf8");
 const buildJob = workflow.match(/^  ci:\n([\s\S]*?)(?=^  build-and-test:)/m)?.[1];
 assert.ok(buildJob, "CI job is present");
 const guard = buildJob.match(/node <<'NODE'\n([\s\S]*?)^\s*NODE$/m)?.[1];
 assert.ok(guard, "version guard is present");
+const forkSafeRunner = "runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || 'gha-runner-set-iops-dind' }}";
 
 test("release tagging uses the public CI App secrets", () => {
   assert.match(workflow, /app-id:\s*\$\{\{\s*secrets\.FULCRUM_CI_APP_ID_PUBLIC\s*\}\}/);
@@ -39,22 +41,28 @@ esac
   }
 }
 
-test("event bases, checkout and internal runners are configured", () => {
+test("event bases, checkout and fork-safe runners are configured", () => {
   for (const field of ["pull_request.base.sha", "merge_group.base_sha", "event.before"]) {
     assert.ok(buildJob.includes(field), field);
   }
   assert.match(buildJob, /fetch-depth:\s*0/);
-  assert.match(buildJob, /runs-on:\s*gha-runner-set-iops-dind/);
+  assert.ok(buildJob.includes(forkSafeRunner));
+  const migrationJob = migrationWorkflow.match(/^  migration-gates:\n([\s\S]*?)(?=^  deploy-development:)/m)?.[1];
+  assert.ok(migrationJob, "migration-gates job is present");
+  assert.ok(migrationJob.includes(forkSafeRunner));
   assert.match(workflow, /^  tag:[\s\S]*?runs-on:\s*gha-runner-set-iops-dind/m);
   assert.match(workflow, /node --test \.github\/tests\/\*\.cjs/);
   if (/^  sonar:/m.test(workflow)) assert.match(workflow, /^  sonar:[\s\S]*?runs-on:\s*gha-runner-set-iops-dind/m);
 });
 
-test("all workflow jobs use the approved internal runner", () => {
+test("fork pull requests use hosted runners and other jobs use the approved internal runner", () => {
   for (const name of readdirSync(workflows).filter((file) => /\.ya?ml$/.test(file))) {
     const contents = readFileSync(path.join(workflows, name), "utf8");
     for (const line of contents.match(/^\s+runs-on:.*$/gm) || []) {
-      assert.match(line, /^\s+runs-on:\s*gha-runner-set-iops-dind\s*$/, `${name}: ${line}`);
+      assert.ok(
+        /^\s*runs-on:\s*gha-runner-set-iops-dind\s*$/.test(line) || line.trim() === forkSafeRunner,
+        `${name}: ${line}`
+      );
     }
   }
 });
