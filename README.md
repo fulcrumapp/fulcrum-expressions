@@ -205,6 +205,19 @@ environment must provide the variable `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` befor
 The checked-in configuration does not establish which origins are authorized;
 the deployment owner must verify the complete list.
 
+For a manual preview deployment, retrieve the configured value with an
+authenticated GitHub CLI and pass it to the deployment command:
+
+```sh
+origins="$(gh variable get EXPRESSION_SANDBOX_ALLOWED_ORIGINS --env preview)" &&
+  EXPRESSION_SANDBOX_ALLOWED_ORIGINS="$origins" yarn deploy preview
+```
+
+For a chaos deployment, replace both occurrences of `preview` with `chaos`.
+GitHub environment variables are not automatically available in a local shell.
+The production GitHub Actions job passes its environment variable to
+`script/deploy` directly.
+
 The local build leaves the proxy unconfigured, so it rejects all messages. To
 use a local sandbox, configure a copy of the proxy for the local parent origin:
 
