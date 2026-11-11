@@ -193,9 +193,10 @@ to build and test without uploading.
 
 Set `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` to a comma-separated list of exact,
 canonical HTTP(S) origins for the applications allowed to embed the sandbox.
-Configure this independently for each deployment environment. Include
-`https://*.thefulcrum.team` in preview and chaos environments only; production
-must omit it. This wildcard accepts HTTPS origins of the form
+Configure this independently for each deployment environment. The shared
+production sandbox is also used by preview and chaos applications, so its
+configuration must include `https://*.thefulcrum.team`. This wildcard accepts
+HTTPS origins of the form
 `<namespace>.thefulcrum.team`, where the namespace is a single lowercase DNS
 label of 1–63 characters. Other subdomains, nested hostnames, HTTP, and
 non-default ports are not covered by this rule.
@@ -205,8 +206,8 @@ environment must provide the variable `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` befor
 The checked-in configuration does not establish which origins are authorized;
 the deployment owner must verify the complete list.
 
-For a manual preview deployment, retrieve the configured value with an
-authenticated GitHub CLI and pass it to the deployment command:
+For a manual deployment to a separate preview bucket, retrieve the configured
+value with an authenticated GitHub CLI and pass it to the deployment command:
 
 ```sh
 origins="$(gh variable get EXPRESSION_SANDBOX_ALLOWED_ORIGINS --env preview)" &&

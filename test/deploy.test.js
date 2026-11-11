@@ -364,9 +364,9 @@ try {
   assert.match(emptyEnvironment.output, /environment must not be empty/);
   assert.deepStrictEqual(emptyEnvironment.calls, []);
 
-  const production = invokeDeploy(["production", "--yes"], "expression-preview-test", "https://web.example.com");
+  const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
-  assertUploads(production, "fulcrum-assets", "https://web.example.com");
+  assertUploads(production, "fulcrum-assets");
   const replies = [];
   const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
   const window = { parent, addEventListener: (name, handler) => { window.onMessage = handler; } };
@@ -379,13 +379,11 @@ try {
   send("https://rails11522.thefulcrum.team.attacker.invalid");
   assert.strictEqual(replies.length, 0);
   send("https://rails11522.thefulcrum.team");
-  assert.strictEqual(replies.length, 0, "production proxy must reject preview origins");
-  send("https://web.example.com");
-  assert.strictEqual(replies.length, 1, "production proxy must accept its configured origin");
-  assert.strictEqual(replies[0].origin, "https://web.example.com");
-  send("https://rails11522.thefulcrum.team");
-  assert.strictEqual(replies.length, 1, "production proxy must continue rejecting preview origins");
+  assert.strictEqual(replies.length, 1, "production proxy must accept configured preview origins");
+  assert.strictEqual(replies[0].origin, "https://rails11522.thefulcrum.team");
   assert.deepStrictEqual(replies[0].data.results, ["calculation"]);
+  send("https://web.example.com");
+  assert.strictEqual(replies.length, 1, "deployed proxy must bind the accepted parent origin");
   assert.deepStrictEqual(
     production.calls.filter((call) => call[0] === "cloudfront"),
     [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/expv1/*"]]
