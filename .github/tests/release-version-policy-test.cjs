@@ -138,7 +138,7 @@ test("Yarn commands cannot modify the tagged package manifest through Corepack a
   const config = yaml.load(workflow);
   assert.equal(config.jobs.ci.env.COREPACK_ENABLE_AUTO_PIN, "0");
   const migration = yaml.load(readFileSync(path.join(workflows, "expression-migration-gates.yml"), "utf8"));
-  for (const job of ["migration-gates", "deploy-production"])
+  for (const job of ["migration-gates", "deploy-development", "deploy-production"])
     assert.equal(migration.jobs[job].env.COREPACK_ENABLE_AUTO_PIN, "0", job);
   assert.match(config.jobs.ci.steps.find((step) => step.name === "Run build and expression migration gates").run,
     /yarn test:migration-gates/);

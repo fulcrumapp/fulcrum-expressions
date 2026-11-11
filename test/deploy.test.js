@@ -60,6 +60,10 @@ assert.strictEqual(deployment.steps.find((step) => step.name === "Publish legacy
   "./script/deploy production --yes");
 assert.strictEqual(developmentDeployment.steps.find((step) => step.name === "Publish legacy and hybrid bundles").run,
   "./script/deploy development --yes");
+for (const action of ["actions/checkout", "actions/setup-node"]) {
+  const step = developmentDeployment.steps.find((step) => step.uses?.startsWith(`${action}@`));
+  assert.match(step.uses, new RegExp(`^${action}@[a-f0-9]{40}$`));
+}
 for (const job of [developmentDeployment, deployment]) {
   assert.strictEqual(
     job.steps.find((step) => step.name === "Publish legacy and hybrid bundles").env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS,
