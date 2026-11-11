@@ -65,6 +65,10 @@ for (const job of [developmentDeployment, deployment]) {
     job.steps.find((step) => step.name === "Publish legacy and hybrid bundles").env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS,
     "${{ vars.EXPRESSION_SANDBOX_ALLOWED_ORIGINS }}"
   );
+  assert.match(
+    job.steps.find((step) => step.uses?.startsWith("aws-actions/configure-aws-credentials@")).uses,
+    /^aws-actions\/configure-aws-credentials@[a-f0-9]{40}$/
+  );
 }
 
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
