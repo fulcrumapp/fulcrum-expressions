@@ -6,7 +6,7 @@ const marker = "__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__";
 const originPattern = /^https?:\/\/(?:[a-z0-9.-]+|\[[a-f0-9:]+\])(?::[0-9]+)?$/i;
 const previewOrigins = "https://*.thefulcrum.team";
 
-function configureProxy(source, value) {
+function configureProxy(source, value, includePreviewOrigins = true) {
   if (typeof value !== "string" || !value.trim()) {
     throw new Error("Trusted origins must be configured as a comma-separated list.");
   }
@@ -29,16 +29,25 @@ function configureProxy(source, value) {
   if (index === -1 || index !== source.lastIndexOf(marker)) {
     throw new Error("Sandbox trusted-origin marker must occur exactly once.");
   }
-  return source.replace(marker, [...new Set([...origins, previewOrigins])].join(","));
+  const configuredOrigins = includePreviewOrigins ? [...origins, previewOrigins] : origins;
+  return source.replace(marker, [...new Set(configuredOrigins)].join(","));
 }
 
 if (require.main === module) {
   try {
-    if (process.argv.length !== 4) {
-      throw new Error("Expected input and output proxy paths.");
+    if (process.argv.length < 4 || process.argv.length > 5) {
+      throw new Error("Expected input and output proxy paths, and an optional preview-origin flag.");
+    }
+    const includePreviewOrigins = process.argv[4] === undefined || process.argv[4] === "true";
+    if (process.argv[4] !== undefined && !["true", "false"].includes(process.argv[4])) {
+      throw new Error("Preview-origin flag must be true or false.");
     }
     const source = fs.readFileSync(process.argv[2], "utf8");
-    const configured = configureProxy(source, process.env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS);
+    const configured = configureProxy(
+      source,
+      process.env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS,
+      includePreviewOrigins
+    );
     fs.writeFileSync(process.argv[3], configured);
   } catch (error) {
     console.error(`Cannot configure expression sandbox: ${error.message}`);

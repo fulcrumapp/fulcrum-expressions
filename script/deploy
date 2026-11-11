@@ -57,7 +57,8 @@ fi
 configured_proxy="$(mktemp "${TMPDIR:-/tmp}/expression-proxy.XXXXXXXX")"
 trap 'rm -f -- "$configured_proxy"' EXIT
 node "${root_dir}/script/configure-sandbox-proxy.js" \
-  "${root_dir}/dist/expressions-proxy.js" "$configured_proxy"
+  "${root_dir}/dist/expressions-proxy.js" "$configured_proxy" \
+  "$([[ "${ENVIRONMENT}" != "production" ]] && printf true || printf false)"
 
 aws s3 cp \
   --cache-control "no-cache, no-store, max-age=0, must-revalidate" \

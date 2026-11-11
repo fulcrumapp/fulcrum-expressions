@@ -11,6 +11,10 @@ assert.strictEqual(
   configureProxy(source, " https://web.example.com, http://localhost:3000 "),
   'var origins = "https://web.example.com,http://localhost:3000,https://*.thefulcrum.team";'
 );
+assert.strictEqual(
+  configureProxy(source, " https://web.example.com, http://localhost:3000 ", false),
+  'var origins = "https://web.example.com,http://localhost:3000";'
+);
 
 for (const origins of [
   undefined, "", "null", "*", "https://*.example.com", "https://example.com/path",

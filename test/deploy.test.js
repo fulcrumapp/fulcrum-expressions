@@ -124,7 +124,7 @@ for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]
     { message: `missing value for ${option} for test-target` });
 }
 
-function assertUploads(result, bucket) {
+function assertUploads(result, bucket, includePreviewOrigins = true) {
   const s3Uploads = result.calls.filter((call) => call[0] === "s3" && call[1] === "cp");
   const targets = s3Uploads.map((call) => call[call.length - 1]);
   assert.deepStrictEqual(targets, [
@@ -146,7 +146,9 @@ function assertUploads(result, bucket) {
         result.proxy,
         fs.readFileSync(path.join(root, "dist", "expressions-proxy.js"), "utf8")
           .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__",
-            "https://web.example.com,https://*.thefulcrum.team")
+            includePreviewOrigins
+              ? "https://web.example.com,https://*.thefulcrum.team"
+              : "https://web.example.com")
       );
     } else {
       assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
@@ -366,7 +368,7 @@ try {
 
   const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
-  assertUploads(production, "fulcrum-assets");
+  assertUploads(production, "fulcrum-assets", false);
   const replies = [];
   const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
   const window = { parent, addEventListener: (name, handler) => { window.onMessage = handler; } };
@@ -379,11 +381,13 @@ try {
   send("https://rails11522.thefulcrum.team.attacker.invalid");
   assert.strictEqual(replies.length, 0);
   send("https://rails11522.thefulcrum.team");
-  assert.strictEqual(replies.length, 1);
-  assert.strictEqual(replies[0].origin, "https://rails11522.thefulcrum.team");
-  assert.deepStrictEqual(replies[0].data.results, ["calculation"]);
+  assert.strictEqual(replies.length, 0, "production proxy must reject preview origins");
   send("https://web.example.com");
-  assert.strictEqual(replies.length, 1, "deployed proxy must bind the accepted parent origin");
+  assert.strictEqual(replies.length, 1, "production proxy must accept its configured origin");
+  assert.strictEqual(replies[0].origin, "https://web.example.com");
+  send("https://rails11522.thefulcrum.team");
+  assert.strictEqual(replies.length, 1, "production proxy must continue rejecting preview origins");
+  assert.deepStrictEqual(replies[0].data.results, ["calculation"]);
   assert.deepStrictEqual(
     production.calls.filter((call) => call[0] === "cloudfront"),
     [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/expv1/*"]]
