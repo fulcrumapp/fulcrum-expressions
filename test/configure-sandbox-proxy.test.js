@@ -8,17 +8,16 @@ const marker = "__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__";
 const source = `var origins = "${marker}";`;
 
 assert.strictEqual(
-  configureProxy(source, " https://web.example.com, http://localhost:3000 "),
+  configureProxy(source, " https://web.example.com, http://localhost:3000, https://*.thefulcrum.team "),
   'var origins = "https://web.example.com,http://localhost:3000,https://*.thefulcrum.team";'
 );
 assert.strictEqual(
-  configureProxy(source, " https://web.example.com, http://localhost:3000 ", false),
+  configureProxy(source, " https://web.example.com, http://localhost:3000 "),
   'var origins = "https://web.example.com,http://localhost:3000";'
 );
 
 for (const origins of [
   undefined, "", "null", "*", "https://*.example.com", "https://example.com/path",
-  "https://*.thefulcrum.team",
   "https://example.com?query=1", "https://user@example.com", "https://example.com/",
   "https://example.com,,https://other.example.com", "javascript:alert(1)",
 ]) {

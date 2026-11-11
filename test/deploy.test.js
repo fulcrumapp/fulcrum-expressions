@@ -70,7 +70,7 @@ fs.writeFileSync(awsStub, [
   "",
 ].join("\n"), { mode: 0o755 });
 
-function invokeDeploy(args, user, origins = "https://web.example.com") {
+function invokeDeploy(args, user, origins = "https://web.example.com,https://*.thefulcrum.team") {
   fs.writeFileSync(callLog, "");
   if (fs.existsSync(proxyCapture)) fs.unlinkSync(proxyCapture);
   const env = {
@@ -124,7 +124,7 @@ for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]
     { message: `missing value for ${option} for test-target` });
 }
 
-function assertUploads(result, bucket, includePreviewOrigins = true) {
+function assertUploads(result, bucket, allowedOrigins = "https://web.example.com,https://*.thefulcrum.team") {
   const s3Uploads = result.calls.filter((call) => call[0] === "s3" && call[1] === "cp");
   const targets = s3Uploads.map((call) => call[call.length - 1]);
   assert.deepStrictEqual(targets, [
@@ -146,9 +146,7 @@ function assertUploads(result, bucket, includePreviewOrigins = true) {
         result.proxy,
         fs.readFileSync(path.join(root, "dist", "expressions-proxy.js"), "utf8")
           .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__",
-            includePreviewOrigins
-              ? "https://web.example.com,https://*.thefulcrum.team"
-              : "https://web.example.com")
+            allowedOrigins)
       );
     } else {
       assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
@@ -366,9 +364,9 @@ try {
   assert.match(emptyEnvironment.output, /environment must not be empty/);
   assert.deepStrictEqual(emptyEnvironment.calls, []);
 
-  const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
+  const production = invokeDeploy(["production", "--yes"], "expression-preview-test", "https://web.example.com");
   assert.strictEqual(production.status, 0, production.output);
-  assertUploads(production, "fulcrum-assets", false);
+  assertUploads(production, "fulcrum-assets", "https://web.example.com");
   const replies = [];
   const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
   const window = { parent, addEventListener: (name, handler) => { window.onMessage = handler; } };
