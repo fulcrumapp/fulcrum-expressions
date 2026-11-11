@@ -142,21 +142,22 @@ for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]
     { message: `missing value for ${option} for test-target` });
 }
 
-function assertUploads(result, bucket, origins = "https://web.example.com") {
+function assertUploads(result, bucket, origins = "https://web.example.com", prefix = "expv1",
+  publicOrigin = `https://${bucket}.s3.amazonaws.com`) {
   const s3Uploads = result.calls.filter((call) => call[0] === "s3" && call[1] === "cp");
   const targets = s3Uploads.map((call) => call[call.length - 1]);
   assert.deepStrictEqual(targets, [
-    `s3://${bucket}/expv1/legacy/expressions.js`,
-    `s3://${bucket}/expv1/hybrid/expressions.js`,
-    `s3://${bucket}/expv1/expressions-proxy.js`,
-    `s3://${bucket}/expv1/legacy/expressions.html`,
-    `s3://${bucket}/expv1/hybrid/expressions.html`,
-    `s3://${bucket}/expv1/expressions.html`,
+    `s3://${bucket}/${prefix}/legacy/expressions.js`,
+    `s3://${bucket}/${prefix}/hybrid/expressions.js`,
+    `s3://${bucket}/${prefix}/expressions-proxy.js`,
+    `s3://${bucket}/${prefix}/legacy/expressions.html`,
+    `s3://${bucket}/${prefix}/hybrid/expressions.html`,
+    `s3://${bucket}/${prefix}/expressions.html`,
   ]);
   s3Uploads.forEach((call) => {
     const target = call[call.length - 1];
     const source = call[call.length - 2];
-    const relativePath = target.split("/expv1/")[1];
+    const relativePath = target.split(`/${prefix}/`)[1];
     const distPathSegments = relativePath.split("/");
     if (relativePath === "expressions-proxy.js") {
       assert.match(path.basename(source), /^expression-proxy\./);
@@ -187,16 +188,16 @@ function assertUploads(result, bucket, origins = "https://web.example.com") {
         "expressions.js",
         channelPage ? "../expressions-proxy.js" : "expressions-proxy.js",
       ], { comparisonPage: !channelPage });
-      const pageUrl = new URL(`/expv1/${relativePath}`, `https://${bucket}.s3.amazonaws.com`);
+      const pageUrl = new URL(`/${prefix}/${relativePath}`, publicOrigin);
       assert.deepStrictEqual(scripts.map((src) => new URL(src, pageUrl).pathname), [
-        channelPage ? `/expv1/${relativePath.split("/")[0]}/expressions.js` : "/expv1/expressions.js",
-        "/expv1/expressions-proxy.js",
+        channelPage ? `/${prefix}/${relativePath.split("/")[0]}/expressions.js` : `/${prefix}/expressions.js`,
+        `/${prefix}/expressions-proxy.js`,
       ]);
       assert.ok(result.output.includes(`Deployed ${pageUrl.href}\n`));
     }
   });
-  assert.ok(!targets.includes(`s3://${bucket}/expv1/expressions.js`));
-  assert.ok(!result.output.includes(`Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n`));
+  assert.ok(!targets.includes(`s3://${bucket}/${prefix}/expressions.js`));
+  assert.ok(!result.output.includes(`Deployed ${publicOrigin}/${prefix}/expressions.js\n`));
 }
 
 try {
@@ -363,8 +364,17 @@ try {
 
   const development = invokeDeploy(["development"], undefined, "https://development.example.com");
   assert.strictEqual(development.status, 0, development.output);
-  assertUploads(development, "fulcrumapp-world-development", "https://development.example.com");
-  assert.ok(!development.calls.some((call) => call[0] === "cloudfront"));
+  assertUploads(
+    development,
+    "fulcrum-assets",
+    "https://development.example.com",
+    "dev-build",
+    "https://assets.fulcrumapp.com"
+  );
+  assert.deepStrictEqual(
+    development.calls.filter((call) => call[0] === "cloudfront"),
+    [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/dev-build/*"]]
+  );
 
   const spoofedOrigin = invokeDeploy(["explicit-preview"], undefined, "https://web.example.com.attacker.invalid");
   assert.strictEqual(spoofedOrigin.status, 0, spoofedOrigin.output);
@@ -388,7 +398,7 @@ try {
 
   const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
-  assertUploads(production, "fulcrum-assets");
+  assertUploads(production, "fulcrum-assets", "https://web.example.com", "expv1", "https://assets.fulcrumapp.com");
   assert.ok(!production.proxy.includes("https://*.thefulcrum.team"));
   assert.deepStrictEqual(
     production.calls.filter((call) => call[0] === "cloudfront"),

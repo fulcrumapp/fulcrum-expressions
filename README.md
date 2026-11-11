@@ -185,11 +185,16 @@ frozen compatibility URL. No all-functions-complete promotion is planned.
 **Manual deployment:** `yarn deploy` builds and gates the release, then uploads
 the two channels and sandbox assets to the bucket for the current `$USER`
 (falling back to `id -un` when `$USER` is unset or empty).
-`yarn deploy <environment>` selects a preview bucket. `yarn deploy production`
-prompts for confirmation and requires production AWS access. Neither form
-uploads or replaces `/expv1/expressions.js`; production deployment still
-invalidates cached `/expv1/*` objects. You can run `yarn build:dist` separately
-to build and test without uploading.
+`yarn deploy <environment>` selects a preview bucket, except `development`
+publishes to the `fulcrum-assets` bucket under `/dev-build/` and serves it
+through `https://assets.fulcrumapp.com/dev-build/`. The `legacy` and `hybrid`
+sandbox pages are available at `/dev-build/legacy/expressions.html` and
+`/dev-build/hybrid/expressions.html`. `yarn deploy production` prompts for
+confirmation and requires production AWS access; it continues to publish under
+`/expv1/`. Neither production nor development uploads or replaces
+`/expv1/expressions.js`; production invalidates `/expv1/*`, and development
+invalidates `/dev-build/*`. You can run `yarn build:dist` separately to build
+and test without uploading.
 
 Set `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` to a comma-separated list of exact,
 canonical HTTP(S) origins for the applications allowed to embed the sandbox.
@@ -220,21 +225,25 @@ does not restrict JavaScript that a trusted page passes to the expression runtim
 the gates pass, separate development- and production-environment jobs check out
 the same tag, verify it still points to the triggering commit, then build and
 upload the legacy and hybrid bundles and sandbox assets, leaving the frozen
-compatibility object untouched. Pull requests, branch creation, pushes to
-`main`, and prerelease tags never run these deployment jobs. Deployments are
-queued rather than canceled or run concurrently. Immediately before publishing,
-each deployment fails if a newer stable tag exists or the triggering tag has
-been deleted or moved to another commit. This check is not atomic with the S3
-uploads: a tag created while an upload is already in progress cannot stop it,
-and its own deployment must still pass the gates. GitHub Packages publishing
-runs independently in the tag-triggered package workflow; success in one
-workflow does not imply success in the other.
+compatibility object untouched. Development publishes under
+`fulcrum-assets/dev-build/` and uses the existing `assets.fulcrumapp.com`
+distribution; production remains under `fulcrum-assets/expv1/`. Pull requests,
+branch creation, pushes to `main`, and prerelease tags never run these
+deployment jobs. Deployments are queued rather than canceled or run
+concurrently. Immediately before publishing, each deployment fails if a newer
+stable tag exists or the triggering tag has been deleted or moved to another
+commit. This check is not atomic with the S3 uploads: a tag created while an
+upload is already in progress cannot stop it, and its own deployment must still
+pass the gates. GitHub Packages publishing runs independently in the
+tag-triggered package workflow; success in one workflow does not imply success
+in the other.
 The GitHub `development` and `production` environments must each provide
 `EXPRESSION_RELEASE_AWS_ROLE_ARN` and `EXPRESSION_RELEASE_AWS_REGION`, and the
 corresponding AWS role must trust this repository's GitHub Actions OIDC identity
-for tag-triggered runs. Scope the development role to its environment bucket
-and the production role to the required `fulcrum-assets/expv1/` objects and
-invalidation of the existing expression CloudFront distribution. Any
+for tag-triggered runs. Scope the development role to
+`fulcrum-assets/dev-build/` objects and invalidation of `/dev-build/*`; scope
+the production role to `fulcrum-assets/expv1/` objects and invalidation of
+`/expv1/*` on the existing expression CloudFront distribution. Any
 environment approval requirement is configured by administrators. This
 repository's deployment path has only been tested locally with mocked AWS
 commands; real AWS configuration and live publication are not verified here.
