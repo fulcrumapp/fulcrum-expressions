@@ -193,17 +193,13 @@ to build and test without uploading.
 
 Set `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` to a comma-separated list of exact,
 canonical HTTP(S) origins for the applications allowed to embed the sandbox.
-Configure this independently for each deployment environment. Every configured
-sandbox also trusts HTTPS origins of the form `<namespace>.thefulcrum.team`,
-where the namespace is a single lowercase DNS label of 1–63 characters. This
-includes all preview and chaos namespaces, so operators must ensure that every
-such namespace is trusted to send sandbox commands. Other subdomains, nested
-hostnames, HTTP, and non-default ports are not covered by this rule.
+Configure this independently for each deployment environment.
 Deployments reject missing or invalid values before uploading any assets;
-user-supplied wildcard and opaque origins are not accepted. The production GitHub Actions environment
-must provide the variable `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` before a release.
-The checked-in configuration does not establish which origins are authorized;
-the deployment owner must verify the complete list.
+wildcard and opaque origins are not accepted. Both the `development` and
+`production` GitHub Actions environments must provide the variable
+`EXPRESSION_SANDBOX_ALLOWED_ORIGINS` before a release. The checked-in
+configuration does not establish which origins are authorized; the deployment
+owner must verify the complete list.
 
 The local build leaves the proxy unconfigured, so it rejects all messages. To
 use a local sandbox, configure a copy of the proxy for the local parent origin:
@@ -219,25 +215,26 @@ For an installed npm package, the same configurator is available under
 This validation limits which embedding pages may send sandbox commands. It
 does not restrict JavaScript that a trusted page passes to the expression runtime.
 
-**Automated production deployment:** creating a stable release tag in the form
+**Automated development and production deployments:** creating a stable release tag in the form
 `vMAJOR.MINOR.PATCH` runs `Expression migration gates` against that tag. After
-the gates pass, the production-environment job checks out the same tag and
-verifies it still points to the triggering commit, then builds and uploads the
-legacy and hybrid bundles and sandbox assets, leaving the frozen compatibility
-object untouched. Pull requests, branch creation, pushes to `main`, and
-prerelease tags never run this deployment job. Production deployments are
+the gates pass, separate development- and production-environment jobs check out
+the same tag, verify it still points to the triggering commit, then build and
+upload the legacy and hybrid bundles and sandbox assets, leaving the frozen
+compatibility object untouched. Pull requests, branch creation, pushes to
+`main`, and prerelease tags never run these deployment jobs. Deployments are
 queued rather than canceled or run concurrently. Immediately before publishing,
-the deployment fails if a newer stable tag exists or the triggering tag has
-been deleted or moved to another commit. This check is not atomic with the S3 uploads: a tag created while
-an upload is already in progress cannot stop it, and its own deployment must
-still pass the gates. GitHub Packages publishing runs independently in the
-tag-triggered package workflow; success in one workflow does not imply success
-in the other.
-The GitHub `production` environment must provide
+each deployment fails if a newer stable tag exists or the triggering tag has
+been deleted or moved to another commit. This check is not atomic with the S3
+uploads: a tag created while an upload is already in progress cannot stop it,
+and its own deployment must still pass the gates. GitHub Packages publishing
+runs independently in the tag-triggered package workflow; success in one
+workflow does not imply success in the other.
+The GitHub `development` and `production` environments must each provide
 `EXPRESSION_RELEASE_AWS_ROLE_ARN` and `EXPRESSION_RELEASE_AWS_REGION`, and the
-AWS role must trust this repository's production-environment GitHub Actions
-OIDC identity for tag-triggered runs. Scope the role to the required `fulcrum-assets/expv1/` objects
-and invalidation of the existing expression CloudFront distribution. Any
+corresponding AWS role must trust this repository's GitHub Actions OIDC identity
+for tag-triggered runs. Scope the development role to its environment bucket
+and the production role to the required `fulcrum-assets/expv1/` objects and
+invalidation of the existing expression CloudFront distribution. Any
 environment approval requirement is configured by administrators. This
 repository's deployment path has only been tested locally with mocked AWS
 commands; real AWS configuration and live publication are not verified here.
