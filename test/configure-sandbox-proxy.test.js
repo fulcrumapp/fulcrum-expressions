@@ -13,7 +13,7 @@ assert.strictEqual(
 );
 
 for (const origins of [
-  undefined, "", "null", "*", "https://*.example.com", "https://example.com/path",
+  undefined, "", "null", "*", "https://*.example.com", "https://*.thefulcrum.team", "https://example.com/path",
   "https://example.com?query=1", "https://user@example.com", "https://example.com/",
   "https://example.com,,https://other.example.com", "javascript:alert(1)",
 ]) {

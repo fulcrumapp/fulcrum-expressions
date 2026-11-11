@@ -49,18 +49,19 @@ then
     printf "Deployment cancelled\n"
     exit 1
   fi
-  bucket=fulcrum-assets
   deploy_prefix=expv1
-  public_base_url="https://assets.fulcrumapp.com/${deploy_prefix}"
 elif [[ "${ENVIRONMENT}" == "development" ]]
 then
-  bucket=fulcrum-assets
   deploy_prefix=dev-build
-  public_base_url="https://assets.fulcrumapp.com/${deploy_prefix}"
 else
   bucket=fulcrumapp-world-${ENVIRONMENT}
   deploy_prefix=expv1
   public_base_url="https://${bucket}.s3.amazonaws.com/${deploy_prefix}"
+fi
+if [[ "${ENVIRONMENT}" == "production" || "${ENVIRONMENT}" == "development" ]]
+then
+  bucket=fulcrum-assets
+  public_base_url="https://assets.fulcrumapp.com/${deploy_prefix}"
 fi
 
 configured_proxy="$(mktemp "${TMPDIR:-/tmp}/expression-proxy.XXXXXXXX")"
