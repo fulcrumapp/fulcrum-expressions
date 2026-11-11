@@ -19,7 +19,7 @@ jobs:
   classify-tag:
     name: Identify stable release tag
     if: github.event_name == 'create' && github.ref_type == 'tag'
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     outputs:
       is_stable: ${{ steps.classify.outputs.is_stable }}
     steps:
@@ -36,7 +36,7 @@ jobs:
     name: Expression migration gates
     needs: classify-tag
     if: ${{ !cancelled() && (github.event_name == 'pull_request' || (github.event_name == 'create' && github.ref_type == 'tag' && needs.classify-tag.result == 'success' && needs.classify-tag.outputs.is_stable == 'true')) }}
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     env:
       COREPACK_ENABLE_AUTO_PIN: '0'
     outputs:
@@ -109,7 +109,7 @@ jobs:
     name: Deploy to S3 (development)
     needs: migration-gates
     if: success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     environment: development
     concurrency:
       group: ${{ github.repository }}-expression-development-deploy
@@ -186,7 +186,7 @@ jobs:
     name: Deploy to S3 (release tag only)
     needs: migration-gates
     if: success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     environment: production
     concurrency:
       group: ${{ github.repository }}-expression-production-deploy

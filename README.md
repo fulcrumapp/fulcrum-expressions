@@ -68,7 +68,8 @@ yarn build:dist
 ### GitHub Packages releases
 
 The standard npm CI workflow runs the migration gates on pull requests into
-`main`, merge queue entries and main changes on GitHub-hosted runners. The
+`main`, merge queue entries and main changes on the approved internal
+`gha-runner-set-iops-dind` runners, as do the release and deployment jobs. The
 existing expression migration workflow also continues to run on pull requests
 and tag creation. After main CI validation succeeds, a GitHub App commits the
 next version to `package.json` and creates its matching SemVer tag. Do not edit

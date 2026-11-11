@@ -19,7 +19,7 @@ concurrency:
 jobs:
   ci:
     if: github.event_name != 'pull_request' || !github.event.pull_request.draft
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     timeout-minutes: 20
     env:
       COREPACK_ENABLE_AUTO_PIN: '0'
@@ -96,7 +96,7 @@ jobs:
   build-and-test:
     if: always() && (github.event_name != 'pull_request' || !github.event.pull_request.draft)
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     steps:
       - name: Require CI to succeed
         env:
@@ -111,7 +111,7 @@ jobs:
     name: Create npm release tag
     needs: build-and-test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     concurrency:
       group: ${{ github.repository }}-npm-release-tag
       cancel-in-progress: false

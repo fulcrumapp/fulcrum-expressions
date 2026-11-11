@@ -39,22 +39,22 @@ esac
   }
 }
 
-test("event bases, checkout and GitHub-hosted runners are configured", () => {
+test("event bases, checkout and internal runners are configured", () => {
   for (const field of ["pull_request.base.sha", "merge_group.base_sha", "event.before"]) {
     assert.ok(buildJob.includes(field), field);
   }
   assert.match(buildJob, /fetch-depth:\s*0/);
-  assert.match(buildJob, /runs-on:\s*ubuntu-latest/);
-  assert.match(workflow, /^  tag:[\s\S]*?runs-on:\s*ubuntu-latest/m);
+  assert.match(buildJob, /runs-on:\s*gha-runner-set-iops-dind/);
+  assert.match(workflow, /^  tag:[\s\S]*?runs-on:\s*gha-runner-set-iops-dind/m);
   assert.match(workflow, /node --test \.github\/tests\/\*\.cjs/);
-  if (/^  sonar:/m.test(workflow)) assert.match(workflow, /^  sonar:[\s\S]*?runs-on:\s*ubuntu-latest/m);
+  if (/^  sonar:/m.test(workflow)) assert.match(workflow, /^  sonar:[\s\S]*?runs-on:\s*gha-runner-set-iops-dind/m);
 });
 
-test("all workflow jobs use GitHub-hosted Ubuntu runners", () => {
+test("all workflow jobs use the approved internal runner", () => {
   for (const name of readdirSync(workflows).filter((file) => /\.ya?ml$/.test(file))) {
     const contents = readFileSync(path.join(workflows, name), "utf8");
     for (const line of contents.match(/^\s+runs-on:.*$/gm) || []) {
-      assert.match(line, /^\s+runs-on:\s*ubuntu-latest\s*$/, `${name}: ${line}`);
+      assert.match(line, /^\s+runs-on:\s*gha-runner-set-iops-dind\s*$/, `${name}: ${line}`);
     }
   }
 });
@@ -87,8 +87,8 @@ test("publish workflows use tag creation and appropriate runners", () => {
     assert.match(publish, /^  create:/m);
     assert.doesNotMatch(publish, /^  push:/m);
     assert.match(publish, /github\.ref_type == 'tag'/);
-    assert.match(publish, /^  publish:[\s\S]*?runs-on:\s*ubuntu-latest/m);
-    assert.match(publish, /^  release:[\s\S]*?runs-on:\s*ubuntu-latest/m);
+    assert.match(publish, /^  publish:[\s\S]*?runs-on:\s*gha-runner-set-iops-dind/m);
+    assert.match(publish, /^  release:[\s\S]*?runs-on:\s*gha-runner-set-iops-dind/m);
   }
 });
 

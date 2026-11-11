@@ -16,7 +16,7 @@ jobs:
   classify-tag:
     name: Identify stable release tag
     if: github.ref_type == 'tag'
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     outputs:
       is_stable: ${{ steps.classify.outputs.is_stable }}
     steps:
@@ -33,7 +33,7 @@ jobs:
     name: Publish to GitHub Packages
     needs: classify-tag
     if: needs.classify-tag.outputs.is_stable == 'true'
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     permissions:
       contents: read
       packages: write
@@ -57,7 +57,7 @@ jobs:
   release:
     name: Create GitHub release notes
     needs: publish
-    runs-on: ubuntu-latest
+    runs-on: gha-runner-set-iops-dind
     permissions:
       contents: write
     steps:
