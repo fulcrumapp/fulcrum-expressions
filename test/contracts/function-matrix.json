@@ -4786,7 +4786,7 @@
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "Invalid RAG options."
+        "message": "Invalid document retrieval options."
       }
     },
     {
@@ -4799,7 +4799,7 @@
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "Invalid RAG options."
+        "message": "Invalid document retrieval options."
       }
     },
     {
@@ -4812,7 +4812,7 @@
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "Invalid RAG options."
+        "message": "Invalid document retrieval options."
       }
     },
     {
@@ -4825,7 +4825,7 @@
       "expected": {
         "$type": "error",
         "name": "Error",
-        "message": "Invalid RAG options."
+        "message": "Invalid document retrieval options."
       }
     },
     {
