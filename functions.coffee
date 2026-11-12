@@ -1315,11 +1315,12 @@ exports.INFERENCE = (options, callback) ->
   , 1)
 
 RAG_ERROR_MESSAGES =
-  rag_invalid_options: 'Invalid RAG options.'
-  rag_invalid_query: 'Invalid RAG query.'
-  rag_unavailable: 'RAG is unavailable.'
+  rag_invalid_options: 'Invalid document retrieval options.'
+  rag_invalid_query: 'Invalid document retrieval query.'
+  rag_unavailable: 'Document retrieval is unavailable.'
   rag_timeout: 'RAG request timed out.'
   rag_cancelled: 'RAG request was cancelled.'
+  document_retrieval_disabled: 'GETDOCCONTEXT isn’t enabled for this account. Contact Fulcrum Sales if you’d like to test document retrieval.'
 
 ragError = (code) ->
   error = new Error(RAG_ERROR_MESSAGES[code] ? RAG_ERROR_MESSAGES.rag_unavailable)
@@ -1604,7 +1605,7 @@ ragValidateResultV1 = (result, requestOptions) ->
 
 ragNativeErrorCode = (error) ->
   try
-    return error.code if error?.code is 'rag_timeout' or error?.code is 'rag_cancelled'
+    return error.code if error?.code is 'rag_timeout' or error?.code is 'rag_cancelled' or error?.code is 'document_retrieval_disabled'
   catch ignored
 
   'rag_unavailable'

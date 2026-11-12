@@ -420,7 +420,7 @@ function REQUEST() {}
 
 /**
  * GETDOCCONTEXT
- * Retrieves ranked passages from the current form's local, validated RAG bundle.
+ * Retrieves ranked passages from the current form's local, validated document-retrieval bundle.
  * GETDOCCONTEXT is a Data Event function and is supported only by the iOS and Android
  * Expressions hosts. Web calls complete with `rag_unavailable`; a missing
  * active form or usable bundle also returns `rag_unavailable`.
@@ -467,15 +467,27 @@ function REQUEST() {}
  * @param {number} [options.timeout_ms=2000] Timeout in milliseconds, an integer from 2,000 through 10,000
  * @param {function} callback Called asynchronously exactly once with `(error, result)`
  *
- * Stable error codes are `rag_invalid_options`, `rag_invalid_query`,
- * `rag_unavailable`, `rag_timeout`, and `rag_cancelled`. On failure the
- * callback receives `(error, null)`; on success it receives `(null, result)`.
+ * Stable error codes and messages are:
+ * - `rag_invalid_options`: `Invalid document retrieval options.`
+ * - `rag_invalid_query`: `Invalid document retrieval query.`
+ * - `rag_unavailable`: `Document retrieval is unavailable.`
+ * - `rag_timeout`: `RAG request timed out.`
+ * - `rag_cancelled`: `RAG request was cancelled.`
+ * - `document_retrieval_disabled`: `GETDOCCONTEXT isn’t enabled for this account.
+ *   Contact Fulcrum Sales if you’d like to test document retrieval.`
+ *
+ * On failure the callback receives `(error, null)`; on success it receives
+ * `(null, result)`.
  * Error messages and diagnostics do not include query text, passage text,
  * filenames, citations, document content, source URLs, or credentials.
  *
  * @example
  * GETDOCCONTEXT({query: 'soil moisture', limit: 5}, function(error, result) {
  *   if (error) {
+ *     if (error.code === 'document_retrieval_disabled') {
+ *       // Contact Fulcrum Sales to request access to document retrieval.
+ *       return;
+ *     }
  *     if (error.code === 'rag_unavailable') {
  *       // Handle a host or active-bundle that is unavailable.
  *     }
