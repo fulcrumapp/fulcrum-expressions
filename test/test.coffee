@@ -2994,6 +2994,7 @@ describe "SETMODE", ->
 
       missingCallbackError.code.should.eql('rag_invalid_options')
       nonCallableCallbackError.code.should.eql('rag_invalid_options')
+      missingCallbackError.message.should.eql('Invalid document retrieval options.')
       missingCallbackError.message.should.not.containEql('private query')
 
     it 'cannot be used in calculations', ->
@@ -3138,6 +3139,7 @@ describe "SETMODE", ->
           GETDOCCONTEXT(options, (error, result) ->
             try
               error.code.should.eql('rag_invalid_options')
+              error.message.should.eql('Invalid document retrieval options.')
               shouldBeNull(result)
               dispatchCount.should.eql(0)
               completedCount += 1
@@ -3170,6 +3172,7 @@ describe "SETMODE", ->
           GETDOCCONTEXT(options, (error, result) ->
             try
               error.code.should.eql('rag_invalid_query')
+              error.message.should.eql('Invalid document retrieval query.')
               shouldBeNull(result)
               dispatchCount.should.eql(0)
               completedCount += 1
@@ -3179,7 +3182,7 @@ describe "SETMODE", ->
           )
           completedCount.should.eql(0)
 
-    it 'returns asynchronous rag_unavailable on Web without dispatching a retrieval request', (done) ->
+    it 'returns asynchronous document retrieval unavailable on Web without dispatching a request', (done) ->
       CONFIGURE({ platform: 'Web' })
       mockAsyncHostTimer()
 
@@ -3193,6 +3196,7 @@ describe "SETMODE", ->
           callbackCalled.should.be.false()
           callbackCalled = true
           error.code.should.eql('rag_unavailable')
+          error.message.should.eql('Document retrieval is unavailable.')
           shouldBeNull(result)
           dispatchCount.should.eql(0)
           done()
@@ -3202,7 +3206,7 @@ describe "SETMODE", ->
 
       callbackCalled.should.be.false()
 
-    it 'returns asynchronous rag_unavailable when a supported host has no RAG operation', (done) ->
+    it 'returns asynchronous document retrieval unavailable when a supported host has no operation', (done) ->
       CONFIGURE({ platform: 'Android' })
       mockAsyncHostTimer()
       delete runtime.$$rag
@@ -3213,6 +3217,7 @@ describe "SETMODE", ->
           callbackCalled.should.be.false()
           callbackCalled = true
           error.code.should.eql('rag_unavailable')
+          error.message.should.eql('Document retrieval is unavailable.')
           shouldBeNull(result)
           done()
         catch error
@@ -3373,7 +3378,7 @@ describe "SETMODE", ->
           GETDOCCONTEXT({query: 'valid'}, (error, result) ->
             try
               error.code.should.eql('rag_unavailable')
-              error.message.should.eql('RAG is unavailable.')
+              error.message.should.eql('Document retrieval is unavailable.')
               shouldBeNull(result)
               completedCount += 1
               done() if completedCount is responses.length
@@ -3406,7 +3411,7 @@ describe "SETMODE", ->
           done(error)
       )
 
-    it 'forwards only stable timeout and cancellation codes with privacy-safe errors', (done) ->
+    it 'forwards stable timeout and cancellation codes with retrieval-specific errors', (done) ->
       CONFIGURE({ platform: 'iOS' })
       mockAsyncHostTimer()
 
@@ -3426,6 +3431,12 @@ describe "SETMODE", ->
           GETDOCCONTEXT({query: 'secret query'}, (error, result) ->
             try
               error.code.should.eql(code)
+              error.message.should.eql(
+                if code is 'rag_timeout'
+                  'Document retrieval request timed out.'
+                else
+                  'Document retrieval request was cancelled.'
+              )
               error.message.should.not.containEql('secret query')
               error.message.should.not.containEql('filename')
               error.message.should.not.containEql('citation')
@@ -3435,6 +3446,39 @@ describe "SETMODE", ->
             catch error
               done(error)
           )
+
+    it 'maps disabled document retrieval to the sales invitation asynchronously exactly once', (done) ->
+      CONFIGURE({ platform: 'Android' })
+      mockAsyncHostTimer()
+
+      runtime.$$rag = (options, callbackID) ->
+        runtime.callbackID = callbackID
+        runtime.callbackArguments = [
+          { code: 'document_retrieval_disabled', message: 'private query' }
+          null
+        ]
+        runtime.finishAsync()
+
+      callbackCount = 0
+      GETDOCCONTEXT({query: 'private query'}, (error, result) ->
+        try
+          callbackCount += 1
+          error.code.should.eql('document_retrieval_disabled')
+          error.message.should.eql('GETDOCCONTEXT isn’t enabled for this account. Contact Fulcrum Sales if you’d like to test document retrieval.')
+          error.message.should.not.containEql('private query')
+          shouldBeNull(result)
+          setTimeout((->
+            try
+              callbackCount.should.eql(1)
+              done()
+            catch error
+              done(error)
+          ), 10)
+        catch error
+          done(error)
+      )
+
+      callbackCount.should.eql(0)
 
     it 'calls the public callback exactly once when a host reports late completions', (done) ->
       CONFIGURE({ platform: 'Android' })
@@ -3487,7 +3531,7 @@ describe "SETMODE", ->
       GETDOCCONTEXT({query: 'private query'}, (error, result) ->
         try
           error.code.should.eql('rag_unavailable')
-          error.message.should.eql('RAG is unavailable.')
+          error.message.should.eql('Document retrieval is unavailable.')
           error.message.should.not.containEql('private query')
           shouldBeNull(result)
           logs.should.eql([])

@@ -1,5 +1,5 @@
 /**
- * Retrieves bounded passages from the active form's local RAG bundle.
+ * Retrieves bounded passages from the active form's local document bundle.
  *
  * This is a Data Event function supported only by the iOS and Android
  * Expressions hosts. It does not generate answers or contact a remote service.
@@ -26,7 +26,8 @@ export type RagErrorCodeV1 =
   | "rag_invalid_query"
   | "rag_unavailable"
   | "rag_timeout"
-  | "rag_cancelled";
+  | "rag_cancelled"
+  | "document_retrieval_disabled";
 
 export interface RagErrorV1 extends Error {
   code: RagErrorCodeV1;
@@ -67,7 +68,7 @@ export interface RagRetrievalResultV1 {
 /**
  * Retrieves ranked passages from the active form's validated local bundle.
  * The callback is invoked asynchronously exactly once. On failure, `result`
- * is null and `error.code` is one of the stable v1 RAG error codes.
+ * is null and `error.code` is one of the stable v1 document retrieval error codes.
  */
 export default function GETDOCCONTEXT(
   options: RagRetrievalOptionsV1,
