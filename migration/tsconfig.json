@@ -6,7 +6,7 @@
     "strict": true,
     "noEmitOnError": true,
     "forceConsistentCasingInFileNames": true,
-    "rootDir": ".",
+    "rootDir": "..",
     "outDir": "../dist/.migration-build",
     "types": [],
     "lib": ["ES2015"]
