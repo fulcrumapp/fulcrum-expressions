@@ -1318,8 +1318,8 @@ RAG_ERROR_MESSAGES =
   rag_invalid_options: 'Invalid document retrieval options.'
   rag_invalid_query: 'Invalid document retrieval query.'
   rag_unavailable: 'Document retrieval is unavailable.'
-  rag_timeout: 'Document retrieval request timed out.'
-  rag_cancelled: 'Document retrieval request was cancelled.'
+  rag_timeout: 'RAG request timed out.'
+  rag_cancelled: 'RAG request was cancelled.'
   document_retrieval_disabled: 'GETDOCCONTEXT isn’t enabled for this account. Contact Fulcrum Sales if you’d like to test document retrieval.'
 
 ragError = (code) ->

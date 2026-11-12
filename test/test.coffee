@@ -3411,14 +3411,16 @@ describe "SETMODE", ->
           done(error)
       )
 
-    it 'forwards stable timeout and cancellation codes with retrieval-specific errors', (done) ->
+    it 'preserves stable timeout and cancellation user-facing messages', (done) ->
       CONFIGURE({ platform: 'iOS' })
       mockAsyncHostTimer()
 
       codes = ['rag_timeout', 'rag_cancelled']
+      responseIndex = 0
       completedCount = 0
       runtime.$$rag = (options, callbackID) ->
-        errorCode = codes[completedCount]
+        errorCode = codes[responseIndex]
+        responseIndex += 1
         runtime.callbackID = callbackID
         runtime.callbackArguments = [
           { code: errorCode, message: 'secret query, filename, and citation' }
@@ -3431,12 +3433,7 @@ describe "SETMODE", ->
           GETDOCCONTEXT({query: 'secret query'}, (error, result) ->
             try
               error.code.should.eql(code)
-              error.message.should.eql(
-                if code is 'rag_timeout'
-                  'Document retrieval request timed out.'
-                else
-                  'Document retrieval request was cancelled.'
-              )
+              error.message.should.eql(if code is 'rag_timeout' then 'RAG request timed out.' else 'RAG request was cancelled.')
               error.message.should.not.containEql('secret query')
               error.message.should.not.containEql('filename')
               error.message.should.not.containEql('citation')
