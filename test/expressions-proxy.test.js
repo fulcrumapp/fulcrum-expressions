@@ -8,7 +8,6 @@ const CoffeeScript = require("coffee-script");
 
 const marker = "__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__";
 const trustedOrigin = "https://trusted.example";
-const previewRule = "https://*.thefulcrum.team";
 const source = fs.readFileSync(path.join(__dirname, "..", "expressions-proxy.coffee"), "utf8");
 
 function createSandbox(origins, request = () => { throw new Error("Unexpected HTTP request"); }) {
@@ -115,48 +114,9 @@ function createSandbox(origins, request = () => { throw new Error("Unexpected HT
 }
 
 {
-  const accepted = [
-    "https://rails11522.thefulcrum.team",
-    "https://chaos-test-123.thefulcrum.team",
-    "https://a.thefulcrum.team",
-    `https://${"a".repeat(63)}.thefulcrum.team`,
-  ];
-  for (const origin of accepted) {
-    const sandbox = createSandbox([trustedOrigin, previewRule]);
-    sandbox.send({ name: "evaluate", id: origin }, { origin });
-    assert.strictEqual(sandbox.replies.length, 1, `${origin} must be accepted`);
-    assert.strictEqual(sandbox.replies[0].origin, origin);
-    sandbox.send({ name: "evaluate" }, { origin: trustedOrigin });
-    assert.strictEqual(sandbox.replies.length, 1, "preview sessions must remain bound to their origin");
-  }
-  const rejected = [
-    "http://rails11522.thefulcrum.team",
-    "https://thefulcrum.team",
-    "https://.thefulcrum.team",
-    "https://nested.rails11522.thefulcrum.team",
-    "https://rails11522.thefulcrum.team.attacker.invalid",
-    "https://rails11522-thefulcrum.team",
-    "https://rails11522.thefulcrum.team:444",
-    "https://rails11522.thefulcrum.team/path",
-    "https://rails11522.thefulcrum.team\n",
-    "https://-preview.thefulcrum.team",
-    "https://preview-.thefulcrum.team",
-    `https://${"a".repeat(64)}.thefulcrum.team`,
-    "null",
-  ];
-  const sandbox = createSandbox([trustedOrigin, previewRule]);
-  rejected.forEach((origin) => sandbox.send({ name: "evaluate" }, { origin }));
-  sandbox.send({ name: "evaluate" }, { origin: accepted[0], source: {} });
-  sandbox.send({ name: "evaluate" }, { origin: accepted[0], isTrusted: false });
-  assert.strictEqual(sandbox.replies.length, 0, "invalid origins and sources must be rejected");
-  sandbox.send({ name: "evaluate" }, { origin: trustedOrigin });
-  assert.strictEqual(sandbox.replies.length, 1, "rejected messages must not bind the parent origin");
-}
-
-{
   const sandbox = createSandbox([trustedOrigin]);
   sandbox.send({ name: "evaluate" }, { origin: "https://rails11522.thefulcrum.team" });
-  assert.strictEqual(sandbox.replies.length, 0, "the preview rule must be present in configured origins");
+  assert.strictEqual(sandbox.replies.length, 0, "unconfigured origins must be rejected");
 }
 
 {

@@ -7,6 +7,7 @@ const { test } = require("node:test");
 
 const workflows = path.resolve(__dirname, "../workflows");
 const workflow = readFileSync(path.join(workflows, "ci.yml"), "utf8");
+const migrationWorkflow = readFileSync(path.join(workflows, "expression-migration-gates.yml"), "utf8");
 const buildJob = workflow.match(/^  ci:\n([\s\S]*?)(?=^  build-and-test:)/m)?.[1];
 assert.ok(buildJob, "CI job is present");
 const guard = buildJob.match(/node <<'NODE'\n([\s\S]*?)^\s*NODE$/m)?.[1];
@@ -45,6 +46,9 @@ test("event bases, checkout and GitHub-hosted runners are configured", () => {
   }
   assert.match(buildJob, /fetch-depth:\s*0/);
   assert.match(buildJob, /runs-on:\s*ubuntu-latest/);
+  const migrationJob = migrationWorkflow.match(/^  migration-gates:\n([\s\S]*?)(?=^  deploy-development:)/m)?.[1];
+  assert.ok(migrationJob, "migration-gates job is present");
+  assert.match(migrationJob, /runs-on:\s*ubuntu-latest/);
   assert.match(workflow, /^  tag:[\s\S]*?runs-on:\s*ubuntu-latest/m);
   assert.match(workflow, /node --test \.github\/tests\/\*\.cjs/);
   if (/^  sonar:/m.test(workflow)) assert.match(workflow, /^  sonar:[\s\S]*?runs-on:\s*ubuntu-latest/m);
@@ -138,7 +142,7 @@ test("Yarn commands cannot modify the tagged package manifest through Corepack a
   const config = yaml.load(workflow);
   assert.equal(config.jobs.ci.env.COREPACK_ENABLE_AUTO_PIN, "0");
   const migration = yaml.load(readFileSync(path.join(workflows, "expression-migration-gates.yml"), "utf8"));
-  for (const job of ["migration-gates", "deploy-production"])
+  for (const job of ["migration-gates", "deploy-development", "deploy-production"])
     assert.equal(migration.jobs[job].env.COREPACK_ENABLE_AUTO_PIN, "0", job);
   assert.match(config.jobs.ci.steps.find((step) => step.name === "Run build and expression migration gates").run,
     /yarn test:migration-gates/);

@@ -113,9 +113,7 @@ class ExpressionEngine
 
   onMessage: (event) =>
     return unless event.isTrusted is true and event.source is window.parent and event.source isnt window
-    previewOrigin = @allowedOrigins.indexOf('https://*.thefulcrum.team') isnt -1 and
-      /^https:\/\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.thefulcrum\.team(?![\s\S])/.test(event.origin)
-    return unless previewOrigin or @allowedOrigins.indexOf(event.origin) isnt -1
+    return unless @allowedOrigins.indexOf(event.origin) isnt -1
     return if @parentOrigin? and @parentOrigin isnt event.origin
     return unless typeof event.data is 'string'
 

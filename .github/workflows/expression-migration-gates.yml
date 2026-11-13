@@ -105,6 +105,83 @@ jobs:
       - name: Deployment path regression checks
         run: yarn test:deploy
 
+  deploy-development:
+    name: Deploy to S3 (development)
+    needs: migration-gates
+    if: success() && github.event_name == 'create' && github.ref_type == 'tag' && needs.migration-gates.outputs.stable_release_tag == 'true'
+    runs-on: ubuntu-latest
+    environment: development
+    concurrency:
+      group: ${{ github.repository }}-expression-development-deploy
+      cancel-in-progress: false
+      queue: max
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify triggering tag
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]] ||
+             [[ "$(git rev-parse --verify "${GITHUB_REF}^{commit}")" != "$GITHUB_SHA" ]]; then
+            echo "::error::The checked-out tag does not match the triggering commit."
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install locked dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Set up Ruby for public declarations
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
+        with:
+          ruby-version: '3.4'
+          bundler: none
+
+      - name: Build release bundles
+        run: yarn build && yarn test:types:check && git diff --exit-code -- ts/api.ts && yarn build:verify
+
+      - name: Validate AWS release configuration
+        env:
+          AWS_ROLE_ARN: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
+          AWS_REGION: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
+        run: |
+          if [[ -z "${AWS_ROLE_ARN}" ]]; then
+            echo "::error::Set EXPRESSION_RELEASE_AWS_ROLE_ARN in the development environment."
+            exit 1
+          fi
+          if [[ -z "${AWS_REGION}" ]]; then
+            echo "::error::Set EXPRESSION_RELEASE_AWS_REGION in the development environment."
+            exit 1
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          role-to-assume: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
+          aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}
+
+      - name: Reject stale release
+        run: node .github/actions/npm-common/remote-tag.js --reject-newer
+
+      - name: Publish legacy and hybrid bundles
+        env:
+          EXPRESSION_SANDBOX_ALLOWED_ORIGINS: ${{ vars.EXPRESSION_SANDBOX_ALLOWED_ORIGINS }}
+        run: ./script/deploy development --yes
+
   deploy-production:
     name: Deploy to S3 (release tag only)
     needs: migration-gates
@@ -122,7 +199,7 @@ jobs:
       id-token: write
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
@@ -137,7 +214,7 @@ jobs:
           fi
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
           cache: yarn
@@ -169,7 +246,7 @@ jobs:
           fi
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           role-to-assume: ${{ vars.EXPRESSION_RELEASE_AWS_ROLE_ARN }}
           aws-region: ${{ vars.EXPRESSION_RELEASE_AWS_REGION }}

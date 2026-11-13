@@ -4,7 +4,6 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const vm = require("vm");
 const { spawnSync } = require("child_process");
 const yaml = require("js-yaml");
 const { assertSandboxScripts } = require("../script/sandbox-scripts");
@@ -28,6 +27,7 @@ assert.match(ci.jobs.ci.steps.find((step) => step.name === "Run build and expres
   /yarn test:migration-gates/);
 const gates = workflow.jobs["migration-gates"];
 const deployment = workflow.jobs["deploy-production"];
+const developmentDeployment = workflow.jobs["deploy-development"];
 const classifier = workflow.jobs["classify-tag"];
 assert.strictEqual(classifier.if, "github.event_name == 'create' && github.ref_type == 'tag'");
 assert.strictEqual(classifier.outputs.is_stable, "${{ steps.classify.outputs.is_stable }}");
@@ -47,11 +47,35 @@ assert.strictEqual(gates.steps.find((step) => step.name === "Check out source").
   "${{ github.event_name == 'create' && github.ref || '' }}");
 assert.strictEqual(deployment.steps.find((step) => step.name === "Check out source").with.ref, "${{ github.ref }}");
 assert.strictEqual(deployment.environment, "production");
+assert.strictEqual(developmentDeployment.environment, "development");
+assert.strictEqual(developmentDeployment.if, deployment.if);
+assert.strictEqual(developmentDeployment.needs, deployment.needs);
 assert.strictEqual(deployment.concurrency.group, "${{ github.repository }}-expression-production-deploy");
+assert.strictEqual(developmentDeployment.concurrency.group, "${{ github.repository }}-expression-development-deploy");
 assert.strictEqual(deployment.concurrency["cancel-in-progress"], false);
+assert.strictEqual(developmentDeployment.concurrency["cancel-in-progress"], false);
 assert.strictEqual(deployment.concurrency.queue, "max");
+assert.strictEqual(developmentDeployment.concurrency.queue, "max");
 assert.strictEqual(deployment.steps.find((step) => step.name === "Publish legacy and hybrid bundles").run,
   "./script/deploy production --yes");
+assert.strictEqual(developmentDeployment.steps.find((step) => step.name === "Publish legacy and hybrid bundles").run,
+  "./script/deploy development --yes");
+for (const job of [developmentDeployment, deployment]) {
+  for (const action of ["actions/checkout", "actions/setup-node"]) {
+    const step = job.steps.find((step) => step.uses?.startsWith(`${action}@`));
+    assert.match(step.uses, new RegExp(`^${action}@[a-f0-9]{40}$`));
+  }
+}
+for (const job of [developmentDeployment, deployment]) {
+  assert.strictEqual(
+    job.steps.find((step) => step.name === "Publish legacy and hybrid bundles").env.EXPRESSION_SANDBOX_ALLOWED_ORIGINS,
+    "${{ vars.EXPRESSION_SANDBOX_ALLOWED_ORIGINS }}"
+  );
+  assert.match(
+    job.steps.find((step) => step.uses?.startsWith("aws-actions/configure-aws-credentials@")).uses,
+    /^aws-actions\/configure-aws-credentials@[a-f0-9]{40}$/
+  );
+}
 
 const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-deploy-test-"));
 const binDirectory = path.join(temporaryRoot, "bin");
@@ -124,29 +148,29 @@ for (const option of ["--content-type", "--acl", "--cache-control", "--expires"]
     { message: `missing value for ${option} for test-target` });
 }
 
-function assertUploads(result, bucket) {
+function assertUploads(result, bucket, origins = "https://web.example.com", prefix = "expv1",
+  publicOrigin = `https://${bucket}.s3.amazonaws.com`) {
   const s3Uploads = result.calls.filter((call) => call[0] === "s3" && call[1] === "cp");
   const targets = s3Uploads.map((call) => call[call.length - 1]);
   assert.deepStrictEqual(targets, [
-    `s3://${bucket}/expv1/legacy/expressions.js`,
-    `s3://${bucket}/expv1/hybrid/expressions.js`,
-    `s3://${bucket}/expv1/expressions-proxy.js`,
-    `s3://${bucket}/expv1/legacy/expressions.html`,
-    `s3://${bucket}/expv1/hybrid/expressions.html`,
-    `s3://${bucket}/expv1/expressions.html`,
+    `s3://${bucket}/${prefix}/legacy/expressions.js`,
+    `s3://${bucket}/${prefix}/hybrid/expressions.js`,
+    `s3://${bucket}/${prefix}/expressions-proxy.js`,
+    `s3://${bucket}/${prefix}/legacy/expressions.html`,
+    `s3://${bucket}/${prefix}/hybrid/expressions.html`,
+    `s3://${bucket}/${prefix}/expressions.html`,
   ]);
   s3Uploads.forEach((call) => {
     const target = call[call.length - 1];
     const source = call[call.length - 2];
-    const relativePath = target.split("/expv1/")[1];
+    const relativePath = target.split(`/${prefix}/`)[1];
     const distPathSegments = relativePath.split("/");
     if (relativePath === "expressions-proxy.js") {
       assert.match(path.basename(source), /^expression-proxy\./);
       assert.strictEqual(
         result.proxy,
         fs.readFileSync(path.join(root, "dist", "expressions-proxy.js"), "utf8")
-          .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__",
-            "https://web.example.com,https://*.thefulcrum.team")
+          .replace("__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__", origins)
       );
     } else {
       assert.strictEqual(path.resolve(source), path.join(root, "dist", ...distPathSegments));
@@ -170,16 +194,16 @@ function assertUploads(result, bucket) {
         "expressions.js",
         channelPage ? "../expressions-proxy.js" : "expressions-proxy.js",
       ], { comparisonPage: !channelPage });
-      const pageUrl = new URL(`/expv1/${relativePath}`, `https://${bucket}.s3.amazonaws.com`);
+      const pageUrl = new URL(`/${prefix}/${relativePath}`, publicOrigin);
       assert.deepStrictEqual(scripts.map((src) => new URL(src, pageUrl).pathname), [
-        channelPage ? `/expv1/${relativePath.split("/")[0]}/expressions.js` : "/expv1/expressions.js",
-        "/expv1/expressions-proxy.js",
+        channelPage ? `/${prefix}/${relativePath.split("/")[0]}/expressions.js` : `/${prefix}/expressions.js`,
+        `/${prefix}/expressions-proxy.js`,
       ]);
       assert.ok(result.output.includes(`Deployed ${pageUrl.href}\n`));
     }
   });
-  assert.ok(!targets.includes(`s3://${bucket}/expv1/expressions.js`));
-  assert.ok(!result.output.includes(`Deployed https://${bucket}.s3.amazonaws.com/expv1/expressions.js\n`));
+  assert.ok(!targets.includes(`s3://${bucket}/${prefix}/expressions.js`));
+  assert.ok(!result.output.includes(`Deployed ${publicOrigin}/${prefix}/expressions.js\n`));
 }
 
 try {
@@ -344,6 +368,20 @@ try {
   assertUploads(preview, "fulcrumapp-world-expression-preview-test");
   assert.ok(!preview.calls.some((call) => call[0] === "cloudfront"));
 
+  const development = invokeDeploy(["development"], undefined, "https://development.example.com");
+  assert.strictEqual(development.status, 0, development.output);
+  assertUploads(
+    development,
+    "fulcrum-assets",
+    "https://development.example.com",
+    "dev-build",
+    "https://assets.fulcrumapp.com"
+  );
+  assert.deepStrictEqual(
+    development.calls.filter((call) => call[0] === "cloudfront"),
+    [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/dev-build/*"]]
+  );
+
   const spoofedOrigin = invokeDeploy(["explicit-preview"], undefined, "https://web.example.com.attacker.invalid");
   assert.strictEqual(spoofedOrigin.status, 0, spoofedOrigin.output);
   assert.throws(
@@ -366,24 +404,8 @@ try {
 
   const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
-  assertUploads(production, "fulcrum-assets");
-  const replies = [];
-  const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
-  const window = { parent, addEventListener: (name, handler) => { window.onMessage = handler; } };
-  vm.runInNewContext(production.proxy, {
-    window, console, XMLHttpRequest: function () {}, $$evaluate: () => ["calculation"],
-  });
-  const send = (origin) => window.onMessage({
-    isTrusted: true, source: parent, origin, data: JSON.stringify({ name: "evaluate" }),
-  });
-  send("https://rails11522.thefulcrum.team.attacker.invalid");
-  assert.strictEqual(replies.length, 0);
-  send("https://rails11522.thefulcrum.team");
-  assert.strictEqual(replies.length, 1);
-  assert.strictEqual(replies[0].origin, "https://rails11522.thefulcrum.team");
-  assert.deepStrictEqual(replies[0].data.results, ["calculation"]);
-  send("https://web.example.com");
-  assert.strictEqual(replies.length, 1, "deployed proxy must bind the accepted parent origin");
+  assertUploads(production, "fulcrum-assets", "https://web.example.com", "expv1", "https://assets.fulcrumapp.com");
+  assert.ok(!production.proxy.includes("https://*.thefulcrum.team"));
   assert.deepStrictEqual(
     production.calls.filter((call) => call[0] === "cloudfront"),
     [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/expv1/*"]]
@@ -393,7 +415,7 @@ try {
   assert.strictEqual(obsoleteOption.status, 2);
   assert.match(obsoleteOption.output, /Unknown option: --skip-compatibility/);
 
-  console.log("Deployment path checks passed: preview and production publish both channels and sandbox assets only; compatibility upload is impossible.");
+  console.log("Deployment path checks passed: preview, development, and production publish both channels and sandbox assets only; compatibility upload is impossible.");
 } finally {
   fs.rmSync(temporaryRoot, { recursive: true, force: true });
 }
