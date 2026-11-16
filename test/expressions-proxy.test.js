@@ -5,12 +5,12 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 const CoffeeScript = require("coffee-script");
+const { configureProxy } = require("../script/configure-sandbox-proxy");
 
-const marker = "__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__";
 const trustedOrigin = "https://trusted.example";
 const source = fs.readFileSync(path.join(__dirname, "..", "expressions-proxy.coffee"), "utf8");
 
-function createSandbox(origins, request = () => { throw new Error("Unexpected HTTP request"); }) {
+function createSandbox(origins, request = () => { throw new Error("Unexpected HTTP request"); }, environment) {
   const replies = [];
   const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
   const window = {
@@ -34,8 +34,8 @@ function createSandbox(origins, request = () => { throw new Error("Unexpected HT
     $$trigger: () => ["event"],
     $$finishAsync: () => ["callback"],
   };
-  let code = CoffeeScript.compile(source, { bare: true });
-  if (origins !== undefined) code = code.replace(marker, origins.join(","));
+  const configured = origins === undefined ? source : configureProxy(source, origins.join(","), environment);
+  const code = CoffeeScript.compile(configured, { bare: true });
   vm.runInNewContext(code, context);
 
   function send(message, overrides = {}) {
@@ -178,6 +178,35 @@ function createSandbox(origins, request = () => { throw new Error("Unexpected HT
   sandbox.runtime.$$messageBox({ title: "Test" }, 42);
   assert.strictEqual(sandbox.replies.at(-1).data.functionName, "messageBox");
   assert.deepStrictEqual(sandbox.replies.at(-1).data.argumentList, [{ title: "Test" }, 42]);
+}
+
+{
+  const origins = ["https://*.thefulcrum.team", trustedOrigin];
+  const rejected = [
+    "https://thefulcrum.team", "https://nested.rails11580.thefulcrum.team",
+    "https://rails11580.thefulcrum.team.attacker.invalid", "https://evilthefulcrum.team",
+    "https://rails11580-thefulcrum.team", "https://rails11580.thefulcrum.team:8443",
+    "http://rails11580.thefulcrum.team", "https://-invalid.thefulcrum.team",
+    "https://invalid-.thefulcrum.team", "https://*.thefulcrum.team", "null",
+  ];
+  for (const origin of ["https://rails11580.thefulcrum.team", "https://chaos-test.thefulcrum.team", trustedOrigin]) {
+    const sandbox = createSandbox(origins, undefined, "development");
+    rejected.forEach((origin) => sandbox.send({ name: "evaluate" }, { origin }));
+    sandbox.send({ name: "evaluate" }, { origin, source: {} });
+    sandbox.send({ name: "evaluate" }, { origin, source: sandbox.window });
+    sandbox.send({ name: "evaluate" }, { origin, isTrusted: false });
+    sandbox.send({ name: "evaluate", extra: true }, { origin });
+    sandbox.send("not json", { origin });
+    assert.strictEqual(sandbox.replies.length, 0);
+
+    sandbox.send({ name: "evaluate", id: "development" }, { origin });
+    assert.deepStrictEqual(sandbox.replies, [{
+      data: { name: "evaluate", results: ["calculation"], id: "development" }, origin,
+    }]);
+    sandbox.send({ name: "evaluate" }, { origin: "https://another.thefulcrum.team" });
+    assert.strictEqual(sandbox.replies.length, 1, "wildcard must not weaken parent-origin binding");
+  }
+  assert.throws(() => createSandbox(origins, undefined, "production"), /trusted origins/i);
 }
 
 console.log("Expression sandbox message validation checks passed.");

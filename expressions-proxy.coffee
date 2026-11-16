@@ -104,6 +104,14 @@ validMessage = (message) ->
       validRequestOptions(message.options)
     else false
 
+isAllowedOrigin = (origin, allowedOrigins) ->
+  return false unless typeof origin is 'string'
+  return false if origin.indexOf('*') isnt -1
+  return true if allowedOrigins.indexOf(origin) isnt -1
+  # Replace exactly one DNS label; the remaining origin must match configuration verbatim.
+  wildcardOrigin = origin.replace(/^https:\/\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\./, 'https://*.')
+  wildcardOrigin isnt origin and allowedOrigins.indexOf(wildcardOrigin) isnt -1
+
 class ExpressionEngine
   constructor: ->
     configuredOrigins = '__EXPRESSION_SANDBOX_ALLOWED_ORIGINS__'
@@ -113,7 +121,7 @@ class ExpressionEngine
 
   onMessage: (event) =>
     return unless event.isTrusted is true and event.source is window.parent and event.source isnt window
-    return unless @allowedOrigins.indexOf(event.origin) isnt -1
+    return unless isAllowedOrigin(event.origin, @allowedOrigins)
     return if @parentOrigin? and @parentOrigin isnt event.origin
     return unless typeof event.data is 'string'
 

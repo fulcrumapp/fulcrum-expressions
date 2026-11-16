@@ -22,6 +22,28 @@ for (const origins of [
 assert.throws(() => configureProxy("no marker", "https://example.com"), /marker/i);
 assert.throws(() => configureProxy(`${marker} ${marker}`, "https://example.com"), /marker/i);
 
+const wildcard = "https://*.thefulcrum.team";
+assert.strictEqual(
+  configureProxy(source, `${wildcard},${wildcard},https://web.example.com`, "development"),
+  `var origins = "${wildcard},https://web.example.com";`
+);
+for (const environment of [undefined, "production", "preview", "Development"]) {
+  assert.throws(() => configureProxy(source, wildcard, environment), /trusted origins/i);
+  assert.strictEqual(configureProxy(source, "https://web.example.com", environment),
+    'var origins = "https://web.example.com";');
+}
+for (const origin of [
+  "*", "https://*", "http://*.thefulcrum.team", "https://*.team",
+  "https://*.*.thefulcrum.team", "https://rails*.thefulcrum.team",
+  "https://*.thefulcrum.team:443", "https://*.thefulcrum.team:8443",
+  "https://*.thefulcrum.team/", "https://*.thefulcrum.team?query=1",
+  "https://user@*.thefulcrum.team", "https://*.Thefulcrum.team",
+  "https://*.-thefulcrum.team", "https://*.thefulcrum..team",
+  "https://*.thefulcrum.team\ninjected",
+]) {
+  assert.throws(() => configureProxy(source, origin, "development"), /trusted origins/i);
+}
+
 const pack = JSON.parse(execFileSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], {
   cwd: require("path").resolve(__dirname, ".."),
   encoding: "utf8",

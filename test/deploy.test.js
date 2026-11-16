@@ -4,6 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const vm = require("vm");
 const { spawnSync } = require("child_process");
 const yaml = require("js-yaml");
 const { assertSandboxScripts } = require("../script/sandbox-scripts");
@@ -206,6 +207,28 @@ function assertUploads(result, bucket, origins = "https://web.example.com", pref
   assert.ok(!result.output.includes(`Deployed ${publicOrigin}/${prefix}/expressions.js\n`));
 }
 
+function assertUploadedProxyMessaging(code, allowedOrigin, rejectedOrigins) {
+  const replies = [];
+  const parent = { postMessage: (data, origin) => replies.push({ data: JSON.parse(data), origin }) };
+  let onMessage;
+  const window = { parent, addEventListener: (name, handler) => { onMessage = handler; } };
+  vm.runInNewContext(code, {
+    window,
+    XMLHttpRequest: function () {},
+    console,
+    $$evaluate: () => ["deployed"],
+  });
+  const send = (origin) => onMessage({
+    isTrusted: true, source: parent, origin, data: '{"name":"evaluate","id":"deployed"}',
+  });
+  rejectedOrigins.forEach(send);
+  assert.deepStrictEqual(replies, [], "uploaded proxy must reject unconfigured origins");
+  send(allowedOrigin);
+  assert.deepStrictEqual(replies, [{
+    data: { name: "evaluate", results: ["deployed"], id: "deployed" }, origin: allowedOrigin,
+  }]);
+}
+
 try {
   const gitStub = path.join(binDirectory, "git");
   fs.writeFileSync(gitStub, [
@@ -362,6 +385,10 @@ try {
     assert.match(invalid.output, /trusted origins/i);
     assert.deepStrictEqual(invalid.calls, []);
   }
+  const rejectedProduction = invokeDeploy(["production", "--yes"], undefined, "https://*.thefulcrum.team");
+  assert.notStrictEqual(rejectedProduction.status, 0);
+  assert.match(rejectedProduction.output, /trusted origins/i);
+  assert.deepStrictEqual(rejectedProduction.calls, [], "production must reject wildcards before any AWS calls");
 
   const preview = invokeDeploy([], "expression-preview-test");
   assert.strictEqual(preview.status, 0, preview.output);
@@ -381,6 +408,18 @@ try {
     development.calls.filter((call) => call[0] === "cloudfront"),
     [["cloudfront", "create-invalidation", "--distribution-id", "E1ONQRALSE0LBO", "--paths", "/dev-build/*"]]
   );
+  const wildcardDevelopment = invokeDeploy(["development"], undefined,
+    "https://*.thefulcrum.team,https://development.example.com");
+  assert.strictEqual(wildcardDevelopment.status, 0, wildcardDevelopment.output);
+  assertUploads(wildcardDevelopment, "fulcrum-assets",
+    "https://*.thefulcrum.team,https://development.example.com", "dev-build", "https://assets.fulcrumapp.com");
+  for (const origin of ["https://rails11580.thefulcrum.team", "https://chaos-test.thefulcrum.team"]) {
+    assertUploadedProxyMessaging(wildcardDevelopment.proxy, origin, [
+      "https://thefulcrum.team", "https://nested.rails11580.thefulcrum.team",
+      "https://rails11580.thefulcrum.team.attacker.invalid", "https://evilthefulcrum.team",
+      "http://rails11580.thefulcrum.team", "https://rails11580.thefulcrum.team:8443",
+    ]);
+  }
 
   const spoofedOrigin = invokeDeploy(["explicit-preview"], undefined, "https://web.example.com.attacker.invalid");
   assert.strictEqual(spoofedOrigin.status, 0, spoofedOrigin.output);
@@ -405,6 +444,9 @@ try {
   const production = invokeDeploy(["production", "--yes"], "expression-preview-test");
   assert.strictEqual(production.status, 0, production.output);
   assertUploads(production, "fulcrum-assets", "https://web.example.com", "expv1", "https://assets.fulcrumapp.com");
+  assertUploadedProxyMessaging(production.proxy, "https://web.example.com", [
+    "https://rails11580.thefulcrum.team", "https://web.example.com.attacker.invalid",
+  ]);
   assert.ok(!production.proxy.includes("https://*.thefulcrum.team"));
   assert.deepStrictEqual(
     production.calls.filter((call) => call[0] === "cloudfront"),
