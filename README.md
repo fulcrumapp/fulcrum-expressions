@@ -200,8 +200,15 @@ and test without uploading.
 Set `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` to a comma-separated list of exact,
 canonical HTTP(S) origins for the applications allowed to embed the sandbox.
 Configure this independently for each deployment environment.
-Deployments reject missing or invalid values before uploading any assets;
-wildcard and opaque origins are not accepted. Both the `development` and
+Only the `development` target additionally accepts explicitly configured HTTPS
+wildcards such as `https://*.thefulcrum.team` for preview and chaos namespaces.
+A wildcard matches exactly one DNS label, not the bare domain or nested
+subdomains; HTTP, explicit ports, paths, and partial-label or global wildcards
+are rejected. Replies still target the concrete parent origin, and the sandbox
+remains bound to the first valid parent origin for its lifetime.
+Production and all other targets accept exact origins only. Deployments reject
+missing or invalid values before uploading any assets; opaque origins are never
+accepted. Both the `development` and
 `production` GitHub Actions environments must provide the variable
 `EXPRESSION_SANDBOX_ALLOWED_ORIGINS` before a release. The checked-in
 configuration does not establish which origins are authorized; the deployment
@@ -217,6 +224,9 @@ EXPRESSION_SANDBOX_ALLOWED_ORIGINS=http://localhost:3000 \
 
 For an installed npm package, the same configurator is available under
 `node_modules/@fulcrumapp/fulcrum-expressions/script/`.
+The configurator's optional final argument is the deployment target; omitting it
+keeps exact-origin-only validation. `script/deploy` passes its selected target
+explicitly, enabling wildcard validation only for `development`.
 
 This validation limits which embedding pages may send sandbox commands. It
 does not restrict JavaScript that a trusted page passes to the expression runtime.
