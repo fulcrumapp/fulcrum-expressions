@@ -44,8 +44,9 @@ node test/contract-runner.js --runtime ./path/to/adapter.js --compare legacy
 The built legacy and hybrid adapters use the same contract. Hybrid runs in an
 isolated JavaScript context so its globals do not overwrite legacy state.
 
-Run `yarn test:contracts:legacy` and `yarn test:contracts:hybrid` to report
-contract results by function group. The hybrid command compares each
+After runtime edits, run `yarn build:expressions` before
+`yarn test:contracts:legacy` and `yarn test:contracts:hybrid` to report
+current built-channel results by function group. The hybrid command compares each
 deterministic result with legacy; cases marked `volatile-result` are checked
 against their declared result shape but not for exact values. Failures include
 the channel, function group, case ID, and assertion message. `yarn test:migration-gates`
