@@ -110,8 +110,12 @@ Keep the batch unexposed until the Rails readiness prerequisite is established;
 after release, exercise it through the flagged Rails runtime and record the
 required acceptance evidence before advancing.
 
-Every batch must have evidence from all required gate categories before it is
-merged or released:
+Every batch must pass the repository gate categories below before merge. These
+automated gates do not establish Rails readiness or application-runtime
+acceptance. Production release or customer exposure is blocked until both are
+established and the flagged runtime acceptance evidence is recorded. Complete
+that verification through the approved non-production path before promotion;
+if no such path is available, keep the batch unreleased and unexposed.
 
 - The legacy and hybrid contract suites pass.
 - Differential checks find no regressions in unchanged functions.
@@ -126,13 +130,14 @@ merged or released:
   block the batch and provide actionable CI output; assertions are not relaxed
   to make a batch pass.
 
-After the automated gates pass, release that batch in hybrid alongside complete
-legacy and exercise `hybrid/expressions.html` and its deployed hybrid runtime
-through the flagged Rails application. Record the release identity, selected sandbox URL/channel, affected expression
-flows, observed values/errors, lifecycle and host effects, and comparison with
-legacy. Review those results before advancing to the next batch. If problems
-appear, roll back selection to legacy and correct and revalidate the batch;
-do not accumulate unobserved batches behind the flag.
+After the automated gates pass, exercise the release candidate through
+`hybrid/expressions.html` and its flagged Rails runtime using the approved
+non-production path. Record the candidate identity, selected sandbox
+URL/channel, affected expression flows, observed values/errors, lifecycle and
+host effects, and comparison with legacy. Review and accept those results before
+production release, customer exposure, or advancing to the next batch. If
+problems appear, keep or restore selection to legacy and correct and revalidate
+the batch; do not accumulate unobserved batches behind the flag.
 
 **Per-batch acceptance:** the intended override set is explicit, all required
 gate categories pass, the hybrid preserves legacy fallback for other functions,

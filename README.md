@@ -32,9 +32,10 @@ prepared migration batch contains same-name overrides for `PI`, `TRUE`, and
 `FALSE`; every other expression remains CoffeeScript-backed. This is local
 preparation only: Rails Phase 1b readiness is still required before the batch
 can be exposed, and passing repository gates will not constitute
-application-runtime acceptance. The isolated
-strict TypeScript check for migration-owned sources is independent of the
-existing project-wide `ts/tsconfig.json` baseline.
+application-runtime acceptance. Keep the batch unreleased and unexposed until
+Rails readiness and flagged application-runtime acceptance are recorded. The
+isolated strict TypeScript check for migration-owned sources is independent of
+the existing project-wide `ts/tsconfig.json` baseline.
 Release bundles retain the original Terser `--mangle` settings; debug bundles
 remain unmangled.
 
