@@ -112,7 +112,8 @@ gates pass, release it in hybrid alongside complete legacy, then exercise the
 deployed hybrid through the flagged Rails runtime. Record and review the
 required acceptance evidence before advancing to the next batch.
 
-Every batch must pass the repository gate categories below before release.
+Every batch must pass the repository gate categories below before it is merged
+or released.
 These automated gates do not establish Rails readiness or application-runtime
 acceptance. The Phase 1b readiness prerequisite must be established before
 exposing a migrated batch; actual flagged Rails runtime acceptance is recorded

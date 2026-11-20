@@ -183,9 +183,10 @@ and review actual runtime results before the next batch. Roll back to legacy and
 correct/revalidate any failing batch. Publication and isolated contracts alone
 are not runtime acceptance.
 Rails owns customer targeting and selection: the planned flag contract
-is `true` → hybrid, `false` or unreadable → legacy. Until Rails is changed to
-request those channel URLs, existing runtime consumers continue to use the
-frozen compatibility URL. No all-functions-complete promotion is planned.
+is `true` → hybrid, `false` or unreadable → legacy. This repository's build and
+deployment checks do not establish which sandbox URL the Rails application
+currently selects; that behavior and its readiness evidence belong to the
+Phase 1b consumer verification. No all-functions-complete promotion is planned.
 
 **Manual deployment:** `yarn deploy` builds and gates the release, then uploads
 the two channels and sandbox assets to the bucket for the current `$USER`
