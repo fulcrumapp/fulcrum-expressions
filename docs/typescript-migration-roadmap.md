@@ -107,8 +107,9 @@ CoffeeScript implementation from the legacy channel.
 same-name hybrid overrides. This repository preparation and its automated
 gates do not satisfy Phase 1b readiness or application-runtime acceptance.
 Keep the batch unexposed until the Rails readiness prerequisite is established;
-after release, exercise it through the flagged Rails runtime and record the
-required acceptance evidence before advancing.
+exercise it through the flagged Rails runtime using the approved non-production
+path, and record the required acceptance evidence before production release or
+advancing.
 
 Every batch must pass the repository gate categories below before merge. These
 automated gates do not establish Rails readiness or application-runtime
