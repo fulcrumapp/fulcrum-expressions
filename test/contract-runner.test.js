@@ -249,9 +249,9 @@ try {
   const typeRootsPath = path.join(overrideFixtureRoot, "types");
   fs.mkdirSync(outputPath);
   fs.mkdirSync(typeRootsPath);
-  fs.copyFileSync(
-    path.join(__dirname, "..", "migration", "function-overrides.ts"),
-    path.join(overrideFixtureRoot, "registry.ts")
+  fs.writeFileSync(
+    path.join(overrideFixtureRoot, "registry.ts"),
+    "export type ExpressionFunction = (...args: never[]) => unknown;\n"
   );
   fs.writeFileSync(fixturePath, [
     "import { ExpressionFunction } from './registry';",
@@ -286,12 +286,82 @@ try {
   fs.rmSync(overrideFixtureRoot, { recursive: true, force: true });
 }
 
+const migrationCompileRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-migration-overrides-"));
+try {
+  const compileResult = spawnSync(process.execPath, [
+    path.join(__dirname, "..", "node_modules", "typescript", "bin", "tsc"),
+    "--project",
+    path.join(__dirname, "..", "migration", "tsconfig.json"),
+    "--outDir",
+    migrationCompileRoot,
+  ], { cwd: path.join(__dirname, ".."), encoding: "utf8" });
+  assert.strictEqual(
+    compileResult.status,
+    0,
+    `strict TypeScript migration closure failed to compile:\n${compileResult.stdout}${compileResult.stderr}`
+  );
+  const compiledRoot = (file) => path.join(migrationCompileRoot, file);
+  const compiledOverrides = require(compiledRoot("migration/function-overrides.js")).functionOverrides;
+  const expectedNames = ["FALSE", "PI", "TRUE"];
+  assert.deepStrictEqual(Object.keys(compiledOverrides).sort(), expectedNames);
+
+  const legacyImplementations = {
+    FALSE: () => "legacy false",
+    PI: () => "legacy pi",
+    TRUE: () => "legacy true",
+    FALLBACK: () => "legacy fallback",
+  };
+  const installedFunctions = { ...legacyImplementations };
+  const typescriptImplementations = {
+    FALSE: require(compiledRoot("ts/functions/FALSE.js")).default,
+    PI: require(compiledRoot("ts/functions/PI.js")).default,
+    TRUE: require(compiledRoot("ts/functions/TRUE.js")).default,
+  };
+  expectedNames.forEach((name) => {
+    assert.strictEqual(compiledOverrides[name], typescriptImplementations[name]);
+  });
+  applyFunctionOverrides(installedFunctions, compiledOverrides);
+  expectedNames.forEach((name) => {
+    assert.strictEqual(installedFunctions[name], typescriptImplementations[name]);
+    assert.notStrictEqual(installedFunctions[name], legacyImplementations[name]);
+  });
+  assert.strictEqual(installedFunctions.PI(), Math.PI);
+  assert.strictEqual(installedFunctions.PI("ignored"), Math.PI);
+  assert.strictEqual(installedFunctions.TRUE(), true);
+  assert.strictEqual(installedFunctions.TRUE("ignored"), true);
+  assert.strictEqual(installedFunctions.FALSE(), false);
+  assert.strictEqual(installedFunctions.FALSE("ignored"), false);
+  assert.strictEqual(installedFunctions.FALLBACK, legacyImplementations.FALLBACK);
+} finally {
+  fs.rmSync(migrationCompileRoot, { recursive: true, force: true });
+}
+
 if (fs.existsSync(path.join(__dirname, "..", "dist", "hybrid", "expressions.js"))) {
   const hybridAdapter = createHybridAdapter();
   assert.deepStrictEqual(hybridAdapter.lifecycle(), { runtimeGlobals: true, functionGlobals: true });
   const legacyValue = adapter.invoke("ARRAY", [[1, [2, 3]]]).value;
   const hybridValue = hybridAdapter.invoke("ARRAY", [[1, [2, 3]]]).value;
   assert.deepStrictEqual(normalize(hybridValue), normalize(legacyValue));
+
+  const focusedParity = {
+    cases: [
+      { id: "pi-no-arguments", function: "PI", args: [], expectedType: "number", expected: Math.PI },
+      { id: "pi-ignored-extra-arguments", function: "PI", args: ["ignored"], expectedType: "number", expected: Math.PI },
+      { id: "true-no-arguments", function: "TRUE", args: [], expected: true },
+      { id: "true-ignored-extra-arguments", function: "TRUE", args: ["ignored"], expected: true },
+      { id: "false-no-arguments", function: "FALSE", args: [], expected: false },
+      { id: "false-ignored-extra-arguments", function: "FALSE", args: ["ignored"], expected: false },
+    ],
+  };
+  assert.strictEqual(run(adapter, hybridAdapter, focusedParity), focusedParity.cases.length);
+  focusedParity.cases.forEach((contract) => {
+    [adapter, hybridAdapter].forEach((runtimeAdapter) => {
+      const result = runtimeAdapter.invoke(contract.function, contract.args);
+      assert.deepStrictEqual(Object.keys(result).sort(), ["results", "value"]);
+      assert.ok(Array.isArray(result.results));
+      assert.deepStrictEqual(normalize(result.value), normalize(contract.expected));
+    });
+  });
 }
 
 const originalError = console.error;
