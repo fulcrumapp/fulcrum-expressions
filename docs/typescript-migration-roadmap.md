@@ -106,17 +106,17 @@ CoffeeScript implementation from the legacy channel.
 **Prepared first batch:** `PI`, `TRUE`, and `FALSE` are prepared as the first
 same-name hybrid overrides. This repository preparation and its automated
 gates do not satisfy Phase 1b readiness or application-runtime acceptance.
-Keep the batch unexposed until the Rails readiness prerequisite is established;
-exercise it through the flagged Rails runtime using the approved non-production
-path, and record the required acceptance evidence before production release or
-advancing.
+Rails Phase 1b readiness has not been demonstrated by this repository and must
+be established before exposing the batch. After readiness and the automated
+gates pass, release it in hybrid alongside complete legacy, then exercise the
+deployed hybrid through the flagged Rails runtime. Record and review the
+required acceptance evidence before advancing to the next batch.
 
-Every batch must pass the repository gate categories below before merge. These
-automated gates do not establish Rails readiness or application-runtime
-acceptance. Production release or customer exposure is blocked until both are
-established and the flagged runtime acceptance evidence is recorded. Complete
-that verification through the approved non-production path before promotion;
-if no such path is available, keep the batch unreleased and unexposed.
+Every batch must pass the repository gate categories below before release.
+These automated gates do not establish Rails readiness or application-runtime
+acceptance. The Phase 1b readiness prerequisite must be established before
+exposing a migrated batch; actual flagged Rails runtime acceptance is recorded
+after release and before advancing to another batch.
 
 - The legacy and hybrid contract suites pass.
 - Differential checks find no regressions in unchanged functions.
@@ -131,14 +131,14 @@ if no such path is available, keep the batch unreleased and unexposed.
   block the batch and provide actionable CI output; assertions are not relaxed
   to make a batch pass.
 
-After the automated gates pass, exercise the release candidate through
-`hybrid/expressions.html` and its flagged Rails runtime using the approved
-non-production path. Record the candidate identity, selected sandbox
-URL/channel, affected expression flows, observed values/errors, lifecycle and
-host effects, and comparison with legacy. Review and accept those results before
-production release, customer exposure, or advancing to the next batch. If
-problems appear, keep or restore selection to legacy and correct and revalidate
-the batch; do not accumulate unobserved batches behind the flag.
+After the automated gates pass and Rails readiness is established, release the
+batch in hybrid alongside complete legacy. Then exercise the deployed
+`hybrid/expressions.html` runtime through the flagged Rails application. Record
+the release identity, selected sandbox URL/channel, affected expression flows,
+observed values/errors, lifecycle and host effects, and comparison with legacy.
+Review and accept those results before advancing to the next batch. If problems
+appear, roll back selection to legacy and correct and revalidate the batch; do
+not accumulate unobserved batches behind the flag.
 
 **Per-batch acceptance:** the intended override set is explicit, all required
 gate categories pass, the hybrid preserves legacy fallback for other functions,

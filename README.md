@@ -30,12 +30,15 @@ runtime and applies TypeScript implementations for same-named functions;
 functions without a TypeScript override remain CoffeeScript-backed. The first
 prepared migration batch contains same-name overrides for `PI`, `TRUE`, and
 `FALSE`; every other expression remains CoffeeScript-backed. This is local
-preparation only: Rails Phase 1b readiness is still required before the batch
-can be exposed, and passing repository gates will not constitute
-application-runtime acceptance. Keep the batch unreleased and unexposed until
-Rails readiness and flagged application-runtime acceptance are recorded. The
-isolated strict TypeScript check for migration-owned sources is independent of
-the existing project-wide `ts/tsconfig.json` baseline.
+preparation only; Rails Phase 1b readiness has not been demonstrated here and
+must be established before exposing a migrated batch. After readiness and
+automated gates pass, release hybrid alongside complete legacy, then exercise
+the deployed hybrid through the flagged Rails runtime. Record and review
+runtime acceptance evidence before advancing to another batch. Passing gates or
+publishing artifacts alone does not establish runtime acceptance; retain the
+complete legacy channel for rollback. The isolated strict TypeScript check for
+migration-owned sources is independent of the existing project-wide
+`ts/tsconfig.json` baseline.
 Release bundles retain the original Terser `--mangle` settings; debug bundles
 remain unmangled.
 
@@ -156,32 +159,29 @@ a separate consumer prerequisite ([Phase 1b: Rails consumer readiness](docs/type
 which must be implemented and exercised before exposing Phase 2 migrated batches,
 not after all functions have been migrated.
 
-**Planned sandbox endpoints (not yet built or deployed):** add
-`dist/expressions-hybrid.html` at
-`https://assets.fulcrumapp.com/expv1/expressions-hybrid.html`, loading
-`hybrid/expressions.js` then `expressions-proxy.js`, and a sibling
-`dist/expressions-legacy.html` at
-`https://assets.fulcrumapp.com/expv1/expressions-legacy.html`, loading
-`legacy/expressions.js` then the same root proxy. Keeping both HTML files at
-the `/expv1/` root makes those relative paths resolve correctly. Release/debug
-builds and manual/automated deploys must add these assets and verify their
-script URLs before Phase 2 exposure. Preserve the original `expressions.html`
-contents and frozen runtime as the comparison endpoint; do not repoint it.
-Rails must select the hybrid sandbox URL for flag true and the legacy sandbox
-URL for false/unreadable or rollback, and exercise both actual endpoints,
-required lifecycle/host wiring and fallback before batches proceed.
+**Channel sandbox pages:** builds package
+`dist/hybrid/expressions.html` and `dist/legacy/expressions.html` alongside
+their channel runtimes. Deployment paths publish these pages and the shared
+proxy; their production URLs are
+`https://assets.fulcrumapp.com/expv1/hybrid/expressions.html` and
+`https://assets.fulcrumapp.com/expv1/legacy/expressions.html`. Preserve the
+original `expressions.html` and frozen runtime as the comparison endpoint; do
+not repoint it. Local build and mocked deployment checks do not establish live
+endpoint availability or Rails readiness. Once Phase 1b readiness and the
+automated batch gates are established, release both channels, then exercise
+the deployed selected endpoint through the flagged Rails runtime and record
+acceptance evidence before advancing.
 
-**Current migration state and [plan](docs/typescript-migration-roadmap.md):** the hybrid override registry is empty;
-no expression has been migrated and no customer is selected for hybrid by this
-repository. First, the separate Rails integration must load the deployed channels
-through those parallel sandbox endpoints under the flag and verify required
-lifecycle/host wiring, fallback and rollback;
-the empty-override hybrid can exercise that baseline wiring. For each future
-batch, add same-name TypeScript overrides, pass the automated gates, release
-alongside complete legacy, and exercise the deployed hybrid sandbox and runtime
-in the flagged application. Record and review actual runtime results before the next
-batch; roll back to legacy and correct/revalidate any failing batch. Publication
-and isolated contracts alone are not runtime acceptance.
+**Current migration state and [plan](docs/typescript-migration-roadmap.md):**
+the hybrid override registry contains the prepared `PI`, `TRUE`, and `FALSE`
+batch; this repository does not select customers for hybrid. The separate Rails
+integration and its Phase 1b readiness have not been established by these
+repository gates. That readiness must precede exposure of migrated batches.
+After readiness and the automated gates, release hybrid alongside complete
+legacy, exercise the deployed hybrid in the flagged application, and record
+and review actual runtime results before the next batch. Roll back to legacy and
+correct/revalidate any failing batch. Publication and isolated contracts alone
+are not runtime acceptance.
 Rails owns customer targeting and selection: the planned flag contract
 is `true` → hybrid, `false` or unreadable → legacy. Until Rails is changed to
 request those channel URLs, existing runtime consumers continue to use the
