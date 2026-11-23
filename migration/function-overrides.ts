@@ -6,7 +6,9 @@ import TRUE from "../ts/functions/TRUE"
 // under strict function variance; callers need each function's own signature.
 export type ExpressionFunction = (...args: never[]) => unknown
 
-export const functionOverrides: Readonly<Record<string, ExpressionFunction>> =
+type FunctionOverrideName = "FALSE" | "PI" | "TRUE"
+
+export const functionOverrides: Readonly<Record<FunctionOverrideName, ExpressionFunction>> =
   Object.freeze({
     FALSE,
     PI,

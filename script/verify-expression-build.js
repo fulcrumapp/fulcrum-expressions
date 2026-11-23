@@ -8,8 +8,10 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const { assertSandboxScripts } = require("./sandbox-scripts");
 const { packageManagerCommand } = require("./package-manager-command");
+const applyFunctionOverrides = require("../migration/apply-function-overrides");
 
 const root = path.resolve(__dirname, "..");
+const typescriptCli = require.resolve("typescript/bin/tsc");
 const buildScript = path.join(root, "script", "build-expressions.js");
 const dist = path.join(root, "dist");
 const channels = ["legacy", "hybrid"];
@@ -97,7 +99,7 @@ function verifyMigrationTypecheckScope() {
       include: [sourcePath],
     }));
     const result = spawnSync(process.execPath, [
-      path.join(root, "node_modules", "typescript", "bin", "tsc"),
+      typescriptCli,
       "--project",
       diagnosticConfigPath,
     ], {
@@ -113,6 +115,61 @@ function verifyMigrationTypecheckScope() {
       [],
       "no files may be emitted when migration typechecking fails"
     );
+  } finally {
+    fs.rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+}
+
+function verifyMigrationOverrides() {
+  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "expression-migration-overrides-"));
+  try {
+    const result = spawnSync(process.execPath, [
+      typescriptCli,
+      "--project",
+      path.join(root, "migration", "tsconfig.json"),
+      "--outDir",
+      temporaryRoot,
+    ], { cwd: root, encoding: "utf8", maxBuffer });
+    if (result.error) throw result.error;
+    assert.strictEqual(
+      result.status,
+      0,
+      `strict TypeScript migration closure failed to compile:\n${result.stdout}${result.stderr}`
+    );
+
+    const compiledRoot = (file) => path.join(temporaryRoot, file);
+    const compiledOverrides = require(compiledRoot("migration/function-overrides.js")).functionOverrides;
+    const expectedNames = ["FALSE", "PI", "TRUE"];
+    assert.deepStrictEqual(Object.keys(compiledOverrides).sort(), expectedNames);
+
+    const legacyImplementations = {
+      FALSE: () => "legacy false",
+      PI: () => "legacy pi",
+      TRUE: () => "legacy true",
+      FALLBACK: () => "legacy fallback",
+    };
+    const installedFunctions = { ...legacyImplementations };
+    const typescriptImplementations = Object.fromEntries(
+      expectedNames.map((name) => [
+        name,
+        require(compiledRoot(`ts/functions/${name}.js`)).default,
+      ])
+    );
+    expectedNames.forEach((name) => {
+      assert.strictEqual(compiledOverrides[name], typescriptImplementations[name]);
+    });
+    applyFunctionOverrides(installedFunctions, compiledOverrides);
+    expectedNames.forEach((name) => {
+      assert.strictEqual(installedFunctions[name], typescriptImplementations[name]);
+      assert.notStrictEqual(installedFunctions[name], legacyImplementations[name]);
+    });
+    assert.strictEqual(installedFunctions.PI(), Math.PI);
+    assert.strictEqual(installedFunctions.PI("ignored"), Math.PI);
+    assert.strictEqual(installedFunctions.TRUE(), true);
+    assert.strictEqual(installedFunctions.TRUE("ignored"), true);
+    assert.strictEqual(installedFunctions.FALSE(), false);
+    assert.strictEqual(installedFunctions.FALSE("ignored"), false);
+    assert.strictEqual(installedFunctions.FALLBACK, legacyImplementations.FALLBACK);
   } finally {
     fs.rmSync(temporaryRoot, { recursive: true, force: true });
   }
@@ -194,6 +251,7 @@ function verifyArtifactInventory() {
 }
 
 verifyMigrationTypecheckScope();
+verifyMigrationOverrides();
 for (const debug of [true, false]) {
   runBuild(debug);
   const firstInventory = verifyArtifactInventory();
