@@ -5,6 +5,7 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 
 const root = path.resolve(__dirname, "..");
+const typescriptCli = require.resolve("typescript/bin/tsc");
 const debug = process.argv.includes("--debug");
 const legacyOnly = process.argv.includes("--legacy-only");
 const dist = path.join(root, "dist");
@@ -68,7 +69,7 @@ if (legacyOnly) {
   buildLegacy();
 
   try {
-    runNodeScript(path.join(root, "node_modules", "typescript", "bin", "tsc"), [
+    runNodeScript(typescriptCli, [
       "--project",
       path.join(root, "migration", "tsconfig.json"),
     ]);

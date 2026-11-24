@@ -6,6 +6,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const vm = require("vm");
+const typescriptCli = require.resolve("typescript/bin/tsc");
 const {
   createLegacyAdapter,
   createBundledAdapter,
@@ -249,9 +250,9 @@ try {
   const typeRootsPath = path.join(overrideFixtureRoot, "types");
   fs.mkdirSync(outputPath);
   fs.mkdirSync(typeRootsPath);
-  fs.copyFileSync(
-    path.join(__dirname, "..", "migration", "function-overrides.ts"),
-    path.join(overrideFixtureRoot, "registry.ts")
+  fs.writeFileSync(
+    path.join(overrideFixtureRoot, "registry.ts"),
+    "export type ExpressionFunction = (...args: never[]) => unknown;\n"
   );
   fs.writeFileSync(fixturePath, [
     "import { ExpressionFunction } from './registry';",
@@ -262,7 +263,7 @@ try {
     "",
   ].join("\n"));
   const compileResult = spawnSync(process.execPath, [
-    path.join(__dirname, "..", "node_modules", "typescript", "bin", "tsc"),
+    typescriptCli,
     fixturePath,
     "--strict",
     "--noEmitOnError",
@@ -292,6 +293,26 @@ if (fs.existsSync(path.join(__dirname, "..", "dist", "hybrid", "expressions.js")
   const legacyValue = adapter.invoke("ARRAY", [[1, [2, 3]]]).value;
   const hybridValue = hybridAdapter.invoke("ARRAY", [[1, [2, 3]]]).value;
   assert.deepStrictEqual(normalize(hybridValue), normalize(legacyValue));
+
+  const focusedParity = {
+    cases: [
+      { id: "pi-no-arguments", function: "PI", args: [], expectedType: "number", expected: Math.PI },
+      { id: "pi-ignored-extra-arguments", function: "PI", args: ["ignored"], expectedType: "number", expected: Math.PI },
+      { id: "true-no-arguments", function: "TRUE", args: [], expectedType: "boolean", expected: true },
+      { id: "true-ignored-extra-arguments", function: "TRUE", args: ["ignored"], expectedType: "boolean", expected: true },
+      { id: "false-no-arguments", function: "FALSE", args: [], expectedType: "boolean", expected: false },
+      { id: "false-ignored-extra-arguments", function: "FALSE", args: ["ignored"], expectedType: "boolean", expected: false },
+    ],
+  };
+  assert.strictEqual(run(adapter, hybridAdapter, focusedParity), focusedParity.cases.length);
+  focusedParity.cases.forEach((contract) => {
+    [adapter, hybridAdapter].forEach((runtimeAdapter) => {
+      const result = runtimeAdapter.invoke(contract.function, contract.args);
+      assert.deepStrictEqual(Object.keys(result).sort(), ["results", "value"]);
+      assert.ok(Array.isArray(result.results));
+      assert.deepStrictEqual(normalize(result.value), normalize(contract.expected));
+    });
+  });
 }
 
 const originalError = console.error;

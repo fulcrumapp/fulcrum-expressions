@@ -103,8 +103,21 @@ verify those exports are present and that functions without overrides continue
 to use the legacy implementation. Do not remove or reduce the complete
 CoffeeScript implementation from the legacy channel.
 
-Every batch must have evidence from all required gate categories before it is
-merged or released:
+**Prepared first batch:** `PI`, `TRUE`, and `FALSE` are prepared as the first
+same-name hybrid overrides. This repository preparation and its automated
+gates do not satisfy Phase 1b readiness or application-runtime acceptance.
+Rails Phase 1b readiness has not been demonstrated by this repository and must
+be established before exposing the batch. After readiness and the automated
+gates pass, release it in hybrid alongside complete legacy, then exercise the
+deployed hybrid through the flagged Rails runtime. Record and review the
+required acceptance evidence before advancing to the next batch.
+
+Every batch must pass the repository gate categories below before it is merged
+or released.
+These automated gates do not establish Rails readiness or application-runtime
+acceptance. The Phase 1b readiness prerequisite must be established before
+exposing a migrated batch; actual flagged Rails runtime acceptance is recorded
+after release and before advancing to another batch.
 
 - The legacy and hybrid contract suites pass.
 - Differential checks find no regressions in unchanged functions.
@@ -119,13 +132,14 @@ merged or released:
   block the batch and provide actionable CI output; assertions are not relaxed
   to make a batch pass.
 
-After the automated gates pass, release that batch in hybrid alongside complete
-legacy and exercise `hybrid/expressions.html` and its deployed hybrid runtime
-through the flagged Rails application. Record the release identity, selected sandbox URL/channel, affected expression
-flows, observed values/errors, lifecycle and host effects, and comparison with
-legacy. Review those results before advancing to the next batch. If problems
-appear, roll back selection to legacy and correct and revalidate the batch;
-do not accumulate unobserved batches behind the flag.
+After the automated gates pass and Rails readiness is established, release the
+batch in hybrid alongside complete legacy. Then exercise the deployed
+`hybrid/expressions.html` runtime through the flagged Rails application. Record
+the release identity, selected sandbox URL/channel, affected expression flows,
+observed values/errors, lifecycle and host effects, and comparison with legacy.
+Review and accept those results before advancing to the next batch. If problems
+appear, roll back selection to legacy and correct and revalidate the batch; do
+not accumulate unobserved batches behind the flag.
 
 **Per-batch acceptance:** the intended override set is explicit, all required
 gate categories pass, the hybrid preserves legacy fallback for other functions,
